@@ -66,7 +66,7 @@ public class ExtraCellsEventHandler {
         ItemStack stack = event.getItemStack();
         Item item = stack.getItem();
         List<String> tooltip = event.getToolTip();
-        String name = stack.getUnlocalizedName();
+        String name = stack.getTranslationKey();
 
         TextComponentTranslation text1 = new TextComponentTranslation("extracells.tooltip.deprecated1");
         TextComponentTranslation text2;
@@ -76,7 +76,7 @@ public class ExtraCellsEventHandler {
 
         String ae2Name = "";
         boolean isDeprecated = false;
-        if (BlockEnum.ECBASEBLOCK.getItem().getUnlocalizedName().equalsIgnoreCase(name)) {
+        if (BlockEnum.ECBASEBLOCK.getItem().getTranslationKey().equalsIgnoreCase(name)) {
             ae2Name = Api.INSTANCE.definitions().blocks().fluidIface().maybeBlock().get().getLocalizedName();
             isDeprecated = true;
         } else if (PartEnum.INTERFACE.getTranslationKey().equalsIgnoreCase(name)) {
@@ -94,7 +94,7 @@ public class ExtraCellsEventHandler {
         } else if (PartEnum.FLUIDSTORAGE.getTranslationKey().equalsIgnoreCase(name)) {
             ae2Name = Api.INSTANCE.definitions().parts().fluidStorageBus().maybeStack(1).get().getDisplayName();
             isDeprecated = true;
-        } else if (ItemEnum.FLUIDSTORAGE.getItem().getUnlocalizedName().equalsIgnoreCase(item.getUnlocalizedName())) {
+        } else if (ItemEnum.FLUIDSTORAGE.getItem().getTranslationKey().equalsIgnoreCase(item.getTranslationKey())) {
             //ae2Name = Api.INSTANCE.definitions().parts().fluidStorageBus().maybeStack(1).get().getDisplayName();
             if (stack.getItemDamage() >= 0 && stack.getItemDamage() < 4) {
                 isDeprecated = true;
@@ -114,7 +114,7 @@ public class ExtraCellsEventHandler {
                         break;
                 }
             }
-        } else if (ItemEnum.STORAGECOMPONET.getItem().getUnlocalizedName().equalsIgnoreCase(item.getUnlocalizedName())) {
+        } else if (ItemEnum.STORAGECOMPONET.getItem().getTranslationKey().equalsIgnoreCase(item.getTranslationKey())) {
             if (stack.getItemDamage() >= 4 && stack.getItemDamage() < 8) {
                 isDeprecated = true;
                 switch (stack.getItemDamage()) {

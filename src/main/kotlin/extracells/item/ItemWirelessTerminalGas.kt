@@ -19,8 +19,8 @@ object ItemWirelessTerminalGas : WirelessTermBase(), IWirelessGasTermHandler {
         ECApi.instance().registerWirelessTermHandler(this)
     }
 
-    override fun getUnlocalizedName(stack: ItemStack): String {
-        return super.getUnlocalizedName(stack).replace("item.extracells", "extracells.item")
+    override fun getTranslationKey(stack: ItemStack): String {
+        return super.getTranslationKey(stack).replace("item.extracells", "extracells.item")
     }
 
     override fun isItemNormalWirelessTermToo(`is`: ItemStack?): Boolean = false

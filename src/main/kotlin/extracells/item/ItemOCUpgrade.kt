@@ -15,9 +15,9 @@ object ItemOCUpgrade: UpgradeItemAEBase() {
         setHasSubtypes(true)
     }
 
-    override fun getUnlocalizedName(): String = super.getUnlocalizedName().replace("item.extracells", "extracells.item")
+    override fun getTranslationKey(): String = super.getTranslationKey().replace("item.extracells", "extracells.item")
 
-    override fun getUnlocalizedName(stack: ItemStack): String = unlocalizedName
+    override fun getTranslationKey(stack: ItemStack): String = translationKey
 
     override fun getItemStackDisplayName(stack: ItemStack): String {
         val tier = 3 - stack.itemDamage

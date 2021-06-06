@@ -62,8 +62,8 @@ class ItemWirelessTerminalUniversal : WirelessTermBase(), IWirelessFluidTermHand
         return ConfigManager(nbt.getCompoundTag("settings"))
     }
 
-    override fun getUnlocalizedName(stack: ItemStack): String {
-        return super.getUnlocalizedName(stack).replace("item.extracells", "extracells.item")
+    override fun getTranslationKey(stack: ItemStack): String {
+        return super.getTranslationKey(stack).replace("item.extracells", "extracells.item")
     }
 
     override fun getItemStackDisplayName(stack: ItemStack): String {
@@ -71,7 +71,8 @@ class ItemWirelessTerminalUniversal : WirelessTermBase(), IWirelessFluidTermHand
         if (!tag.hasKey("type")) {
             tag.setByte("type", 0)
         }
-        return super.getItemStackDisplayName(stack) + " - " + I18n.translateToLocal("extracells.tooltip." + WirelessTerminalType.values().apply { tag.getByte("type") }.toString().toLowerCase())
+        // TODO: Bug here
+        return super.getItemStackDisplayName(stack) + " - " + I18n.translateToLocal("extracells.tooltip." + WirelessTerminalType.values()[tag.getByte("type").toInt()].toString().toLowerCase())
     }
 
     override fun onItemRightClick(world: World, player: EntityPlayer, hand: EnumHand): ActionResult<ItemStack> {
@@ -185,7 +186,7 @@ class ItemWirelessTerminalUniversal : WirelessTermBase(), IWirelessFluidTermHand
         if (!tag.hasKey("type")) {
             tag.setByte("type", 0)
         }
-        tooltip.add(I18n.translateToLocal("extracells.tooltip.mode") + ": " + I18n.translateToLocal("extracells.tooltip." + WirelessTerminalType.values().apply { tag.getByte("type") }.toString().toLowerCase()))
+        tooltip.add(I18n.translateToLocal("extracells.tooltip.mode") + ": " + I18n.translateToLocal("extracells.tooltip." + WirelessTerminalType.values()[tag.getByte("type").toInt()].toString().toLowerCase()))
         tooltip.add(I18n.translateToLocal("extracells.tooltip.installed"))
         val it = getInstalledModules(stack).iterator()
         while (it.hasNext()) {

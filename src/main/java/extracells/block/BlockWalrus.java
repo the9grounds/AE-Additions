@@ -32,8 +32,8 @@ public class BlockWalrus extends BlockEC {
 	}
 
 	@Override
-	public String getUnlocalizedName() {
-		return super.getUnlocalizedName().replace("tile.", "");
+	public String getTranslationKey() {
+		return super.getTranslationKey().replace("tile.", "");
 	}
 
 	@Override
@@ -42,7 +42,7 @@ public class BlockWalrus extends BlockEC {
 	}
 
 	@Override
-	public BlockRenderLayer getBlockLayer() {
+	public BlockRenderLayer getRenderLayer() {
 		return BlockRenderLayer.SOLID;
 	}
 

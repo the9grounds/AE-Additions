@@ -152,14 +152,14 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
             final Predicate<String> test = filterToPredicate(filter.substring(1));
             return (is) -> is != null && !is.isEmpty() &&
                     Optional.ofNullable(is.getItem().getRegistryName())
-                            .map(ResourceLocation::getResourceDomain)
+                            .map(ResourceLocation::getNamespace)
                             .map(test::test)
                             .orElse(false);
         } else if (filter.startsWith("~")) {
             final Predicate<String> test = filterToPredicate(filter.substring(1));
             return (is) -> is != null && !is.isEmpty() &&
                     Optional.ofNullable(is.getItem().getRegistryName())
-                            .map(ResourceLocation::getResourcePath)
+                            .map(ResourceLocation::getPath)
                             .map(test::test)
                             .orElse(false);
         } else {

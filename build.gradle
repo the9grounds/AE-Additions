@@ -10,6 +10,7 @@ buildscript {
 //        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
 		classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.1.+', changing: true
 //		classpath 'gradle.plugin.com.matthewprenger:CurseGradle:1.0.9'
+		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.10"
     }
 }
 
@@ -24,16 +25,11 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'idea'
 //apply plugin: 'com.matthewprenger.cursegradle'
 
-//compileScala.dependsOn.remove("compileJava")
-//compileKotlin.dependsOn compileScala
-
-ext.buildProps = file "build.properties"
-
-buildProps.withReader {
-    def prop = new Properties()
-    prop.load(it)
-    ext.config = new ConfigSlurper().parse prop
-}
+//buildProps.withReader {
+//    def prop = new Properties()
+//    prop.load(it)
+//    ext.config = new ConfigSlurper().parse prop
+//}
 
 version = "${project.properties['version.minecraft']}-${project.properties['version.mod.major']}.${project.properties['version.mod.minor']}.${project.properties['version.mod.revis']}." + getBuildNumber()
 group = "extracells"
@@ -65,8 +61,10 @@ minecraft {
 //    version = "${project.properties['version.minecraft']}-${project.properties['version.forge']}"
 //    runDir = "../../MinecraftDebug/run_client"
 //	mappings = "${config.version.mappings}"
-	mappings channel: 'snapshot', version: '20171003-1.12'
-	
+//	mappings channel: 'snapshot', version: '20171003-1.12'
+	mappings channel: 'snapshot', version: '20180814-1.12'
+//	mappings channel: 'stable', version: '39-1.12'
+
 //	replace '@VERSION@', "${project.properties['version.mod.major']}.${project.properties['version.mod.minor']}.${project.properties['version.mod.revis']}"
 
 	runs {
@@ -89,12 +87,32 @@ minecraft {
 
         server {
 
+			workingDirectory project.file('run')
+
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
+
+			mods {
+				extracells {
+					source sourceSets.main
+				}
+			}
         }
+
+		data {
+
+			workingDirectory project.file('run')
+			args '--mod', 'extracells', '--all', '--output', file('src/generated/resources/'), "--existing", file("src/main/resources")
+
+			mods {
+				extracells {
+					source sourceSets.main
+				}
+			}
+		}
     }
 }
 
@@ -105,6 +123,10 @@ repositories {
 	mavenLocal()
 	mavenCentral()
 	maven { url = "http://files.minecraftforge.net/maven" }
+	maven {
+		name = 'kotlinforforge'
+		url = 'https://thedarkcolour.github.io/KotlinForForge/'
+	}
 	maven {
 		url "http://maven.shadowfacts.net/"
 	}
@@ -172,12 +194,14 @@ dependencies {
 	compile fg.deobf("cofh:RedstoneFlux:${project.properties['version.rf']}:universal")
 	
 	compileOnly ("cofh:CoFHCore:${project.properties['version.cofh']}:deobf")
+
+	compileOnly fg.deobf('thedarkcolour:kotlinforforge:1.1.0')
 	
 	//deobfProvided ("li.cil.oc:OpenComputers:${config.version.oc}:api")
 	compileOnly fg.deobf("li.cil.oc:OpenComputers:${project.properties['version.oc']}")
 
-	compileOnly "mezz.jei:jei_${project.properties['version.minecraft']}:${project.properties['version.jei']}:api"
-	runtimeOnly "mezz.jei:jei_${project.properties['version.minecraft']}:${project.properties['version.jei']}"
+	compileOnly fg.deobf("mezz.jei:jei_${project.properties['version.minecraft']}:${project.properties['version.jei']}:api")
+	runtime "mezz.jei:jei_${project.properties['version.minecraft']}:${project.properties['version.jei']}"
 
 	compileOnly "com.mod-buildcraft:buildcraft-api:${project.properties['version.bc']}"
 	runtime "com.mod-buildcraft:buildcraft:${project.properties['version.bc']}"
@@ -219,6 +243,17 @@ processResources {
 
 //        expand 'version': "${project.properties['version.mod.major']}.${project.properties['version.mod.minor']}.${project.properties['version.mod.revis']}", 'mcversion': project.minecraft.version
     }
+
+	from(sourceSets.main.resources.srcDirs) {
+
+		include 'mcmod.info'
+
+		// TODO: Replace version
+	}
+
+	from(sourceSets.main.resources.srcDirs) {
+		exclude 'mcmod.info'
+	}
 }
 
 compileKotlin {
@@ -226,6 +261,8 @@ compileKotlin {
 		jvmTarget = "1.8"
 	}
 }
+
+
 
 task apiJar(type: Jar) {
     from sourceSets.main.output
@@ -273,8 +310,44 @@ def getBuildNumber() {
     return "NIGHTLY"
 }
 
-idea {
-    module {
-        outputDir = file('build/classes/main')
-    }
+//idea {
+//    module {
+//        outputDir = file('build/classes/main')
+//    }
+//}
+
+jar {
+	from sourceSets.main.output.classesDirs
+	from sourceSets.main.output.resourcesDir
+	include "extracells/**"
+	include "assets/**"
+	include "mcmod.info"
+	include "pack.mcmeta"
+	manifest {
+		attributes([
+				"Specification-Title": "extracells",
+				"Specification-Vendor": "extracells",
+				"Specification-Version": "1", // We are version 1 of ourselves
+				"Implementation-Title": project.name,
+				"Implementation-Version": "${version}",
+				"Implementation-Vendor" :"extracells",
+				"Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+		])
+	}
 }
+
+//sourceSets {
+//	main {
+//		java {
+//			srcDir 'src/main/java'
+//		}
+//
+//		resources {
+//			srcDir 'src/main/resources'
+//		}
+//
+//		output.resourcesDir = output.classesDirs[0]
+//	}
+//}
+
+sourceSets { main { output.resourcesDir = file("build/resources/main") } }

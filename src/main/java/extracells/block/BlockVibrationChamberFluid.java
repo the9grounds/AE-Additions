@@ -179,7 +179,7 @@ public class BlockVibrationChamberFluid extends BlockEC implements IGuiBlock {
 	}
 
 	@Override
-	public void onBlockDestroyedByPlayer(World world, BlockPos pos, IBlockState state) {
+	public void onPlayerDestroy(World world, BlockPos pos, IBlockState state) {
 		if (world.isRemote) {
 			return;
 		}

@@ -210,7 +210,7 @@ object BlockHardMEDrive : BlockEC(Material.ROCK, 2.0f, 1000000f) {
         super.breakBlock(world, pos, state)
     }
 
-    override fun getBlockLayer(): BlockRenderLayer = BlockRenderLayer.CUTOUT
+    override fun getRenderLayer(): BlockRenderLayer = BlockRenderLayer.CUTOUT
 
     override fun createBlockState(): BlockStateContainer {
         return ExtendedBlockState(this, arrayOf(facing), arrayOf(PropertyDrive.INSTANCE))
