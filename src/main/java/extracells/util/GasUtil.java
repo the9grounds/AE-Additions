@@ -19,11 +19,11 @@ import mekanism.api.gas.IGasItem;
 public class GasUtil {
 
 	public static IAEFluidStack createAEFluidStack(Gas gas) {
-		return createAEFluidStack(new FluidStack(MekanismGas.getFluidGasMap().get(gas),1000));
+		return createAEFluidStack(new FluidStack(MekanismGas.fluidGas.get(gas),1000));
 	}
 
 	public static IAEFluidStack createAEFluidStack(GasStack gasStack) {
-		return gasStack == null ? null : createAEFluidStack(new FluidStack(MekanismGas.getFluidGasMap().get(gasStack.getGas()), gasStack.amount));
+		return gasStack == null ? null : createAEFluidStack(new FluidStack(MekanismGas.fluidGas.get(gasStack.getGas()), gasStack.amount));
 	}
 
 
@@ -32,7 +32,7 @@ public class GasUtil {
 	}
 
 	public static IAEFluidStack createAEFluidStack(Gas gas, long amount) {
-		return createAEFluidStack(new FluidStack(MekanismGas.getFluidGasMap().get(gas), 1)).setStackSize(
+		return createAEFluidStack(new FluidStack(MekanismGas.fluidGas.get(gas), 1)).setStackSize(
 			amount);
 	}
 
@@ -168,7 +168,7 @@ public class GasUtil {
 		}
 		Fluid fluid = fluidStack.getFluid();
 		if (fluid instanceof MekanismGas.GasFluid) {
-			return new GasStack(((MekanismGas.GasFluid) fluid).getGas(), fluidStack.amount);
+			return new GasStack(((MekanismGas.GasFluid) fluid).gas, fluidStack.amount);
 		}
 		return null;
 	}
@@ -179,7 +179,7 @@ public class GasUtil {
 		}
 		Fluid fluid = fluidStack.getFluid();
 		if (fluid instanceof MekanismGas.GasFluid) {
-			return new GasStack(((MekanismGas.GasFluid) fluid).getGas(), (int) fluidStack.getStackSize());
+			return new GasStack(((MekanismGas.GasFluid) fluid).gas, (int) fluidStack.getStackSize());
 		}
 		return null;
 	}
@@ -188,7 +188,7 @@ public class GasUtil {
 		if (gasStack == null) {
 			return null;
 		}
-		Fluid fluid = MekanismGas.getFluidGasMap().get(gasStack.getGas());
+		Fluid fluid = MekanismGas.fluidGas.get(gasStack.getGas());
 		if (fluid == null) {
 			return null;
 		}
@@ -208,7 +208,7 @@ public class GasUtil {
 			return null;
 		}
 		if (fluid instanceof MekanismGas.GasFluid) {
-			return ((MekanismGas.GasFluid) fluid).getGas();
+			return ((MekanismGas.GasFluid) fluid).gas;
 		}
 		return null;
 	}

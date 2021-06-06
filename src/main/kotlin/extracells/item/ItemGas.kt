@@ -20,12 +20,12 @@ object ItemGas: Item(), IItemModelRegister {
 
     val isMekanismGasEnabled = Integration.Mods.MEKANISMGAS.isEnabled
 
-    fun setGasName(itemStack: ItemStack?, fluidName: String) {
+    @JvmStatic fun setGasName(itemStack: ItemStack?, fluidName: String) {
         itemStack?.setTagInfo("gas", NBTTagString(fluidName))
     }
 
-    fun getGasName(itemStack: ItemStack?): String {
-        if (itemStack == null || itemStack.hasTagCompound()) {
+    @JvmStatic fun getGasName(itemStack: ItemStack?): String {
+        if (itemStack == null || !itemStack.hasTagCompound() || itemStack.tagCompound == null) {
             return ""
         }
 

@@ -83,6 +83,6 @@ public class BlockItemDefinitions implements ITileDefinition {
 	@Nonnull
 	@Override
 	public String identifier() {
-		return block.getRegistryName().getPath();
+		return block.getRegistryName().getResourcePath();
 	}
 }

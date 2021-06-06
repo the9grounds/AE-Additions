@@ -85,8 +85,8 @@ public class CommonProxy {
 
 	@SubscribeEvent
 	public void onRegister(RegistryEvent.Register<IRecipe> event){
-		RecipeUniversalTerminal.setRegistryName("UniversalCraftingTerminalRecipe");
-		event.getRegistry().register(RecipeUniversalTerminal.THIS());
+		RecipeUniversalTerminal.INSTANCE.setRegistryName("UniversalCraftingTerminalRecipe");
+		event.getRegistry().register(RecipeUniversalTerminal.INSTANCE);
 	}
 
 	public void registerItems() {

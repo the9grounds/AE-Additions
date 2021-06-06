@@ -15,7 +15,7 @@ public class CreativeTabEC extends CreativeTabs {
 	}
 
 	@Override
-	public ItemStack createIcon() {
+	public ItemStack getTabIconItem() {
 		return ItemEnum.FLUIDSTORAGE.getSizedStack(1);
 	}
 }

@@ -21,12 +21,12 @@ public class ItemBlockFluidInterface extends ItemBlock {
 	}
 
 	@Override
-	public String getTranslationKey(ItemStack stack) {
-		return getTranslationKey();
+	public String getUnlocalizedName(ItemStack stack) {
+		return getUnlocalizedName();
 	}
 
 	@Override
-	public String getTranslationKey() {
+	public String getUnlocalizedName() {
 		return "tile.extracells.block.fluidinterface";
 	}
 

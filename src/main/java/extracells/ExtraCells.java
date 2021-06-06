@@ -24,7 +24,7 @@ import appeng.api.AEApi;
 import appeng.api.features.IRegistryContainer;
 import extracells.integration.Integration;
 import extracells.item.storage.CellDefinition;
-import extracells.network.GuiHandler$;
+import extracells.network.GuiHandler;
 import extracells.network.PacketHandler;
 import extracells.proxy.CommonProxy;
 import extracells.util.ECConfigHandler;
@@ -61,7 +61,7 @@ public class ExtraCells {
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		packetHandler = new PacketHandler();
-		NetworkRegistry.INSTANCE.registerGuiHandler(this, GuiHandler$.MODULE$);
+		NetworkRegistry.INSTANCE.registerGuiHandler(this, GuiHandler.INSTANCE);
 
 		// Config
 		configFolder = event.getModConfigurationDirectory();

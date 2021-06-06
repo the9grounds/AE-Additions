@@ -42,7 +42,7 @@ public class HardDriveBakedModel implements IBakedModel {
 		if (side == null && state instanceof IExtendedBlockState) {
 			IExtendedBlockState extState = (IExtendedBlockState) state;
 			DriveSlotsState slotsState = extState.getValue(PropertyDrive.INSTANCE);
-			EnumFacing direction = extState.getValue(BlockHardMEDrive.FACING());
+			EnumFacing direction = extState.getValue(BlockHardMEDrive.INSTANCE.getFacing());
 
 			if (slotsState == null)
 				return result;

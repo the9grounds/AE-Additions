@@ -64,9 +64,9 @@ public class ItemFluidPattern extends ItemECBase {
 	public String getItemStackDisplayName(ItemStack itemStack) {
 		Fluid fluid = getFluid(itemStack);
 		if (fluid == null) {
-			return I18n.translateToLocal(getTranslationKey(itemStack));
+			return I18n.translateToLocal(getUnlocalizedName(itemStack));
 		}
-		return I18n.translateToLocal(getTranslationKey(itemStack))
+		return I18n.translateToLocal(getUnlocalizedName(itemStack))
 			+ ": " + fluid.getLocalizedName(new FluidStack(fluid, 1));
 	}
 
@@ -87,7 +87,7 @@ public class ItemFluidPattern extends ItemECBase {
 	}
 
 	@Override
-	public String getTranslationKey(ItemStack itemStack) {
+	public String getUnlocalizedName(ItemStack itemStack) {
 		return "extracells.item.fluid.pattern";
 	}
 

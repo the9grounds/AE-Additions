@@ -8,13 +8,13 @@ import net.minecraftforge.fml.common.Optional
 object FuelBurnTime {
     private val fluidBurnTimes = mutableMapOf<Fluid, Int>()
 
-    fun registerFuel(fluid: Fluid, burnTime: Int) {
+    @JvmStatic fun registerFuel(fluid: Fluid, burnTime: Int) {
         if (!fluidBurnTimes.contains(fluid)) {
             fluidBurnTimes.put(fluid, burnTime)
         }
     }
 
-    fun getBurnTime(fluid: Fluid): Int {
+    @JvmStatic fun getBurnTime(fluid: Fluid): Int {
         if (fluidBurnTimes.contains(fluid)) {
             return fluidBurnTimes.get(fluid)!!
         }
