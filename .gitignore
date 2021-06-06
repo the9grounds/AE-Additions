@@ -12,3 +12,4 @@
 !/build.properties
 !/changelog.txt
 !/gradle.properties
+!/.gitlab-ci.yml

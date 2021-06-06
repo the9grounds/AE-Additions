@@ -17,6 +17,9 @@ before_script:
 build:
   stage: build
   script: sh ./gradlew --build-cache assemble
+  artifacts:
+    paths:
+      - build/lib/*.jar
   cache:
     key: "$CI_COMMIT_REF_NAME"
     policy: push
@@ -24,12 +27,12 @@ build:
       - build
       - .gradle
 
-test:
-  stage: test
-  script: sh ./gradlew check
-  cache:
-    key: "$CI_COMMIT_REF_NAME"
-    policy: pull
-    paths:
-      - build
-      - .gradle
+#test:
+#  stage: test
+#  script: sh ./gradlew check
+#  cache:
+#    key: "$CI_COMMIT_REF_NAME"
+#    policy: pull
+#    paths:
+#      - build
+#      - .gradle
