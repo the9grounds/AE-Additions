@@ -177,7 +177,7 @@ dependencies {
 	compileOnly fg.deobf("li.cil.oc:OpenComputers:${project.properties['version.oc']}")
 
 	compileOnly "mezz.jei:jei_${project.properties['version.minecraft']}:${project.properties['version.jei']}:api"
-//	runtime "mezz.jei:jei_${project.properties['version.minecraft']}:${project.properties['version.jei']}"
+	runtimeOnly "mezz.jei:jei_${project.properties['version.minecraft']}:${project.properties['version.jei']}"
 
 	compileOnly "com.mod-buildcraft:buildcraft-api:${project.properties['version.bc']}"
 	runtime "com.mod-buildcraft:buildcraft:${project.properties['version.bc']}"

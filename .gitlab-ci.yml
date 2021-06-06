@@ -19,7 +19,7 @@ build:
   script: sh ./gradlew --build-cache assemble
   artifacts:
     paths:
-      - build/lib/*.jar
+      - build/libs/*.jar
   cache:
     key: "$CI_COMMIT_REF_NAME"
     policy: push
