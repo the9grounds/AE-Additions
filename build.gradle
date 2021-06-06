@@ -10,6 +10,10 @@ buildscript {
     }
 }
 
+plugins {
+	id "org.jetbrains.kotlin.jvm" version "1.3.30"
+}
+
 
 apply plugin: 'scala'
 apply plugin: 'net.minecraftforge.gradle.forge'
@@ -60,58 +64,66 @@ minecraft {
 }
 	
 repositories {
-    maven {
-        name 'Mobius Repo'
-        url "https://www.mobiusstrip.eu/maven"
-    }
-	
+	jcenter()
+	maven {
+		url "http://maven.shadowfacts.net/"
+	}
+	flatDir {
+		dirs 'libs'
+	}
+	maven {
+		name 'Mobius Repo'
+		url "https://www.mobiusstrip.eu/maven/"
+	}
+
 	maven {
 		name 'Open Computers'
 		url "https://maven.cil.li/"
 	}
-	
+
 	maven {
 		name 'prog'
-		url "https://dvs1.progwml6.com/files/maven"
+		url "https://dvs1.progwml6.com/files/maven/"
 	}
-	
+
 	maven {
-        name 'amadornes'
-        url "https://maven.amadornes.com/"
-    }
+		name 'amadornes'
+		url "https://maven.amadornes.com/"
+	}
 
 	maven  {
 		name "BuildCraft Maven"
-		url "https://mod-buildcraft.com/maven"
+		url "https://mod-buildcraft.com/maven/"
 	}
-	
-	maven {
-		name = "tehnut"
-		url = "https://tehnut.info/maven"
-	}
-	
+
 	maven {
 		name = "CoFH Maven"
-		url = "https://maven.covers1624.net"
+		url = "https://maven.covers1624.net/"
 	}
-	
-	maven {
-        name = 'IGW'
-        url = "https://maven.k-4u.nl/"
-    }
 
-    maven {
-        name = "CurseForge"
-        url = "https://minecraft.curseforge.com/api/maven/"
-    }
+	maven {
+		name = 'IGW'
+		url = "https://maven.k-4u.nl/"
+	}
+
+	maven {
+		name = "CurseForge"
+		url = "https://minecraft.curseforge.com/api/maven/"
+	}
+	maven { url = "https://maven.hypherionmc.me/" }
 }
 
 dependencies {
 	//compile ("mcp.mobius.waila:Waila:${config.version.waila}"){
     //    transitive = false
 	//}
+
+	compileOnly "org.jetbrains.kotlin:kotlin-reflect:1.3.30"
+	compileOnly "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.30"
+
+	compile group: "net.shadowfacts", name: "Forgelin", version: "1.8.4"
 	
-	deobfCompile ("mcp.mobius.waila:Hwyla:${config.version.waila}") {
+	deobfCompile ("mcp.mobius.waila:Hwyla:${config.version.waila}:api") {
 		transitive = false
 	}
 	
@@ -133,11 +145,13 @@ dependencies {
 	deobfCompile "igwmod:IGW-Mod-${config.version.minecraft}:${config.version.igw}:universal"
 
 	deobfCompile "mekanism:Mekanism:${config.version.me}"
-    deobfCompile "p455w0rd:p455w0rdslib:${config.version.pl}"
-    deobfCompile "p455w0rd:AE2WTLib:${config.version.wt}"
-	deobfCompile "p455w0rd:WirelessCraftingTerminal:${config.version.wc}"
-	
-	deobfCompile ("appeng:appliedenergistics2:${config.version.ae}"){
+	deobfCompile "p455w0rd:p455w0rdslib:${config.version.pl}"
+	deobfCompile "p455w0rd:AE2WTLib:${config.version.wt}:api"
+	runtime "p455w0rd:AE2WTLib:${config.version.wt}"
+	compileOnly "p455w0rd:WirelessCraftingTerminal:${config.version.wc}:api"
+	runtime "p455w0rd:WirelessCraftingTerminal:${config.version.wc}"
+
+	deobfCompile ("appeng:appliedenergistics2:${config.version.ae}:api"){
 		transitive = false
 	}
 	
@@ -163,10 +177,17 @@ processResources {
     }
 }
 
+compileKotlin {
+	kotlinOptions {
+		jvmTarget = "1.8"
+	}
+}
+
 task apiJar(type: Jar) {
     from sourceSets.main.output
     from sourceSets.main.scala
     from sourceSets.main.java
+    from sourceSets.main.kotlin
     classifier = 'api'
 	include 'extracells/api/**'
 }
