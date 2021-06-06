@@ -11,5 +11,4 @@
 !/build.sh
 !/build.properties
 !/changelog.txt
-
-run
+!/gradle.properties

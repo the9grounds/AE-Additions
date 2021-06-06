@@ -71,6 +71,7 @@ minecraft {
 
 	runs {
         client {
+
             workingDirectory project.file('run')
 
             // Recommended logging data for a userdev environment
@@ -78,6 +79,12 @@ minecraft {
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
+
+			mods {
+				extracells {
+					source sourceSets.main
+				}
+			}
         }
 
         server {
@@ -90,6 +97,8 @@ minecraft {
         }
     }
 }
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
 	
 repositories {
 	jcenter()
@@ -168,7 +177,7 @@ dependencies {
 	compileOnly fg.deobf("li.cil.oc:OpenComputers:${project.properties['version.oc']}")
 
 	compileOnly "mezz.jei:jei_${project.properties['version.minecraft']}:${project.properties['version.jei']}:api"
-	runtime "mezz.jei:jei_${project.properties['version.minecraft']}:${project.properties['version.jei']}"
+//	runtime "mezz.jei:jei_${project.properties['version.minecraft']}:${project.properties['version.jei']}"
 
 	compileOnly "com.mod-buildcraft:buildcraft-api:${project.properties['version.bc']}"
 	runtime "com.mod-buildcraft:buildcraft:${project.properties['version.bc']}"
