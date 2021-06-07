@@ -28,14 +28,16 @@ class PartGasImport: PartFluidImport(), IGasHandler, ITubeConnection {
     private val isMekanismEnabled = Integration.Mods.MEKANISMGAS.isEnabled
 
     override fun doWork(rate: Int, ticksSinceLastCall: Int): Boolean {
-        if ((!isMekanismEnabled) || facingGasTank == null || isActive) {
+        if ((!isMekanismEnabled) || facingGasTank == null || !isActive) {
             return false
         }
 
         var empty = true
         val filter = mutableListOf<Fluid>()
 
-        filter.add(this.filterFluids[4])
+        if (this.filterFluids[4] != null) {
+            filter.add(this.filterFluids[4])
+        }
 
         if (this.filterSize >= 1) {
             var i = 1.toByte()

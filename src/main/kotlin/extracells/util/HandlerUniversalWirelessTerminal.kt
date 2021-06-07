@@ -10,7 +10,8 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 
 object HandlerUniversalWirelessTerminal : IWirelessTermHandler, IWirelessFluidTermHandler, IWirelessGasTermHandler {
-    private val terminal = ItemEnum.UNIVERSALTERMINAL.item as ItemWirelessTerminalUniversal
+    private val terminal
+    get() = ItemEnum.UNIVERSALTERMINAL.item as ItemWirelessTerminalUniversal
 
     override fun getEncryptionKey(item: ItemStack): String = terminal.getEncryptionKey(item)
 

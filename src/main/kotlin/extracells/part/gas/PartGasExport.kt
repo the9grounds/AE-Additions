@@ -30,7 +30,15 @@ class PartGasExport : PartFluidExport(), ITubeConnection {
     protected fun work(rate: Int, ticksSinceLastCall: Int): Boolean {
         val facingTank: IGasHandler = facingGasTank ?: return false
 
+        if (!isActive) {
+            return false
+        }
+
         val filter = mutableListOf<Fluid?>()
+
+        if (this.filterFluids[4] != null) {
+            filter.add(this.filterFluids[4])
+        }
 
         if (this.filterSize >= 1) {
             var i: Byte = 1.toByte()

@@ -96,11 +96,11 @@ class AEGasStack : IAEGasStack {
     }
 
     override fun isCraftable(): Boolean {
-        return isCraftable
+        return canCraft
     }
 
     override fun setCraftable(isCraftable: Boolean): IAEGasStack {
-        this.isCraftable = isCraftable
+        this.canCraft = isCraftable
 
         return this
     }

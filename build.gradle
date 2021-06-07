@@ -1,50 +1,52 @@
 buildscript {
     repositories {
         jcenter()
-		maven { url = 'https://maven.minecraftforge.net' }
+        maven { url = "http://files.minecraftforge.net/maven" }
         maven { url "https://plugins.gradle.org/m2/" }
-		mavenLocal()
-		mavenCentral()
     }
     dependencies {
-//        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
-		classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.1.+', changing: true
-//		classpath 'gradle.plugin.com.matthewprenger:CurseGradle:1.0.9'
-		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.10"
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+//        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.1.+', changing: true
+        classpath 'gradle.plugin.com.matthewprenger:CurseGradle:1.0.9'
     }
 }
 
 plugins {
-	id "org.jetbrains.kotlin.jvm" version "1.5.10"
+    id "org.jetbrains.kotlin.jvm" version "1.3.50"
 }
 
 
 //apply plugin: 'scala'
-//apply plugin: 'net.minecraftforge.gradle.forge'
-apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'net.minecraftforge.gradle.forge'
+//apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'idea'
-//apply plugin: 'com.matthewprenger.cursegradle'
+apply plugin: 'com.matthewprenger.cursegradle'
 
-//buildProps.withReader {
-//    def prop = new Properties()
-//    prop.load(it)
-//    ext.config = new ConfigSlurper().parse prop
-//}
+//compileScala.dependsOn.remove("compileJava")
+//compileKotlin.dependsOn compileScala
 
-version = "${project.properties['version.minecraft']}-${project.properties['version.mod.major']}.${project.properties['version.mod.minor']}.${project.properties['version.mod.revis']}." + getBuildNumber()
+ext.buildProps = file "gradle.properties"
+
+buildProps.withReader {
+    def prop = new Properties()
+    prop.load(it)
+    ext.config = new ConfigSlurper().parse prop
+}
+
+version = "${config.version.minecraft}-${config.version.mod.major}.${config.version.mod.minor}.${config.version.mod.revis}." + getBuildNumber()
 group = "extracells"
 archivesBaseName = "ExtraCells"
 def actualVersion = version
 
 
 task outputVersionToFile {
-	def versionFile = new File("version.txt")
-	versionFile.write("${project.properties['version.mod.major']}.${project.properties['version.mod.minor']}.${project.properties['version.mod.revis']}")
-	
-	def oldVersion = new File("versionOld.txt")
-	if(!oldVersion.exists()) {
-		oldVersion.write("0.0.0")
-	}
+    def versionFile = new File("version.txt")
+    versionFile.write("${config.version.mod.major}.${config.version.mod.minor}.${config.version.mod.revis}")
+
+    def oldVersion = new File("versionOld.txt")
+    if(!oldVersion.exists()) {
+        oldVersion.write("0.0.0")
+    }
 }
 //build.dependsOn outputVersionToFile
 
@@ -58,172 +60,113 @@ logger.lifecycle "$archivesBaseName-$version"
 logger.lifecycle "" + version
 
 minecraft {
-//    version = "${project.properties['version.minecraft']}-${project.properties['version.forge']}"
-//    runDir = "../../MinecraftDebug/run_client"
+    version = "${config.version.minecraft}-${config.version.forge}"
+//    runDir = "../MinecraftDebug/run_client"
+    runDir = "run"
 //	mappings = "${config.version.mappings}"
-//	mappings channel: 'snapshot', version: '20171003-1.12'
-	mappings channel: 'snapshot', version: '20180814-1.12'
-//	mappings channel: 'stable', version: '39-1.12'
+    mappings = 'snapshot_20180814'
 
-//	replace '@VERSION@', "${project.properties['version.mod.major']}.${project.properties['version.mod.minor']}.${project.properties['version.mod.revis']}"
-
-	runs {
-        client {
-
-            workingDirectory project.file('run')
-
-            // Recommended logging data for a userdev environment
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-
-            // Recommended logging level for the console
-            property 'forge.logging.console.level', 'debug'
-
-			mods {
-				extracells {
-					source sourceSets.main
-				}
-			}
-        }
-
-        server {
-
-			workingDirectory project.file('run')
-
-            // Recommended logging data for a userdev environment
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-
-            // Recommended logging level for the console
-            property 'forge.logging.console.level', 'debug'
-
-			mods {
-				extracells {
-					source sourceSets.main
-				}
-			}
-        }
-
-		data {
-
-			workingDirectory project.file('run')
-			args '--mod', 'extracells', '--all', '--output', file('src/generated/resources/'), "--existing", file("src/main/resources")
-
-			mods {
-				extracells {
-					source sourceSets.main
-				}
-			}
-		}
-    }
+    replace '@VERSION@', "${config.version.mod.major}.${config.version.mod.minor}.${config.version.mod.revis}"
 }
 
-sourceSets.main.resources { srcDir 'src/generated/resources' }
-	
 repositories {
-	jcenter()
-	mavenLocal()
-	mavenCentral()
-	maven { url = "http://files.minecraftforge.net/maven" }
-	maven {
-		name = 'kotlinforforge'
-		url = 'https://thedarkcolour.github.io/KotlinForForge/'
-	}
-	maven {
-		url "http://maven.shadowfacts.net/"
-	}
-	flatDir {
-		dirs 'libs'
-	}
-	maven {
-		name 'Mobius Repo'
-		url "https://www.mobiusstrip.eu/maven/"
-	}
+    jcenter()
+    maven {
+        url "http://maven.shadowfacts.net/"
+    }
+    flatDir {
+        dirs 'libs'
+    }
+    maven {
+        name 'Mobius Repo'
+        url "https://www.mobiusstrip.eu/maven/"
+    }
 
-	maven { url = "https://www.cursemaven.com" }
+    maven {
+        name 'Open Computers'
+        url "https://maven.cil.li/"
+    }
 
-	maven {
-		name 'Open Computers'
-		url "https://maven.cil.li/"
-	}
+    maven {
+        name 'prog'
+        url "https://dvs1.progwml6.com/files/maven/"
+    }
 
-	maven {
-		name 'prog'
-		url "https://dvs1.progwml6.com/files/maven/"
-	}
+    maven {
+        name 'amadornes'
+        url "https://maven.amadornes.com/"
+    }
 
-	maven {
-		name 'amadornes'
-		url "https://maven.amadornes.com/"
-	}
+    maven  {
+        name "BuildCraft Maven"
+        url "https://mod-buildcraft.com/maven/"
+    }
 
-	maven  {
-		name "BuildCraft Maven"
-		url "https://mod-buildcraft.com/maven/"
-	}
+    maven {
+        name = "CoFH Maven"
+        url = "https://maven.covers1624.net/"
+    }
 
-	maven {
-		name = "CoFH Maven"
-		url = "https://maven.covers1624.net/"
-	}
+    maven {
+        name = 'IGW'
+        url = "https://maven.k-4u.nl/"
+    }
 
-	maven {
-		name = 'IGW'
-		url = "https://maven.k-4u.nl/"
-	}
-
-	maven {
-		name = "CurseForge"
-		url = "https://minecraft.curseforge.com/api/maven/"
-	}
-	maven { url = "https://maven.hypherionmc.me/" }
+    maven {
+        name = "CurseForge"
+        url = "https://minecraft.curseforge.com/api/maven/"
+    }
+    maven { url = "https://www.cursemaven.com" }
+    maven { url = "https://maven.hypherionmc.me/" }
 }
 
 dependencies {
-	//compile ("mcp.mobius.waila:Waila:${config.version.waila}"){
+    //compile ("mcp.mobius.waila:Waila:${config.version.waila}"){
     //    transitive = false
-	//}
+    //}
 
-	minecraft "net.minecraftforge:forge:${project.properties['version.minecraft']}-${project.properties['version.forge']}"
+    compileOnly "org.jetbrains.kotlin:kotlin-reflect:${config.kotlin_version}"
+    compileOnly "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${config.kotlin_version}"
 
-	compileOnly "org.jetbrains.kotlin:kotlin-reflect:${project.properties['kotlin_version']}"
-	compileOnly "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${project.properties['kotlin_version']}"
+    compile group: "net.shadowfacts", name: "Forgelin", version: "1.8.4"
 
-	compile group: "net.shadowfacts", name: "Forgelin", version: "1.8.4"
-	
-	compile fg.deobf("mcp.mobius.waila:Hwyla:${project.properties['version.waila']}:api")
-	
-	compile fg.deobf("cofh:RedstoneFlux:${project.properties['version.rf']}:universal")
-	
-	compileOnly ("cofh:CoFHCore:${project.properties['version.cofh']}:deobf")
+    deobfCompile ("mcp.mobius.waila:Hwyla:${config.version.waila}:api") {
+        transitive = false
+    }
 
-	compileOnly fg.deobf('thedarkcolour:kotlinforforge:1.1.0')
-	
-	//deobfProvided ("li.cil.oc:OpenComputers:${config.version.oc}:api")
-	compileOnly fg.deobf("li.cil.oc:OpenComputers:${project.properties['version.oc']}")
+    deobfCompile "cofh:RedstoneFlux:${config.version.rf}:universal"
 
-	compileOnly fg.deobf("mezz.jei:jei_${project.properties['version.minecraft']}:${project.properties['version.jei']}:api")
-	runtime "mezz.jei:jei_${project.properties['version.minecraft']}:${project.properties['version.jei']}"
+    compileOnly ("cofh:CoFHCore:${config.version.cofh}:deobf") {
+        transitive = false
+    }
 
-	compileOnly "com.mod-buildcraft:buildcraft-api:${project.properties['version.bc']}"
-	runtime "com.mod-buildcraft:buildcraft:${project.properties['version.bc']}"
-	
-	compile fg.deobf("igwmod:IGW-Mod-${project.properties['version.minecraft']}:${project.properties['version.igw']}:universal")
+    //deobfProvided ("li.cil.oc:OpenComputers:${config.version.oc}:api")
+    deobfProvided ("li.cil.oc:OpenComputers:${config.version.oc}")
 
-//	compile fg.deobf("mekanism:Mekanism:${project.properties['version.me']}")
-	compile fg.deobf("curse.maven:mekanism-268560:${project.properties['version.me']}")
-	compile fg.deobf("p455w0rd:p455w0rdslib:${project.properties['version.pl']}")
-	compile "p455w0rd:AE2WTLib:${project.properties['version.wt']}:api"
-	runtime "p455w0rd:AE2WTLib:${project.properties['version.wt']}"
-	compileOnly "p455w0rd:WirelessCraftingTerminal:${project.properties['version.wc']}:api"
-	runtime "p455w0rd:WirelessCraftingTerminal:${project.properties['version.wc']}"
+    deobfProvided "mezz.jei:jei_${config.version.minecraft}:${config.version.jei}:api"
+//    runtime "mezz.jei:jei_${config.version.minecraft}:${config.version.jei}"
 
-	compile fg.deobf("curse.maven:applied-energistics-2-223794:2747063")
+    deobfProvided "com.mod-buildcraft:buildcraft-api:${config.version.bc}"
+    runtime "com.mod-buildcraft:buildcraft:${config.version.bc}"
 
-//	compileOnly ("appeng:appliedenergistics2:${project.properties['version.ae']}:api")
-//	compile fg.deobf("appeng:appliedenergistics2:${project.properties['version.ae']}")
+    deobfCompile "igwmod:IGW-Mod-${config.version.minecraft}:${config.version.igw}:universal"
 
-	compile fg.deobf("MCMultiPart2:MCMultiPart:${project.properties['version.mcmp']}")
-//	compile fg.deobf("baubles:Baubles:1.12:${project.properties['version.baubles']}")
-	compile fg.deobf("curse.maven:baubles-227083:${project.properties['version.baubles']}")
+//    deobfCompile "mekanism:Mekanism:${config.version.me}"
+    deobfCompile "curse.maven:mekanism-268560:${config.version.me}"
+    deobfCompile "p455w0rd:p455w0rdslib:${config.version.pl}"
+    deobfCompile "p455w0rd:AE2WTLib:${config.version.wt}:api"
+    runtime "p455w0rd:AE2WTLib:${config.version.wt}"
+    compileOnly "p455w0rd:WirelessCraftingTerminal:${config.version.wc}:api"
+    runtime "p455w0rd:WirelessCraftingTerminal:${config.version.wc}"
+
+//    deobfCompile ("appeng:appliedenergistics2:${config.version.ae}:api"){
+//        transitive = false
+//    }
+    deobfCompile "curse.maven:applied-energistics-2-223794:2747063"
+
+    deobfCompile "MCMultiPart2:MCMultiPart:${config.version.mcmp}"
+//    deobfCompile "baubles:Baubles:1.12:${config.version.baubles}"
+    deobfCompile "curse.maven:baubles-227083:${config.version.baubles}"
 }
 
 processResources {
@@ -232,8 +175,7 @@ processResources {
         include '**/*.info'
         include '**/*.properties'
 
-//		expand 'version': version, 'minecraft_version': project.minecraft_version_range, 'forge_version': project.forge_version_range,
-//				'jei_version': project.jei_version_range, 'top_version': project.top_version_range
+        expand 'version': project.version, 'mcversion': project.minecraft.version
     }
 
     from(sourceSets.main.resources.srcDirs) {
@@ -241,57 +183,44 @@ processResources {
         include '**/*.info'
         include '**/*.properties'
 
-//        expand 'version': "${project.properties['version.mod.major']}.${project.properties['version.mod.minor']}.${project.properties['version.mod.revis']}", 'mcversion': project.minecraft.version
+        expand 'version': "${config.version.mod.major}.${config.version.mod.minor}.${config.version.mod.revis}", 'mcversion': project.minecraft.version
     }
-
-	from(sourceSets.main.resources.srcDirs) {
-
-		include 'mcmod.info'
-
-		// TODO: Replace version
-	}
-
-	from(sourceSets.main.resources.srcDirs) {
-		exclude 'mcmod.info'
-	}
 }
 
 compileKotlin {
-	kotlinOptions {
-		jvmTarget = "1.8"
-	}
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 }
-
-
 
 task apiJar(type: Jar) {
     from sourceSets.main.output
     from sourceSets.main.java
     from sourceSets.main.kotlin
     classifier = 'api'
-	include 'extracells/api/**'
+    include 'extracells/api/**'
 }
 
-//if (System.getenv("CURSEFORGE_API_KEY") != null) {
-//	curseforge {
-//	  apiKey = System.getenv("CURSEFORGE_API_KEY")
-//	  project {
-//		id = config.cf.project.id
-//		addGameVersion project.properties['version.minecraft']
-//		changelog = file('changelog.txt')
-//		releaseType = config.cf.project.type
-//		relations {
-//			requiredLibrary 'applied-energistics-2'
-//		}
-//		addArtifact(apiJar) {
-//			releaseType = 'alpha'
-//		}
-//		mainArtifact(jar) {
-//			displayName = "$archivesBaseName-${project.properties['version.minecraft']}-${project.properties['version.mod.major']}.${project.properties['version.mod.minor']}.${project.properties['version.mod.revis']}"
-//		}
-//	  }
-//	}
-//}
+if (System.getenv("CURSEFORGE_API_KEY") != null) {
+    curseforge {
+        apiKey = System.getenv("CURSEFORGE_API_KEY")
+        project {
+            id = config.cf.project.id
+            addGameVersion config.version.minecraft
+            changelog = file('changelog.txt')
+            releaseType = config.cf.project.type
+            relations {
+                requiredLibrary 'applied-energistics-2'
+            }
+            addArtifact(apiJar) {
+                releaseType = 'alpha'
+            }
+            mainArtifact(jar) {
+                displayName = "$archivesBaseName-${config.version.minecraft}-${config.version.mod.major}.${config.version.mod.minor}.${config.version.mod.revis}"
+            }
+        }
+    }
+}
 
 artifacts {
     archives apiJar
@@ -304,7 +233,7 @@ def getBuildNumber() {
     else if (System.getenv("DRONE_BUILD_NUMBER") != null) {
         return "${System.getenv("DRONE_BUILD_NUMBER")}"
     }
-	else if (System.getenv("APPVEYOR_BUILD_NUMBER") != null) {
+    else if (System.getenv("APPVEYOR_BUILD_NUMBER") != null) {
         return "${System.getenv("APPVEYOR_BUILD_NUMBER")}"
     }
     return "NIGHTLY"
@@ -315,39 +244,4 @@ def getBuildNumber() {
 //        outputDir = file('build/classes/main')
 //    }
 //}
-
-jar {
-	from sourceSets.main.output.classesDirs
-	from sourceSets.main.output.resourcesDir
-	include "extracells/**"
-	include "assets/**"
-	include "mcmod.info"
-	include "pack.mcmeta"
-	manifest {
-		attributes([
-				"Specification-Title": "extracells",
-				"Specification-Vendor": "extracells",
-				"Specification-Version": "1", // We are version 1 of ourselves
-				"Implementation-Title": project.name,
-				"Implementation-Version": "${version}",
-				"Implementation-Vendor" :"extracells",
-				"Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-		])
-	}
-}
-
-//sourceSets {
-//	main {
-//		java {
-//			srcDir 'src/main/java'
-//		}
-//
-//		resources {
-//			srcDir 'src/main/resources'
-//		}
-//
-//		output.resourcesDir = output.classesDirs[0]
-//	}
-//}
-
-sourceSets { main { output.resourcesDir = file("build/resources/main") } }
+sourceSets { main { output.resourcesDir = output.classesDir } }
