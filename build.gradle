@@ -143,7 +143,7 @@ dependencies {
     deobfProvided "com.mod-buildcraft:buildcraft-api:${config.version.bc}"
     runtime "com.mod-buildcraft:buildcraft:${config.version.bc}"
 
-    deobfCompile "igwmod:IGW-Mod-${config.version.minecraft}:${config.version.igw}:universal"
+//    deobfCompile "igwmod:IGW-Mod-${config.version.minecraft}:${config.version.igw}:universal"
 
 //    deobfCompile "mekanism:Mekanism:${config.version.me}"
     deobfCompile "curse.maven:mekanism-268560:${config.version.me}"
