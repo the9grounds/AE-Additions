@@ -228,16 +228,19 @@ artifacts {
 
 def getBuildNumber() {
 
+    if (System.getenv("CI") == null) {
+        return "${config.version.minecraft}-LOCAL"
+    }
 
     if (System.getenv("CI_MERGE_REQUEST_IID") != null) {
-        return "pr-${System.getenv("CI_COMMIT_BRANCH")}-${System.getenv("CI_COMMIT_SHORT_SHA")}"
+        return "${config.version.minecraft}-pr-${System.getenv("CI_COMMIT_BRANCH")}-${System.getenv("CI_COMMIT_SHORT_SHA")}"
     }
 
     if (System.getenv("CI_COMMIT_TAG") != null) {
         return null
     }
 
-    return "ci-${System.getenv("CI_COMMIT_BRANCH")}-${System.getenv("CI_COMMIT_SHORT_SHA")}"
+    return "${config.version.minecraft}-ci-${System.getenv("CI_COMMIT_BRANCH")}-${System.getenv("CI_COMMIT_SHORT_SHA")}"
 }
 
 def getVersion() {
