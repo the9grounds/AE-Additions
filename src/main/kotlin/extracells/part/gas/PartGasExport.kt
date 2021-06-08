@@ -69,7 +69,7 @@ class PartGasExport : PartFluidExport(), ITubeConnection {
                 val stack = extractGas(StorageChannels.GAS!!.createStack(FluidStack(fluid, rate * ticksSinceLastCall)), Actionable.SIMULATE)
 
                 if (stack != null) {
-                    val gasStack = stack.gas as GasStack
+                    val gasStack = stack.gasStack as GasStack
 
                     if (gasStack != null && facingTank.canReceiveGas(facing.opposite, gasStack.gas)) {
                         val filled = facingTank.receiveGas(facing.opposite, gasStack, true)

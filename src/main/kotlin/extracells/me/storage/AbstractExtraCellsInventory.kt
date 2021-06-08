@@ -16,7 +16,7 @@ abstract class AbstractExtraCellsInventory<T : IAEStack<T>?>(cellType: IExtraCel
     protected var container: ISaveProvider? = null
     private var maxItemTypes = MAX_ITEM_TYPES
     private var storedItems: Short = 0
-    private var storedItemCount = 0
+    private var storedItemCount = 0L
     private var i: ItemStack? = null
     protected var cellType: IExtraCellsStorageCell<T>? = null
     protected var itemsPerByte = 0
@@ -69,7 +69,7 @@ abstract class AbstractExtraCellsInventory<T : IAEStack<T>?>(cellType: IExtraCel
         this.container = container
         tagCompound = Platform.openNbtData(o)
         storedItems = tagCompound!!.getShort(ITEM_TYPE_TAG)
-        storedItemCount = tagCompound!!.getInteger(ITEM_COUNT_TAG)
+        storedItemCount = tagCompound!!.getLong(ITEM_COUNT_TAG)
         cellItems = null
     }
 
@@ -85,16 +85,16 @@ abstract class AbstractExtraCellsInventory<T : IAEStack<T>?>(cellType: IExtraCel
         if (isPersisted) {
             return
         }
-        var itemCount = 0
+        var itemCount = 0L
 
         // add new pretty stuff...
         var x = 0
         for (v in cellItems!!) {
-            itemCount += v!!.getStackSize().toInt()
+            itemCount += v!!.getStackSize()
             val g = NBTTagCompound()
             v.writeToNBT(g)
             tagCompound!!.setTag(ITEM_SLOT_KEYS[x], g)
-            tagCompound!!.setInteger(ITEM_SLOT_COUNT_KEYS[x], v.getStackSize().toInt())
+            tagCompound!!.setLong(ITEM_SLOT_COUNT_KEYS[x], v.getStackSize())
             x++
         }
         val oldStoredItems = storedItems
@@ -105,10 +105,10 @@ abstract class AbstractExtraCellsInventory<T : IAEStack<T>?>(cellType: IExtraCel
             tagCompound!!.setShort(ITEM_TYPE_TAG, storedItems)
         }
         storedItemCount = itemCount
-        if (itemCount == 0) {
+        if (itemCount == 0L) {
             tagCompound!!.removeTag(ITEM_COUNT_TAG)
         } else {
-            tagCompound!!.setInteger(ITEM_COUNT_TAG, itemCount)
+            tagCompound!!.setLong(ITEM_COUNT_TAG, itemCount)
         }
 
         // clean any old crusty stuff...

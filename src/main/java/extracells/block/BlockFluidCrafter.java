@@ -88,7 +88,7 @@ public class BlockFluidCrafter extends BlockEC {
 		}
 
 		ItemStack current = player.getHeldItem(hand);
-		if (!player.isSneaking()) {
+		if (player.isSneaking()) {
 			TileEntity tile = world.getTileEntity(pos);
 			if (!PermissionUtil.hasPermission(player, SecurityPermissions.BUILD, tile)) {
 				return false;

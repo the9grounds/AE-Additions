@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import extracells.block.BlockHardMEDrive;
+import net.minecraft.block.Block;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -42,7 +43,16 @@ public class HardDriveBakedModel implements IBakedModel {
 		if (side == null && state instanceof IExtendedBlockState) {
 			IExtendedBlockState extState = (IExtendedBlockState) state;
 			DriveSlotsState slotsState = extState.getValue(PropertyDrive.INSTANCE);
-			EnumFacing direction = extState.getValue(BlockHardMEDrive.INSTANCE.getFacing());
+
+			Block block = extState.getBlock();
+
+			if (!(block instanceof BlockHardMEDrive)) {
+				return result;
+			}
+
+			BlockHardMEDrive blockHardMEDrive = (BlockHardMEDrive) block;
+
+			EnumFacing direction = extState.getValue(blockHardMEDrive.getFacing());
 
 			if (slotsState == null)
 				return result;

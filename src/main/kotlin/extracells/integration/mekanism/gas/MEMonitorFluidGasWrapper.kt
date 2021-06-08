@@ -15,7 +15,7 @@ import extracells.util.StorageChannels
 
 class MEMonitorFluidGasWrapper(val gasMonitor: IMEMonitor<IAEGasStack>) : IMEMonitor<IAEFluidStack>, IMEMonitorHandlerReceiver<IAEGasStack> {
 
-    final val listeners = mutableMapOf<IMEMonitorHandlerReceiver<IAEFluidStack>, Any>()
+    final val listeners = mutableMapOf<IMEMonitorHandlerReceiver<IAEFluidStack>, Any?>()
 
     override fun injectItems(fluidStack: IAEFluidStack?, actionable: Actionable?, actionSource: IActionSource?): IAEFluidStack {
         return GasUtil.createAEFluidStack(gasMonitor.injectItems(GasUtil.createAEGasStack(fluidStack), actionable, actionSource))
@@ -43,7 +43,7 @@ class MEMonitorFluidGasWrapper(val gasMonitor: IMEMonitor<IAEGasStack>) : IMEMon
 
     override fun validForPass(i: Int): Boolean = gasMonitor.validForPass(i)
 
-    override fun addListener(listener: IMEMonitorHandlerReceiver<IAEFluidStack>, verificationToken: Any) {
+    override fun addListener(listener: IMEMonitorHandlerReceiver<IAEFluidStack>, verificationToken: Any?) {
         this.listeners[listener] = verificationToken
         // TODO: Look at this
         if (listeners.isEmpty()) {

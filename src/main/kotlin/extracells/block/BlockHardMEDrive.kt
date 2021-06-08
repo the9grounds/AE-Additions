@@ -35,7 +35,7 @@ import net.minecraftforge.common.property.ExtendedBlockState
 import net.minecraftforge.common.property.IExtendedBlockState
 import kotlin.random.Random
 
-object BlockHardMEDrive : BlockEC(Material.ROCK, 2.0f, 1000000f) {
+class BlockHardMEDrive : BlockEC(Material.ROCK, 2.0f, 1000000f) {
 
     private var _facing: PropertyDirection? = null
 

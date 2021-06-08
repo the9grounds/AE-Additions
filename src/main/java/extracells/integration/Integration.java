@@ -3,6 +3,7 @@ package extracells.integration;
 import extracells.integration.appeng.AppEng;
 import extracells.integration.buildcraft.tools.BuildcraftTools;
 import extracells.integration.cofh.item.CofhItem;
+import extracells.integration.enderio.EnderIO;
 import extracells.integration.opencomputers.OpenComputers;
 import extracells.util.Log;
 import net.minecraftforge.common.config.Configuration;
@@ -29,7 +30,8 @@ public class Integration {
 		WIRELESSCRAFTING("wct", "AE2 Wireless Crafting Terminal"),
 		JEI("jei", "Just Enough Items", Side.CLIENT),
 		BUILDCRAFTTOOLS("BuildCraftAPI|tools", "BuildCraft Wrench"),
-		COFHITEM("cofhapi|item", "COFH Hammer");
+		COFHITEM("cofhapi|item", "COFH Hammer"),
+		ENDERIO("enderio", "Ender IO");
 
 		private final String modID;
 
@@ -120,6 +122,10 @@ public class Integration {
 			BuildcraftTools.init();
 		if (Mods.COFHITEM.isEnabled())
 			CofhItem.init();
+		// Shift-Right click doesn't work with yeta wrench
+		if (Mods.ENDERIO.isEnabled()) {
+			EnderIO.init();
+		}
 
 		AppEng.init();
 	}

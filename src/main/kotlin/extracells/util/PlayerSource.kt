@@ -6,7 +6,7 @@ import com.google.common.base.Preconditions
 import net.minecraft.entity.player.EntityPlayer
 import java.util.*
 
-class PlayerSource(private val playerObj: EntityPlayer, val via: IActionHost) : IActionSource {
+class PlayerSource(private val playerObj: EntityPlayer, val via: IActionHost?) : IActionSource {
 
     init {
         Preconditions.checkNotNull(playerObj)

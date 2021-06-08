@@ -33,7 +33,7 @@ buildProps.withReader {
     ext.config = new ConfigSlurper().parse prop
 }
 
-version = "${config.version.minecraft}-${config.version.mod.major}.${config.version.mod.minor}.${config.version.mod.revis}." + getBuildNumber()
+version = getVersion()
 group = "extracells"
 archivesBaseName = "ExtraCells"
 def actualVersion = version
@@ -61,9 +61,7 @@ logger.lifecycle "" + version
 
 minecraft {
     version = "${config.version.minecraft}-${config.version.forge}"
-//    runDir = "../MinecraftDebug/run_client"
     runDir = "run"
-//	mappings = "${config.version.mappings}"
     mappings = 'snapshot_20180814'
 
     replace '@VERSION@', "${config.version.mod.major}.${config.version.mod.minor}.${config.version.mod.revis}"
@@ -80,6 +78,11 @@ repositories {
     maven {
         name 'Mobius Repo'
         url "https://www.mobiusstrip.eu/maven/"
+    }
+
+    maven {
+        name 'Ender IO'
+        url = "https://maven.tterrag.com/"
     }
 
     maven {
@@ -121,10 +124,6 @@ repositories {
 }
 
 dependencies {
-    //compile ("mcp.mobius.waila:Waila:${config.version.waila}"){
-    //    transitive = false
-    //}
-
     compileOnly "org.jetbrains.kotlin:kotlin-reflect:${config.kotlin_version}"
     compileOnly "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${config.kotlin_version}"
 
@@ -167,6 +166,14 @@ dependencies {
     deobfCompile "MCMultiPart2:MCMultiPart:${config.version.mcmp}"
 //    deobfCompile "baubles:Baubles:1.12:${config.version.baubles}"
     deobfCompile "curse.maven:baubles-227083:${config.version.baubles}"
+
+    deobfProvided ("com.enderio:EnderIO:1.12.2-5.3.70:api") {
+        transitive = false
+    }
+
+    runtime ("com.enderio:EnderIO:1.12.2-5.3.70") {
+        transitive = false
+    }
 }
 
 processResources {
@@ -179,11 +186,9 @@ processResources {
     }
 
     from(sourceSets.main.resources.srcDirs) {
-        include '**/*.lang'
-        include '**/*.info'
-        include '**/*.properties'
-
-        expand 'version': "${config.version.mod.major}.${config.version.mod.minor}.${config.version.mod.revis}", 'mcversion': project.minecraft.version
+        exclude '**/*.lang'
+        exclude '**/*.info'
+        exclude '**/*.properties'
     }
 }
 
@@ -227,16 +232,27 @@ artifacts {
 }
 
 def getBuildNumber() {
-    if (System.getenv("BUILD_NUMBER") != null) {
-        return "${System.getenv("BUILD_NUMBER")}"
+
+
+    if (System.getenv("CI_MERGE_REQUEST_IID") != null) {
+        return "pr-${System.getenv("CI_COMMIT_BRANCH")}-${System.getenv("CI_COMMIT_SHORT_SHA")}"
     }
-    else if (System.getenv("DRONE_BUILD_NUMBER") != null) {
-        return "${System.getenv("DRONE_BUILD_NUMBER")}"
+
+    if (System.getenv("CI_COMMIT_TAG") != null) {
+        return null
     }
-    else if (System.getenv("APPVEYOR_BUILD_NUMBER") != null) {
-        return "${System.getenv("APPVEYOR_BUILD_NUMBER")}"
+
+    return "ci-${System.getenv("CI_COMMIT_BRANCH")}-${System.getenv("CI_COMMIT_SHORT_SHA")}"
+}
+
+def getVersion() {
+    def buildNumber = getBuildNumber()
+
+    if (buildNumber == null) {
+        return "${config.version.minecraft}-${config.version.mod.major}.${config.version.mod.minor}.${config.version.mod.revis}"
     }
-    return "NIGHTLY"
+
+    return buildNumber
 }
 
 //idea {
@@ -244,4 +260,8 @@ def getBuildNumber() {
 //        outputDir = file('build/classes/main')
 //    }
 //}
-sourceSets { main { output.resourcesDir = output.classesDir } }
+//sourceSets { main { output.resourcesDir = output.classesDir } }
+
+tasks.test {
+    enabled = gradle.startParameter.taskNames.contains("test")
+}

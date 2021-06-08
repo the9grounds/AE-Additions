@@ -127,31 +127,20 @@ class PartGasImport: PartFluidImport(), IGasHandler, ITubeConnection {
     }
 
 
+    // This is bugged, it duplicates the amount
     @Optional.Method(modid = "MekanismAPI|gas")
     override fun receiveGas(side: EnumFacing?, stack: GasStack?, doTransfer: Boolean): Int {
         if (stack == null || stack.amount <= 0 || !canReceiveGas(side, stack.gas)) {
             return 0
         }
 
-        val amount = min(stack.amount, 125 + speedState * 125)
+        val copy = stack.copy()
 
-        val gasStack = StorageChannels.GAS!!.createStack(GasStack(stack.gas, amount))
+        val amount = min(copy.amount, 125 + speedState * 125)
 
-        val notInjected = if (gridBlock == null) {
-            gasStack
-        } else {
-            val monitor = gridBlock.gasMonitor
+        val gasStack = StorageChannels.GAS!!.createStack(GasStack(copy.gas, amount))
 
-            if (monitor == null) {
-                gasStack
-            } else {
-                monitor.injectItems(gasStack, Actionable.MODULATE, MachineSource(this))
-            }
-        }
-
-        if (notInjected == null) {
-            return amount
-        }
+        val notInjected = injectGas(gasStack, Actionable.MODULATE) ?: return amount
 
         return amount - notInjected.stackSize.toInt()
     }

@@ -24,8 +24,8 @@ import net.minecraft.util.math.RayTraceResult
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 
-object BlockFluidFiller : BlockEC(Material.IRON, 2.0f, 10.0f) {
-    override fun createNewTileEntity(worldIn: World, meta: Int): TileEntity? = TileEntityFluidFiller()
+class BlockFluidFiller : BlockEC(Material.IRON, 2.0f, 10.0f) {
+    override fun createNewTileEntity(worldIn: World, meta: Int): TileEntity = TileEntityFluidFiller()
 
     override fun onBlockActivated(
         world: World,

@@ -32,7 +32,7 @@ class AEGasStack : IAEGasStack {
         this.countRequestable = oldStack.countRequestable
     }
 
-    constructor(gasStack: GasStack) {
+    constructor(gasStack: GasStack?) {
 
         if (gasStack == null || gasStack.gas == null) {
             throw IllegalArgumentException("Gas is null")
@@ -195,7 +195,7 @@ class AEGasStack : IAEGasStack {
         return stack
     }
 
-    override fun getGasStack(): Any = GasStack(gas, min(Int.MAX_VALUE, stackSize.toInt()))
+    override fun getGasStack(): GasStack = GasStack(gas, min(Int.MAX_VALUE, stackSize.toInt()))
 
     override fun getGas(): Any? = gas
 

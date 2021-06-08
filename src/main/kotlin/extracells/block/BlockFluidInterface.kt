@@ -28,7 +28,7 @@ import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 import kotlin.random.Random
 
-object BlockFluidInterface: BlockEC(Material.IRON, 2.0f, 10.0f) {
+class BlockFluidInterface: BlockEC(Material.IRON, 2.0f, 10.0f) {
     override fun createNewTileEntity(worldIn: World, meta: Int): TileEntity? = TileEntityFluidInterface()
 
     override fun registerModel(item: Item?, manager: ModelManager?) {
