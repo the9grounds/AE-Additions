@@ -1,5 +1,6 @@
 package extracells.item.storage;
 
+import extracells.api.IExtraCellsStorageCell;
 import net.minecraft.item.ItemStack;
 
 import net.minecraftforge.items.IItemHandler;
@@ -12,7 +13,7 @@ import extracells.inventory.ECFluidFilterInventory;
 import extracells.inventory.InventoryPlain;
 import extracells.util.StorageChannels;
 
-public class ItemStorageCellFluid extends ItemStorageCell<IAEFluidStack> implements IStorageCell<IAEFluidStack> {
+public class ItemStorageCellFluid extends ItemStorageCell<IAEFluidStack> implements IExtraCellsStorageCell<IAEFluidStack> {
 
     public ItemStorageCellFluid() {
         super(CellDefinition.FLUID, StorageChannels.FLUID);

@@ -1,11 +1,11 @@
 package extracells.item.storage;
 
+import extracells.api.IExtraCellsStorageCell;
 import net.minecraft.item.ItemStack;
 
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
-import appeng.api.implementations.items.IStorageCell;
 import appeng.api.storage.IStorageChannel;
 
 import extracells.api.gas.IAEGasStack;
@@ -13,7 +13,7 @@ import extracells.inventory.ECGasFilterInventory;
 import extracells.inventory.InventoryPlain;
 import extracells.util.StorageChannels;
 
-public class ItemStorageCellGas extends ItemStorageCell<IAEGasStack> implements IStorageCell<IAEGasStack> {
+public class ItemStorageCellGas extends ItemStorageCell<IAEGasStack> implements IExtraCellsStorageCell<IAEGasStack> {
 
     public ItemStorageCellGas() {
         super(CellDefinition.GAS, StorageChannels.GAS);

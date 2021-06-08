@@ -3,6 +3,7 @@ package extracells.item.storage;
 import java.util.List;
 import javax.annotation.Nonnull;
 
+import extracells.api.IExtraCellsStorageCell;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
@@ -19,11 +20,9 @@ import net.minecraft.world.World;
 
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.IItemHandler;
 
 import appeng.api.AEApi;
 import appeng.api.config.FuzzyMode;
-import appeng.api.implementations.items.IStorageCell;
 import appeng.api.storage.ICellInventory;
 import appeng.api.storage.ICellInventoryHandler;
 import appeng.api.storage.ICellRegistry;
@@ -34,7 +33,7 @@ import extracells.item.ItemECBase;
 import extracells.models.ModelManager;
 import extracells.registries.ItemEnum;
 
-public abstract class ItemStorageCell<T extends IAEStack<T>> extends ItemECBase implements IStorageCell<T> {
+public abstract class ItemStorageCell<T extends IAEStack<T>> extends ItemECBase implements IExtraCellsStorageCell<T> {
     protected final CellDefinition definition;
     protected final IStorageChannel<T> channel;
 

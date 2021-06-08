@@ -5,6 +5,7 @@ import com.google.common.base.Preconditions;
 import javax.annotation.Nullable;
 import java.io.File;
 
+import extracells.me.storage.ExtraCellsCellHandler;
 import net.minecraft.util.datafix.FixTypes;
 
 import net.minecraftforge.common.MinecraftForge;
@@ -85,6 +86,7 @@ public class ExtraCells {
 	public void init(FMLInitializationEvent event) {
 		IRegistryContainer registries = AEApi.instance().registries();
 		registries.wireless().registerWirelessHandler(new AEWirelessTermHandler());
+		registries.cell().addCellHandler(new ExtraCellsCellHandler());
 		ExtraCellsEventHandler handler = new ExtraCellsEventHandler();
 		MinecraftForge.EVENT_BUS.register(handler);
 		proxy.registerMovables();
