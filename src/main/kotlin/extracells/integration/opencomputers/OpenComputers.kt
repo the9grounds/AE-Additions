@@ -9,8 +9,6 @@ import li.cil.oc.api.driver.*
 object OpenComputers {
 
     @JvmStatic fun init() {
-        add(DriverFluidExportBus())
-        add(DriverFluidImportBus())
         add(DriverOreDictExportBus())
         add(DriverFluidInterface())
 

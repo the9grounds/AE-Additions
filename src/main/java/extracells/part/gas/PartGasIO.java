@@ -1,4 +1,4 @@
-package extracells.part.fluid;
+package extracells.part.gas;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,8 +28,8 @@ import appeng.api.util.AECableType;
 import appeng.api.util.AEPartLocation;
 import appeng.api.util.DimensionalCoord;
 import extracells.container.IUpgradeable;
-import extracells.container.fluid.ContainerBusFluidIO;
-import extracells.gui.fluid.GuiBusFluidIO;
+import extracells.container.gas.ContainerBusGasIO;
+import extracells.gui.gas.GuiBusGasIO;
 import extracells.gui.widget.fluid.IFluidSlotListener;
 import extracells.inventory.IInventoryListener;
 import extracells.inventory.InventoryPlain;
@@ -40,7 +40,7 @@ import extracells.part.PartECBase;
 import extracells.util.NetworkUtil;
 import io.netty.buffer.ByteBuf;
 
-public abstract class PartFluidIO extends PartECBase implements IGridTickable, IInventoryListener, IFluidSlotListener, IUpgradeable {
+public abstract class PartGasIO extends PartECBase implements IGridTickable, IInventoryListener, IFluidSlotListener, IUpgradeable {
 
 	public final Fluid[] filterFluids = new Fluid[9];
 	private final UpgradeInventory upgradeInventory = new UpgradeInventory(this){
@@ -109,7 +109,7 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, I
 
 	@Override
 	public Object getClientGuiElement(EntityPlayer player) {
-		return new GuiBusFluidIO(this, player);
+		return new GuiBusGasIO(this, player);
 	}
 
 	@Override
@@ -123,7 +123,7 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, I
 
 	@Override
 	public Object getServerGuiElement(EntityPlayer player) {
-		return new ContainerBusFluidIO(this, player);
+		return new ContainerBusGasIO(this, player);
 	}
 
 	@Override

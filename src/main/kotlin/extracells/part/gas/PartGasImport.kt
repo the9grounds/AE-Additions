@@ -1,18 +1,24 @@
 package extracells.part.gas
 
 import appeng.api.config.Actionable
+import appeng.api.config.SecurityPermissions
+import appeng.api.parts.IPart
+import appeng.api.parts.IPartCollisionHelper
+import appeng.api.parts.IPartModel
+import appeng.api.util.AECableType
 import extracells.integration.Integration
 import extracells.integration.mekanism.gas.Capabilities
 import extracells.integration.mekanism.gas.MekanismGas
-import extracells.part.fluid.PartFluidImport
-import extracells.util.GasUtil
-import extracells.util.MachineSource
-import extracells.util.StorageChannels
+import extracells.models.PartModels
+import extracells.util.*
 import mekanism.api.gas.Gas
 import mekanism.api.gas.GasStack
 import mekanism.api.gas.IGasHandler
 import mekanism.api.gas.ITubeConnection
+import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.EnumFacing
+import net.minecraft.util.EnumHand
+import net.minecraft.util.math.Vec3d
 import net.minecraftforge.common.capabilities.Capability
 import net.minecraftforge.fluids.Fluid
 import net.minecraftforge.fluids.FluidStack
@@ -23,7 +29,40 @@ import kotlin.math.min
     Optional.Interface(iface = "mekanism.api.gas.IGasHandler", modid = "MekanismAPI|gas", striprefs = true),
     Optional.Interface(iface = "mekanism.api.gas.ITubeConnection", modid = "MekanismAPI|gas", striprefs = true)
 ])
-class PartGasImport: PartFluidImport(), IGasHandler, ITubeConnection {
+class PartGasImport: PartGasIO(), IGasHandler, ITubeConnection {
+
+    override fun getCableConnectionLength(aeCableType: AECableType?): Float {
+        return 5.0f
+    }
+
+    override fun getBoxes(bch: IPartCollisionHelper) {
+        bch.addBox(4.0, 4.0, 14.0, 12.0, 12.0, 16.0)
+        bch.addBox(5.0, 5.0, 13.0, 11.0, 11.0, 14.0)
+        bch.addBox(6.0, 6.0, 12.0, 10.0, 10.0, 13.0)
+        bch.addBox(6.0, 6.0, 11.0, 10.0, 10.0, 12.0)
+    }
+
+    override fun getPowerUsage(): Double {
+        return 1.0
+    }
+
+    override fun onActivate(player: EntityPlayer?, enumHand: EnumHand?, pos: Vec3d?): Boolean {
+        return PermissionUtil.hasPermission(
+            player,
+            SecurityPermissions.BUILD,
+            this as IPart
+        ) && super.onActivate(player, enumHand, pos)
+    }
+
+    override fun getStaticModels(): IPartModel {
+        return if (isActive && isPowered) {
+            PartModels.IMPORT_HAS_CHANNEL
+        } else if (isPowered) {
+            PartModels.IMPORT_ON
+        } else {
+            PartModels.IMPORT_OFF
+        }
+    }
 
     private val isMekanismEnabled = Integration.Mods.MEKANISMGAS.isEnabled
 
@@ -73,7 +112,7 @@ class PartGasImport: PartFluidImport(), IGasHandler, ITubeConnection {
     }
 
     @Optional.Method(modid = "MekanismAPI|gas")
-    override fun fillToNetwork(fluid: Fluid?, toDrain: Int): Boolean {
+    fun fillToNetwork(fluid: Fluid?, toDrain: Int): Boolean {
         var drained: GasStack? = null
         val facingTank = facingGasTank
         val side = facing

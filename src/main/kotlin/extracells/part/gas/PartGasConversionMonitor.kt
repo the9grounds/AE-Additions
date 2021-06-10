@@ -4,10 +4,11 @@ import appeng.api.config.Actionable
 import appeng.api.networking.storage.IStackWatcher
 import appeng.api.networking.storage.IStorageGrid
 import appeng.api.parts.IPartHost
+import appeng.api.parts.IPartModel
 import appeng.api.storage.IMEMonitor
 import extracells.api.gas.IAEGasStack
 import extracells.integration.Integration
-import extracells.part.fluid.PartFluidConversionMonitor
+import extracells.models.PartModels
 import extracells.util.*
 import mekanism.api.gas.GasStack
 import mekanism.api.gas.IGasItem
@@ -20,9 +21,7 @@ import net.minecraft.util.text.TextComponentTranslation
 import net.minecraftforge.fml.common.Optional
 import org.apache.commons.lang3.tuple.MutablePair
 
-class PartGasConversionMonitor : PartFluidConversionMonitor() {
-
-    val isMekanismEnabled = Integration.Mods.MEKANISMGAS.isEnabled
+class PartGasConversionMonitor : PartGasStorageMonitor() {
 
     override fun onActivate(player: EntityPlayer?, hand: EnumHand?, pos: Vec3d?): Boolean {
         if (isMekanismEnabled) {
@@ -33,7 +32,7 @@ class PartGasConversionMonitor : PartFluidConversionMonitor() {
     }
 
     @Optional.Method(modid = "MekanismAPI|gas")
-    override fun wasActivated(player: EntityPlayer?, hand: EnumHand?, pos: Vec3d?): Boolean {
+    fun wasActivated(player: EntityPlayer?, hand: EnumHand?, pos: Vec3d?): Boolean {
         if (player == null || player.world == null) {
             return true
         }
@@ -42,7 +41,7 @@ class PartGasConversionMonitor : PartFluidConversionMonitor() {
         if (s == null) {
             if (this.locked) return false
             if (this.fluid == null) return true
-            if (this.watcher != null) this.watcher.remove(StorageChannels.GAS!!.createStack(this.fluid))
+            if (this.watcher != null) this.watcher!!.remove(StorageChannels.GAS!!.createStack(this.fluid!!))
             this.fluid = null
             this.amount = 0L
             val host: IPartHost = host
@@ -64,11 +63,11 @@ class PartGasConversionMonitor : PartFluidConversionMonitor() {
         }
         if (this.locked) return false
         if (GasUtil.isFilled(s)) {
-            if (this.fluid != null && this.watcher != null) this.watcher.remove(StorageChannels.GAS!!.createStack(this.fluid))
+            if (this.fluid != null && this.watcher != null) this.watcher!!.remove(StorageChannels.GAS!!.createStack(this.fluid!!))
             val gas = GasUtil.getGasFromContainer(s)
             val fluidStack = GasUtil.getFluidStack(gas)
             this.fluid = if (fluidStack == null) null else fluidStack.fluid
-            if (this.watcher != null) this.watcher.add(StorageChannels.GAS!!.createStack(this.fluid))
+            if (this.watcher != null) this.watcher!!.add(StorageChannels.GAS!!.createStack(this.fluid!!))
             val host: IPartHost = host
             if (host != null) host.markForUpdate()
             onStackChange()
@@ -78,7 +77,7 @@ class PartGasConversionMonitor : PartFluidConversionMonitor() {
     }
 
     @Optional.Method(modid = "MekanismAPI|gas")
-    fun onActivateGas(player: EntityPlayer?, hand: EnumHand?, pos: Vec3d?): Boolean {
+    override fun onActivateGas(player: EntityPlayer?, hand: EnumHand?, pos: Vec3d?): Boolean {
         val b: Boolean = wasActivated(player, hand, pos)
         if (b) {
             return b
@@ -88,7 +87,7 @@ class PartGasConversionMonitor : PartFluidConversionMonitor() {
         }
         if (player.world.isRemote) return true
         val s: ItemStack = player.getHeldItem(hand)
-        val mon: IMEMonitor<IAEGasStack> = gasStorage
+        val mon: IMEMonitor<IAEGasStack?>? = gasStorage
         if (this.locked && s != null && (!s.isEmpty) && mon != null) {
             val s2: ItemStack = s.copy()
             s2.count = 1
@@ -96,7 +95,7 @@ class PartGasConversionMonitor : PartFluidConversionMonitor() {
                 val g = GasUtil.getGasFromContainer(s2)
                 if (g == null) return true
                 val g1 = StorageChannels.GAS!!.createStack(g)
-                val not: IAEGasStack = mon.injectItems(g1!!.copy(), Actionable.SIMULATE, MachineSource(this))
+                val not: IAEGasStack? = mon.injectItems(g1!!.copy(), Actionable.SIMULATE, MachineSource(this))
                 if (mon.canAccept(g1) && (not == null || not.stackSize == 0L)) {
                     mon.injectItems(g1, Actionable.MODULATE, MachineSource(this))
                     val empty1: MutablePair<Int, ItemStack> = GasUtil.drainStack(s2, g)
@@ -154,7 +153,7 @@ class PartGasConversionMonitor : PartFluidConversionMonitor() {
         if (s == null) {
             if (this.locked) return false
             if (this.fluid == null) return true
-            if (this.watcher != null) this.watcher.remove(AEUtils.createFluidStack(this.fluid))
+            if (this.watcher != null) this.watcher!!.remove(AEUtils.createFluidStack(this.fluid))
             this.fluid = null
             this.amount = 0L
             this.host?.markForUpdate()
@@ -172,10 +171,10 @@ class PartGasConversionMonitor : PartFluidConversionMonitor() {
         }
         if (this.locked) return false
         if (GasUtil.isFilled(s)) {
-            if (this.fluid != null && this.watcher != null) this.watcher.remove(AEUtils.createFluidStack(this.fluid))
+            if (this.fluid != null && this.watcher != null) this.watcher!!.remove(AEUtils.createFluidStack(this.fluid))
             val gas = GasUtil.getGasFromContainer(s)
             this.fluid = GasUtil.getFluidStack(gas)?.fluid
-            if (this.watcher != null) this.watcher.add(AEUtils.createFluidStack(this.fluid))
+            if (this.watcher != null) this.watcher!!.add(AEUtils.createFluidStack(this.fluid))
             this.host?.markForUpdate()
             return true
         }
@@ -196,7 +195,7 @@ class PartGasConversionMonitor : PartFluidConversionMonitor() {
             val gas = GasUtil.getGas(this.fluid)
 
             for (s in fluids.storageList) {
-                if (s.gas == gas) {
+                if (s!!.gas == gas) {
                     this.amount = s.stackSize
                     host?.markForUpdate()
 
@@ -210,11 +209,21 @@ class PartGasConversionMonitor : PartFluidConversionMonitor() {
         }
     }
 
+    override fun getStaticModels(): IPartModel {
+        return if (isActive && isPowered) {
+            PartModels.CONVERSION_MONITOR_HAS_CHANNEL
+        } else if (isPowered) {
+            PartModels.CONVERSION_MONITOR_ON
+        } else {
+            PartModels.CONVERSION_MONITOR_OFF
+        }
+    }
+
     override fun updateWatcher(w: IStackWatcher?) {
         this.watcher = w
 
         if (this.fluid != null) {
-            w!!.add(StorageChannels.GAS!!.createStack(this.fluid))
+            w!!.add(StorageChannels.GAS!!.createStack(this.fluid!!))
         }
 
         onStackChange(null, null, null, null, null)

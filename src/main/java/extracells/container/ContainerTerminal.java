@@ -1,21 +1,7 @@
 package extracells.container;
 
-import javax.annotation.Nullable;
-
-import appeng.api.networking.security.IActionSource;
-import extracells.util.StorageChannels;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.ClickType;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
-
-import net.minecraftforge.fluids.Fluid;
-
-import appeng.api.AEApi;
 import appeng.api.config.SecurityPermissions;
+import appeng.api.networking.security.IActionSource;
 import appeng.api.networking.storage.IBaseMonitor;
 import appeng.api.parts.IPart;
 import appeng.api.storage.IMEMonitor;
@@ -26,19 +12,30 @@ import extracells.container.slot.SlotOutput;
 import extracells.container.slot.SlotRespective;
 import extracells.network.packet.part.PacketTerminalSelectFluidServer;
 import extracells.network.packet.part.PacketTerminalUpdateFluid;
-import extracells.part.fluid.PartFluidTerminal;
+import extracells.part.gas.PartGasTerminal;
 import extracells.util.NetworkUtil;
 import extracells.util.PermissionUtil;
+import extracells.util.StorageChannels;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.ClickType;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.Fluid;
+
+import javax.annotation.Nullable;
 
 public class ContainerTerminal extends Container implements IMEMonitorHandlerReceiver<IAEFluidStack>, IFluidSelectorContainer {
-	private PartFluidTerminal terminal;
+	private PartGasTerminal terminal;
 	private IMEMonitor<IAEFluidStack> monitor;
 	private IItemList<IAEFluidStack> fluidStackList;
 	private Fluid selectedFluid;
 	private EntityPlayer player;
 	private StorageType type;
 
-	public ContainerTerminal(PartFluidTerminal terminal, EntityPlayer player, StorageType type) {
+	public ContainerTerminal(PartGasTerminal terminal, EntityPlayer player, StorageType type) {
 		this.terminal = terminal;
 		this.player = player;
 		this.type = type;
@@ -100,7 +97,7 @@ public class ContainerTerminal extends Container implements IMEMonitorHandlerRec
 		return this.selectedFluid;
 	}
 
-	public PartFluidTerminal getTerminal() {
+	public PartGasTerminal getTerminal() {
 		return this.terminal;
 	}
 

@@ -9,12 +9,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
-import appeng.api.implementations.ICraftingPatternItem;
 import appeng.api.util.AEPartLocation;
 import extracells.api.IFluidInterface;
 import extracells.container.IContainerListener;
 import extracells.container.slot.SlotRespective;
-import extracells.gui.fluid.GuiFluidInterface;
+import extracells.gui.gas.GuiGasInterface;
 import extracells.network.packet.part.PacketFluidInterface;
 import extracells.part.fluid.PartFluidInterface;
 import extracells.tileentity.TileEntityFluidInterface;
@@ -26,7 +25,7 @@ public class ContainerFluidInterface extends Container implements
 	IContainerListener {
 	public IFluidInterface fluidInterface;
 	@SideOnly(Side.CLIENT)
-	public GuiFluidInterface gui;
+	public GuiGasInterface gui;
 	EntityPlayer player;
 
 	public ContainerFluidInterface(EntityPlayer player,

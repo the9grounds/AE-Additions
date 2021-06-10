@@ -1,4 +1,4 @@
-package extracells.gui.fluid;
+package extracells.gui.gas;
 
 import javax.annotation.Nullable;
 
@@ -6,7 +6,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.translation.I18n;
 
 import appeng.api.implementations.ICraftingPatternItem;
 import appeng.api.util.AEPartLocation;
@@ -15,21 +14,19 @@ import extracells.container.fluid.ContainerFluidInterface;
 import extracells.gui.GuiBase;
 import extracells.gui.ISlotRenderer;
 import extracells.gui.SlotOutputRenderer;
-import extracells.gui.SlotUpgradeRenderer;
 import extracells.gui.widget.WidgetFluidTank;
 import extracells.gui.widget.fluid.IFluidSlotListener;
 import extracells.gui.widget.fluid.WidgetFluidSlot;
-import extracells.registries.BlockEnum;
 
-public class GuiFluidInterface extends GuiBase<ContainerFluidInterface> {
+public class GuiGasInterface extends GuiBase<ContainerFluidInterface> {
 	private AEPartLocation partSide;
 	public WidgetFluidSlot[] filter = new WidgetFluidSlot[6];
 
-	public GuiFluidInterface(EntityPlayer player, IFluidInterface fluidInterface) {
+	public GuiGasInterface(EntityPlayer player, IFluidInterface fluidInterface) {
 		this(player, fluidInterface, AEPartLocation.INTERNAL);
 	}
 
-	public GuiFluidInterface(EntityPlayer player, IFluidInterface fluidInterface, AEPartLocation side) {
+	public GuiGasInterface(EntityPlayer player, IFluidInterface fluidInterface, AEPartLocation side) {
 		super(new ResourceLocation("extracells", "textures/gui/interfacefluid.png"), new ContainerFluidInterface(player, fluidInterface));
 		this.ySize = 230;
 		this.partSide = side;
@@ -71,8 +68,8 @@ public class GuiFluidInterface extends GuiBase<ContainerFluidInterface> {
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-		ItemStack itemStack = new ItemStack(BlockEnum.ECBASEBLOCK.getBlock());
-		this.fontRenderer.drawString(itemStack.getDisplayName().replace("ME ", ""), 8, 5, 0x000000);
-		this.fontRenderer.drawString(I18n.translateToLocal("container.inventory"), 8, 136, 0x000000);
+//		ItemStack itemStack = new ItemStack(BlockEnum.ECBASEBLOCK.getBlock());
+//		this.fontRenderer.drawString(itemStack.getDisplayName().replace("ME ", ""), 8, 5, 0x000000);
+//		this.fontRenderer.drawString(I18n.translateToLocal("container.inventory"), 8, 136, 0x000000);
 	}
 }

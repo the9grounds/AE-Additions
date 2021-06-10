@@ -12,7 +12,13 @@ public enum CellDefinition {
 			cells.add(this, 256, 1024, 4096, 16384, 65536);
 		}
 	},
-	FLUID(EnumRarity.RARE),
+	FLUID(EnumRarity.RARE) {
+		@Override
+		protected void create(StorageRegistry.Builder components, StorageRegistry.Builder cells) {
+			components.add(this,256, 1024, 4096);
+			cells.add(this, 256, 1024, 4096);
+		}
+	},
 	GAS(EnumRarity.UNCOMMON);
 
 	public static StorageRegistry components;

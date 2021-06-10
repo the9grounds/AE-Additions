@@ -38,7 +38,6 @@ object UniversalTerminal {
 
         val terminalDefinition = AEApi.instance().definitions().parts().terminal().maybeStack(1).orElse(null)
         terminals.add(terminalDefinition)
-        terminals.add(ItemEnum.PARTITEM.getDamagedStack(PartEnum.FLUIDTERMINAL.ordinal))
 
         if (isMekLoaded) {
             terminals.add(ItemEnum.PARTITEM.getDamagedStack(PartEnum.GASTERMINAL.ordinal))
@@ -66,10 +65,6 @@ object UniversalTerminal {
         }
         val aeTermFluid = AEApi.instance().definitions().parts().fluidTerminal().maybeStack(1).orElse(null)
         if (aeTermFluid != null && item == aeTermFluid.item && meta == aeTermFluid.itemDamage) {
-            return true
-        }
-        val fluidTerm = ItemEnum.PARTITEM.getDamagedStack(PartEnum.FLUIDTERMINAL.ordinal)
-        if (item == fluidTerm.item && meta == fluidTerm.itemDamage) {
             return true
         }
         val aeTermGas = ItemEnum.PARTITEM.getDamagedStack(PartEnum.GASTERMINAL.ordinal)
@@ -135,10 +130,6 @@ object UniversalTerminal {
         }
         val aeTerminalFluid = AEApi.instance().definitions().parts().fluidTerminal().maybeStack(1).orElse(null)
         if (aeTerminalFluid != null && item == aeTerminalFluid.item && meta == aeTerminalFluid.itemDamage) {
-            return WirelessTerminalType.FLUID
-        }
-        val fluidTerminal = ItemEnum.PARTITEM.getDamagedStack(PartEnum.FLUIDTERMINAL.ordinal)
-        if (item == fluidTerminal.item && meta == fluidTerminal.itemDamage) {
             return WirelessTerminalType.FLUID
         }
         val gasTerminal = ItemEnum.PARTITEM.getDamagedStack(PartEnum.GASTERMINAL.ordinal)

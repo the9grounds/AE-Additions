@@ -1,46 +1,43 @@
-package extracells.gui.fluid;
-
-import javax.annotation.Nullable;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import extracells.gui.IFluidSlotGuiTransfer;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
+package extracells.gui.gas;
 
 import appeng.api.AEApi;
 import appeng.api.config.AccessRestriction;
-import extracells.container.fluid.ContainerBusFluidStorage;
+import extracells.container.gas.ContainerBusGasStorage;
 import extracells.gui.GuiBase;
+import extracells.gui.IFluidSlotGuiTransfer;
 import extracells.gui.ISlotRenderer;
 import extracells.gui.SlotUpgradeRenderer;
 import extracells.gui.buttons.ButtonStorageDirection;
 import extracells.gui.widget.fluid.WidgetFluidSlot;
 import extracells.network.packet.other.IFluidSlotGui;
 import extracells.network.packet.part.PacketPartConfig;
-import extracells.part.fluid.PartFluidStorage;
 import extracells.part.gas.PartGasStorage;
 import extracells.registries.PartEnum;
 import extracells.util.FluidHelper;
 import extracells.util.NetworkUtil;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
 
-public class GuiBusFluidStorage extends GuiBase<ContainerBusFluidStorage> implements WidgetFluidSlot.IConfigurable, IFluidSlotGui, IFluidSlotGuiTransfer {
+import javax.annotation.Nullable;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class GuiBusGasStorage extends GuiBase<ContainerBusGasStorage> implements WidgetFluidSlot.IConfigurable, IFluidSlotGui, IFluidSlotGuiTransfer {
 
 	private EntityPlayer player;
 	private byte filterSize;
 	private List<WidgetFluidSlot> fluidSlotList = new ArrayList<WidgetFluidSlot>();
 	private boolean hasNetworkTool;
-	private final PartFluidStorage part;
+	private final PartGasStorage part;
 
-	public GuiBusFluidStorage(PartFluidStorage part, EntityPlayer _player) {
-		super(new ResourceLocation("extracells", "textures/gui/storagebusfluid.png"), new ContainerBusFluidStorage(part, _player));
+	public GuiBusGasStorage(PartGasStorage part, EntityPlayer _player) {
+		super(new ResourceLocation("extracells", "textures/gui/storagebusfluid.png"), new ContainerBusGasStorage(part, _player));
 		this.part = part;
 		container.setGui(this);
 		this.player = _player;
@@ -118,7 +115,7 @@ public class GuiBusFluidStorage extends GuiBase<ContainerBusFluidStorage> implem
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
-		PartEnum partEnum = part instanceof PartGasStorage ? PartEnum.GASSTORAGE : PartEnum.FLUIDSTORAGE;
+		PartEnum partEnum = PartEnum.GASSTORAGE;
 		fontRenderer.drawString(partEnum.getStatName().replace("ME ", ""), 8, 6, 4210752);
 		fontRenderer.drawString(player.inventory.getDisplayName().getUnformattedText(), 8, this.ySize - 96 + 3, 4210752);
 	}

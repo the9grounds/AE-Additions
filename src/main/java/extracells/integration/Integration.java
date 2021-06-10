@@ -24,7 +24,6 @@ public class Integration {
 		OPENCOMPUTERS("opencomputers"),
 		BCFUEL("BuildCraftAPI|fuels", "BuildCraftFuel"),
 		MEKANISMGAS("MekanismAPI|gas", "MekanismGas"),
-//		IGW("igwmod", "IngameWikiMod", Side.CLIENT),
 		THAUMATICENERGISTICS("thaumicenergistics", "Thaumatic Energistics"),
 		MEKANISM("mekanism"),
 		WIRELESSCRAFTING("wct", "AE2 Wireless Crafting Terminal"),

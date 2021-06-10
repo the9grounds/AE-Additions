@@ -1,22 +1,21 @@
-package extracells.container.fluid;
+package extracells.container.gas;
 
+import extracells.container.ContainerUpgradeable;
+import extracells.container.slot.SlotRespective;
 import extracells.gui.IFluidSlotGuiTransfer;
+import extracells.part.gas.PartGasStorage;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-import extracells.container.ContainerUpgradeable;
-import extracells.container.slot.SlotRespective;
-import extracells.part.fluid.PartFluidStorage;
-
-public class ContainerBusFluidStorage extends ContainerUpgradeable {
+public class ContainerBusGasStorage extends ContainerUpgradeable {
 
 	private IFluidSlotGuiTransfer guiBusFluidStorage;
 
-	public PartFluidStorage part;
+	public PartGasStorage part;
 
-	public ContainerBusFluidStorage(PartFluidStorage part, EntityPlayer player) {
+	public ContainerBusGasStorage(PartGasStorage part, EntityPlayer player) {
 
 		addSlotToContainer(new SlotRespective(part.getUpgradeInventory(), 0, 187, 8));
 		this.part = part;

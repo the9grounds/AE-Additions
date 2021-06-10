@@ -7,13 +7,12 @@ import appeng.api.networking.security.ISecurityGrid
 import appeng.api.parts.IPart
 import appeng.api.parts.IPartHost
 import appeng.api.storage.IMEMonitor
-import appeng.api.storage.data.IAEFluidStack
 import appeng.api.util.AEPartLocation
 import extracells.ExtraCells
-import extracells.api.*
+import extracells.api.IPortableGasStorageCell
+import extracells.api.IWirelessGasTermHandler
 import extracells.api.gas.IAEGasStack
 import extracells.block.IGuiBlock
-import extracells.container.fluid.ContainerFluidStorage
 import extracells.container.gas.ContainerGasStorage
 import extracells.gui.GuiStorage
 import extracells.integration.mekanism.gas.MEMonitorFluidGasWrapper
@@ -36,22 +35,6 @@ object GuiHandler: IGuiHandler {
 
     fun getContainer(id: Int, player: EntityPlayer, args: Array<Any>): Any? {
         return when(id) {
-            0 -> {
-                val fluidInventory = args[0] as IMEMonitor<IAEFluidStack>
-                ContainerFluidStorage(fluidInventory, player, hand)
-            }
-            1 -> {
-                val fluidInventory = args[0] as IMEMonitor<IAEFluidStack>
-                val handler = args[1] as IWirelessFluidTermHandler
-
-                ContainerFluidStorage(fluidInventory, player, handler, hand)
-            }
-            3 -> {
-                val fluidInventory = args[0] as IMEMonitor<IAEFluidStack>
-                val storageCell = args[1] as IPortableFluidStorageCell
-
-                ContainerFluidStorage(fluidInventory, player, storageCell, hand)
-            }
             4 -> {
                 val gasInventory = MEMonitorFluidGasWrapper(args[0] as IMEMonitor<IAEGasStack>)
                 ContainerGasStorage(gasInventory, player, hand)
@@ -75,9 +58,6 @@ object GuiHandler: IGuiHandler {
     @SideOnly(Side.CLIENT)
     fun getGui(id: Int, player: EntityPlayer): Any? {
         return when(id) {
-            0 -> GuiStorage(ContainerFluidStorage(player, hand), "extracells.part.fluid.terminal.name")
-            1 -> GuiStorage(ContainerFluidStorage(player, hand), "extracells.part.fluid.terminal.name");
-            3 -> GuiStorage(ContainerFluidStorage(player, hand), "extracells.item.storage.fluid.portable.name");
             4 -> GuiStorage(ContainerGasStorage(player, hand), "extracells.part.gas.terminal.name");
             5 -> GuiStorage(ContainerGasStorage(player, hand), "extracells.part.gas.terminal.name");
             6 -> GuiStorage(ContainerGasStorage(player, hand), "extracells.item.storage.gas.portable.name");

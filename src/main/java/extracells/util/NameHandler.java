@@ -159,27 +159,6 @@ public class NameHandler implements ISubItemResolver {
 		}
 
 		// Parts
-		if (fullName.equals("partFluidImportBus")) {
-			return new ResolverResult(ItemEnum.PARTITEM.getInternalName(), PartEnum.FLUIDIMPORT.ordinal());
-		}
-		if (fullName.equals("partFluidExportBus")) {
-			return new ResolverResult(ItemEnum.PARTITEM.getInternalName(), PartEnum.FLUIDEXPORT.ordinal());
-		}
-		if (fullName.equals("partFluidStorageBus")) {
-			return new ResolverResult(ItemEnum.PARTITEM.getInternalName(), PartEnum.FLUIDSTORAGE.ordinal());
-		}
-		if (fullName.equals("partFluidTerminal")) {
-			return new ResolverResult(ItemEnum.PARTITEM.getInternalName(), PartEnum.FLUIDTERMINAL.ordinal());
-		}
-		if (fullName.equals("partFluidLevelEmitter")) {
-			return new ResolverResult(ItemEnum.PARTITEM.getInternalName(), PartEnum.FLUIDLEVELEMITTER.ordinal());
-		}
-		if (fullName.equals("partFluidAnnihilationPlane")) {
-			return new ResolverResult(ItemEnum.PARTITEM.getInternalName(), PartEnum.FLUIDPANEANNIHILATION.ordinal());
-		}
-		if (fullName.equals("partFluidFormationPlane")) {
-			return new ResolverResult(ItemEnum.PARTITEM.getInternalName(), PartEnum.FLUIDPANEFORMATION.ordinal());
-		}
 		if (fullName.equals("partBattery")) {
 			return new ResolverResult(ItemEnum.PARTITEM.getInternalName(), PartEnum.BATTERY.ordinal());
 		}
@@ -188,12 +167,6 @@ public class NameHandler implements ISubItemResolver {
 		}
 		if (fullName.equals("partInterface")) {
 			return new ResolverResult(ItemEnum.PARTITEM.getInternalName(), PartEnum.INTERFACE.ordinal());
-		}
-		if (fullName.equals("partFluidStorageMonitor")) {
-			return new ResolverResult(ItemEnum.PARTITEM.getInternalName(), PartEnum.FLUIDMONITOR.ordinal());
-		}
-		if (fullName.equals("partFluidConversionMonitor")) {
-			return new ResolverResult(ItemEnum.PARTITEM.getInternalName(), PartEnum.FLUIDCONVERSIONMONITOR.ordinal());
 		}
 		if (fullName.equals("partOreDictExportBus")) {
 			return new ResolverResult(ItemEnum.PARTITEM.getInternalName(), PartEnum.OREDICTEXPORTBUS.ordinal());
@@ -235,12 +208,6 @@ public class NameHandler implements ISubItemResolver {
 		}
 		if (fullName.equals("wirelessGasTerminal")) {
 			return new ResolverResult(ItemEnum.GASWIRELESSTERMINAL.getInternalName(), 0);
-		}
-		if (fullName.equals("walrus")) {
-			return new ResolverResult(BlockEnum.WALRUS.getInternalName(), 0);
-		}
-		if (fullName.equals("interface")) {
-			return new ResolverResult(BlockEnum.ECBASEBLOCK.getInternalName(), 0);
 		}
 		if (fullName.equals("fluidFiller")) {
 			return new ResolverResult(BlockEnum.FILLER.getInternalName(), 1);

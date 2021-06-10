@@ -65,7 +65,7 @@ import extracells.container.fluid.ContainerFluidInterface;
 import extracells.crafting.CraftingPattern;
 import extracells.crafting.CraftingPattern2;
 import extracells.gridblock.ECFluidGridBlock;
-import extracells.gui.fluid.GuiFluidInterface;
+import extracells.gui.gas.GuiGasInterface;
 import extracells.gui.widget.fluid.IFluidSlotListener;
 import extracells.integration.Capabilities;
 import extracells.integration.waila.IWailaTile;
@@ -1112,7 +1112,7 @@ public class TileEntityFluidInterface extends TileBase implements
 	@SideOnly(Side.CLIENT)
 	@Override
 	public GuiContainer getClientGuiElement(EntityPlayer player, Object... args) {
-		return new GuiFluidInterface(player, this);
+		return new GuiGasInterface(player, this);
 	}
 
 	@Override

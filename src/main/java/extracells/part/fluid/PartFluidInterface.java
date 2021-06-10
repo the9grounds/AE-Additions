@@ -69,7 +69,7 @@ import extracells.container.IContainerListener;
 import extracells.container.fluid.ContainerFluidInterface;
 import extracells.crafting.CraftingPattern;
 import extracells.crafting.CraftingPattern2;
-import extracells.gui.fluid.GuiFluidInterface;
+import extracells.gui.gas.GuiGasInterface;
 import extracells.gui.widget.fluid.IFluidSlotListener;
 import extracells.integration.Capabilities;
 import extracells.inventory.FluidInterfaceInventory;
@@ -232,7 +232,7 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler, IFl
 
 	@Override
 	public Object getClientGuiElement(EntityPlayer player) {
-		return new GuiFluidInterface(player, this, getSide());
+		return new GuiGasInterface(player, this, getSide());
 	}
 
 	@SideOnly(Side.CLIENT)

@@ -1,8 +1,9 @@
-package extracells.gui.fluid;
+package extracells.gui.gas;
 
 import java.io.IOException;
 import java.util.List;
 
+import extracells.part.gas.PartGasLevelEmitter;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,7 +14,7 @@ import net.minecraftforge.fluids.Fluid;
 import org.lwjgl.input.Keyboard;
 
 import appeng.api.config.RedstoneMode;
-import extracells.container.fluid.ContainerFluidEmitter;
+import extracells.container.gas.ContainerGasEmitter;
 import extracells.gui.GuiBase;
 import extracells.gui.buttons.ButtonRedstoneModes;
 import extracells.gui.widget.AbstractWidget;
@@ -21,11 +22,10 @@ import extracells.gui.widget.DigitTextField;
 import extracells.gui.widget.fluid.WidgetFluidSlot;
 import extracells.network.packet.other.IFluidSlotGui;
 import extracells.network.packet.part.PacketPartConfig;
-import extracells.part.fluid.PartFluidLevelEmitter;
 import extracells.registries.PartEnum;
 import extracells.util.NetworkUtil;
 
-public class GuiFluidEmitter extends GuiBase<ContainerFluidEmitter> implements IFluidSlotGui {
+public class GuiGasEmitter extends GuiBase<ContainerGasEmitter> implements IFluidSlotGui {
 
 	//TODO: Clean Up / Add own Button Class
 	public static final String[] BUTTON_NAMES = {"-1", "-10", "-100", "+1", "+10", "+100"};
@@ -34,10 +34,10 @@ public class GuiFluidEmitter extends GuiBase<ContainerFluidEmitter> implements I
 	public static final int xSize = 176;
 	public static final int ySize = 166;
 	private DigitTextField amountField;
-	private PartFluidLevelEmitter part;
+	private PartGasLevelEmitter part;
 
-	public GuiFluidEmitter(PartFluidLevelEmitter part, EntityPlayer player) {
-		super(new ResourceLocation("extracells", "textures/gui/levelemitterfluid.png"), new ContainerFluidEmitter(part, player));
+	public GuiGasEmitter(PartGasLevelEmitter part, EntityPlayer player) {
+		super(new ResourceLocation("extracells", "textures/gui/levelemitterfluid.png"), new ContainerGasEmitter(part, player));
 		this.part = part;
 		widgetManager.add(new WidgetFluidSlot(widgetManager, this.part, 79, 36));
 		NetworkUtil.sendToServer(new PacketPartConfig(this.part, PacketPartConfig.FLUID_EMITTER_TOGGLE, Boolean.toString(false)));
@@ -73,7 +73,7 @@ public class GuiFluidEmitter extends GuiBase<ContainerFluidEmitter> implements I
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-		this.fontRenderer.drawString(PartEnum.FLUIDLEVELEMITTER.getStatName(), 5, 5, 0x000000);
+		this.fontRenderer.drawString(PartEnum.GASLEVELEMITTER.getStatName(), 5, 5, 0x000000);
 	}
 
 	@Override

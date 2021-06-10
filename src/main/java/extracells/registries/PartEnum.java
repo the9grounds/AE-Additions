@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import extracells.part.gas.*;
 import org.apache.commons.lang3.tuple.Pair;
 
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -20,39 +21,12 @@ import extracells.part.PartBattery;
 import extracells.part.PartDrive;
 import extracells.part.PartECBase;
 import extracells.part.PartOreDictExporter;
-import extracells.part.fluid.PartFluidConversionMonitor;
-import extracells.part.fluid.PartFluidExport;
-import extracells.part.fluid.PartFluidImport;
 import extracells.part.fluid.PartFluidInterface;
-import extracells.part.fluid.PartFluidLevelEmitter;
-import extracells.part.fluid.PartFluidPlaneAnnihilation;
-import extracells.part.fluid.PartFluidPlaneFormation;
-import extracells.part.fluid.PartFluidStorage;
-import extracells.part.fluid.PartFluidStorageMonitor;
-import extracells.part.fluid.PartFluidTerminal;
-import extracells.part.gas.PartGasConversionMonitor;
-import extracells.part.gas.PartGasExport;
-import extracells.part.gas.PartGasImport;
-import extracells.part.gas.PartGasLevelEmitter;
-import extracells.part.gas.PartGasStorage;
-import extracells.part.gas.PartGasStorageMonitor;
-import extracells.part.gas.PartGasTerminal;
-
-import javax.annotation.Nullable;
 
 public enum PartEnum {
-	FLUIDEXPORT("fluid.export", PartFluidExport.class, "fluid.IO", generatePair(Upgrades.CAPACITY, 2), generatePair(Upgrades.REDSTONE, 1), generatePair(Upgrades.SPEED, 2)),
-	FLUIDIMPORT("fluid.import", PartFluidImport.class, "fluid.IO", generatePair(Upgrades.CAPACITY, 2), generatePair(Upgrades.REDSTONE, 1), generatePair(Upgrades.SPEED, 2)),
-	FLUIDSTORAGE("fluid.storage", PartFluidStorage.class, null, generatePair(Upgrades.INVERTER, 1)),
-	FLUIDTERMINAL("fluid.terminal", PartFluidTerminal.class),
-	FLUIDLEVELEMITTER("fluid.levelemitter", PartFluidLevelEmitter.class),
-	FLUIDPANEANNIHILATION("fluid.plane.annihilation", PartFluidPlaneAnnihilation.class, "fluid.plane"),
-	FLUIDPANEFORMATION("fluid.plane.formation", PartFluidPlaneFormation.class, "fluid.plane"),
 	DRIVE("drive", PartDrive.class),
 	BATTERY("battery", PartBattery.class),
 	INTERFACE("interface", PartFluidInterface.class),
-	FLUIDMONITOR("fluid.monitor", PartFluidStorageMonitor.class),
-	FLUIDCONVERSIONMONITOR("fluid.conversion.monitor", PartFluidConversionMonitor.class),
 	OREDICTEXPORTBUS("oredict.export", PartOreDictExporter.class),
 	GASIMPORT("gas.import", PartGasImport.class, "gas.IO", Integration.Mods.MEKANISMGAS, generatePair(Upgrades.CAPACITY, 2), generatePair(Upgrades.REDSTONE, 1), generatePair(Upgrades.SPEED, 2)),
 	GASEXPORT("gas.export", PartGasExport.class, "gas.IO", Integration.Mods.MEKANISMGAS, generatePair(Upgrades.CAPACITY, 2), generatePair(Upgrades.REDSTONE, 1), generatePair(Upgrades.SPEED, 2)),
