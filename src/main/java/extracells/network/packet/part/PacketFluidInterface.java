@@ -13,7 +13,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import appeng.api.util.AEPartLocation;
 import extracells.container.fluid.ContainerFluidInterface;
-import extracells.gui.fluid.GuiFluidInterface;
+import extracells.gui.gas.GuiGasInterface;
 import extracells.network.packet.IPacketHandlerClient;
 import extracells.network.packet.Packet;
 import extracells.network.packet.PacketBufferEC;
@@ -77,7 +77,7 @@ public class PacketFluidInterface extends Packet {
 				}
 			}
 
-			GuiFluidInterface gui = GuiUtil.getGui(GuiFluidInterface.class);
+			GuiGasInterface gui = GuiUtil.getGui(GuiGasInterface.class);
 			ContainerFluidInterface container = GuiUtil.getContainer(gui, ContainerFluidInterface.class);
 			if (container == null) {
 				return;

@@ -1,21 +1,20 @@
 package extracells.network.packet.part;
 
-import java.io.IOException;
-
-import net.minecraft.entity.player.EntityPlayerMP;
-
 import extracells.container.ContainerTerminal;
 import extracells.network.packet.IPacketHandlerServer;
 import extracells.network.packet.Packet;
 import extracells.network.packet.PacketBufferEC;
 import extracells.network.packet.PacketId;
-import extracells.part.fluid.PartFluidTerminal;
+import extracells.part.gas.PartGasTerminal;
 import extracells.util.GuiUtil;
+import net.minecraft.entity.player.EntityPlayerMP;
+
+import java.io.IOException;
 
 public class PacketTerminalOpenContainer extends Packet {
-	PartFluidTerminal terminalFluid;
+	PartGasTerminal terminalFluid;
 
-	public PacketTerminalOpenContainer(PartFluidTerminal terminalFluid) {
+	public PacketTerminalOpenContainer(PartGasTerminal terminalFluid) {
 		this.terminalFluid = terminalFluid;
 	}
 
@@ -32,7 +31,7 @@ public class PacketTerminalOpenContainer extends Packet {
 	public static class Handler implements IPacketHandlerServer {
 		@Override
 		public void onPacketData(PacketBufferEC data, EntityPlayerMP player) throws IOException {
-			PartFluidTerminal terminalFluid = data.readPart(player.world);
+			PartGasTerminal terminalFluid = data.readPart(player.world);
 			ContainerTerminal containerTerminal = GuiUtil.getContainer(player, ContainerTerminal.class);
 			if (terminalFluid == null) {
 				return;

@@ -1,30 +1,23 @@
 package extracells.network.packet.part;
 
-import java.io.IOException;
-
+import appeng.api.config.AccessRestriction;
+import appeng.api.config.RedstoneMode;
+import extracells.gui.gas.GuiBusGasIO;
+import extracells.gui.gas.GuiBusGasStorage;
+import extracells.gui.gas.GuiGasEmitter;
+import extracells.network.packet.*;
+import extracells.part.PartECBase;
+import extracells.part.gas.PartGasIO;
+import extracells.part.gas.PartGasLevelEmitter;
+import extracells.part.gas.PartGasStorage;
+import extracells.util.GuiUtil;
+import extracells.util.NetworkUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import appeng.api.config.AccessRestriction;
-import appeng.api.config.RedstoneMode;
-import extracells.gui.fluid.GuiBusFluidIO;
-import extracells.gui.fluid.GuiBusFluidStorage;
-import extracells.gui.fluid.GuiFluidEmitter;
-import extracells.network.packet.IPacketHandlerClient;
-import extracells.network.packet.IPacketHandlerServer;
-import extracells.network.packet.Packet;
-import extracells.network.packet.PacketBufferEC;
-import extracells.network.packet.PacketId;
-import extracells.part.PartECBase;
-import extracells.part.fluid.PartFluidIO;
-import extracells.part.fluid.PartFluidLevelEmitter;
-import extracells.part.fluid.PartFluidPlaneFormation;
-import extracells.part.fluid.PartFluidStorage;
-import extracells.util.GuiUtil;
-import extracells.util.NetworkUtil;
+import java.io.IOException;
 
 public class PacketPartConfig extends Packet {
 	public static final String FLUID_EMITTER_TOGGLE = "FluidEmitter.Toggle";
@@ -78,44 +71,44 @@ public class PacketPartConfig extends Packet {
 			PartECBase part = data.readPart(player.world);
 			String name = data.readString();
 			String value = data.readString();
-			if (name.equals(FLUID_EMITTER_AMOUNT) && part instanceof PartFluidLevelEmitter) {
+			if (name.equals(FLUID_EMITTER_AMOUNT) && part instanceof PartGasLevelEmitter) {
 				long amount = Long.valueOf(value);
-				GuiFluidEmitter gui = GuiUtil.getGui(GuiFluidEmitter.class);
+				GuiGasEmitter gui = GuiUtil.getGui(GuiGasEmitter.class);
 				if (gui == null) {
 					return;
 				}
 				gui.setAmountField(amount);
-			} else if (name.equals(FLUID_EMITTER_MODE) && part instanceof PartFluidLevelEmitter) {
+			} else if (name.equals(FLUID_EMITTER_MODE) && part instanceof PartGasLevelEmitter) {
 				RedstoneMode redstoneMode = RedstoneMode.valueOf(value);
-				GuiFluidEmitter gui = GuiUtil.getGui(GuiFluidEmitter.class);
+				GuiGasEmitter gui = GuiUtil.getGui(GuiGasEmitter.class);
 				if (gui == null) {
 					return;
 				}
 				gui.setRedstoneMode(redstoneMode);
-			} else if (name.equals(FLUID_IO_REDSTONE) && part instanceof PartFluidIO) {
+			} else if (name.equals(FLUID_IO_REDSTONE) && part instanceof PartGasIO) {
 				boolean redstoneControlled = Boolean.valueOf(value);
-				GuiBusFluidIO gui = GuiUtil.getGui(GuiBusFluidIO.class);
+				GuiBusGasIO gui = GuiUtil.getGui(GuiBusGasIO.class);
 				if (gui == null) {
 					return;
 				}
 				gui.setRedstoneControlled(redstoneControlled);
-			} else if (name.equals(FLUID_IO_FILTER) && part instanceof PartFluidIO) {
+			} else if (name.equals(FLUID_IO_FILTER) && part instanceof PartGasIO) {
 				byte filterSize = Byte.valueOf(value);
-				GuiBusFluidIO gui = GuiUtil.getGui(GuiBusFluidIO.class);
+				GuiBusGasIO gui = GuiUtil.getGui(GuiBusGasIO.class);
 				if (gui == null) {
 					return;
 				}
 				gui.changeConfig(filterSize);
-			} else if (name.equals(FLUID_IO_REDSTONE_MODE) && part instanceof PartFluidIO) {
+			} else if (name.equals(FLUID_IO_REDSTONE_MODE) && part instanceof PartGasIO) {
 				RedstoneMode redstoneMode = RedstoneMode.valueOf(value);
-				GuiBusFluidIO gui = GuiUtil.getGui(GuiBusFluidIO.class);
+				GuiBusGasIO gui = GuiUtil.getGui(GuiBusGasIO.class);
 				if (gui == null) {
 					return;
 				}
 				gui.updateRedstoneMode(redstoneMode);
 			} else if (name.equals(FLUID_STORAGE_ACCESS)) {
 				AccessRestriction access = AccessRestriction.valueOf(value);
-				GuiBusFluidStorage gui = GuiUtil.getGui(GuiBusFluidStorage.class);
+				GuiBusGasStorage gui = GuiUtil.getGui(GuiBusGasStorage.class);
 				if (gui == null || access == null) {
 					return;
 				}
@@ -130,34 +123,32 @@ public class PacketPartConfig extends Packet {
 			PartECBase part = data.readPart(player.world);
 			String name = data.readString();
 			String value = data.readString();
-			if (name.equals(FLUID_EMITTER_TOGGLE) && part instanceof PartFluidLevelEmitter) {
+			if (name.equals(FLUID_EMITTER_TOGGLE) && part instanceof PartGasLevelEmitter) {
 				boolean toggle = Boolean.valueOf(value);
 				if (toggle) {
-					((PartFluidLevelEmitter) part).toggleMode(player);
+					((PartGasLevelEmitter) part).toggleMode(player);
 				} else {
-					((PartFluidLevelEmitter) part).syncClientGui(player);
+					((PartGasLevelEmitter) part).syncClientGui(player);
 				}
-			} else if (name.equals(FLUID_EMITTER_AMOUNT_CHANGE) && part instanceof PartFluidLevelEmitter) {
+			} else if (name.equals(FLUID_EMITTER_AMOUNT_CHANGE) && part instanceof PartGasLevelEmitter) {
 				long amount = Long.valueOf(value);
-				((PartFluidLevelEmitter) part).changeWantedAmount((int) amount, player);
-			} else if (name.equals(FLUID_EMITTER_AMOUNT) && part instanceof PartFluidLevelEmitter) {
+				((PartGasLevelEmitter) part).changeWantedAmount((int) amount, player);
+			} else if (name.equals(FLUID_EMITTER_AMOUNT) && part instanceof PartGasLevelEmitter) {
 				long amount = Long.valueOf(value);
-				((PartFluidLevelEmitter) part).setWantedAmount(amount, player);
-			} else if (name.equals(FLUID_IO_INFO) && part instanceof PartFluidIO) {
-				((PartFluidIO) part).sendInformation(player);
-			} else if (name.equals(FLUID_IO_REDSTONE_LOOP) && part instanceof PartFluidIO) {
-				((PartFluidIO) part).loopRedstoneMode(player);
-			} else if (name.equals(FLUID_STORAGE_ACCESS) && part instanceof PartFluidStorage) {
+				((PartGasLevelEmitter) part).setWantedAmount(amount, player);
+			} else if (name.equals(FLUID_IO_INFO) && part instanceof PartGasIO) {
+				((PartGasIO) part).sendInformation(player);
+			} else if (name.equals(FLUID_IO_REDSTONE_LOOP) && part instanceof PartGasIO) {
+				((PartGasIO) part).loopRedstoneMode(player);
+			} else if (name.equals(FLUID_STORAGE_ACCESS) && part instanceof PartGasStorage) {
 				AccessRestriction access = AccessRestriction.valueOf(value);
 				if (access == null) {
 					return;
 				}
-				((PartFluidStorage) part).updateAccess(access);
+				((PartGasStorage) part).updateAccess(access);
 				NetworkUtil.sendToPlayer(new PacketPartConfig(part, PacketPartConfig.FLUID_STORAGE_ACCESS, value), player);
-			} else if (name.equals(FLUID_STORAGE_INFO) && part instanceof PartFluidStorage) {
-				((PartFluidStorage) part).sendInformation(player);
-			} else if (name.equals(FLUID_PLANE_FORMATION_INFO) && part instanceof PartFluidPlaneFormation) {
-				((PartFluidPlaneFormation) part).sendInformation(player);
+			} else if (name.equals(FLUID_STORAGE_INFO) && part instanceof PartGasStorage) {
+				((PartGasStorage) part).sendInformation(player);
 			}
 		}
 	}

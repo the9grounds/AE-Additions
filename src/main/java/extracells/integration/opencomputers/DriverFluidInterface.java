@@ -161,9 +161,9 @@ public class DriverFluidInterface implements DriverBlock, EnvironmentProvider {
 		if (stack.getItem() == ItemEnum.PARTITEM.getItem() && stack.getItemDamage() == PartEnum.INTERFACE.ordinal()) {
 			return Enviroment.class;
 		}
-		if (stack.getItem() == Item.getItemFromBlock(BlockEnum.ECBASEBLOCK.getBlock()) && stack.getItemDamage() == 0) {
-			return Enviroment.class;
-		}
+//		if (stack.getItem() == Item.getItemFromBlock(BlockEnum.ECBASEBLOCK.getBlock()) && stack.getItemDamage() == 0) {
+//			return Enviroment.class;
+//		}
 		return null;
 	}
 }

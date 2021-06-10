@@ -2,17 +2,12 @@ package extracells.registries;
 
 import java.util.function.Function;
 
+import appeng.block.crafting.BlockCraftingUnit;
+import extracells.block.*;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.util.text.translation.I18n;
 
-import extracells.block.BlockCertusTank;
-import extracells.block.BlockFluidCrafter;
-import extracells.block.BlockFluidFiller;
-import extracells.block.BlockFluidInterface;
-import extracells.block.BlockHardMEDrive;
-import extracells.block.BlockVibrationChamberFluid;
-import extracells.block.BlockWalrus;
 import extracells.integration.Integration;
 import extracells.item.block.ItemBlockCertusTank;
 import extracells.item.block.ItemBlockFluidFiller;
@@ -20,13 +15,15 @@ import extracells.item.block.ItemBlockFluidInterface;
 import extracells.util.CreativeTabEC;
 
 public enum BlockEnum {
-	CERTUSTANK("certustank", new BlockCertusTank(), (block) -> new ItemBlockCertusTank(block)),
-	WALRUS("walrus", new BlockWalrus()),
+	CERTUSTANK("certustank", new BlockCertusTank(), ItemBlockCertusTank::new),
 	FLUIDCRAFTER("fluidcrafter", new BlockFluidCrafter()),
-	ECBASEBLOCK("ecbaseblock", new BlockFluidInterface(), (block) -> new ItemBlockFluidInterface(block)),
-	FILLER("fluidfiller", new BlockFluidFiller(), (block) -> new ItemBlockFluidFiller(block)),
+	FILLER("fluidfiller", new BlockFluidFiller(), ItemBlockFluidFiller::new),
 	BLASTRESISTANTMEDRIVE("hardmedrive", new BlockHardMEDrive()),
-	VIBRANTCHAMBERFLUID("vibrantchamberfluid", new BlockVibrationChamberFluid());
+	VIBRANTCHAMBERFLUID("vibrantchamberfluid", new BlockVibrationChamberFluid()),
+	UPGRADEDCRAFTINGSTORAGE256("crafting_storage_256", new BlockCraftingStorage(BlockCraftingUnit.CraftingUnitType.STORAGE_1K)),
+	UPGRADEDCRAFTINGSTORAGE1024("crafting_storage_1024", new BlockCraftingStorage(BlockCraftingUnit.CraftingUnitType.STORAGE_4K)),
+	UPGRADEDCRAFTINGSTORAGE4096("crafting_storage_4096", new BlockCraftingStorage(BlockCraftingUnit.CraftingUnitType.STORAGE_16K)),
+	UPGRADEDCRAFTINGSTORAGE16384("crafting_storage_16384", new BlockCraftingStorage(BlockCraftingUnit.CraftingUnitType.STORAGE_64K));
 
 	private final String internalName;
 	private Block block;
@@ -34,11 +31,11 @@ public enum BlockEnum {
 	private Integration.Mods mod;
 
 	BlockEnum(String internalName, Block block, Integration.Mods mod) {
-		this(internalName, block, (b) -> new ItemBlock(b), mod);
+		this(internalName, block, ItemBlock::new, mod);
 	}
 
 	BlockEnum(String internalName, Block block) {
-		this(internalName, block, (b) -> new ItemBlock(b));
+		this(internalName, block, ItemBlock::new);
 	}
 
 	BlockEnum(String internalName, Block block, Function<Block, ItemBlock> itemFactory) {

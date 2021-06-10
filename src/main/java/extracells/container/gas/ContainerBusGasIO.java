@@ -1,18 +1,18 @@
-package extracells.container.fluid;
+package extracells.container.gas;
 
 import extracells.gui.IFluidSlotGuiTransfer;
+import extracells.part.gas.PartGasIO;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 import extracells.container.ContainerUpgradeable;
-import extracells.part.fluid.PartFluidIO;
 
-public class ContainerBusFluidIO extends ContainerUpgradeable {
-	private PartFluidIO part;
+public class ContainerBusGasIO extends ContainerUpgradeable {
+	private PartGasIO part;
 	private IFluidSlotGuiTransfer guiBusFluidIO;
 
-	public ContainerBusFluidIO(PartFluidIO part, EntityPlayer player) {
+	public ContainerBusGasIO(PartGasIO part, EntityPlayer player) {
 		this.part = part;
 		bindPlayerInventory(player.inventory, 8, 102);
 		bindUpgradeInventory(player.inventory, part);

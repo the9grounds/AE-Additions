@@ -1,4 +1,4 @@
-package extracells.gui.fluid;
+package extracells.gui.gas;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -17,7 +17,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 import appeng.api.AEApi;
 import appeng.api.config.RedstoneMode;
-import extracells.container.fluid.ContainerBusFluidIO;
+import extracells.container.gas.ContainerBusGasIO;
 import extracells.gui.GuiBase;
 import extracells.gui.ISlotRenderer;
 import extracells.gui.SlotUpgradeRenderer;
@@ -25,22 +25,22 @@ import extracells.gui.buttons.ButtonRedstoneModes;
 import extracells.gui.widget.fluid.WidgetFluidSlot;
 import extracells.network.packet.other.IFluidSlotGui;
 import extracells.network.packet.part.PacketPartConfig;
-import extracells.part.fluid.PartFluidIO;
+import extracells.part.gas.PartGasIO;
 import extracells.util.FluidHelper;
 import extracells.util.NetworkUtil;
 
-public class GuiBusFluidIO extends GuiBase<ContainerBusFluidIO> implements
+public class GuiBusGasIO extends GuiBase<ContainerBusGasIO> implements
 	WidgetFluidSlot.IConfigurable, IFluidSlotGui, IFluidSlotGuiTransfer {
 
-	private PartFluidIO part;
+	private PartGasIO part;
 	private byte filterSize;
 	private List<WidgetFluidSlot> fluidSlotList = new ArrayList<WidgetFluidSlot>();
 	private boolean redstoneControlled;
 	private boolean hasNetworkTool;
 
-	public GuiBusFluidIO(PartFluidIO terminal, EntityPlayer player) {
-		super(new ResourceLocation("extracells", "textures/gui/busiofluid.png"), new ContainerBusFluidIO(terminal, player));
-		((ContainerBusFluidIO) this.inventorySlots).setGui(this);
+	public GuiBusGasIO(PartGasIO terminal, EntityPlayer player) {
+		super(new ResourceLocation("extracells", "textures/gui/busiofluid.png"), new ContainerBusGasIO(terminal, player));
+		((ContainerBusGasIO) this.inventorySlots).setGui(this);
 		this.part = terminal;
 		for (int x = 0; x < 3; x++) {
 			for (int y = 0; y < 3; y++) {

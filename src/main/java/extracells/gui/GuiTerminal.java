@@ -1,24 +1,5 @@
 package extracells.gui;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.translation.I18n;
-
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
 import extracells.container.ContainerTerminal;
@@ -29,13 +10,29 @@ import extracells.gui.widget.fluid.AbstractFluidWidget;
 import extracells.gui.widget.fluid.IFluidSelectorGui;
 import extracells.gui.widget.fluid.WidgetFluidSelector;
 import extracells.network.packet.part.PacketTerminalOpenContainer;
-import extracells.part.fluid.PartFluidTerminal;
+import extracells.part.gas.PartGasTerminal;
 import extracells.util.ECConfigHandler;
 import extracells.util.NetworkUtil;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.translation.I18n;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class GuiTerminal extends GuiContainer implements IFluidSelectorGui {
 
-	private PartFluidTerminal terminal;
+	private PartGasTerminal terminal;
 	private int currentScroll = 0;
 	private GuiTextField searchbar;
 	private List<AbstractFluidWidget> fluidWidgets = new ArrayList<AbstractFluidWidget>();
@@ -44,7 +41,7 @@ public class GuiTerminal extends GuiContainer implements IFluidSelectorGui {
 	private ContainerTerminal containerTerminal;
 	private StorageType type;
 
-	public GuiTerminal(PartFluidTerminal terminal, EntityPlayer player, StorageType type) {
+	public GuiTerminal(PartGasTerminal terminal, EntityPlayer player, StorageType type) {
 		super(new ContainerTerminal(terminal, player, type));
 		this.containerTerminal = (ContainerTerminal) this.inventorySlots;
 		this.terminal = terminal;
@@ -146,7 +143,7 @@ public class GuiTerminal extends GuiContainer implements IFluidSelectorGui {
 		return this.currentFluid;
 	}
 
-	public PartFluidTerminal getTerminal() {
+	public PartGasTerminal getTerminal() {
 		return this.terminal;
 	}
 

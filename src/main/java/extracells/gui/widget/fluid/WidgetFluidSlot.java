@@ -3,6 +3,7 @@ package extracells.gui.widget.fluid;
 import java.util.Collections;
 import java.util.List;
 
+import extracells.part.gas.PartGasLevelEmitter;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureManager;
@@ -126,7 +127,7 @@ public class WidgetFluidSlot extends AbstractWidget {
 		if (!isVisable()) {
 			return;
 		}
-		if ((listener instanceof PartGasImport || listener instanceof PartGasExport || listener instanceof PartGasStorage) && Integration.Mods.MEKANISMGAS.isEnabled()) {
+		if ((listener instanceof PartGasImport || listener instanceof PartGasExport || listener instanceof PartGasStorage || listener instanceof PartGasLevelEmitter) && Integration.Mods.MEKANISMGAS.isEnabled()) {
 			handleGasContainer(stack);
 		} else {
 			handleFluidContainer(stack);

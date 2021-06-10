@@ -1,18 +1,6 @@
 package extracells.integration.opencomputers;
 
 import appeng.api.parts.IPart;
-import extracells.part.fluid.PartFluidImport;
-import li.cil.oc.api.network.*;
-import li.cil.oc.api.prefab.AbstractManagedEnvironment;
-import mekanism.api.gas.GasStack;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-
 import appeng.api.parts.IPartHost;
 import appeng.api.util.AEPartLocation;
 import extracells.part.gas.PartGasImport;
@@ -24,8 +12,17 @@ import li.cil.oc.api.internal.Database;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
+import li.cil.oc.api.network.*;
+import li.cil.oc.api.prefab.AbstractManagedEnvironment;
+import mekanism.api.gas.GasStack;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
 
-public class DriverGasImportBus extends DriverBase<PartGasImport> {
+public class DriverGasImportBus extends DriverBase<extracells.part.gas.PartGasImport> {
 
 	public DriverGasImportBus() {
 		super(PartEnum.GASIMPORT, Enviroment.class);
@@ -36,7 +33,7 @@ public class DriverGasImportBus extends DriverBase<PartGasImport> {
 		return new Enviroment(host);
 	}
 
-	private static PartGasImport getImportBus(World world, BlockPos pos, AEPartLocation dir){
+	private static extracells.part.gas.PartGasImport getImportBus(World world, BlockPos pos, AEPartLocation dir){
 		TileEntity tile = world.getTileEntity(pos);
 		if (tile == null || (!(tile instanceof IPartHost)))
 			return null;
@@ -44,13 +41,13 @@ public class DriverGasImportBus extends DriverBase<PartGasImport> {
 		if(dir == null || dir == AEPartLocation.INTERNAL){
 			for (AEPartLocation side: AEPartLocation.SIDE_LOCATIONS){
 				IPart part = host.getPart(side);
-				if (part != null && part instanceof PartGasImport)
-					return (PartGasImport) part;
+				if (part != null && part instanceof extracells.part.gas.PartGasImport)
+					return (extracells.part.gas.PartGasImport) part;
 			}
 			return null;
 		}else{
 			IPart part = host.getPart(dir);
-			return part == null ? null : part instanceof PartGasImport ? (PartGasImport) part : null;
+			return part == null ? null : part instanceof extracells.part.gas.PartGasImport ? (extracells.part.gas.PartGasImport) part : null;
 		}
 	}
 
@@ -73,7 +70,7 @@ public class DriverGasImportBus extends DriverBase<PartGasImport> {
 			if (dir == null || dir == AEPartLocation.INTERNAL) {
 				return new Object[]{null, "unknown side"};
 			}
-			PartGasImport part = OCUtils.getPart(tile.getWorld(), tile.getPos(), dir, PartGasImport.class);
+			extracells.part.gas.PartGasImport part = OCUtils.getPart(tile.getWorld(), tile.getPos(), dir, extracells.part.gas.PartGasImport.class);
 			if (part == null) {
 				return new Object[]{null, "no export bus"};
 			}
@@ -96,7 +93,7 @@ public class DriverGasImportBus extends DriverBase<PartGasImport> {
 			if (dir == null || dir == AEPartLocation.INTERNAL) {
 				return new Object[]{null, "unknown side"};
 			}
-			PartGasImport part = OCUtils.getPart(tile.getWorld(), tile.getPos(), dir, PartGasImport.class);
+			extracells.part.gas.PartGasImport part = OCUtils.getPart(tile.getWorld(), tile.getPos(), dir, extracells.part.gas.PartGasImport.class);
 			if (part == null) {
 				return new Object[]{null, "no export bus"};
 			}
@@ -159,7 +156,7 @@ public class DriverGasImportBus extends DriverBase<PartGasImport> {
 			AEPartLocation dir = AEPartLocation.fromOrdinal(args.checkInteger(0));
 			if (dir == null || dir == AEPartLocation.INTERNAL)
 				return new Object[]{false, "unknown side"};
-			PartFluidImport part = getImportBus(tile.getWorld(), tile.getPos(), dir);
+			PartGasImport part = getImportBus(tile.getWorld(), tile.getPos(), dir);
 			if (part == null)
 				return new Object[]{false, "no export bus"};
 			if (part.getFacingTank() == null)

@@ -1,29 +1,191 @@
 package extracells.part.gas
 
 import appeng.api.config.Actionable
+import appeng.api.config.SecurityPermissions
+import appeng.api.networking.IGridNode
+import appeng.api.networking.ticking.IGridTickable
+import appeng.api.networking.ticking.TickRateModulation
+import appeng.api.networking.ticking.TickingRequest
+import appeng.api.parts.IPart
+import appeng.api.parts.IPartCollisionHelper
+import appeng.api.parts.IPartModel
+import appeng.api.parts.PartItemStack
+import appeng.api.util.AECableType
 import extracells.container.ContainerTerminal
 import extracells.container.StorageType
 import extracells.gui.GuiTerminal
 import extracells.integration.Integration
-import extracells.part.fluid.PartFluidTerminal
-import extracells.util.GasUtil
-import extracells.util.StorageChannels
+import extracells.inventory.IInventoryListener
+import extracells.inventory.InventoryPlain
+import extracells.models.PartModels
+import extracells.network.packet.part.PacketTerminalSelectFluidClient
+import extracells.part.PartECBase
+import extracells.util.*
 import mekanism.api.gas.GasStack
 import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.inventory.IInventory
 import net.minecraft.item.ItemStack
+import net.minecraft.nbt.NBTTagCompound
+import net.minecraft.util.EnumHand
+import net.minecraft.util.math.Vec3d
+import net.minecraftforge.fluids.Fluid
 import net.minecraftforge.fluids.FluidStack
 import net.minecraftforge.fml.common.Optional
+import net.minecraftforge.fml.relauncher.Side
+import net.minecraftforge.fml.relauncher.SideOnly
 import org.apache.commons.lang3.tuple.MutablePair
 import kotlin.math.min
 
-class PartGasTerminal : PartFluidTerminal() {
+class PartGasTerminal : PartECBase(), IGridTickable, IInventoryListener {
+
+    private val containers: MutableList<Any> = mutableListOf()
+    val inventory = object : InventoryPlain("extracells.part.gas.terminal", 2, 64, this) {
+        override fun isItemValidForSlot(i: Int, itemstack: ItemStack): Boolean {
+            return isItemValidForSlot(i, itemstack)
+        }
+
+        override fun onContentsChanged() {
+            saveData()
+        }
+    }
+    var currentFluid: Fluid? = null
+
+    protected var machineSource = MachineSource(this)
+
+    override fun getDrops(drops: MutableList<ItemStack?>, wrenched: Boolean) {
+        for (stack in inventory.slots) {
+            if (stack == null) {
+                continue
+            }
+            drops.add(stack)
+        }
+    }
+
+    fun fillSecondSlot(itemStack: ItemStack?): Boolean {
+        if (itemStack == null) {
+            return false
+        }
+        val secondSlot = inventory.getStackInSlot(1)
+        return if (secondSlot == null || secondSlot.isEmpty) {
+            inventory.setInventorySlotContents(1, itemStack)
+            true
+        } else {
+            if (!secondSlot.isItemEqual(itemStack) || !ItemStack.areItemStackTagsEqual(itemStack, secondSlot)) {
+                return false
+            }
+            inventory.incrStackSize(1, itemStack.count)
+            true
+        }
+    }
+
+    override fun getBoxes(bch: IPartCollisionHelper) {
+        bch.addBox(2.0, 2.0, 14.0, 14.0, 14.0, 16.0)
+        bch.addBox(4.0, 4.0, 13.0, 12.0, 12.0, 14.0)
+        bch.addBox(5.0, 5.0, 12.0, 11.0, 11.0, 13.0)
+    }
+
+    override fun getPowerUsage(): Double {
+        return 0.5
+    }
+
+    override fun getTickingRequest(node: IGridNode): TickingRequest {
+        return TickingRequest(1, 20, false, false)
+    }
+
+    override fun onActivate(player: EntityPlayer?, hand: EnumHand?, pos: Vec3d?): Boolean {
+        return if (isActive && (PermissionUtil.hasPermission(
+                player,
+                SecurityPermissions.INJECT,
+                this as IPart
+            ) || PermissionUtil.hasPermission(player, SecurityPermissions.EXTRACT, this as IPart))
+        ) {
+            super.onActivate(player, hand, pos)
+        } else false
+    }
+
+    override fun onInventoryChanged() {
+        saveData()
+    }
+
+    override fun readFromNBT(data: NBTTagCompound) {
+        super.readFromNBT(data)
+        inventory.readFromNBT(data.getTagList("inventory", 10))
+    }
+
+    fun removeContainer(containerTerminalFluid: ContainerTerminal?) {
+        if (containerTerminalFluid != null) {
+            containers.remove(containerTerminalFluid)
+        }
+    }
+
+    fun addContainer(containerTerminalFluid: ContainerTerminal?) {
+        if (containerTerminalFluid != null) {
+            containers.add(containerTerminalFluid)
+            sendCurrentFluid()
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    override fun getStaticModels(): IPartModel {
+        return if (isActive) {
+            PartModels.TERMINAL_HAS_CHANNEL
+        } else if (isPowered) {
+            PartModels.TERMINAL_ON
+        } else {
+            PartModels.TERMINAL_OFF
+        }
+    }
+
+    fun sendCurrentFluid() {
+        for (containerFluidTerminal in containers) {
+            sendCurrentFluid(containerFluidTerminal)
+        }
+    }
+
+    fun sendCurrentFluid(container: Any?) {
+        if (container is ContainerTerminal) {
+            NetworkUtil.sendToPlayer(PacketTerminalSelectFluidClient(currentFluid), container.player)
+        }
+    }
+
+    override fun tickingRequest(node: IGridNode, ticksSinceLastCall: Int): TickRateModulation {
+        doWork()
+
+        return TickRateModulation.FASTER
+    }
+
+    override fun writeToNBT(data: NBTTagCompound) {
+        super.writeToNBT(data)
+        data.setTag("inventory", inventory.writeToNBT())
+    }
+
+    override fun getCableConnectionLength(aeCableType: AECableType?): Float {
+        return 1.0f
+    }
+
+    fun decreaseFirstSlot() {
+        val slot = inventory.getStackInSlot(0)
+        slot.count = slot.count - 1
+        if (slot.count <= 0) {
+            inventory.setInventorySlotContents(0, ItemStack.EMPTY)
+        }
+    }
+
+    override fun getItemStack(type: PartItemStack): ItemStack? {
+        val stack = super.getItemStack(type)
+        if (type == PartItemStack.WRENCH) {
+            stack.tagCompound!!.removeTag("inventory")
+        }
+        return stack
+    }
+
     val isMekanismLoaded = Integration.Mods.MEKANISMGAS.isEnabled
 
     var doNextFill = false
 
-    override fun isItemValidForInputSlot(i: Int, itemStack: ItemStack?): Boolean = GasUtil.isGasContainer(itemStack)
+    fun isItemValidForInputSlot(i: Int, itemStack: ItemStack?): Boolean = GasUtil.isGasContainer(itemStack)
 
-    override fun doWork() {
+    fun doWork() {
         if (isMekanismLoaded) {
             doWorkGas()
         }

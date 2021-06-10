@@ -18,7 +18,7 @@ public class PartDefinition implements IPartDefinition {
 	@Override
 	public IItemDefinition partConversionMonitor() {
 		return new ItemItemDefinitions(ItemEnum.PARTITEM.getItem(),
-			PartEnum.FLUIDCONVERSIONMONITOR.ordinal());
+			PartEnum.GASCONVERSIONMONITOR.ordinal());
 	}
 
 	@Override
@@ -28,52 +28,40 @@ public class PartDefinition implements IPartDefinition {
 	}
 
 	@Override
-	public IItemDefinition partFluidAnnihilationPlane() {
+	public IItemDefinition partGasImportBus() {
 		return new ItemItemDefinitions(ItemEnum.PARTITEM.getItem(),
-			PartEnum.FLUIDPANEANNIHILATION.ordinal());
+			PartEnum.GASIMPORT.ordinal());
 	}
 
 	@Override
-	public IItemDefinition partFluidExportBus() {
+	public IItemDefinition partGasExportBus() {
 		return new ItemItemDefinitions(ItemEnum.PARTITEM.getItem(),
-			PartEnum.FLUIDIMPORT.ordinal());
+				PartEnum.GASEXPORT.ordinal());
 	}
 
 	@Override
-	public IItemDefinition partFluidFormationPlane() {
+	public IItemDefinition partGasLevelEmitter() {
 		return new ItemItemDefinitions(ItemEnum.PARTITEM.getItem(),
-			PartEnum.FLUIDPANEFORMATION.ordinal());
+			PartEnum.GASLEVELEMITTER.ordinal());
 	}
 
 	@Override
-	public IItemDefinition partFluidImportBus() {
+	public IItemDefinition partGasStorageBus() {
 		return new ItemItemDefinitions(ItemEnum.PARTITEM.getItem(),
-			PartEnum.FLUIDEXPORT.ordinal());
+			PartEnum.GASSTORAGE.ordinal());
 	}
 
 	@Override
-	public IItemDefinition partFluidLevelEmitter() {
+	public IItemDefinition partGasTerminal() {
 		return new ItemItemDefinitions(ItemEnum.PARTITEM.getItem(),
-			PartEnum.FLUIDLEVELEMITTER.ordinal());
+			PartEnum.GASTERMINAL.ordinal());
 	}
 
-	@Override
-	public IItemDefinition partFluidStorageBus() {
-		return new ItemItemDefinitions(ItemEnum.PARTITEM.getItem(),
-			PartEnum.FLUIDSTORAGE.ordinal());
-	}
-
-	@Override
-	public IItemDefinition partFluidTerminal() {
-		return new ItemItemDefinitions(ItemEnum.PARTITEM.getItem(),
-			PartEnum.FLUIDTERMINAL.ordinal());
-	}
-
-	@Override
-	public IItemDefinition partInterface() {
-		return new ItemItemDefinitions(ItemEnum.PARTITEM.getItem(),
-			PartEnum.INTERFACE.ordinal());
-	}
+//	@Override
+//	public IItemDefinition partInterface() {
+//		return new ItemItemDefinitions(ItemEnum.PARTITEM.getItem(),
+//			PartEnum.INTERFACE.ordinal());
+//	}
 
 	@Override
 	public IItemDefinition partOreDictExportBus() {
@@ -84,7 +72,7 @@ public class PartDefinition implements IPartDefinition {
 	@Override
 	public IItemDefinition partStorageMonitor() {
 		return new ItemItemDefinitions(ItemEnum.PARTITEM.getItem(),
-			PartEnum.FLUIDMONITOR.ordinal());
+			PartEnum.GASMONITOR.ordinal());
 	}
 
 }

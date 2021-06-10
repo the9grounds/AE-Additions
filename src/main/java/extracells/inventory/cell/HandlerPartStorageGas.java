@@ -1,8 +1,21 @@
 package extracells.inventory.cell;
 
+import appeng.api.config.AccessRestriction;
+import appeng.api.config.Actionable;
+import appeng.api.networking.IGrid;
+import appeng.api.networking.IGridNode;
+import appeng.api.networking.events.MENetworkCellArrayUpdate;
+import appeng.api.networking.events.MENetworkStorageEvent;
 import appeng.api.networking.security.IActionSource;
-import appeng.api.storage.*;
+import appeng.api.networking.storage.IBaseMonitor;
+import appeng.api.storage.IMEInventory;
+import appeng.api.storage.IStorageChannel;
+import appeng.api.storage.IStorageMonitorableAccessor;
+import appeng.api.storage.data.IItemList;
+import extracells.api.ECApi;
+import extracells.api.IExternalGasStorageHandler;
 import extracells.api.gas.IAEGasStack;
+import extracells.part.gas.PartGasStorage;
 import extracells.util.GasUtil;
 import extracells.util.MachineSource;
 import extracells.util.StorageChannels;
@@ -10,23 +23,7 @@ import mekanism.api.gas.GasStack;
 import mekanism.api.gas.IGasHandler;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-
 import net.minecraftforge.fluids.Fluid;
-
-import appeng.api.AEApi;
-import appeng.api.config.AccessRestriction;
-import appeng.api.config.Actionable;
-import appeng.api.networking.IGrid;
-import appeng.api.networking.IGridNode;
-import appeng.api.networking.events.MENetworkCellArrayUpdate;
-import appeng.api.networking.events.MENetworkStorageEvent;
-import appeng.api.networking.storage.IBaseMonitor;
-import appeng.api.storage.data.IAEFluidStack;
-import appeng.api.storage.data.IItemList;
-import extracells.api.ECApi;
-import extracells.api.IExternalGasStorageHandler;
-import extracells.part.fluid.PartFluidStorage;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +32,7 @@ import java.util.List;
 public class HandlerPartStorageGas implements IHandlerPartBase<IAEGasStack> {
 
 
-	protected PartFluidStorage node;
+	protected PartGasStorage node;
 	protected IGasHandler tank;
 	protected AccessRestriction access = AccessRestriction.READ_WRITE;
 	protected List<Fluid> prioritizedFluids = new ArrayList<Fluid>();
@@ -44,7 +41,7 @@ public class HandlerPartStorageGas implements IHandlerPartBase<IAEGasStack> {
 	private IExternalGasStorageHandler externalHandler = null;
 	public IStorageMonitorableAccessor externalSystem;
 
-	public HandlerPartStorageGas(PartFluidStorage _node) {
+	public HandlerPartStorageGas(PartGasStorage _node) {
 		this.node = _node;
 	}
 

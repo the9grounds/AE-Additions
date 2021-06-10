@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import extracells.util.ItemStackUtils;
-import extracells.util.ItemUtils;
 import extracells.util.MachineSource;
 import extracells.util.StorageChannels;
 import net.minecraft.client.gui.inventory.GuiContainer;

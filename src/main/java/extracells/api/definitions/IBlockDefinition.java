@@ -4,7 +4,7 @@ import appeng.api.definitions.ITileDefinition;
 
 public interface IBlockDefinition {
 
-	ITileDefinition blockInterface();
+//	ITileDefinition blockInterface();
 
 	ITileDefinition certusTank();
 
@@ -12,5 +12,13 @@ public interface IBlockDefinition {
 
 	ITileDefinition fluidFiller();
 
-	ITileDefinition walrus();
+	ITileDefinition craftingStorage256();
+
+	ITileDefinition craftingStorage1024();
+
+	ITileDefinition craftingStorage4096();
+
+	ITileDefinition craftingStorage16384();
+
+//	ITileDefinition walrus();
 }

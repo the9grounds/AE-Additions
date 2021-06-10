@@ -1,5 +1,6 @@
-package extracells.container.fluid;
+package extracells.container.gas;
 
+import extracells.part.gas.PartGasLevelEmitter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
@@ -9,17 +10,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import extracells.network.packet.part.PacketPartConfig;
-import extracells.part.fluid.PartFluidLevelEmitter;
 import extracells.util.FluidHelper;
 import extracells.util.NetworkUtil;
 
-public class ContainerFluidEmitter extends Container {
+public class ContainerGasEmitter extends Container {
 
-	private final PartFluidLevelEmitter part;
+	private final PartGasLevelEmitter part;
 	private final EntityPlayer player;
 	private long clientAmount = -1;
 
-	public ContainerFluidEmitter(PartFluidLevelEmitter part, EntityPlayer player) {
+	public ContainerGasEmitter(PartGasLevelEmitter part, EntityPlayer player) {
 		super();
 		this.part = part;
 		this.player = player;

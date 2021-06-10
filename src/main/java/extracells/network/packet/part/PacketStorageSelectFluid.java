@@ -1,18 +1,15 @@
 package extracells.network.packet.part;
 
-import java.io.IOException;
-
-import net.minecraft.entity.player.EntityPlayerMP;
-
-import net.minecraftforge.fluids.Fluid;
-
 import extracells.container.ContainerStorage;
-import extracells.container.fluid.ContainerFluidStorage;
 import extracells.network.packet.IPacketHandlerServer;
 import extracells.network.packet.Packet;
 import extracells.network.packet.PacketBufferEC;
 import extracells.network.packet.PacketId;
 import extracells.util.GuiUtil;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fluids.Fluid;
+
+import java.io.IOException;
 
 public class PacketStorageSelectFluid extends Packet {
 	Fluid fluid;

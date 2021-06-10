@@ -1,21 +1,61 @@
 package extracells.part.gas
 
 import appeng.api.config.Actionable
+import appeng.api.config.SecurityPermissions
+import appeng.api.parts.IPart
+import appeng.api.parts.IPartCollisionHelper
+import appeng.api.parts.IPartModel
+import appeng.api.util.AECableType
 import extracells.integration.Integration
 import extracells.integration.mekanism.gas.Capabilities
-import extracells.part.fluid.PartFluidExport
+import extracells.models.PartModels
+import extracells.util.PermissionUtil
 import extracells.util.StorageChannels
 import mekanism.api.gas.GasStack
 import mekanism.api.gas.IGasHandler
 import mekanism.api.gas.ITubeConnection
+import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.EnumFacing
+import net.minecraft.util.EnumHand
+import net.minecraft.util.math.Vec3d
 import net.minecraftforge.common.capabilities.Capability
 import net.minecraftforge.fluids.Fluid
 import net.minecraftforge.fluids.FluidStack
 import net.minecraftforge.fml.common.Optional
 
 @Optional.Interface(iface = "mekanism.api.gas.ITubeConnection", modid = "MekanismAPI|gas", striprefs = true)
-class PartGasExport : PartFluidExport(), ITubeConnection {
+class PartGasExport : PartGasIO(), ITubeConnection {
+
+    override fun getCableConnectionLength(aeCableType: AECableType?): Float {
+        return 5.0f
+    }
+
+    override fun getBoxes(bch: IPartCollisionHelper) {
+        bch.addBox(6.0, 6.0, 12.0, 10.0, 10.0, 13.0)
+        bch.addBox(4.0, 4.0, 13.0, 12.0, 12.0, 14.0)
+        bch.addBox(5.0, 5.0, 14.0, 11.0, 11.0, 15.0)
+        bch.addBox(6.0, 6.0, 15.0, 10.0, 10.0, 16.0)
+        bch.addBox(6.0, 6.0, 11.0, 10.0, 10.0, 12.0)
+    }
+
+    override fun getPowerUsage(): Double {
+        return 1.0
+    }
+
+    override fun onActivate(player: EntityPlayer?, hand: EnumHand?, pos: Vec3d?): Boolean {
+        return if (PermissionUtil.hasPermission(player, SecurityPermissions.BUILD, this as IPart)) {
+            super.onActivate(player, hand, pos)
+        } else false
+    }
+
+    override fun getStaticModels(): IPartModel {
+        if (isActive && isPowered) {
+            return PartModels.EXPORT_HAS_CHANNEL
+        } else if (isPowered) {
+            return PartModels.EXPORT_ON
+        }
+        return PartModels.EXPORT_OFF
+    }
 
     private val isMekanismEnabled = Integration.Mods.MEKANISMGAS.isEnabled
 
