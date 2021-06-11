@@ -26,7 +26,7 @@ import net.minecraftforge.fml.common.Optional
 @Optional.Interface(iface = "mekanism.api.gas.ITubeConnection", modid = "MekanismAPI|gas", striprefs = true)
 class PartGasExport : PartGasIO(), ITubeConnection {
 
-    override fun getCableConnectionLength(aeCableType: AECableType): Float {
+    override fun getCableConnectionLength(aeCableType: AECableType?): Float {
         return 5.0f
     }
 

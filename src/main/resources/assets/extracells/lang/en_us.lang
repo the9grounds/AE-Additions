@@ -123,6 +123,8 @@ extracells.tooltip.deprecated1=This item has been deprecated
 extracells.tooltip.deprecated2=Replaced by %s from Applied Energistics 2
 extracells.tooltip.deprecated.part=Place in crafting grid to convert
 extracells.tooltip.deprecated.cell=Empty this cell using the ME IO Port then break into its components to convert
+//GasIO Group Name
+extracells.gas.IO=ME Gas Import/Export Bus
 
 //Buttons
 extracells.gui.craft=Craft

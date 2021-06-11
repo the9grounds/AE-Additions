@@ -36,7 +36,7 @@ import net.minecraftforge.fluids.Fluid
 import java.util.*
 
 abstract class PartGasIO : PartECBase(), IGridTickable, IInventoryListener, IFluidSlotListener, IUpgradeable {
-    val filterFluids = arrayOfNulls<Fluid>(9)
+    @JvmField val filterFluids = arrayOfNulls<Fluid>(9)
     val filterOrder = listOf<Int>(4,1,3,5,7,0,2,6,8)
     private val upgradeInventory: UpgradeInventory = object : UpgradeInventory(this) {
         override fun onContentsChanged() {
@@ -68,7 +68,7 @@ abstract class PartGasIO : PartECBase(), IGridTickable, IInventoryListener, IFlu
         return stack
     }
 
-    open override fun getCableConnectionLength(aeCableType: AECableType): Float {
+    open override fun getCableConnectionLength(aeCableType: AECableType?): Float {
         return 5.0f
     }
 

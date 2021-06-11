@@ -31,7 +31,7 @@ import kotlin.math.min
 ])
 class PartGasImport: PartGasIO(), IGasHandler, ITubeConnection {
 
-    override fun getCableConnectionLength(aeCableType: AECableType ): Float {
+    override fun getCableConnectionLength(aeCableType: AECableType? ): Float {
         return 5.0f
     }
 
