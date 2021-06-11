@@ -156,7 +156,7 @@ class PartGasImport: PartGasIO(), IGasHandler, ITubeConnection {
         } else {
             val gasStack = toFill.gasStack
             if (gasStack is GasStack) {
-                facingTank.drawGas(side.opposite, gasStack.amount, true)
+                facingTank.drawGas(side.opposite, toDrain, true)
 
                 return true
             }
@@ -169,19 +169,20 @@ class PartGasImport: PartGasIO(), IGasHandler, ITubeConnection {
     // This is bugged, it duplicates the amount
     @Optional.Method(modid = "MekanismAPI|gas")
     override fun receiveGas(side: EnumFacing?, stack: GasStack?, doTransfer: Boolean): Int {
-        if (stack == null || stack.amount <= 0 || !canReceiveGas(side, stack.gas)) {
+        if (stack == null || stack.amount <= 0 || !canReceiveGas(side, stack.gas) || !isActive) {
             return 0
         }
 
         val copy = stack.copy()
 
-        val amount = min(copy.amount, 125 + speedState * 125)
+        // Workaround to fix duplicate gas when the gas tank auto ejects
+        val amount = (min(copy.amount, 125 + speedState * 125)) / 2
 
         val gasStack = StorageChannels.GAS!!.createStack(GasStack(copy.gas, amount))
 
-        val notInjected = injectGas(gasStack, Actionable.MODULATE) ?: return amount
+        val notInjected = injectGas(gasStack, Actionable.MODULATE) ?: return amount * 2
 
-        return amount - notInjected.stackSize.toInt()
+        return amount * 2 - notInjected.stackSize.toInt()
     }
 
     @Optional.Method(modid = "MekanismAPI|gas")

@@ -55,12 +55,14 @@ class ExtraCellsCellInventory<T: IAEStack<T>?>(cellType: IExtraCellsStorageCell<
                 if (mode == Actionable.MODULATE) {
                     l.setStackSize(l.getStackSize() + remainingItemCount)
                     saveChanges()
+                    input.setStackSize(r.getStackSize())
                 }
                 r
             } else {
                 if (mode == Actionable.MODULATE) {
                     l.setStackSize(l.getStackSize() + input.getStackSize())
                     saveChanges()
+                    input.setStackSize(0L)
                 }
                 null
             }
@@ -78,12 +80,15 @@ class ExtraCellsCellInventory<T: IAEStack<T>?>(cellType: IExtraCellsStorageCell<
                         toWrite!!.setStackSize(remainingItemCount)
                         cellItems!!.add(toWrite)
                         saveChanges()
+                        input.setStackSize(toReturn.getStackSize())
                     }
                     return toReturn
                 }
                 if (mode == Actionable.MODULATE) {
-                    cellItems!!.add(input)
+                    val copy = input.copy()
+                    cellItems!!.add(copy)
                     saveChanges()
+                    input.setStackSize(0L)
                 }
                 return null
             }
@@ -124,7 +129,7 @@ class ExtraCellsCellInventory<T: IAEStack<T>?>(cellType: IExtraCellsStorageCell<
 
     override fun getChannel(): IStorageChannel<T>? = channel
 
-    override fun loadCellItem(compoundTag: NBTTagCompound?, stackSize: Int): Boolean {
+    override fun loadCellItem(compoundTag: NBTTagCompound?, stackSize: Long): Boolean {
 
         // Now load the item stack
         val t: T?
@@ -142,7 +147,7 @@ class ExtraCellsCellInventory<T: IAEStack<T>?>(cellType: IExtraCellsStorageCell<
             throw ex
         }
 
-        t.setStackSize(stackSize.toLong())
+        t.setStackSize(stackSize)
 
         if (stackSize > 0) {
             cellItems!!.add(t)

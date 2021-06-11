@@ -145,7 +145,7 @@ abstract class AbstractExtraCellsInventory<T : IAEStack<T>?>(cellType: IExtraCel
         var needsUpdate = false
         for (slot in 0 until types) {
             val compoundTag = tagCompound!!.getCompoundTag(ITEM_SLOT_KEYS[slot])
-            val stackSize = tagCompound!!.getInteger(ITEM_SLOT_COUNT_KEYS[slot])
+            val stackSize = tagCompound!!.getLong(ITEM_SLOT_COUNT_KEYS[slot])
             needsUpdate = needsUpdate or !loadCellItem(compoundTag, stackSize)
         }
         if (needsUpdate) {
@@ -160,7 +160,7 @@ abstract class AbstractExtraCellsInventory<T : IAEStack<T>?>(cellType: IExtraCel
      * @param stackSize
      * @return true when successfully loaded
      */
-    protected abstract fun loadCellItem(compoundTag: NBTTagCompound?, stackSize: Int): Boolean
+    protected abstract fun loadCellItem(compoundTag: NBTTagCompound?, stackSize: Long): Boolean
 
     override fun getAvailableItems(out: IItemList<T>): IItemList<T>? {
         for (item in cellItems!!) {

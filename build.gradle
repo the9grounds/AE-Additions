@@ -124,7 +124,7 @@ dependencies {
 
     compile group: "net.shadowfacts", name: "Forgelin", version: "1.8.4"
 
-    deobfCompile ("mcp.mobius.waila:Hwyla:${config.version.waila}:api") {
+    deobfProvided ("mcp.mobius.waila:Hwyla:${config.version.waila}:api") {
         transitive = false
     }
 
