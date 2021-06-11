@@ -78,8 +78,10 @@ public class CommonProxy {
 
 	public void registerBlocks() {
 		for (BlockEnum current : BlockEnum.values()) {
-			registerBlock(current.getBlock());
-			registerItem(current.getItem());
+			if (current.getEnabled()) {
+				registerBlock(current.getBlock());
+				registerItem(current.getItem());
+			}
 		}
 	}
 

@@ -26,7 +26,7 @@ import net.minecraftforge.fml.common.Optional
 @Optional.Interface(iface = "mekanism.api.gas.ITubeConnection", modid = "MekanismAPI|gas", striprefs = true)
 class PartGasExport : PartGasIO(), ITubeConnection {
 
-    override fun getCableConnectionLength(aeCableType: AECableType?): Float {
+    override fun getCableConnectionLength(aeCableType: AECableType): Float {
         return 5.0f
     }
 
@@ -74,37 +74,9 @@ class PartGasExport : PartGasIO(), ITubeConnection {
             return false
         }
 
-        val filter = mutableListOf<Fluid?>()
+        val activeFilters = activeFilters
 
-        if (this.filterFluids[4] != null) {
-            filter.add(this.filterFluids[4])
-        }
-
-        if (this.filterSize >= 1) {
-            var i: Byte = 1.toByte()
-
-            while (i < 9) {
-                if (i != 4.toByte()) {
-                    filter.add(this.filterFluids[i.toInt()])
-                }
-
-                i = (i + 2).toByte()
-            }
-        }
-
-        if (this.filterSize >= 2) {
-            var i: Byte = 1.toByte()
-
-            while (i < 9) {
-                if (i != 4.toByte()) {
-                    filter.add(this.filterFluids[i.toInt()])
-                }
-
-                i = (i + 2).toByte()
-            }
-        }
-
-        for (fluid in filter) {
+        for (fluid in activeFilters) {
             if (fluid != null) {
                 val stack = extractGas(StorageChannels.GAS!!.createStack(FluidStack(fluid, rate * ticksSinceLastCall)), Actionable.SIMULATE)
 

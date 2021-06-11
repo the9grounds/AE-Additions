@@ -20,15 +20,16 @@ public enum BlockEnum {
 	FILLER("fluidfiller", new BlockFluidFiller(), ItemBlockFluidFiller::new),
 	BLASTRESISTANTMEDRIVE("hardmedrive", new BlockHardMEDrive()),
 	VIBRANTCHAMBERFLUID("vibrantchamberfluid", new BlockVibrationChamberFluid()),
-	UPGRADEDCRAFTINGSTORAGE256("crafting_storage_256", new BlockCraftingStorage(BlockCraftingUnit.CraftingUnitType.STORAGE_1K)),
-	UPGRADEDCRAFTINGSTORAGE1024("crafting_storage_1024", new BlockCraftingStorage(BlockCraftingUnit.CraftingUnitType.STORAGE_4K)),
-	UPGRADEDCRAFTINGSTORAGE4096("crafting_storage_4096", new BlockCraftingStorage(BlockCraftingUnit.CraftingUnitType.STORAGE_16K)),
-	UPGRADEDCRAFTINGSTORAGE16384("crafting_storage_16384", new BlockCraftingStorage(BlockCraftingUnit.CraftingUnitType.STORAGE_64K));
+	UPGRADEDCRAFTINGSTORAGE256("crafting_storage_256", new BlockCraftingStorage(BlockCraftingUnit.CraftingUnitType.STORAGE_1K), false),
+	UPGRADEDCRAFTINGSTORAGE1024("crafting_storage_1024", new BlockCraftingStorage(BlockCraftingUnit.CraftingUnitType.STORAGE_4K), false),
+	UPGRADEDCRAFTINGSTORAGE4096("crafting_storage_4096", new BlockCraftingStorage(BlockCraftingUnit.CraftingUnitType.STORAGE_16K), false),
+	UPGRADEDCRAFTINGSTORAGE16384("crafting_storage_16384", new BlockCraftingStorage(BlockCraftingUnit.CraftingUnitType.STORAGE_64K), false);
 
 	private final String internalName;
 	private Block block;
 	private ItemBlock item;
 	private Integration.Mods mod;
+	private Boolean enabled = true;
 
 	BlockEnum(String internalName, Block block, Integration.Mods mod) {
 		this(internalName, block, ItemBlock::new, mod);
@@ -36,6 +37,11 @@ public enum BlockEnum {
 
 	BlockEnum(String internalName, Block block) {
 		this(internalName, block, ItemBlock::new);
+	}
+
+	BlockEnum(String internalName, Block block, Boolean enabled) {
+		this(internalName, block, ItemBlock::new);
+		this.enabled = enabled;
 	}
 
 	BlockEnum(String internalName, Block block, Function<Block, ItemBlock> itemFactory) {
@@ -73,5 +79,9 @@ public enum BlockEnum {
 
 	public Integration.Mods getMod() {
 		return mod;
+	}
+
+	public Boolean getEnabled() {
+		return enabled;
 	}
 }

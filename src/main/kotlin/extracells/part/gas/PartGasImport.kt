@@ -31,7 +31,7 @@ import kotlin.math.min
 ])
 class PartGasImport: PartGasIO(), IGasHandler, ITubeConnection {
 
-    override fun getCableConnectionLength(aeCableType: AECableType?): Float {
+    override fun getCableConnectionLength(aeCableType: AECableType ): Float {
         return 5.0f
     }
 
@@ -72,33 +72,9 @@ class PartGasImport: PartGasIO(), IGasHandler, ITubeConnection {
         }
 
         var empty = true
-        val filter = mutableListOf<Fluid>()
+        val activeFilters = activeFilters
 
-        if (this.filterFluids[4] != null) {
-            filter.add(this.filterFluids[4])
-        }
-
-        if (this.filterSize >= 1) {
-            var i = 1.toByte()
-            while (i < 9) {
-                if (i != 4.toByte()) {
-                    filter.add(this.filterFluids[i.toInt()])
-                }
-                i = (i.toInt() + 2).toByte()
-            }
-        }
-
-        if (this.filterSize >= 2) {
-            var i = 1.toByte()
-            while (i < 9) {
-                if (i != 4.toByte()) {
-                    filter.add(this.filterFluids[i.toInt()])
-                }
-                i = (i.toInt() + 2).toByte()
-            }
-        }
-
-        for (fluid in filter) {
+        for (fluid in activeFilters) {
             if (fluid != null) {
                 empty = false
 
