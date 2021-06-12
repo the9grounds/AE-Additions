@@ -1,10 +1,7 @@
 package extracells.item.storage;
 
-import java.util.List;
-
-import appeng.api.storage.data.IAEStack;
+import extracells.registries.CellDefinition;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -19,7 +16,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.translation.I18n;
@@ -33,7 +29,6 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 import cofh.redstoneflux.api.IEnergyContainerItem;
 import extracells.inventory.ECCellInventory;
 import extracells.item.EnumBlockContainerMode;
-import extracells.item.ItemECBase;
 import extracells.models.ModelManager;
 import extracells.registries.ItemEnum;
 import extracells.util.ECConfigHandler;
@@ -42,15 +37,11 @@ import extracells.util.StorageChannels;
 import appeng.api.AEApi;
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
-import appeng.api.config.FuzzyMode;
 import appeng.api.config.PowerUnits;
 import appeng.api.implementations.items.IAEItemPowerStorage;
-import appeng.api.implementations.items.IStorageCell;
 import appeng.api.storage.ICellInventory;
 import appeng.api.storage.ICellInventoryHandler;
-import appeng.api.storage.ICellRegistry;
 import appeng.api.storage.IMEInventoryHandler;
-import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
 
@@ -70,8 +61,9 @@ public class ItemStorageCellPhysical extends ItemStorageCell<IAEItemStack> imple
 
 	@Override
 	public int getBytesPerType(ItemStack cellItem) {
-		return ECConfigHandler.dynamicTypes ? bytes_cell[MathHelper.clamp(
-			cellItem.getItemDamage(), 0, suffixes.length - 1)] / 128 : 8;
+		int bytes = definition.cells.fromMeta(cellItem.getItemDamage()).getBytes();
+
+		return ECConfigHandler.dynamicTypes ? bytes / 128 : 8;
 	}
 
 	private NBTTagCompound ensureTagCompound(ItemStack itemStack) {
@@ -132,8 +124,7 @@ public class ItemStorageCellPhysical extends ItemStorageCell<IAEItemStack> imple
 
 	@Override
 	public int getBytes(ItemStack cellItem) {
-		return bytes_cell[MathHelper.clamp(cellItem.getItemDamage(), 0,
-			suffixes.length - 1)];
+		return definition.cells.fromMeta(cellItem.getItemDamage()).getBytes();
 	}
 
 	@Override
@@ -228,7 +219,7 @@ public class ItemStorageCellPhysical extends ItemStorageCell<IAEItemStack> imple
 
 	@Override
 	public int getTotalTypes(ItemStack cellItem) {
-		return types_cell[MathHelper.clamp(cellItem.getItemDamage(), 0, suffixes.length - 1)];
+		return definition.cells.fromMeta(cellItem.getItemDamage()).getNumberOfTypes();
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package extracells.util;
 
 import com.google.common.base.Preconditions;
 
+import extracells.AEAdditions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,7 +17,6 @@ import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import extracells.ExtraCells;
 import extracells.network.packet.IPacket;
 
 public class NetworkUtil {
@@ -48,7 +48,7 @@ public class NetworkUtil {
 		}
 
 		EntityPlayerMP player = (EntityPlayerMP) entityplayer;
-		ExtraCells.getPacketHandler().sendPacket(packet.getPacket(), player);
+		AEAdditions.getPacketHandler().sendPacket(packet.getPacket(), player);
 	}
 
 	public static void inventoryChangeNotify(EntityPlayer player) {

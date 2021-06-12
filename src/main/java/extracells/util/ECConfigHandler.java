@@ -1,12 +1,12 @@
 package extracells.util;
 
+import extracells.AEAdditions;
 import net.minecraftforge.common.config.Configuration;
 
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import extracells.Constants;
-import extracells.ExtraCells;
 
 public class ECConfigHandler {
 
@@ -22,7 +22,7 @@ public class ECConfigHandler {
 	public void reload() {
 		shortenedBuckets = config.get("Tooltips", "shortenedBuckets", true, "Shall the guis shorten large mB values?").getBoolean(true);
 		dynamicTypes = config.get("Storage Cells", "dynamicTypes", true, "Should the mount of bytes needed for a new type depend on the cellsize?").getBoolean(true);
-		ExtraCells.integration.loadConfig(config);
+		AEAdditions.integration.loadConfig(config);
 
 		if (config.hasChanged()) {
 			config.save();

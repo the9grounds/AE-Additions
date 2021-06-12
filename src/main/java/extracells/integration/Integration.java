@@ -1,5 +1,6 @@
 package extracells.integration;
 
+import extracells.AEAdditions;
 import extracells.integration.appeng.AppEng;
 import extracells.integration.buildcraft.tools.BuildcraftTools;
 import extracells.integration.cofh.item.CofhItem;
@@ -12,7 +13,6 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModAPIManager;
 import net.minecraftforge.fml.relauncher.Side;
 
-import extracells.ExtraCells;
 import extracells.integration.mekanism.Mekanism;
 import extracells.integration.mekanism.gas.MekanismGas;
 import extracells.integration.waila.Waila;
@@ -83,7 +83,7 @@ public class Integration {
 		}
 
 		private boolean correctSide() {
-			return ExtraCells.proxy.isClient() ? isOnClient() : isOnServer();
+			return AEAdditions.proxy.isClient() ? isOnClient() : isOnServer();
 		}
 	}
 
