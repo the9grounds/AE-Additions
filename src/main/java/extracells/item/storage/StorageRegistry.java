@@ -1,7 +1,10 @@
 package extracells.item.storage;
 
 import com.google.common.collect.ImmutableList;
+import extracells.config.CellConfig;
+import extracells.registries.CellDefinition;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -37,14 +40,20 @@ public class StorageRegistry implements Iterable<StorageType> {
 			this.name = name;
 		}
 
-		public void add(CellDefinition definition, int... sizes) {
-			for (int size : sizes) {
-				add(definition, size);
-			}
-		}
+//		public void add(CellDefinition definition, int... sizes) {
+//			for (int size : sizes) {
+//				add(definition, size);
+//			}
+//		}
+//
+//		public void add(CellDefinition definition, Iterable<Integer> sizes) {
+//			for (int size : sizes) {
+//				add(definition, size);
+//			}
+//		}
 
-		public void add(CellDefinition definition, int size) {
-			types.add(new StorageType(definition, types.size(), size, name));
+		public void add(CellDefinition definition, String cellName, CellConfig config) {
+			types.add(new StorageType(definition, types.size(), cellName, config.getEnabled(), config.getNumberOfTypes(), config.getSize(), name));
 		}
 
 		public int size() {

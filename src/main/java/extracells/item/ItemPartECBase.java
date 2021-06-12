@@ -60,7 +60,7 @@ public class ItemPartECBase extends ItemECBase implements IPartItem, IItemGroup,
 		} catch (Throwable ex) {
 			Log.error(
 				"ExtraCells2 severe error - could not create AE2 Part from ItemStack! This should not happen!\n"
-					+ "[ExtraCells2 SEVERE] Contact Leonelf/M3gaFr3ak with the following stack trace.\n"
+					+ "[ExtraCells2 SEVERE] Contact MasterYodA with the following stack trace.\n"
 					+ "[ExtraCells2 SEVERE] Offending item: '%s'",
 				itemStack.toString(), ex);
 			return null;

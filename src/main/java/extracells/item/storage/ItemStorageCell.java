@@ -4,6 +4,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import extracells.api.IExtraCellsStorageCell;
+import extracells.registries.CellDefinition;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
@@ -83,7 +84,9 @@ public abstract class ItemStorageCell<T extends IAEStack<T>> extends ItemECBase 
         if (!this.isInCreativeTab(creativeTab))
             return;
         for (StorageType type : definition.cells) {
-            listSubItems.add(new ItemStack(this, 1, type.getMeta()));
+            if (type.getEnabled()) {
+                listSubItems.add(new ItemStack(this, 1, type.getMeta()));
+            }
         }
     }
 
@@ -92,6 +95,12 @@ public abstract class ItemStorageCell<T extends IAEStack<T>> extends ItemECBase 
     public String getTranslationKey(ItemStack itemStack) {
         StorageType type = definition.cells.fromMeta(itemStack.getItemDamage());
         return "extracells.item.storage." + type.getIdentifier();
+    }
+
+    @Override
+    public String getItemStackDisplayName(ItemStack stack) {
+        StorageType type = definition.cells.fromMeta(stack.getItemDamage());
+        return String.format(super.getItemStackDisplayName(stack), type.getSize());
     }
 
     @Override
@@ -120,7 +129,9 @@ public abstract class ItemStorageCell<T extends IAEStack<T>> extends ItemECBase 
     @SideOnly(Side.CLIENT)
     public void registerModel(Item item, ModelManager manager) {
         for (StorageType type : definition.cells) {
-            manager.registerItemModel(item, type.getMeta(), type.getModelName());
+            if (type.getEnabled()) {
+                manager.registerItemModel(item, type.getMeta(), type.getModelName());
+            }
         }
     }
 
@@ -137,7 +148,8 @@ public abstract class ItemStorageCell<T extends IAEStack<T>> extends ItemECBase 
 
     @Override
     public int getTotalTypes(@Nonnull ItemStack cellItem) {
-        return 5;
+        StorageType type = this.definition.cells.fromMeta(cellItem.getItemDamage());
+        return type.getNumberOfTypes();
     }
 
     @Override

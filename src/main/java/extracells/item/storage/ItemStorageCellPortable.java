@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 import javax.annotation.Nonnull;
 
+import extracells.registries.CellDefinition;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;

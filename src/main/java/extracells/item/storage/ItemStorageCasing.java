@@ -2,6 +2,7 @@ package extracells.item.storage;
 
 import java.util.List;
 
+import extracells.registries.CellDefinition;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

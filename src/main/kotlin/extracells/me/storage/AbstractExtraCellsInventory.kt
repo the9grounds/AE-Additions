@@ -12,9 +12,10 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.items.IItemHandler
 
+// TODO: Redo this class to allow for configurable number of items
 abstract class AbstractExtraCellsInventory<T : IAEStack<T>?>(cellType: IExtraCellsStorageCell<T>?, o: ItemStack?, container: ISaveProvider?) : ICellInventory<T> {
     protected var container: ISaveProvider? = null
-    private var maxItemTypes = MAX_ITEM_TYPES
+    private var maxItemTypes = 500
     private var storedItems: Short = 0
     private var storedItemCount = 0L
     private var i: ItemStack? = null
@@ -34,7 +35,6 @@ abstract class AbstractExtraCellsInventory<T : IAEStack<T>?>(cellType: IExtraCel
 
     companion object
     {
-        private val MAX_ITEM_TYPES = 63
         private val ITEM_TYPE_TAG = "it"
         private val ITEM_COUNT_TAG = "ic"
         private val ITEM_SLOT = "#"
@@ -43,16 +43,6 @@ abstract class AbstractExtraCellsInventory<T : IAEStack<T>?>(cellType: IExtraCel
         protected val ITEM_PRE_FORMATTED_SLOT = "PF#"
         protected val ITEM_PRE_FORMATTED_NAME = "PN"
         protected val ITEM_PRE_FORMATTED_FUZZY = "FP"
-        private val ITEM_SLOT_KEYS = arrayOfNulls<String>(MAX_ITEM_TYPES)
-        private val ITEM_SLOT_COUNT_KEYS = arrayOfNulls<String>(MAX_ITEM_TYPES)
-
-        init {
-
-            for (x in 0 until MAX_ITEM_TYPES) {
-                ITEM_SLOT_KEYS[x] = ITEM_SLOT + x
-                ITEM_SLOT_COUNT_KEYS[x] = ITEM_SLOT_COUNT + x
-            }
-        }
     }
 
     init {
@@ -60,9 +50,6 @@ abstract class AbstractExtraCellsInventory<T : IAEStack<T>?>(cellType: IExtraCel
         this.cellType = cellType
         itemsPerByte = this.cellType!!.getChannel().unitsPerByte
         maxItemTypes = this.cellType!!.getTotalTypes(i!!)
-        if (maxItemTypes > MAX_ITEM_TYPES) {
-            maxItemTypes = MAX_ITEM_TYPES
-        }
         if (maxItemTypes < 1) {
             maxItemTypes = 1
         }
@@ -89,14 +76,15 @@ abstract class AbstractExtraCellsInventory<T : IAEStack<T>?>(cellType: IExtraCel
 
         // add new pretty stuff...
         var x = 0
-        for (v in cellItems!!) {
-            itemCount += v!!.getStackSize()
+        cellItems!!.forEachIndexed {index, element ->
+            itemCount += element!!.getStackSize()
             val g = NBTTagCompound()
-            v.writeToNBT(g)
-            tagCompound!!.setTag(ITEM_SLOT_KEYS[x], g)
-            tagCompound!!.setLong(ITEM_SLOT_COUNT_KEYS[x], v.getStackSize())
-            x++
+            element.writeToNBT(g)
+            tagCompound!!.setTag(ITEM_SLOT + index, g)
+            tagCompound!!.setLong(ITEM_SLOT_COUNT + index, element.getStackSize())
+            x = index
         }
+        x++
         val oldStoredItems = storedItems
         storedItems = cellItems!!.size().toShort()
         if (cellItems!!.isEmpty) {
@@ -113,8 +101,8 @@ abstract class AbstractExtraCellsInventory<T : IAEStack<T>?>(cellType: IExtraCel
 
         // clean any old crusty stuff...
         while (x < oldStoredItems && x < maxItemTypes) {
-            tagCompound!!.removeTag(ITEM_SLOT_KEYS[x])
-            tagCompound!!.removeTag(ITEM_SLOT_COUNT_KEYS[x])
+            tagCompound!!.removeTag(ITEM_SLOT + x)
+            tagCompound!!.removeTag(ITEM_SLOT_COUNT + x)
             x++
         }
         isPersisted = true
@@ -144,8 +132,8 @@ abstract class AbstractExtraCellsInventory<T : IAEStack<T>?>(cellType: IExtraCel
         val types = this.storedItemTypes.toInt()
         var needsUpdate = false
         for (slot in 0 until types) {
-            val compoundTag = tagCompound!!.getCompoundTag(ITEM_SLOT_KEYS[slot])
-            val stackSize = tagCompound!!.getLong(ITEM_SLOT_COUNT_KEYS[slot])
+            val compoundTag = tagCompound!!.getCompoundTag(ITEM_SLOT + slot)
+            val stackSize = tagCompound!!.getLong(ITEM_SLOT_COUNT + slot)
             needsUpdate = needsUpdate or !loadCellItem(compoundTag, stackSize)
         }
         if (needsUpdate) {

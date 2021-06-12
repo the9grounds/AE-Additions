@@ -1,6 +1,7 @@
 package extracells.item.storage;
 
 import extracells.api.IExtraCellsStorageCell;
+import extracells.registries.CellDefinition;
 import net.minecraft.item.ItemStack;
 
 import net.minecraftforge.items.IItemHandler;

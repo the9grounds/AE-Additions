@@ -2,6 +2,7 @@ package extracells.item.storage;
 
 import javax.annotation.Nonnull;
 
+import extracells.registries.CellDefinition;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

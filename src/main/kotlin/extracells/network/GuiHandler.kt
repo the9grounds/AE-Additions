@@ -8,7 +8,7 @@ import appeng.api.parts.IPart
 import appeng.api.parts.IPartHost
 import appeng.api.storage.IMEMonitor
 import appeng.api.util.AEPartLocation
-import extracells.ExtraCells
+import extracells.AEAdditions
 import extracells.api.IPortableGasStorageCell
 import extracells.api.IWirelessGasTermHandler
 import extracells.api.gas.IAEGasStack
@@ -80,11 +80,11 @@ object GuiHandler: IGuiHandler {
     @JvmStatic fun launchGui(id: Int, player: EntityPlayer, hand: EnumHand, args: Array<Any>) {
         temp = args
         this.hand = hand
-        player.openGui(ExtraCells.instance, id, player.entityWorld, player.posX.toInt(), player.posY.toInt(), player.posZ.toInt())
+        player.openGui(AEAdditions, id, player.entityWorld, player.posX.toInt(), player.posY.toInt(), player.posZ.toInt())
     }
 
     @JvmStatic fun launchGui(id: Int, player: EntityPlayer, world: World, x: Int, y: Int, z: Int): Any {
-        return player.openGui(ExtraCells.instance, id, world, x, y, z)
+        return player.openGui(AEAdditions, id, world, x, y, z)
     }
 
     @JvmStatic fun hasPermissions(pos: BlockPos, side: AEPartLocation, player: EntityPlayer): Boolean {
