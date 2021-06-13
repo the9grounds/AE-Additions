@@ -24,7 +24,7 @@ buildNonRelease:
       - build/libs/*.jar
   cache:
     key: "$CI_COMMIT_REF_NAME"
-    policy: push
+    policy: pull-push
     paths:
       - build
       - .gradle
