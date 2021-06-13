@@ -1,0 +1,22 @@
+﻿{
+	"conditions": [{
+		"type": "aeadditions:mod_integration",
+		"mod": "mekanismgas"
+	}],
+	"result": {
+		"item": "aeadditions:storage.gas.portable",
+		"data": 0
+	},
+	"type": "forge:ore_shapeless",
+	"ingredients": [{
+			"item": "appliedenergistics2:chest"
+		},
+		{
+			"item": "aeadditions:storage.component",
+			"data": 11
+		},
+		{
+			"item": "appliedenergistics2:energy_Cell"
+		}
+	]
+}

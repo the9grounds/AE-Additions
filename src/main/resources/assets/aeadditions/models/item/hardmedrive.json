@@ -1,0 +1,6 @@
+{
+  "parent": "aeadditions:block/hard_drive_base",
+  "textures": {
+    "front": "aeadditions:blocks/hard_me_drive_flat"
+  }
+}

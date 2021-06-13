@@ -1,7 +1,7 @@
 [
 {
-  "modid": "extracells",
-  "name": "Extra Cells",
+  "modid": "aeadditions",
+  "name": "AE Additions",
   "description": "Adds new ME Storage Cells and some other cool stuff to AE 2.",
   "version": "${version}",
   "mcversion": "${mcversion}",

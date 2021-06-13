@@ -1,0 +1,18 @@
+{
+    "result": {
+        "item": "aeadditions:part.base",
+		"data": 7
+    },
+    "type": "forge:ore_shapeless",
+    "ingredients": [
+		{
+			"item": "appliedenergistics2:drive"
+        },
+		{
+			"item": "#aeadditions:iron"
+		},
+		{
+			"item": "#aeadditions:iron"
+		}
+    ]
+}

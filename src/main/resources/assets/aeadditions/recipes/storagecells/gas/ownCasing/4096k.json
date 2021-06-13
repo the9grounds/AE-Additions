@@ -1,0 +1,33 @@
+﻿{
+    "conditions": [
+        {
+            "type": "aeadditions:mod_integration",
+            "mod": "mekanismgas"
+        }
+    ],
+    "result": {
+        "item": "aeadditions:storage.gas",
+		"data": 6
+    },
+    "type": "forge:ore_shaped",
+    "pattern": [
+        "dad",
+        "asa",
+        "bbb"
+    ],
+    "key": {
+        "a": {
+			"item": "#aeadditions:dustFluix"
+        },
+		"b": {
+			"item": "#aeadditions:gold"
+		},
+		"d": {
+			"item": "#aeadditions:glassQuartz"
+		},
+		"s": {
+			"item": "aeadditions:storage.component",
+			"data": 17
+		}
+    }
+}

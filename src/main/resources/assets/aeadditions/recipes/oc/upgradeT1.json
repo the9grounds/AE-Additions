@@ -1,0 +1,35 @@
+﻿{
+    "conditions": [
+        {
+            "type": "aeadditions:mod_integration",
+            "mod": "opencomputers"
+        }
+    ],
+    "result": {
+        "item": "aeadditions:oc.upgrade",
+		"data": 2
+    },
+    "type": "forge:ore_shaped",
+    "pattern": [
+        "dad",
+        "mbm",
+        "dcd"
+    ],
+    "key": {
+        "a": {
+          "item": "#aeadditions:wirelessReceiver"
+        },
+		"c": {
+			"item": "#aeadditions:printedCircuitBoard"
+		},
+		"b": {
+			"item": "#aeadditions:wlanCard"
+		},
+		"d": {
+			"item": "#aeadditions:iron"
+		},
+		"m": {
+			"item": "#aeadditions:chip1"
+		}
+    }
+}

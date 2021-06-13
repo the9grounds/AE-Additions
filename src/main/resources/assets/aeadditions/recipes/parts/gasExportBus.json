@@ -1,0 +1,31 @@
+﻿{
+    "conditions": [
+        {
+            "type": "aeadditions:mod_integration",
+            "mod": "mekanismgas"
+        }
+    ],
+    "result": {
+        "item": "aeadditions:part.base",
+		"data": 14
+    },
+    "type": "forge:ore_shaped",
+    "pattern": [
+        "aba",
+        "cdc"
+    ],
+    "key": {
+        "a": {
+			"item": "#aeadditions:iron"
+        },
+		"b": {
+			"item": "#aeadditions:formationCore"
+		},
+		"c": {
+			"item": "#aeadditions:flower"
+		},
+		"d": {
+			"item": "minecraft:piston"
+		}
+    }
+}

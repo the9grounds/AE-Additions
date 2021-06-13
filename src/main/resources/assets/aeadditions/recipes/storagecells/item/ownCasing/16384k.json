@@ -1,0 +1,28 @@
+{
+    "result": {
+        "item": "aeadditions:storage.physical",
+		"data": 3
+    },
+    "type": "forge:ore_shaped",
+    "pattern": [
+        "dad",
+        "asa",
+        "bbb"
+    ],
+    "key": {
+        "a": {
+			"item": "#aeadditions:dustFluix"
+        },
+		"b": {
+			"type": "forge:ore_dict",
+            "ore": "gemDiamond"
+		},
+		"d": {
+			"item": "#aeadditions:glassQuartz"
+		},
+		"s": {
+			"item": "aeadditions:storage.component",
+			"data": 3
+		}
+    }
+}

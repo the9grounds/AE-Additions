@@ -1,0 +1,285 @@
+[
+    {
+        "name": "aeadditions:panel",
+        "ingredient": [
+            {
+                "type": "forge:ore_dict",
+                "ore": "itemIlluminatedPanel"
+            }
+        ]
+    },
+	{
+		"name": "aeadditions:chest",
+		"ingredient": [
+			{
+				"type": "forge:ore_dict",
+				"ore": "chestWood"
+			}
+		]
+	},
+	{
+		"name": "aeadditions:lapis",
+		"ingredient": [
+			{
+				"type": "forge:ore_dict",
+				"ore": "dyeBlue"
+			}
+		]
+	},
+	{
+		"name": "aeadditions:flower",
+		"ingredient": [
+			{
+				"type": "forge:ore_dict",
+				"ore": "dyeYellow"
+			}
+		]
+	},
+	{
+		"name": "aeadditions:iron",
+		"ingredient": [
+			{
+				"type": "forge:ore_dict",
+				"ore": "ingotIron"
+			}
+		]
+	},
+	{
+		"name": "aeadditions:gold",
+		"ingredient": [
+			{
+				"type": "forge:ore_dict",
+				"ore": "ingotGold"
+			}
+		]
+	},
+	{
+		"name": "aeadditions:diamond",
+		"ingredient": [
+			{
+				"type": "forge:ore_dict",
+				"ore": "gemDiamond"
+			}
+		]
+	},
+	{
+		"name": "aeadditions:formationCore",
+		"ingredient": [
+			{
+				"item": "appliedenergistics2:material",
+				"data": 43
+			}
+		]
+	},
+	{
+		"name": "aeadditions:annihilationCore",
+		"ingredient": [
+			{
+				"item": "appliedenergistics2:material",
+				"data": 44
+			}
+		]
+	},
+	{
+		"name": "aeadditions:cardFuzzy",
+		"ingredient": [
+			{
+				"item": "appliedenergistics2:material",
+				"data": 29
+			}
+		]
+	},
+	{
+		"name": "aeadditions:cardSpeed",
+		"ingredient": [
+			{
+				"item": "appliedenergistics2:material",
+				"data": 30
+			}
+		]
+	},
+	{
+		"name": "aeadditions:interface",
+		"ingredient": [
+			{
+				"item": "appliedenergistics2:part",
+				"data": 440
+			},
+			{
+				"item": "appliedenergistics2:interface"
+			}
+		]
+	},
+	{
+		"name": "aeadditions:exportBus",
+		"ingredient": [
+			{
+				"item": "appliedenergistics2:part",
+				"data": 260
+			}
+		]
+	},
+	{
+		"name": "aeadditions:levelEmitter",
+		"ingredient": [
+			{
+				"item": "appliedenergistics2:part",
+				"data": 280
+			}
+		]
+	},
+	{
+		"name": "aeadditions:dustFluix",
+		"ingredient": [
+			{
+				"type": "forge:ore_dict",
+				"ore": "dustFluix"
+			}
+		]
+	},
+	{
+		"name": "aeadditions:dustGlowstone",
+		"ingredient": [
+			{
+				"type": "forge:ore_dict",
+				"ore": "dustGlowstone"
+			}
+		]
+	},
+	{
+		"name": "aeadditions:engProcessor",
+		"ingredient": [
+			{
+				"item": "appliedenergistics2:material",
+				"data": 24
+			}
+		]
+	},
+	{
+		"name": "aeadditions:logProcessor",
+		"ingredient": [
+			{
+				"item": "appliedenergistics2:material",
+				"data": 22
+			}
+		]
+	},
+	{
+		"name": "aeadditions:calcProcessor",
+		"ingredient": [
+			{
+				"item": "appliedenergistics2:material",
+				"data": 23
+			}
+		]
+	},
+	{
+		"name": "aeadditions:glassQuartz",
+		"ingredient": [
+			{
+				"item": "appliedenergistics2:quartz_glass"
+			}
+		]
+	},
+	{
+		"name": "aeadditions:certusCrystal",
+		"ingredient": [
+			{
+				"item": "appliedenergistics2:material",
+				"data": 0
+			},
+			{
+				"item": "appliedenergistics2:material",
+				"data": 1
+			},
+			{
+				"item": "appliedenergistics2:material",
+				"data": 10
+			}
+		]
+	},
+	{
+		"name": "aeadditions:wirelessReceiver",
+		"ingredient": [
+			{
+				"item": "appliedenergistics2:material",
+				"data": 41
+			}
+		]
+	},
+	{
+		"name": "aeadditions:printedCircuitBoard",
+		"conditions": [
+			{
+				"type": "aeadditions:mod_integration",
+				"mod": "opencomputers"
+			}
+		],
+		"ingredient": [
+			{
+				"item": "opencomputers:material",
+				"data": 4
+			}
+		]
+	},
+	{
+		"name": "aeadditions:wlanCard",
+		"conditions": [
+			{
+				"type": "aeadditions:mod_integration",
+				"mod": "opencomputers"
+			}
+		],
+		"ingredient": [
+			{
+				"item": "opencomputers:card",
+				"data": 7
+			}
+		]
+	},
+	{
+		"name": "aeadditions:chip1",
+		"conditions": [
+			{
+				"type": "aeadditions:mod_integration",
+				"mod": "opencomputers"
+			}
+		],
+		"ingredient": [
+			{
+				"item": "opencomputers:material",
+				"data": 7
+			}
+		]
+	},
+	{
+		"name": "aeadditions:chip2",
+		"conditions": [
+			{
+				"type": "aeadditions:mod_integration",
+				"mod": "opencomputers"
+			}
+		],
+		"ingredient": [
+			{
+				"item": "opencomputers:material",
+				"data": 8
+			}
+		]
+	},
+	{
+		"name": "aeadditions:chip3",
+		"conditions": [
+			{
+				"type": "aeadditions:mod_integration",
+				"mod": "opencomputers"
+			}
+		],
+		"ingredient": [
+			{
+				"item": "opencomputers:material",
+				"data": 9
+			}
+		]
+	}
+]

@@ -1,0 +1,27 @@
+{
+    "result": {
+        "item": "aeadditions:storage.fluid",
+		"data": 4
+    },
+    "type": "forge:ore_shaped",
+    "pattern": [
+        "dad",
+        "asa",
+        "bbb"
+    ],
+    "key": {
+        "a": {
+			"item": "#aeadditions:dustFluix"
+        },
+		"b": {
+			"item": "aeadditions:certustank"
+		},
+		"d": {
+			"item": "#aeadditions:glassQuartz"
+		},
+		"s": {
+			"item": "aeadditions:storage.component",
+			"data": 8
+		}
+    }
+}

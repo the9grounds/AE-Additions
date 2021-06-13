@@ -33,8 +33,8 @@ buildProps.withReader {
 }
 
 version = getVersion()
-group = "extracells"
-archivesBaseName = "ExtraCells"
+group = "com.the9grounds.aeadditions"
+archivesBaseName = "AEAdditions"
 def actualVersion = version
 
 
@@ -198,7 +198,7 @@ task apiJar(type: Jar) {
     from sourceSets.main.java
     from sourceSets.main.kotlin
     classifier = 'api'
-    include 'extracells/api/**'
+    include 'aeadditions/api/**'
 }
 
 if (System.getenv("CURSEFORGE_API_KEY") != null) {

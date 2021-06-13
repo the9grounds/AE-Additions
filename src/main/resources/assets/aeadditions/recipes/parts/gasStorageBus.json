@@ -1,0 +1,30 @@
+﻿{
+    "conditions": [
+        {
+            "type": "aeadditions:mod_integration",
+            "mod": "mekanismgas"
+        }
+    ],
+    "result": {
+        "item": "aeadditions:part.base",
+		"data": 16
+    },
+    "type": "forge:ore_shapeless",
+    "ingredients": [
+		{
+			"item": "#aeadditions:interface"
+        },
+		{
+			"item": "minecraft:sticky_piston"
+        },
+		{
+			"item": "minecraft:piston"
+        },
+		{
+			"item": "#aeadditions:flower"
+		},
+		{
+			"item": "#aeadditions:flower"
+		}
+    ]
+}

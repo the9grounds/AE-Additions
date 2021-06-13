@@ -1,0 +1,30 @@
+{
+    "result": {
+        "item": "aeadditions:part.base",
+		"data": 12
+    },
+    "type": "forge:ore_shapeless",
+    "ingredients": [
+		{
+			"item": "#aeadditions:exportBus"
+        },
+		{
+			"item": "#aeadditions:cardFuzzy"
+        },
+		{
+			"item": "#aeadditions:cardFuzzy"
+        },
+		{
+			"item": "#aeadditions:cardSpeed"
+        },
+		{
+			"item": "#aeadditions:cardSpeed"
+        },
+		{
+			"item": "#aeadditions:cardSpeed"
+        },
+		{
+			"item": "#aeadditions:cardSpeed"
+        }
+    ]
+}

@@ -1,0 +1,13 @@
+{
+    "result": {
+        "type": "appliedenergistics2:part",
+        "part": "part.fluid_annihilation_plane"
+    },
+    "type": "appliedenergistics2:part_shapeless",
+    "ingredients": [
+        {
+            "item": "aeadditions:part.base",
+            "data": 5
+        }
+    ]
+}

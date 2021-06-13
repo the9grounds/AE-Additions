@@ -1,0 +1,1 @@
+The same as the normal [link{aeadditions/part/fluid/terminal}] Fluid Terminal [link{}] but it is wireless.

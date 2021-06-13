@@ -1,0 +1,33 @@
+﻿{
+    "conditions": [
+        {
+            "type": "aeadditions:mod_integration",
+            "mod": "mekanismgas"
+        }
+    ],
+    "result": {
+        "item": "aeadditions:storage.component",
+		"data": 14
+    },
+    "type": "forge:ore_shaped",
+    "pattern": [
+        "aba",
+        "cdc",
+        "aca"
+    ],
+    "key": {
+        "a": {
+			"item": "#aeadditions:flower"
+        },
+		"b": {
+			"item": "#aeadditions:engProcessor"
+		},
+		"c": {
+			"item": "aeadditions:storage.component",
+			"data": 13
+		},
+		"d": {
+			"item": "#aeadditions:glassQuartz"
+		}
+    }
+}

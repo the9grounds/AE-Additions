@@ -1,0 +1,23 @@
+﻿{
+    "conditions": [
+        {
+            "type": "aeadditions:mod_integration",
+            "mod": "mekanismgas"
+        }
+    ],
+    "result": {
+        "item": "aeadditions:storage.gas",
+		"data": 6
+    },
+    "type": "forge:ore_shapeless",
+    "ingredients": [
+		{
+			"item": "aeadditions:storage.casing",
+			"data": 2
+        },
+		{
+			"item": "aeadditions:storage.component",
+			"data": 17
+        }
+    ]
+}

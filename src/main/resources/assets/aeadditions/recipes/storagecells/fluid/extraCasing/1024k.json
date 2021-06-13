@@ -1,0 +1,17 @@
+{
+    "result": {
+        "item": "aeadditions:storage.fluid",
+		"data": 5
+    },
+    "type": "forge:ore_shapeless",
+    "ingredients": [
+		{
+			"item": "aeadditions:storage.casing",
+			"data": 1
+        },
+		{
+			"item": "aeadditions:storage.component",
+			"data": 9
+        }
+    ]
+}

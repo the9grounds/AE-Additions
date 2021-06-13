@@ -1,0 +1,29 @@
+﻿{
+    "conditions": [
+        {
+            "type": "aeadditions:mod_integration",
+            "mod": "mekanismgas"
+        }
+    ],
+    "result": {
+        "item": "aeadditions:storage.component",
+		"data": 11
+    },
+    "type": "forge:ore_shaped",
+    "pattern": [
+        "aba",
+        "bcb",
+        "aba"
+    ],
+    "key": {
+        "a": {
+			"item": "#aeadditions:flower"
+        },
+		"b": {
+			"item": "#aeadditions:certusCrystal"
+		},
+		"c": {
+			"item": "#aeadditions:logProcessor"
+		}
+    }
+}

@@ -1,6 +1,0 @@
-{
-  "parent": "extracells:block/hard_drive_base",
-  "textures": {
-    "front": "extracells:blocks/hard_me_drive_flat"
-  }
-}

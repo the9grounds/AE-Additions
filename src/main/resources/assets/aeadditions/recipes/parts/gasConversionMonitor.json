@@ -1,0 +1,25 @@
+﻿{
+    "conditions": [
+        {
+            "type": "aeadditions:mod_integration",
+            "mod": "mekanismgas"
+        }
+    ],
+    "result": {
+        "item": "aeadditions:part.base",
+		"data": 19
+    },
+    "type": "forge:ore_shapeless",
+    "ingredients": [
+		{
+			"item": "#aeadditions:annihilationCore"
+        },
+		{
+			"item": "aeadditions:part.base",
+			"data": 18
+        },
+		{
+			"item": "#aeadditions:formationCore"
+		}
+    ]
+}

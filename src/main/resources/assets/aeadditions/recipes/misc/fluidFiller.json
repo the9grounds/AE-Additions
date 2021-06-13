@@ -1,0 +1,18 @@
+{
+    "result": {
+        "item": "aeadditions:fluidfiller"
+    },
+    "type": "forge:ore_shapeless",
+    "pattern": [
+        "ab"
+    ],
+    "ingredients": [
+        {
+			"item": "aeadditions:fluidcrafter"
+        },
+		{
+            "type": "appliedenergistics2:part",
+            "part": "part.fluid_terminal"
+        }
+    ]
+}

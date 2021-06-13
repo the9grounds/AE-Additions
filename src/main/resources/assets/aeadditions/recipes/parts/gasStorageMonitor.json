@@ -1,0 +1,27 @@
+﻿{
+    "conditions": [
+        {
+            "type": "aeadditions:mod_integration",
+            "mod": "mekanismgas"
+        }
+    ],
+    "result": {
+        "item": "aeadditions:part.base",
+		"data": 18
+    },
+    "type": "forge:ore_shapeless",
+    "ingredients": [
+		{
+			"item": "#aeadditions:levelEmitter"
+        },
+		{
+			"item": "#aeadditions:panel"
+        },
+		{
+			"item": "#aeadditions:flower"
+		},
+		{
+			"item": "#aeadditions:flower"
+		}
+    ]
+}

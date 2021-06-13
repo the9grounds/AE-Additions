@@ -1,0 +1,30 @@
+﻿{
+    "conditions": [
+        {
+            "type": "aeadditions:mod_integration",
+            "mod": "mekanismgas"
+        }
+    ],
+    "result": {
+        "item": "aeadditions:terminal.gas.wireless"
+    },
+    "type": "forge:ore_shaped",
+    "pattern": [
+        "a",
+        "b",
+        "c"
+    ],
+    "key": {
+        "a": {
+			"item": "appliedenergistics2:material",
+			"data": 41
+        },
+		"b": {
+			"item": "aeadditions:part.base",
+			"data": 15
+		},
+		"c": {
+			"item": "appliedenergistics2:dense_energy_cell"
+		}
+    }
+}

@@ -1,0 +1,8 @@
+{
+    "parent": "block/orientable",
+    "textures": {
+        "top": "aeadditions:blocks/vibration_chamber_fluid",
+        "front": "aeadditions:blocks/vibration_chamber_fluid_front_on",
+        "side": "aeadditions:blocks/vibration_chamber_fluid"
+    }
+}
