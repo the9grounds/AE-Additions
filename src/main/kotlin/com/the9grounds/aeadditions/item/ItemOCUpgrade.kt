@@ -16,7 +16,7 @@ object ItemOCUpgrade: UpgradeItemAEBase() {
         setHasSubtypes(true)
     }
 
-    override fun getTranslationKey(): String = super.getTranslationKey().replace("item." + Constants.MOD_ID, "com.the9grounds.aeadditions.item")
+    override fun getTranslationKey(): String = super.getTranslationKey().replace("item.com.the9grounds.aeadditions", "com.the9grounds.aeadditions.item")
 
     override fun getTranslationKey(stack: ItemStack): String = translationKey
 

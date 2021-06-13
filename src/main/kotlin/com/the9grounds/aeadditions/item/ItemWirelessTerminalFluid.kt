@@ -21,7 +21,7 @@ object ItemWirelessTerminalFluid: WirelessTermBase(), IWirelessFluidTermHandler 
     }
 
     override fun getTranslationKey(stack: ItemStack): String {
-        return super.getTranslationKey(stack).replace("item." + Constants.MOD_ID, "com.the9grounds.aeadditions.item")
+        return super.getTranslationKey(stack).replace("item.com.the9grounds.aeadditions", "com.the9grounds.aeadditions.item")
     }
 
     override fun isItemNormalWirelessTermToo(`is`: ItemStack?): Boolean = false

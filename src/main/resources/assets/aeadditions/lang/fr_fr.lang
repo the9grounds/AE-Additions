@@ -3,79 +3,79 @@
 //**********//
 
 //Items
-aeadditions.item.storage.physical.256k.name=Stockage ME 256k
-aeadditions.item.storage.physical.1024k.name=Stockage ME 1024k
-aeadditions.item.storage.physical.4096k.name=Stockage ME 4096k
-aeadditions.item.storage.physical.16384k.name=Stockage ME 16384k
-aeadditions.item.storage.physical.container.name=Conteneur de bloc ME
-aeadditions.item.storage.fluid.1k.name=Stockage de fluide ME 1k
-aeadditions.item.storage.fluid.4k.name=Stockage de fluide ME 4k
-aeadditions.item.storage.fluid.16k.name=Stockage de fluide ME 16k
-aeadditions.item.storage.fluid.64k.name=Stockage de fluide ME 64k
-aeadditions.item.storage.fluid.256k.name=Stockage de fluide ME 256k
-aeadditions.item.storage.fluid.1024k.name=Stockage de fluide ME 1024k
-aeadditions.item.storage.fluid.4096k.name=Stockage de fluide ME 4096k
-aeadditions.item.storage.fluid.portable.name=Stockage portable de fluide ME
-aeadditions.item.storage.component.physical.256k.name=Composant de stockage ME 256k
-aeadditions.item.storage.component.physical.1024k.name=Composant de stockage ME 1024k
-aeadditions.item.storage.component.physical.4096k.name=Composant de stockage ME 4096k
-aeadditions.item.storage.component.physical.16384k.name=Composant de stockage ME 16384k
-aeadditions.item.storage.component.fluid.1k.name=Composant de stockage de fluide ME 1k
-aeadditions.item.storage.component.fluid.4k.name=Composant de stockage de fluide ME 4k
-aeadditions.item.storage.component.fluid.16k.name=Composant de stockage de fluide ME 16k
-aeadditions.item.storage.component.fluid.64k.name=Composant de stockage de fluide ME 64k
-aeadditions.item.storage.component.fluid.256k.name=Composant de stockage de fluide ME 256k
-aeadditions.item.storage.component.fluid.1024k.name=Composant de stockage de fluide ME 1024k
-aeadditions.item.storage.component.fluid.4096k.name=Composant de stockage de fluide ME 4096k
-aeadditions.item.storage.casing.physical.name=Boîtier avancé de stockage ME
-aeadditions.item.storage.casing.fluid.name=Boîtier de stockage de fluide ME
-aeadditions.item.terminal.fluid.wireless.name=Terminal de fluide ME sans fil
-aeadditions.item.fluid.pattern=Modèle de fluide ME
+com.the9grounds.aeadditions.item.storage.physical.256k.name=Stockage ME 256k
+com.the9grounds.aeadditions.item.storage.physical.1024k.name=Stockage ME 1024k
+com.the9grounds.aeadditions.item.storage.physical.4096k.name=Stockage ME 4096k
+com.the9grounds.aeadditions.item.storage.physical.16384k.name=Stockage ME 16384k
+com.the9grounds.aeadditions.item.storage.physical.container.name=Conteneur de bloc ME
+com.the9grounds.aeadditions.item.storage.fluid.1k.name=Stockage de fluide ME 1k
+com.the9grounds.aeadditions.item.storage.fluid.4k.name=Stockage de fluide ME 4k
+com.the9grounds.aeadditions.item.storage.fluid.16k.name=Stockage de fluide ME 16k
+com.the9grounds.aeadditions.item.storage.fluid.64k.name=Stockage de fluide ME 64k
+com.the9grounds.aeadditions.item.storage.fluid.256k.name=Stockage de fluide ME 256k
+com.the9grounds.aeadditions.item.storage.fluid.1024k.name=Stockage de fluide ME 1024k
+com.the9grounds.aeadditions.item.storage.fluid.4096k.name=Stockage de fluide ME 4096k
+com.the9grounds.aeadditions.item.storage.fluid.portable.name=Stockage portable de fluide ME
+com.the9grounds.aeadditions.item.storage.component.physical.256k.name=Composant de stockage ME 256k
+com.the9grounds.aeadditions.item.storage.component.physical.1024k.name=Composant de stockage ME 1024k
+com.the9grounds.aeadditions.item.storage.component.physical.4096k.name=Composant de stockage ME 4096k
+com.the9grounds.aeadditions.item.storage.component.physical.16384k.name=Composant de stockage ME 16384k
+com.the9grounds.aeadditions.item.storage.component.fluid.1k.name=Composant de stockage de fluide ME 1k
+com.the9grounds.aeadditions.item.storage.component.fluid.4k.name=Composant de stockage de fluide ME 4k
+com.the9grounds.aeadditions.item.storage.component.fluid.16k.name=Composant de stockage de fluide ME 16k
+com.the9grounds.aeadditions.item.storage.component.fluid.64k.name=Composant de stockage de fluide ME 64k
+com.the9grounds.aeadditions.item.storage.component.fluid.256k.name=Composant de stockage de fluide ME 256k
+com.the9grounds.aeadditions.item.storage.component.fluid.1024k.name=Composant de stockage de fluide ME 1024k
+com.the9grounds.aeadditions.item.storage.component.fluid.4096k.name=Composant de stockage de fluide ME 4096k
+com.the9grounds.aeadditions.item.storage.casing.physical.name=Boîtier avancé de stockage ME
+com.the9grounds.aeadditions.item.storage.casing.fluid.name=Boîtier de stockage de fluide ME
+com.the9grounds.aeadditions.item.terminal.fluid.wireless.name=Terminal de fluide ME sans fil
+com.the9grounds.aeadditions.item.fluid.pattern=Modèle de fluide ME
 
 //Creative Tab
-itemGroup.Extra_Cells=Extra Cells 2
+itemGroup.AE_Additions=AE Additions
 
 //Item Groups
-aeadditions.fluid.IO=Bus d'import/export de fluide ME
-aeadditions.fluid.plane=Plan de fluide ME
+com.the9grounds.aeadditions.fluid.IO=Bus d'import/export de fluide ME
+com.the9grounds.aeadditions.fluid.plane=Plan de fluide ME
 
 //Parts
-aeadditions.part.fluid.export.name=Bus d'export de fluide ME
-aeadditions.part.fluid.import.name=Bus d'import de fluide ME
-aeadditions.part.fluid.storage.name=Bus de stockage de fluide ME
-aeadditions.part.fluid.terminal.name=Terminale des fluides ME
-aeadditions.part.fluid.plane.annihilation.name=Plan d'annihilisation de fluide ME
-aeadditions.part.fluid.plane.formation.name=Plan de formation de fluide ME
-aeadditions.part.fluid.levelemitter.name=Emetteur de niveau de fluide ME
-aeadditions.part.drive.name=Installation de disque ME
-aeadditions.part.battery.name=Installation de cellule énergétique ME
+com.the9grounds.aeadditions.part.fluid.export.name=Bus d'export de fluide ME
+com.the9grounds.aeadditions.part.fluid.import.name=Bus d'import de fluide ME
+com.the9grounds.aeadditions.part.fluid.storage.name=Bus de stockage de fluide ME
+com.the9grounds.aeadditions.part.fluid.terminal.name=Terminale des fluides ME
+com.the9grounds.aeadditions.part.fluid.plane.annihilation.name=Plan d'annihilisation de fluide ME
+com.the9grounds.aeadditions.part.fluid.plane.formation.name=Plan de formation de fluide ME
+com.the9grounds.aeadditions.part.fluid.levelemitter.name=Emetteur de niveau de fluide ME
+com.the9grounds.aeadditions.part.drive.name=Installation de disque ME
+com.the9grounds.aeadditions.part.battery.name=Installation de cellule énergétique ME
 
 //Blocks
-aeadditions.block.certustank=Réservoir en Quartz Certus
-aeadditions.block.walrus.name=Morse
-tile.aeadditions.block.fluidcrafter.name=Assembleur de fluide ME
-tile.aeadditions.block.fluidinterface.name=Interface de fluide ME
+com.the9grounds.aeadditions.block.certustank=Réservoir en Quartz Certus
+com.the9grounds.aeadditions.block.walrus.name=Morse
+tile.com.the9grounds.aeadditions.block.fluidcrafter.name=Assembleur de fluide ME
+tile.com.the9grounds.aeadditions.block.fluidinterface.name=Interface de fluide ME
 
 //Tooltips and Chat-Messages
-aeadditions.tooltip.amount=Quantité
-aeadditions.tooltip.fluid=Fluide
-aeadditions.tooltip.storage.physical.types=%s of %s item types used.
-aeadditions.tooltip.storage.fluid.types=%s of %s fluid types used.
-aeadditions.tooltip.storage.physical.bytes=%s of %s item bytes used.
-aeadditions.tooltip.storage.fluid.bytes=%s of %s fluid bytes used.
-aeadditions.tooltip.storage.fluid.content=contains %s mB of fluid.
-aeadditions.tooltip.storage.physical.content=contains %s items.
-aeadditions.tooltip.direction.0=Bas
-aeadditions.tooltip.direction.1=Haut
-aeadditions.tooltip.direction.2=Nord
-aeadditions.tooltip.direction.3=Sud
-aeadditions.tooltip.direction.4=Ouest
-aeadditions.tooltip.direction.5=Est
-aeadditions.tooltip.empty1=Vide
-aeadditions.tooltip.storage.container.0=Mode: Placement Mode
-aeadditions.tooltip.storage.container.1=Mode: Equal Trade Mode (1*1)
-aeadditions.tooltip.storage.container.2=Mode: Equal Trade Mode (3*3)
-aeadditions.tooltip.onlyblocks=You can't place Items! Put a Block into the BLOCK-Container
+com.the9grounds.aeadditions.tooltip.amount=Quantité
+com.the9grounds.aeadditions.tooltip.fluid=Fluide
+com.the9grounds.aeadditions.tooltip.storage.physical.types=%s of %s item types used.
+com.the9grounds.aeadditions.tooltip.storage.fluid.types=%s of %s fluid types used.
+com.the9grounds.aeadditions.tooltip.storage.physical.bytes=%s of %s item bytes used.
+com.the9grounds.aeadditions.tooltip.storage.fluid.bytes=%s of %s fluid bytes used.
+com.the9grounds.aeadditions.tooltip.storage.fluid.content=contains %s mB of fluid.
+com.the9grounds.aeadditions.tooltip.storage.physical.content=contains %s items.
+com.the9grounds.aeadditions.tooltip.direction.0=Bas
+com.the9grounds.aeadditions.tooltip.direction.1=Haut
+com.the9grounds.aeadditions.tooltip.direction.2=Nord
+com.the9grounds.aeadditions.tooltip.direction.3=Sud
+com.the9grounds.aeadditions.tooltip.direction.4=Ouest
+com.the9grounds.aeadditions.tooltip.direction.5=Est
+com.the9grounds.aeadditions.tooltip.empty1=Vide
+com.the9grounds.aeadditions.tooltip.storage.container.0=Mode: Placement Mode
+com.the9grounds.aeadditions.tooltip.storage.container.1=Mode: Equal Trade Mode (1*1)
+com.the9grounds.aeadditions.tooltip.storage.container.2=Mode: Equal Trade Mode (3*3)
+com.the9grounds.aeadditions.tooltip.onlyblocks=You can't place Items! Put a Block into the BLOCK-Container
 
 //Buttons
-aeadditions.gui.craft=Craft
+com.the9grounds.aeadditions.gui.craft=Craft

@@ -17,8 +17,9 @@ object OpenComputers {
             add(DriverGasImportBus())
         }
 
-        add(ItemOCUpgrade)
-        AEApi.instance().registries().wireless().registerWirelessHandler(WirelessHandlerUpgradeAE)
+        // TODO: Re-enable when fixed
+//        add(ItemOCUpgrade)
+//        AEApi.instance().registries().wireless().registerWirelessHandler(WirelessHandlerUpgradeAE)
         AEAdditionsPathProvider
     }
 

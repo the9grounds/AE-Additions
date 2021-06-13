@@ -10,6 +10,7 @@ import com.the9grounds.aeadditions.network.PacketHandler
 import com.the9grounds.aeadditions.proxy.CommonProxy
 import com.the9grounds.aeadditions.util.AEAConfigHandler
 import com.the9grounds.aeadditions.util.AEAdditionsEventHandler
+import com.the9grounds.aeadditions.util.EventHandler
 import com.the9grounds.aeadditions.util.NameHandler
 import com.the9grounds.aeadditions.util.datafix.BasicCellDataFixer
 import com.the9grounds.aeadditions.util.datafix.PortableCellDataFixer
@@ -84,6 +85,7 @@ object AEAdditions {
         registries.cell().addCellHandler(AEAdditionsCellHandler())
         val handler = AEAdditionsEventHandler()
         MinecraftForge.EVENT_BUS.register(handler)
+        MinecraftForge.EVENT_BUS.register(EventHandler)
         proxy!!.registerMovables()
         proxy!!.registerRenderers()
         proxy!!.registerTileEntities()

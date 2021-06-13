@@ -3,86 +3,86 @@
 //**********//
 
 //Items
-aeadditions.item.storage.physical.256k.name=256k ME-Speicher
-aeadditions.item.storage.physical.1024k.name=1024k ME-Speicher
-aeadditions.item.storage.physical.4096k.name=4096k ME-Speicher
-aeadditions.item.storage.physical.16348k.name=16348k ME-Speicher
-aeadditions.item.storage.physical.container.name=ME-Block-Speicher
-aeadditions.item.storage.fluid.1k.name=1k ME-Flüssigkeitsspeicher
-aeadditions.item.storage.fluid.4k.name=4k ME-Flüssigkeitsspeicher
-aeadditions.item.storage.fluid.16k.name=16k ME-Flüssigkeitsspeicher
-aeadditions.item.storage.fluid.64k.name=64k ME-Flüssigkeitsspeicher
-aeadditions.item.storage.fluid.256k.name=256k ME-Flüssigkeitsspeicher
-aeadditions.item.storage.fluid.1024k.name=1024k ME-Flüssigkeitsspeicher
-aeadditions.item.storage.fluid.4096k.name=4096k ME-Flüssigkeitsspeicher
-aeadditions.item.storage.fluid.portable.name=Portabler ME-Flüssigkeitsspeicher
-aeadditions.item.storage.component.physical.256k.name=256k-ME-Speicherkomponente
-aeadditions.item.storage.component.physical.1024k.name=1024k-ME-Speicherkomponente
-aeadditions.item.storage.component.physical.4096k.name=4096k-ME-Speicherkomponente
-aeadditions.item.storage.component.physical.16384k.name=16348k-ME-Speicherkomponente
-aeadditions.item.storage.component.fluid.1k.name=1k-ME-Flüssigkeitsspeicherkomponente
-aeadditions.item.storage.component.fluid.4k.name=4k-ME-Flüssigkeitsspeicherkomponente
-aeadditions.item.storage.component.fluid.16k.name=16k-ME-Flüssigkeitsspeicherkomponente
-aeadditions.item.storage.component.fluid.64k.name=64k-ME-Flüssigkeitsspeicherkomponente
-aeadditions.item.storage.component.fluid.256k.name=256k-ME-Flüssigkeitsspeicherkomponente
-aeadditions.item.storage.component.fluid.1024k.name=1024k-ME-Flüssigkeitsspeicherkomponente
-aeadditions.item.storage.component.fluid.4096k.name=4096k-ME-Flüssigkeitsspeicherkomponente
-aeadditions.item.storage.casing.physical.name=Erweitertes Speichergehäuse
-aeadditions.item.storage.casing.fluid.name=Flüssigkeits-Speichergehäuse
-aeadditions.item.terminal.fluid.wireless.name=Drahtlose Flüssigkeits-Zugangskonsole
-aeadditions.item.fluid.pattern=ME Flüssigkeitsschablone
+com.the9grounds.aeadditions.item.storage.physical.256k.name=256k ME-Speicher
+com.the9grounds.aeadditions.item.storage.physical.1024k.name=1024k ME-Speicher
+com.the9grounds.aeadditions.item.storage.physical.4096k.name=4096k ME-Speicher
+com.the9grounds.aeadditions.item.storage.physical.16348k.name=16348k ME-Speicher
+com.the9grounds.aeadditions.item.storage.physical.container.name=ME-Block-Speicher
+com.the9grounds.aeadditions.item.storage.fluid.1k.name=1k ME-Flüssigkeitsspeicher
+com.the9grounds.aeadditions.item.storage.fluid.4k.name=4k ME-Flüssigkeitsspeicher
+com.the9grounds.aeadditions.item.storage.fluid.16k.name=16k ME-Flüssigkeitsspeicher
+com.the9grounds.aeadditions.item.storage.fluid.64k.name=64k ME-Flüssigkeitsspeicher
+com.the9grounds.aeadditions.item.storage.fluid.256k.name=256k ME-Flüssigkeitsspeicher
+com.the9grounds.aeadditions.item.storage.fluid.1024k.name=1024k ME-Flüssigkeitsspeicher
+com.the9grounds.aeadditions.item.storage.fluid.4096k.name=4096k ME-Flüssigkeitsspeicher
+com.the9grounds.aeadditions.item.storage.fluid.portable.name=Portabler ME-Flüssigkeitsspeicher
+com.the9grounds.aeadditions.item.storage.component.physical.256k.name=256k-ME-Speicherkomponente
+com.the9grounds.aeadditions.item.storage.component.physical.1024k.name=1024k-ME-Speicherkomponente
+com.the9grounds.aeadditions.item.storage.component.physical.4096k.name=4096k-ME-Speicherkomponente
+com.the9grounds.aeadditions.item.storage.component.physical.16384k.name=16348k-ME-Speicherkomponente
+com.the9grounds.aeadditions.item.storage.component.fluid.1k.name=1k-ME-Flüssigkeitsspeicherkomponente
+com.the9grounds.aeadditions.item.storage.component.fluid.4k.name=4k-ME-Flüssigkeitsspeicherkomponente
+com.the9grounds.aeadditions.item.storage.component.fluid.16k.name=16k-ME-Flüssigkeitsspeicherkomponente
+com.the9grounds.aeadditions.item.storage.component.fluid.64k.name=64k-ME-Flüssigkeitsspeicherkomponente
+com.the9grounds.aeadditions.item.storage.component.fluid.256k.name=256k-ME-Flüssigkeitsspeicherkomponente
+com.the9grounds.aeadditions.item.storage.component.fluid.1024k.name=1024k-ME-Flüssigkeitsspeicherkomponente
+com.the9grounds.aeadditions.item.storage.component.fluid.4096k.name=4096k-ME-Flüssigkeitsspeicherkomponente
+com.the9grounds.aeadditions.item.storage.casing.physical.name=Erweitertes Speichergehäuse
+com.the9grounds.aeadditions.item.storage.casing.fluid.name=Flüssigkeits-Speichergehäuse
+com.the9grounds.aeadditions.item.terminal.fluid.wireless.name=Drahtlose Flüssigkeits-Zugangskonsole
+com.the9grounds.aeadditions.item.fluid.pattern=ME Flüssigkeitsschablone
 
 //Creative Tab
-itemGroup.Extra_Cells=Extra Cells 2
+itemGroup.AE_Additions=AE Additions
 
 //Item Groups
-aeadditions.fluid.IO=ME-Flüssigkeits-Export-/Importbus
-aeadditions.fluid.plane=ME-Flüssigkeits-Annihilations-/Formationsfeld
+com.the9grounds.aeadditions.fluid.IO=ME-Flüssigkeits-Export-/Importbus
+com.the9grounds.aeadditions.fluid.plane=ME-Flüssigkeits-Annihilations-/Formationsfeld
 
 //Parts
-aeadditions.part.fluid.export.name=ME-Flüssigkeits-Exportbus
-aeadditions.part.fluid.import.name=ME-Flüssigkeits-Importbus
-aeadditions.part.fluid.storage.name=ME-Flüssigkeits-Speicherbus
-aeadditions.part.fluid.terminal.name=ME-Flüssigkeits-Terminal
-aeadditions.part.fluid.plane.annihilation.name=ME-Flüssigkeits-Annihilationsfeld
-aeadditions.part.fluid.plane.formation.name=ME-Flüssigkeits-Formationsfeld
-aeadditions.part.fluid.levelemitter.name=ME-Flüssigkeits-Füllstandemitter
-aeadditions.part.drive.name=ME-Laufwerkhalterung
-aeadditions.part.battery.name=ME-Energiezellenhalterung
-aeadditions.part.fluid.conversion.monitor.name=ME-Flüssigkeits-Konversionsmonitor
-aeadditions.part.fluid.monitor.name=ME-Flüssigkeits-Speichermonitor
-aeadditions.part.oredict.export.name=ME-Ore-Dictionary-Exportbus
+com.the9grounds.aeadditions.part.fluid.export.name=ME-Flüssigkeits-Exportbus
+com.the9grounds.aeadditions.part.fluid.import.name=ME-Flüssigkeits-Importbus
+com.the9grounds.aeadditions.part.fluid.storage.name=ME-Flüssigkeits-Speicherbus
+com.the9grounds.aeadditions.part.fluid.terminal.name=ME-Flüssigkeits-Terminal
+com.the9grounds.aeadditions.part.fluid.plane.annihilation.name=ME-Flüssigkeits-Annihilationsfeld
+com.the9grounds.aeadditions.part.fluid.plane.formation.name=ME-Flüssigkeits-Formationsfeld
+com.the9grounds.aeadditions.part.fluid.levelemitter.name=ME-Flüssigkeits-Füllstandemitter
+com.the9grounds.aeadditions.part.drive.name=ME-Laufwerkhalterung
+com.the9grounds.aeadditions.part.battery.name=ME-Energiezellenhalterung
+com.the9grounds.aeadditions.part.fluid.conversion.monitor.name=ME-Flüssigkeits-Konversionsmonitor
+com.the9grounds.aeadditions.part.fluid.monitor.name=ME-Flüssigkeits-Speichermonitor
+com.the9grounds.aeadditions.part.oredict.export.name=ME-Ore-Dictionary-Exportbus
 
 //Blocks
-aeadditions.block.certustank=Certus-Quarz-Tank
-aeadditions.block.walrus.name=Walross
-tile.aeadditions.block.fluidcrafter.name=ME-Flüssigkeits-Fertigungskammer
-tile.aeadditions.block.fluidinterface.name=ME-Flüssigkeits-Interface
-tile.aeadditions.block.fluidfiller.name=ME-Flüssigkeitsfüller
-tile.aeadditions.block.hardmedrive.name=Explosionssicheres ME-Laufwerk
+com.the9grounds.aeadditions.block.certustank=Certus-Quarz-Tank
+com.the9grounds.aeadditions.block.walrus.name=Walross
+tile.com.the9grounds.aeadditions.block.fluidcrafter.name=ME-Flüssigkeits-Fertigungskammer
+tile.com.the9grounds.aeadditions.block.fluidinterface.name=ME-Flüssigkeits-Interface
+tile.com.the9grounds.aeadditions.block.fluidfiller.name=ME-Flüssigkeitsfüller
+tile.com.the9grounds.aeadditions.block.hardmedrive.name=Explosionssicheres ME-Laufwerk
 
 //Tooltips and Chat-Messages
-aeadditions.tooltip.amount=Menge
-aeadditions.tooltip.fluid=Flüssigkeit
-aeadditions.tooltip.storage.physical.types=%s von %s Item-Typen verwendet.
-aeadditions.tooltip.storage.fluid.types=%s von %s Flüssigkeits-Typen verwendet.
-aeadditions.tooltip.storage.physical.bytes=%s von %s Item-Bytes verwendet.
-aeadditions.tooltip.storage.fluid.bytes=%s von %s Flüssigkeits-Bytes verwendet.
-aeadditions.tooltip.storage.fluid.content=Enthält %s mB Flüssigkeit.
-aeadditions.tooltip.storage.physical.content=Enthält %s Items.
-aeadditions.tooltip.direction.0=Unten
-aeadditions.tooltip.direction.1=Oben
-aeadditions.tooltip.direction.2=Norden
-aeadditions.tooltip.direction.3=Süden
-aeadditions.tooltip.direction.4=Westen
-aeadditions.tooltip.direction.5=Osten
-aeadditions.tooltip.empty1=Leer
-aeadditions.tooltip.storage.container.0=Modus: Plazier-Modus
-aeadditions.tooltip.storage.container.1=Modus: Gleicher-Handel-Modus (1*1)
-aeadditions.tooltip.storage.container.2=Modus: Gleicher-Handel-Modus (3*3)
-aeadditions.tooltip.onlyblocks=Du kannst keine Items platzieren! Packe einen Block in den BLOCK-Container
-aeadditions.tooltip.save=Speichern
-aeadditions.tooltip.oredict=Ore-Dictionary Name
+com.the9grounds.aeadditions.tooltip.amount=Menge
+com.the9grounds.aeadditions.tooltip.fluid=Flüssigkeit
+com.the9grounds.aeadditions.tooltip.storage.physical.types=%s von %s Item-Typen verwendet.
+com.the9grounds.aeadditions.tooltip.storage.fluid.types=%s von %s Flüssigkeits-Typen verwendet.
+com.the9grounds.aeadditions.tooltip.storage.physical.bytes=%s von %s Item-Bytes verwendet.
+com.the9grounds.aeadditions.tooltip.storage.fluid.bytes=%s von %s Flüssigkeits-Bytes verwendet.
+com.the9grounds.aeadditions.tooltip.storage.fluid.content=Enthält %s mB Flüssigkeit.
+com.the9grounds.aeadditions.tooltip.storage.physical.content=Enthält %s Items.
+com.the9grounds.aeadditions.tooltip.direction.0=Unten
+com.the9grounds.aeadditions.tooltip.direction.1=Oben
+com.the9grounds.aeadditions.tooltip.direction.2=Norden
+com.the9grounds.aeadditions.tooltip.direction.3=Süden
+com.the9grounds.aeadditions.tooltip.direction.4=Westen
+com.the9grounds.aeadditions.tooltip.direction.5=Osten
+com.the9grounds.aeadditions.tooltip.empty1=Leer
+com.the9grounds.aeadditions.tooltip.storage.container.0=Modus: Plazier-Modus
+com.the9grounds.aeadditions.tooltip.storage.container.1=Modus: Gleicher-Handel-Modus (1*1)
+com.the9grounds.aeadditions.tooltip.storage.container.2=Modus: Gleicher-Handel-Modus (3*3)
+com.the9grounds.aeadditions.tooltip.onlyblocks=Du kannst keine Items platzieren! Packe einen Block in den BLOCK-Container
+com.the9grounds.aeadditions.tooltip.save=Speichern
+com.the9grounds.aeadditions.tooltip.oredict=Ore-Dictionary Name
 
 //Buttons
-aeadditions.gui.craft=Herstellen
+com.the9grounds.aeadditions.gui.craft=Herstellen
