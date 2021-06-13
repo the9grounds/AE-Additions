@@ -47,6 +47,7 @@ deploy:
   before_script:
     - 'which ssh-agent || ( apt-get update && apt-get install -y openssh-client )'
     - mkdir -p ~/.ssh
+    - chmod 755 ~/.ssh
     - echo $ENCODED_KEY | base64 --decode > ~/.ssh/ssh-key
     - eval $(ssh-agent -s)
     - ssh-add ~/.ssh/ssh-key
