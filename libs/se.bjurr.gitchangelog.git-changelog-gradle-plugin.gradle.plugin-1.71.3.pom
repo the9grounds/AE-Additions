@@ -1,0 +1,14 @@
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0">
+      <modelVersion>4.0.0</modelVersion>
+      <groupId>se.bjurr.gitchangelog.git-changelog-gradle-plugin</groupId>
+      <artifactId>se.bjurr.gitchangelog.git-changelog-gradle-plugin.gradle.plugin</artifactId>
+      <version>1.71.3</version>
+      <packaging>pom</packaging>
+      <dependencies>
+        <dependency>
+          <groupId>gradle.plugin.se.bjurr.gitchangelog</groupId>
+          <artifactId>git-changelog-gradle-plugin</artifactId>
+          <version>1.71.3</version>
+        </dependency>
+      </dependencies>
+    </project>
