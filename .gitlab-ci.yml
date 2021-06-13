@@ -26,7 +26,6 @@ buildNonRelease:
     key: "$CI_COMMIT_BRANCH"
     policy: pull-push
     paths:
-      - build
       - .gradle
 
 
