@@ -45,7 +45,7 @@ deploy:
   only:
     - tags
   before_script:
-    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - 'which ssh-agent || ( apk add --update openssh-client coreutils )'
     - echo $ENCODED_KEY | base64 --decode > ~/.ssh/ssh-key
     - eval $(ssh-agent -s)
     - ssh-add ~/.ssh/ssh-key
