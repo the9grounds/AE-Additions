@@ -46,12 +46,12 @@ deploy:
     - tags
   before_script:
     - 'which ssh-agent || ( apt-get update && apt-get install -y openssh-client )'
+    - mkdir -p ~/.ssh
     - echo $ENCODED_KEY | base64 --decode > ~/.ssh/ssh-key
     - eval $(ssh-agent -s)
     - ssh-add ~/.ssh/ssh-key
     - git config --global user.email "aylon@the9grounds.com"
     - git config --global user.name "AE Additions CI/CD"
-    - mkdir -p ~/.ssh
     - cat gitlab-known-hosts >> ~/.ssh/known_hosts
 
   script:
