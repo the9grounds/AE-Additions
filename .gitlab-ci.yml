@@ -16,7 +16,7 @@ before_script:
 
 buildNonRelease:
   stage: build
-  script: sh ./gradlew --build-cache assemble
+  script: sh ./gradlew --build-cache setupCiWorkspace assemble
   except:
     - tags
   artifacts:
@@ -36,17 +36,11 @@ buildRelease:
     - tags
   script:
     - sh ./gradlew gitChangelogTask
-    - sh ./gradlew --build-cache assemble
+    - sh ./gradlew --build-cache setupCiWorkspace assemble
   artifacts:
     paths:
       - build/libs/*.jar
       - CHANGELOG.md
-  cache:
-    key: "$CI_COMMIT_BRANCH"
-    policy: push
-    paths:
-      - build
-      - .gradle
 
 deploy:
   only:
