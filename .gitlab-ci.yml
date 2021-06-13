@@ -23,7 +23,7 @@ buildNonRelease:
     paths:
       - build/libs/*.jar
   cache:
-    key: "$CI_COMMIT_REF_NAME"
+    key: "$CI_COMMIT_BRANCH"
     policy: pull-push
     paths:
       - build
@@ -42,7 +42,7 @@ buildRelease:
       - build/libs/*.jar
       - CHANGELOG.md
   cache:
-    key: "$CI_COMMIT_REF_NAME"
+    key: "$CI_COMMIT_BRANCH"
     policy: push
     paths:
       - build
