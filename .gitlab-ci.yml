@@ -2,7 +2,7 @@
 # This is the Gradle build system for JVM applications
 # https://gradle.org/
 # https://github.com/gradle/gradle
-image: gradle:alpine
+image: git.the9grounds.com:5050/minecraft/aeadditions/gradle-docker:latest
 
 # Disable the Gradle daemon for Continuous Integration servers as correctness
 # is usually a priority over speed in CI environments. Using a fresh
@@ -45,7 +45,7 @@ deploy:
   only:
     - tags
   before_script:
-    - 'which ssh-agent || ( apk add --update openssh-client coreutils )'
+    - 'which ssh-agent || ( apt-get update && apt-get install -y openssh-client )'
     - echo $ENCODED_KEY | base64 --decode > ~/.ssh/ssh-key
     - eval $(ssh-agent -s)
     - ssh-add ~/.ssh/ssh-key
