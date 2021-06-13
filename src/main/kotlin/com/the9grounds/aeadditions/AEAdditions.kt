@@ -33,7 +33,7 @@ import java.io.File
     version = Constants.VERSION,
     name = "Extra Cells",
     modLanguageAdapter = "net.shadowfacts.forgelin.KotlinAdapter",
-    dependencies = "after:waila;required-after:appliedenergistics2;after:mekanism"
+    dependencies = "after:waila;required-after:appliedenergistics2;after:mekanism;required-after:forgelin"
 )
 object AEAdditions {
     @SidedProxy(clientSide = "com.the9grounds.aeadditions.proxy.ClientProxy", serverSide = "com.the9grounds.aeadditions.proxy.CommonProxy")

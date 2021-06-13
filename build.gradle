@@ -29,7 +29,7 @@ buildProps.withReader {
 
 version = getVersion()
 group = "com.the9grounds.aeadditions"
-archivesBaseName = "AEAdditions"
+archivesBaseName = "AEAdditions-${config.version.minecraft}"
 def actualVersion = version
 
 
@@ -58,7 +58,7 @@ minecraft {
     runDir = "run"
     mappings = 'snapshot_20180814'
 
-    replace '@VERSION@', "${config.version.mod.major}.${config.version.mod.minor}.${config.version.mod.revis}"
+    replace "@VERSION@", actualVersion
 }
 
 repositories {
@@ -189,11 +189,11 @@ compileKotlin {
 }
 
 task apiJar(type: Jar) {
+    classifier = 'api'
     from sourceSets.main.output
     from sourceSets.main.java
     from sourceSets.main.kotlin
-    classifier = 'api'
-    include 'aeadditions/api/**'
+    include 'com/the9grounds/aeadditions/api/**'
 }
 
 if (System.getenv("CURSEFORGE_API_KEY") != null) {
@@ -206,16 +206,21 @@ if (System.getenv("CURSEFORGE_API_KEY") != null) {
             releaseType = config.cf.project.type
             relations {
                 requiredLibrary 'applied-energistics-2'
+                requiredLibrary 'shadowfacts-forgelin'
             }
             addArtifact(apiJar) {
                 releaseType = 'alpha'
             }
             mainArtifact(jar) {
-                displayName = "$archivesBaseName-${config.version.minecraft}-${config.version.mod.major}.${config.version.mod.minor}.${config.version.mod.revis}"
+                displayName = "$archivesBaseName-${config.version.minecraft}-${version}"
             }
         }
     }
 }
+
+sourceJar.duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+apiJar.duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+jar.duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
 artifacts {
     archives apiJar
@@ -224,25 +229,27 @@ artifacts {
 def getBuildNumber() {
 
     if (System.getenv("CI") == null) {
-        return "${config.version.minecraft}-LOCAL"
+        return "LOCAL"
     }
 
     if (System.getenv("CI_MERGE_REQUEST_IID") != null) {
-        return "${config.version.minecraft}-pr-${System.getenv("CI_COMMIT_BRANCH")}-${System.getenv("CI_COMMIT_SHORT_SHA")}"
+        return "pr-${System.getenv("CI_COMMIT_BRANCH")}-${System.getenv("CI_COMMIT_SHORT_SHA")}"
     }
 
     if (System.getenv("CI_COMMIT_TAG") != null) {
         return null
     }
 
-    return "${config.version.minecraft}-ci-${System.getenv("CI_COMMIT_BRANCH")}-${System.getenv("CI_COMMIT_SHORT_SHA")}"
+    return "ci-${System.getenv("CI_COMMIT_BRANCH")}-${System.getenv("CI_COMMIT_SHORT_SHA")}"
 }
 
 def getVersion() {
     def buildNumber = getBuildNumber()
 
     if (buildNumber == null) {
-        return "${config.version.minecraft}-${config.version.mod.major}.${config.version.mod.minor}.${config.version.mod.revis}"
+        def tag = System.getenv("CI_COMMIT_TAG")
+
+        return "${tag}"
     }
 
     return buildNumber
@@ -257,4 +264,10 @@ def getVersion() {
 
 tasks.test {
     enabled = gradle.startParameter.taskNames.contains("test")
+}
+
+idea {
+    module {
+        outputDir = file('build/classes/main')
+    }
 }
