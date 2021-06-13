@@ -14,9 +14,11 @@ variables:
 before_script:
   - export GRADLE_USER_HOME=`pwd`/.gradle
 
-build:
+buildNonRelease:
   stage: build
   script: sh ./gradlew --build-cache assemble
+  except:
+    - tags
   artifacts:
     paths:
       - build/libs/*.jar
@@ -27,6 +29,42 @@ build:
       - build
       - .gradle
 
+
+buildRelease:
+  stage: build
+  only:
+    - tags
+  script:
+    - sh ./gradlew gitChangelogTask
+    - sh ./gradlew --build-cache assemble
+  artifacts:
+    paths:
+      - build/libs/*.jar
+      - CHANGELOG.md
+  cache:
+    key: "$CI_COMMIT_REF_NAME"
+    policy: push
+    paths:
+      - build
+      - .gradle
+
+deploy:
+  only:
+    - tags
+  before_script:
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - echo $ENCODED_KEY | base64 --decode > ~/.ssh/ssh-key
+    - eval $(ssh-agent -s)
+    - ssh-add ~/.ssh/ssh-key
+    - git config --global user.email "aylon@the9grounds.com"
+    - git config --global user.name "AE Additions CI/CD"
+    - mkdir -p ~/.ssh
+    - cat gitlab-known-hosts >> ~/.ssh/known_hosts
+
+  script:
+    - git add CHANGELOG.md
+    - git commit -m "Add changelog for version ${CI_COMMIT_TAG}"
+    - git push origin master
 #test:
 #  stage: test
 #  script: sh ./gradlew check

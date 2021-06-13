@@ -1,9 +1,13 @@
 buildscript {
     repositories {
-        maven { url = "http://files.minecraftforge.net/maven" }
+        flatDir {
+            dirs 'libs'
+        }
         maven { url "https://plugins.gradle.org/m2/" }
+        maven { url "https://files.minecraftforge.net/maven"}
     }
     dependencies {
+        classpath "se.bjurr.gitchangelog:git-changelog-gradle-plugin:1.71.3"
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
 //        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.1.+', changing: true
         classpath 'gradle.plugin.com.matthewprenger:CurseGradle:1.0.9'
@@ -14,6 +18,7 @@ plugins {
     id "org.jetbrains.kotlin.jvm" version "1.3.50"
 }
 
+apply plugin: 'se.bjurr.gitchangelog.git-changelog-gradle-plugin'
 apply plugin: 'net.minecraftforge.gradle.forge'
 //apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'idea'
@@ -49,6 +54,7 @@ minecraft {
 }
 
 repositories {
+    gradlePluginPortal()
     maven {
         url "http://maven.shadowfacts.net/"
     }
@@ -215,6 +221,8 @@ artifacts {
 
 def getBuildNumber() {
 
+    return "1.0.0"
+
     if (System.getenv("CI") == null) {
         return "LOCAL"
     }
@@ -257,4 +265,44 @@ idea {
     module {
         outputDir = file('build/classes/main')
     }
+}
+
+task gitChangelogTask(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
+    file = file("CHANGELOG.md")
+    fromRepo = file(".")
+    fromRef = "1.0"
+    gitLabServer = "https://git.the9grounds.com"
+    gitLabProjectName = "124"
+    templateContent = """
+    Changelog of AE Additions.
+
+{{#tags}}
+## {{name}}
+ {{#issues}}
+  {{#hasIssue}}
+   {{#hasLink}}
+### {{name}} [{{issue}}]({{link}}) {{title}} {{#hasIssueType}} *{{issueType}}* {{/hasIssueType}} {{#hasLabels}} {{#labels}} *{{.}}* {{/labels}} {{/hasLabels}}
+   {{/hasLink}}
+   {{^hasLink}}
+### {{name}} {{issue}} {{title}} {{#hasIssueType}} *{{issueType}}* {{/hasIssueType}} {{#hasLabels}} {{#labels}} *{{.}}* {{/labels}} {{/hasLabels}}
+   {{/hasLink}}
+  {{/hasIssue}}
+  {{^hasIssue}}
+### {{name}}
+  {{/hasIssue}}
+
+  {{#commits}}
+**{{{messageTitle}}}**
+
+{{#messageBodyItems}}
+ * {{.}}
+{{/messageBodyItems}}
+
+[{{hash}}](https://git.the9grounds.com/{{ownerName}}/{{repoName}}/commit/{{hash}}) {{authorName}} *{{commitTime}}*
+
+  {{/commits}}
+
+ {{/issues}}
+{{/tags}}
+ """;
 }
