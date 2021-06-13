@@ -1,8 +1,9 @@
-------------------------
-WARNING: REMEMBER TO BACKUP YOUR SAVES BEFORE USING THIS VERSION
-ALONG WITH AE2 EXTRA CELLS 2 IS IN ALPHA STATE
-------------------------
+Fixes:
 
-Updated to ae2 rv6-alpha-3 and added deprecation tooltips for duplicate items
-Removed Deprecated item recipes and added conversion recipes
-Fixed issue with Cell Workbench
+- Gas level emitter causes fps lag
+- Allow Storage Cell sizes to be set via config
+- Redo AbstractExtraCellsInventory to allow configurable number of max slots
+- Export and Import Buses do not show up correctly when hovering over ae2 cards
+- Fix duplication bug with gases
+- Rewrite filter handling in export & import bus
+- Can't import gases into ME system from unrelease change
