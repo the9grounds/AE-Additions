@@ -31,7 +31,7 @@ import java.io.File
 @Mod(
     modid = Constants.MOD_ID,
     version = Constants.VERSION,
-    name = "Extra Cells",
+    name = "AE Additions",
     modLanguageAdapter = "net.shadowfacts.forgelin.KotlinAdapter",
     dependencies = "after:waila;required-after:appliedenergistics2;after:mekanism;required-after:forgelin"
 )

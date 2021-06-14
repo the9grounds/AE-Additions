@@ -195,6 +195,7 @@ if (System.getenv("CURSEFORGE_API_KEY") != null) {
         project {
             id = config.cf.project.id
             addGameVersion config.version.minecraft
+            changelogType = "markdown"
             changelog = file('CHANGELOG.md')
             releaseType = config.cf.project.type
             relations {
@@ -205,7 +206,7 @@ if (System.getenv("CURSEFORGE_API_KEY") != null) {
                 releaseType = 'alpha'
             }
             mainArtifact(jar) {
-                displayName = "$archivesBaseName-${config.version.minecraft}-${version}"
+                displayName = "$archivesBaseName-${version}"
             }
         }
     }
@@ -270,7 +271,7 @@ task gitChangelogTask(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask
     fromRepo = file(".")
     fromCommit = "af8070505337d16db7f47e1b7e17fb4f20c88090"
     gitLabServer = "https://git.the9grounds.com"
-    ignoreCommitsIfMessageMatches = "Add changelog for version.*"
+    ignoreCommitsIfMessageMatches = "Add changelog for version.*|Update ci.*|\\[ci\\].*"
     gitLabProjectName = "124"
     templateContent = """
     Changelog of AE Additions.
