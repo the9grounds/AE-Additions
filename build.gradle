@@ -199,8 +199,8 @@ if (System.getenv("CURSEFORGE_API_KEY") != null) {
             changelog = file('CHANGELOG.md')
             releaseType = config.cf.project.type
             relations {
-                requiredLibrary 'applied-energistics-2'
-                requiredLibrary 'shadowfacts-forgelin'
+                requiredDependency 'applied-energistics-2'
+                requiredDependency 'shadowfacts-forgelin'
             }
             addArtifact(apiJar) {
                 releaseType = 'alpha'
