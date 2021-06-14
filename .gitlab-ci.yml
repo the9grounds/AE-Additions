@@ -50,9 +50,13 @@ deploy:
   stage: deploy
   only:
     - tags
-
+  cache:
+    key: "release-pipeline"
+    policy: pull
+    paths:
+      - .gradle
   script:
-    - sh ./gradlew curseforge
+    - sh ./gradlew curseforge493962
 #test:
 #  stage: test
 #  script: sh ./gradlew check
