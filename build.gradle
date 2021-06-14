@@ -10,7 +10,7 @@ buildscript {
         classpath "se.bjurr.gitchangelog:git-changelog-gradle-plugin:1.71.3"
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
 //        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.1.+', changing: true
-        classpath 'gradle.plugin.com.matthewprenger:CurseGradle:1.0.9'
+        classpath 'gradle.plugin.com.matthewprenger:CurseGradle:1.4.0'
     }
 }
 
