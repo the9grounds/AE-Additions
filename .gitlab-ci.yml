@@ -61,10 +61,8 @@ deploy:
 
   script:
     - git remote set-url origin git@git.the9grounds.com:minecraft/aeadditions.git
-    - git stash
-    - git checkout master
-    - git stash pop
     - git add CHANGELOG.md
+    - git checkout master
     - git commit -m "Add changelog for version ${CI_COMMIT_TAG}"
     - git push origin master
 #test:
