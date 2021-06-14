@@ -38,7 +38,7 @@ buildRelease:
     - sh ./gradlew --build-cache setupCiWorkspace assemble
   artifacts:
     paths:
-      - build/libs/*.jar
+      - build
       - CHANGELOG.md
   cache:
     key: "release-pipeline"
