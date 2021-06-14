@@ -268,7 +268,7 @@ idea {
 task gitChangelogTask(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
     file = file("CHANGELOG.md")
     fromRepo = file(".")
-    fromRef = "1.0.0"
+    fromCommit = "af8070505337d16db7f47e1b7e17fb4f20c88090"
     gitLabServer = "https://git.the9grounds.com"
     gitLabProjectName = "124"
     templateContent = """

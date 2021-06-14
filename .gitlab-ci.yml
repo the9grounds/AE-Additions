@@ -40,6 +40,11 @@ buildRelease:
     paths:
       - build/libs/*.jar
       - CHANGELOG.md
+  cache:
+    key: "release-pipeline"
+    policy: pull-push
+    paths:
+      - .gradle
 
 deploy:
   only:
@@ -52,7 +57,7 @@ deploy:
     - eval $(ssh-agent -s)
     - git config --global user.email "aylon@the9grounds.com"
     - git config --global user.name "AE Additions CI/CD"
-    - cat gitlab-known-hosts >> ~/.ssh/known_hosts
+    - echo $SSH_KNOWN_HOSTS >> ~/.ssh/known_hosts
 
   script:
     - git add CHANGELOG.md
