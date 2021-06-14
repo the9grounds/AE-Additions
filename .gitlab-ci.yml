@@ -60,6 +60,7 @@ deploy:
     - echo $SSH_KNOWN_HOSTS >> ~/.ssh/known_hosts
 
   script:
+    - git checkout master
     - git add CHANGELOG.md
     - git commit -m "Add changelog for version ${CI_COMMIT_TAG}"
     - git push origin master
