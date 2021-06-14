@@ -189,23 +189,25 @@ task apiJar(type: Jar) {
     include 'com/the9grounds/aeadditions/api/**'
 }
 
-curseforge {
-    apiKey = System.getenv("CURSEFORGE_API_KEY")
-    project {
-        id = config.cf.project.id
-        addGameVersion config.version.minecraft
-        changelogType = "markdown"
-        changelog = file('CHANGELOG.md')
-        releaseType = config.cf.project.type
-        relations {
-            requiredLibrary 'applied-energistics-2'
-            requiredLibrary 'shadowfacts-forgelin'
-        }
-        addArtifact(apiJar) {
-            releaseType = 'alpha'
-        }
-        mainArtifact(jar) {
-            displayName = "$archivesBaseName-${version}"
+if (System.getenv("CURSEFORGE_API_KEY") != null) {
+    curseforge {
+        apiKey = System.getenv("CURSEFORGE_API_KEY")
+        project {
+            id = config.cf.project.id
+            addGameVersion config.version.minecraft
+            changelogType = "markdown"
+            changelog = file('CHANGELOG.md')
+            releaseType = config.cf.project.type
+            relations {
+                requiredLibrary 'applied-energistics-2'
+                requiredLibrary 'shadowfacts-forgelin'
+            }
+            addArtifact(apiJar) {
+                releaseType = 'alpha'
+            }
+            mainArtifact(jar) {
+                displayName = "$archivesBaseName-${version}"
+            }
         }
     }
 }
