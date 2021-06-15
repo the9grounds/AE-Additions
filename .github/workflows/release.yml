@@ -1,13 +1,10 @@
 # This workflow will build a Java project with Gradle
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
 
-name: Build
+name: Release
 
 on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+  release: [published]
 
 jobs:
   build:
@@ -16,18 +13,15 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - uses: benjlevesque/short-sha@v1.2
-      id: short-sha
-    - name: Extract branch name
-      shell: bash
-      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-      id: extract_branch
+    - name: Set output
+      id: vars
+      run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
     - uses: actions/cache@v2
       with:
         path: |
           ~/.gradle/caches
           ~/.gradle/wrapper
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        key: 'release-cache'
         restore-keys: |
           ${{ runner.os }}-gradle-
     - name: Set up JDK 8
@@ -38,12 +32,14 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
-      run: ./gradlew setupCiWorkspace build
+      run: ./gradlew setupCiWorkspace curseforge493962
       env:
-        SHORT_SHA: ${{ steps.short-sha.outputs.sha }}
-        BRANCH_NAME: ${{ steps.extract_branch.outputs.branch }}
+        CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
+        TAG: ${{ steps.vars.outputs.tag }}
     - uses: actions/upload-artifact@v2
       with:
-        name: jars
-        path: ./build/libs/*.jar
+        name: release-files
+        path: |
+          ./build
+          ./CHANGELOG.md
        
