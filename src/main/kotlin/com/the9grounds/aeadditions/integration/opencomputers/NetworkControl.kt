@@ -11,10 +11,13 @@ import appeng.api.storage.IMEMonitor
 import appeng.api.storage.data.IAEFluidStack
 import appeng.api.storage.data.IAEItemStack
 import appeng.api.util.AEPartLocation
+import com.the9grounds.aeadditions.integration.Integration
+import com.the9grounds.aeadditions.integration.mekanism.Mekanism
 import com.the9grounds.aeadditions.registries.ItemEnum
 import com.the9grounds.aeadditions.util.FluidHelper
 import com.the9grounds.aeadditions.util.MachineSource
 import com.the9grounds.aeadditions.util.StorageChannels
+import li.cil.oc.api.Network
 import li.cil.oc.api.internal.Agent
 import li.cil.oc.api.internal.Database
 import li.cil.oc.api.internal.Drone
@@ -23,16 +26,17 @@ import li.cil.oc.api.machine.Arguments
 import li.cil.oc.api.machine.Callback
 import li.cil.oc.api.machine.Context
 import li.cil.oc.api.network.*
-import li.cil.oc.api.prefab.AbstractManagedEnvironment
+import li.cil.oc.integration.appeng.AEUtil
+import li.cil.oc.integration.ec.ECUtil
 import net.minecraft.item.ItemStack
+import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
-import kotlin.math.exp
 import kotlin.math.min
 
-abstract class NetworkControl<T> : AbstractManagedEnvironment() where T : TileEntity, T : IActionHost, T: IGridHost {
-    abstract fun tile(): T
+interface NetworkControl<T> : ManagedEnvironment where T : TileEntity, T : IActionHost, T: IGridHost {
+    fun tile(): T
 
-    abstract fun host(): EnvironmentHost
+    fun host(): EnvironmentHost
 
     val robot: Robot?
     get() = (host()) as? Robot
@@ -43,7 +47,7 @@ abstract class NetworkControl<T> : AbstractManagedEnvironment() where T : TileEn
     val agent: Agent?
     get() = (host()) as? Agent
 
-    var isActive = false
+    var isActive: Boolean
 
     fun getComponent(): ItemStack? {
         if (robot != null) {
@@ -312,6 +316,15 @@ abstract class NetworkControl<T> : AbstractManagedEnvironment() where T : TileEn
         return listOf(amount - notInjected.stackSize)
     }
 
+    @Callback(doc = "function():table -- Get a list of the stored gases in the network.")
+    fun getGasesInNetwork(context: Context, args: Arguments): List<Any> {
+        if (Integration.Mods.MEKANISMGAS.isEnabled) {
+            return listOf(AEUtil.getGridStorage(tile().getGridNode(AEPartLocation.INTERNAL)!!.grid).getInventory(StorageChannels.GAS!!).storageList.filterNotNull().map{it.gasStack}.toTypedArray())
+        }
+
+        return listOf()
+    }
+
     @Callback(doc = "function(database:address, entry:number[, number:amount]):number -- Get fluid from your ae system.")
     fun requestFluids(context: Context, args: Arguments): List<Any> {
         val address = args.checkString(0)
@@ -373,7 +386,7 @@ abstract class NetworkControl<T> : AbstractManagedEnvironment() where T : TileEn
     }
 
     override fun update() {
-        super.update()
+//        super.update()
 
         if ((host().world().totalWorldTime % 10).toInt() == 0 && isActive) {
             val node = node() as Connector
@@ -396,12 +409,35 @@ abstract class NetworkControl<T> : AbstractManagedEnvironment() where T : TileEn
     }
 
     override fun onMessage(message: Message?) {
-        super.onMessage(message)
+//        super.onMessage(message)
 
         if (message!!.name() == "computer.stopped") {
             isActive = false
         }else if (message.name() == "computer.started") {
             isActive = true
+        }
+    }
+
+    override fun load(nbt: NBTTagCompound?) {
+        if (node() != null) {
+            node().load(nbt!!.getCompoundTag("node"))
+        }
+    }
+
+    override fun save(nbt: NBTTagCompound?) {
+        if (node() != null) {
+            val nodeTag: NBTTagCompound
+            if (node().address() == null) {
+                Network.joinNewNetwork(node())
+                nodeTag = NBTTagCompound()
+                node().save(nodeTag)
+                nbt!!.setTag("node", nodeTag)
+                node().remove()
+            } else {
+                nodeTag = NBTTagCompound()
+                node().save(nodeTag)
+                nbt!!.setTag("node", nodeTag)
+            }
         }
     }
 }

@@ -18,8 +18,8 @@ object OpenComputers {
         }
 
         // TODO: Re-enable when fixed
-//        add(ItemOCUpgrade)
-//        AEApi.instance().registries().wireless().registerWirelessHandler(WirelessHandlerUpgradeAE)
+        add(ItemOCUpgrade)
+        AEApi.instance().registries().wireless().registerWirelessHandler(WirelessHandlerUpgradeAE)
         AEAdditionsPathProvider
     }
 

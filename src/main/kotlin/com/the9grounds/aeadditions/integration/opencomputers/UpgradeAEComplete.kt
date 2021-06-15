@@ -8,14 +8,12 @@ import li.cil.oc.api.machine.Context
 import li.cil.oc.api.network.EnvironmentHost
 import li.cil.oc.api.network.Node
 import li.cil.oc.integration.appeng.AEUtil
-import li.cil.oc.integration.appeng.NetworkControl
-import li.cil.oc.integration.appeng.`NetworkControl$`
 
 //NetworkControl<TileSecurityStation>,
 //li.cil.oc.integration.ec.NetworkControl<TileSecurityStation>
-class UpgradeAEComplete(environmentHost: EnvironmentHost) : UpgradeAE(environmentHost) {
+class UpgradeAEComplete(environmentHost: EnvironmentHost) : UpgradeAE(environmentHost)/*, NetworkControl<TileSecurityStation> */{
 
-//    fun aeCraftItem(aeItem: IAEItemStack): IAEItemStack? {
+    //    fun aeCraftItem(aeItem: IAEItemStack): IAEItemStack? {
 //        val patterns = AEUtil.getGridCrafting(tile().getGridNode(pos())!!.grid).getCraftingFor(aeItem, null, 0, tile().world)
 //        val pattern = patterns.find { it.outputs.any { iit ->  iit::class.java == aeItem::class.java } }
 //        return when {
@@ -70,4 +68,5 @@ class UpgradeAEComplete(environmentHost: EnvironmentHost) : UpgradeAE(environmen
 //    override fun getStoredPower(context: Context?, args: Arguments?): Array<Any> {
 //        return super.getStoredPower(context, args)
 //    }
+//    override fun pos(): AEPartLocation = AEPartLocation.INTERNAL
 }
