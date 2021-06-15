@@ -1,7 +1,7 @@
-[ExtraCells 2](https://minecraft.curseforge.com/projects/extracells2)
+[AE Additions - Extra Cells 2 Fork](https://www.curseforge.com/minecraft/mc-mods/ae-additions-extra-cells-2-fork)
 ==========
-[![CurseForge](http://cf.way2muchnoise.eu/full_229218_downloads.svg)](https://minecraft.curseforge.com/projects/extracells2)
-[![Latest Version](http://cf.way2muchnoise.eu/versions/For%20MC_229218_all.svg)](https://minecraft.curseforge.com/projects/extracells2/files/latest)
+[![CurseForge](http://cf.way2muchnoise.eu/full_493962_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/ae-additions-extra-cells-2-fork)
+[![Latest Version](http://cf.way2muchnoise.eu/versions/For%20MC_493962_all.svg)](https://www.curseforge.com/minecraft/mc-mods/ae-additions-extra-cells-2-fork/files/latest)
 
 
 A mighty Add-On for Applied Energistics 2
