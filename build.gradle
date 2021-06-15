@@ -226,22 +226,22 @@ def getBuildNumber() {
         return "LOCAL"
     }
 
-    if (System.getenv("CI_MERGE_REQUEST_IID") != null) {
-        return "pr-${System.getenv("CI_COMMIT_BRANCH")}-${System.getenv("CI_COMMIT_SHORT_SHA")}"
+    if (System.getenv("GITHUB_HEAD_REF") != null) {
+        return "pr-${System.getenv("GITHUB_HEAD_REF")}-${System.getenv("SHORT_SHA")}"
     }
 
-    if (System.getenv("CI_COMMIT_TAG") != null) {
+    if (System.getenv("TAG") != null) {
         return null
     }
 
-    return "ci-${System.getenv("CI_COMMIT_BRANCH")}-${System.getenv("CI_COMMIT_SHORT_SHA")}"
+    return "ci-${System.getenv("BRANCH_NAME")}-${System.getenv("SHORT_SHA")}"
 }
 
 def getVersion() {
     def buildNumber = getBuildNumber()
 
     if (buildNumber == null) {
-        def tag = System.getenv("CI_COMMIT_TAG")
+        def tag = System.getenv("TAG")
 
         return "${tag}"
     }
@@ -270,7 +270,6 @@ task gitChangelogTask(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask
     file = file("CHANGELOG.md")
     fromRepo = file(".")
     fromCommit = "af8070505337d16db7f47e1b7e17fb4f20c88090"
-    gitLabServer = "https://git.the9grounds.com"
     ignoreCommitsIfMessageMatches = "Add changelog for version.*|Update ci.*|\\[ci\\].*"
     gitLabProjectName = "124"
     templateContent = """
@@ -298,7 +297,7 @@ task gitChangelogTask(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask
  * {{.}}
 {{/messageBodyItems}}
 
-[{{hash}}](https://git.the9grounds.com/{{ownerName}}/{{repoName}}/commit/{{hash}}) {{authorName}} *{{commitTime}}*
+[{{hash}}](https://github.com/{{ownerName}}/{{repoName}}/commit/{{hash}}) {{authorName}} *{{commitTime}}*
 
   {{/commits}}
 
