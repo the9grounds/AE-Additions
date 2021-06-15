@@ -49,6 +49,10 @@ class PartGasTerminal : PartECBase(), IGridTickable, IInventoryListener {
         }
     }
     var currentFluid: Fluid? = null
+    set(value) {
+        field = value
+        sendCurrentFluid()
+    }
 
     protected var machineSource = MachineSource(this)
 
