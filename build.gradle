@@ -195,7 +195,7 @@ if (System.getenv("CURSEFORGE_API_KEY") != null) {
             addGameVersion config.version.minecraft
             changelogType = "markdown"
             changelog = file('CHANGELOG.md')
-            releaseType = config.cf.project.type
+            releaseType = getReleaseType()
             relations {
                 requiredDependency 'applied-energistics-2'
                 requiredDependency 'shadowfacts-forgelin'
@@ -245,6 +245,16 @@ def getVersion() {
     }
 
     return buildNumber
+}
+
+def getReleaseType() {
+    def preRelease = System.getenv("PRERELEASE")
+
+    if (preRelease == true || preRelease == "true") {
+        return "release"
+    }
+
+    return "alpha"
 }
 
 tasks.test {

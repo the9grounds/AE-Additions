@@ -6,7 +6,8 @@ name: Release
 on:
   release:
     types:
-      - published
+      - released
+      - prereleased
 
 jobs:
   build:
@@ -38,11 +39,16 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
         user: the9grounds
         project: AE-Additions
+        pullRequests: true
+        issues: true
+        issuesWoLabels: true
+        prWoLabels: true
     - name: Build with Gradle
       run: ./gradlew setupCiWorkspace curseforge493962
       env:
         CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
         TAG: ${{ steps.vars.outputs.tag }}
+        PRERELEASE: ${{ github.event.release.prerelease }}
     - uses: actions/upload-artifact@v2
       with:
         name: release-files
