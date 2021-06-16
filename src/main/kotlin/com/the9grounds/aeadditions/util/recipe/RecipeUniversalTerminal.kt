@@ -21,7 +21,7 @@ object RecipeUniversalTerminal : IForgeRegistryEntry.Impl<IRecipe>(), IRecipe {
 
     val itemUniversal = ItemEnum.UNIVERSALTERMINAL.item as ItemWirelessTerminalUniversal
 
-    override fun matches(inv: InventoryCrafting, worldIn: World): Boolean {
+    override fun matches(inv: InventoryCrafting, worldIn: World?): Boolean {
         var hasWireless = false
         var isUniversal = false
         var hasTerminal = false
