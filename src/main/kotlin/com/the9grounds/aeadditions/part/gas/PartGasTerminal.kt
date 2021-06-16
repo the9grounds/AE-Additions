@@ -41,7 +41,7 @@ class PartGasTerminal : PartECBase(), IGridTickable, IInventoryListener {
     private val containers: MutableList<Any> = mutableListOf()
     val inventory = object : InventoryPlain("com.the9grounds.aeadditions.part.gas.terminal", 2, 64, this) {
         override fun isItemValidForSlot(i: Int, itemstack: ItemStack): Boolean {
-            return isItemValidForSlot(i, itemstack)
+            return isItemValidForInputSlot(i, itemstack)
         }
 
         override fun onContentsChanged() {
