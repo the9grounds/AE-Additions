@@ -224,12 +224,12 @@ def getBuildNumber() {
         return "LOCAL"
     }
 
-    if (System.getenv("GITHUB_HEAD_REF") != null) {
-        return "pr-${System.getenv("GITHUB_HEAD_REF")}-${System.getenv("SHORT_SHA")}"
-    }
-
     if (System.getenv("TAG") != null) {
         return null
+    }
+
+    if (System.getenv("GITHUB_HEAD_REF") != null) {
+        return "pr-${System.getenv("GITHUB_HEAD_REF")}-${System.getenv("SHORT_SHA")}"
     }
 
     return "ci-${System.getenv("BRANCH_NAME")}-${System.getenv("SHORT_SHA")}"
