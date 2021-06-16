@@ -70,6 +70,7 @@ com.the9grounds.aeadditions.part.fluid.plane.formation.name=ME Fluid Formation P
 com.the9grounds.aeadditions.part.fluid.levelemitter.name=ME Fluid Level Emitter
 com.the9grounds.aeadditions.part.drive.name=ME Drive Fixture
 com.the9grounds.aeadditions.part.battery.name=ME Energy Cell Fixture
+com.the9grounds.aeadditions.part.interface.name=ME Fluid Interface
 com.the9grounds.aeadditions.part.fluid.conversion.monitor.name=ME Fluid Conversion Monitor
 com.the9grounds.aeadditions.part.fluid.monitor.name=ME Fluid Storage Monitor
 com.the9grounds.aeadditions.part.oredict.export.name=ME Ore Dictionary Export Bus

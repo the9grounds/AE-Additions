@@ -7,12 +7,16 @@ import appeng.api.networking.security.ISecurityGrid
 import appeng.api.parts.IPart
 import appeng.api.parts.IPartHost
 import appeng.api.storage.IMEMonitor
+import appeng.api.storage.data.IAEFluidStack
 import appeng.api.util.AEPartLocation
 import com.the9grounds.aeadditions.AEAdditions
+import com.the9grounds.aeadditions.api.IPortableFluidStorageCell
 import com.the9grounds.aeadditions.api.IPortableGasStorageCell
+import com.the9grounds.aeadditions.api.IWirelessFluidTermHandler
 import com.the9grounds.aeadditions.api.IWirelessGasTermHandler
 import com.the9grounds.aeadditions.api.gas.IAEGasStack
 import com.the9grounds.aeadditions.block.IGuiBlock
+import com.the9grounds.aeadditions.container.fluid.ContainerFluidStorage
 import com.the9grounds.aeadditions.container.gas.ContainerGasStorage
 import com.the9grounds.aeadditions.gui.GuiStorage
 import com.the9grounds.aeadditions.integration.mekanism.gas.MEMonitorFluidGasWrapper
@@ -35,6 +39,22 @@ object GuiHandler: IGuiHandler {
 
     fun getContainer(id: Int, player: EntityPlayer, args: Array<Any>): Any? {
         return when(id) {
+            0 -> {
+                val fluidInventory = args[0] as IMEMonitor<IAEFluidStack>
+                ContainerFluidStorage(fluidInventory, player, hand)
+            }
+            1 -> {
+                val fluidInventory = args[0] as IMEMonitor<IAEFluidStack>
+                val handler = args[1] as IWirelessFluidTermHandler
+
+                ContainerFluidStorage(fluidInventory, player, handler, hand)
+            }
+            3 -> {
+                val fluidInventory = args[0] as IMEMonitor<IAEFluidStack>
+                val storageCell = args[1] as IPortableFluidStorageCell
+
+                ContainerFluidStorage(fluidInventory, player, storageCell, hand)
+            }
             4 -> {
                 val gasInventory = MEMonitorFluidGasWrapper(args[0] as IMEMonitor<IAEGasStack>)
                 ContainerGasStorage(gasInventory, player, hand)
@@ -58,6 +78,9 @@ object GuiHandler: IGuiHandler {
     @SideOnly(Side.CLIENT)
     fun getGui(id: Int, player: EntityPlayer): Any? {
         return when(id) {
+            0 -> GuiStorage(ContainerFluidStorage(player, hand), "com.the9grounds.aeadditions.part.fluid.terminal.name")
+            1 -> GuiStorage(ContainerFluidStorage(player, hand), "com.the9grounds.aeadditions.part.fluid.terminal.name");
+            3 -> GuiStorage(ContainerFluidStorage(player, hand), "com.the9grounds.aeadditions.item.storage.fluid.portable.name");
             4 -> GuiStorage(ContainerGasStorage(player, hand), "com.the9grounds.aeadditions.part.gas.terminal.name");
             5 -> GuiStorage(ContainerGasStorage(player, hand), "com.the9grounds.aeadditions.part.gas.terminal.name");
             6 -> GuiStorage(ContainerGasStorage(player, hand), "com.the9grounds.aeadditions.item.storage.gas.portable.name");

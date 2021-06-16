@@ -97,9 +97,14 @@ public class WidgetFluidSelector extends AbstractFluidWidget {
 
 			Gas gas = GasUtil.getGas(fluid);
 
-			int color = gas.getTint();
 
-			GlStateManager.color(getRed(color), getGreen(color), getBlue(color));
+			if (gas != null) {
+				int color = gas.getTint();
+
+				GlStateManager.color(getRed(color), getGreen(color), getBlue(color));
+			} else {
+				GlStateManager.color(1.0f, 1.0f, 1.0f);
+			}
 
 			drawTexturedModalRect(posX + 1, posY + 1,
 				sprite, this.height - 2, this.width - 2);
