@@ -248,9 +248,9 @@ def getVersion() {
 }
 
 def getReleaseType() {
-    def preRelease = System.getenv("PRERELEASE")
+    def preRelease = Boolean.parseBoolean(System.getenv("PRERELEASE"))
 
-    if (preRelease == true || preRelease == "true") {
+    if (preRelease) {
         return "release"
     }
 
