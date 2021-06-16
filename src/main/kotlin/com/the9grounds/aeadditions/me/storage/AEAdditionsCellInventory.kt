@@ -54,14 +54,12 @@ class AEAdditionsCellInventory<T: IAEStack<T>?>(cellType: IAEAdditionsStorageCel
                 if (mode == Actionable.MODULATE) {
                     l.setStackSize(l.getStackSize() + remainingItemCount)
                     saveChanges()
-                    input.setStackSize(r.getStackSize())
                 }
                 r
             } else {
                 if (mode == Actionable.MODULATE) {
                     l.setStackSize(l.getStackSize() + input.getStackSize())
                     saveChanges()
-                    input.setStackSize(0L)
                 }
                 null
             }
@@ -79,7 +77,6 @@ class AEAdditionsCellInventory<T: IAEStack<T>?>(cellType: IAEAdditionsStorageCel
                         toWrite!!.setStackSize(remainingItemCount)
                         cellItems!!.add(toWrite)
                         saveChanges()
-                        input.setStackSize(toReturn.getStackSize())
                     }
                     return toReturn
                 }
@@ -87,7 +84,6 @@ class AEAdditionsCellInventory<T: IAEStack<T>?>(cellType: IAEAdditionsStorageCel
                     val copy = input.copy()
                     cellItems!!.add(copy)
                     saveChanges()
-                    input.setStackSize(0L)
                 }
                 return null
             }

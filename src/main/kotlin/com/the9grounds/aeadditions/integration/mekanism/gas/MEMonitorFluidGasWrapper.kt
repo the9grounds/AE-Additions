@@ -44,16 +44,15 @@ class MEMonitorFluidGasWrapper(val gasMonitor: IMEMonitor<IAEGasStack>) : IMEMon
     override fun validForPass(i: Int): Boolean = gasMonitor.validForPass(i)
 
     override fun addListener(listener: IMEMonitorHandlerReceiver<IAEFluidStack>, verificationToken: Any?) {
-        this.listeners[listener] = verificationToken
-        // TODO: Look at this
-        if (listeners.isEmpty()) {
+        if (this.listeners.isEmpty()) {
             gasMonitor.addListener(this, null)
         }
+        this.listeners[listener] = verificationToken
     }
 
     override fun removeListener(listener: IMEMonitorHandlerReceiver<IAEFluidStack>?) {
         this.listeners.remove(listener)
-        if (listeners.isEmpty()) {
+        if (this.listeners.isEmpty()) {
             gasMonitor.removeListener(this)
         }
     }
