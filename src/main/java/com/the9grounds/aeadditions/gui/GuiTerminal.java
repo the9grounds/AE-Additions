@@ -76,11 +76,11 @@ public class GuiTerminal extends GuiContainer implements IFluidSelectorGui {
 			String amountToText = Long.toString(currentFluidAmount) + "mB";
 			if (AEAConfigHandler.shortenedBuckets) {
 				if (currentFluidAmount > 1000000000L) {
-					amountToText = Long.toString(currentFluidAmount / 1000000000L) + type.getMega();
+					amountToText = Long.toString(currentFluidAmount / 1000000000L) + type.getMega() + "MegaB";
 				} else if (currentFluidAmount > 1000000L) {
-					amountToText = Long.toString(currentFluidAmount / 1000000L) + type.getKilo();
+					amountToText = Long.toString(currentFluidAmount / 1000000L) + type.getKilo() + "KiloB";
 				} else if (currentFluidAmount > 9999L) {
-					amountToText = Long.toString(currentFluidAmount / 1000L) + type.getBuckets();
+					amountToText = Long.toString(currentFluidAmount / 1000L) + type.getBuckets() + "B";
 				}
 			}
 

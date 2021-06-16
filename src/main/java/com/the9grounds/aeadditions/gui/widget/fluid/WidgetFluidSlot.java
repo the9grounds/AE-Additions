@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.the9grounds.aeadditions.Constants;
 import com.the9grounds.aeadditions.part.gas.PartGasLevelEmitter;
+import mekanism.api.gas.Gas;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureManager;
@@ -109,8 +110,25 @@ public class WidgetFluidSlot extends AbstractWidget {
 	private void drawFluid(TextureManager textureManager) {
 		textureManager.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		TextureAtlasSprite sprite = manager.mc.getTextureMapBlocks().getAtlasSprite(fluid.getStill().toString());
-		GlStateManager.color(1.0F, 1.0F, 1.0F);
+
+		Gas gas = GasUtil.getGas(fluid);
+
+		int color = gas.getTint();
+
+		GlStateManager.color(getRed(color), getGreen(color), getBlue(color));
 		manager.gui.drawTexturedModalRect(this.xPos + 1, this.yPos + 1, sprite, 16, 16);
+	}
+
+	private float getRed(int color) {
+		return (color >> 16 & 0xFF) / 255.0F;
+	}
+
+	private float getGreen(int color) {
+		return (color >> 8 & 0xFF) / 255.0F;
+	}
+
+	private float getBlue(int color) {
+		return (color & 0xFF) / 255.0F;
 	}
 
 	public Fluid getFluid() {
