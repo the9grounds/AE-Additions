@@ -1,0 +1,30 @@
+# This workflow will build a Java project with Gradle
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
+
+name: Test changelog
+
+on:
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: heinrichreimer/github-changelog-generator-action@v2.1.1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          user: the9grounds
+          project: AE-Additions
+          pullRequests: true
+          issues: true
+          issuesWoLabels: true
+          prWoLabels: true
+      - uses: actions/upload-artifact@v2
+        with:
+          name: changelog
+          path: |
+            ./CHANGELOG.md
