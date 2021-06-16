@@ -14,4 +14,3 @@
 !/gradle.properties
 !/.gitlab-ci.yml
 !libs/*
-!CHANGELOG.md

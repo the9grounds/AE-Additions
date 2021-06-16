@@ -33,6 +33,11 @@ jobs:
         distribution: 'adopt'
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
+    - uses: heinrichreimer/github-changelog-generator-action@v2.1.1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        user: the9grounds
+        project: AE-Additions
     - name: Build with Gradle
       run: ./gradlew setupCiWorkspace curseforge493962
       env:

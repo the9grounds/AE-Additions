@@ -7,7 +7,6 @@ buildscript {
         maven { url "https://files.minecraftforge.net/maven"}
     }
     dependencies {
-        classpath "se.bjurr.gitchangelog:git-changelog-gradle-plugin:1.71.3"
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
 //        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.1.+', changing: true
         classpath 'gradle.plugin.com.matthewprenger:CurseGradle:1.4.0'
@@ -18,7 +17,6 @@ plugins {
     id "org.jetbrains.kotlin.jvm" version "1.3.50"
 }
 
-apply plugin: 'se.bjurr.gitchangelog.git-changelog-gradle-plugin'
 apply plugin: 'net.minecraftforge.gradle.forge'
 //apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'idea'
@@ -249,13 +247,6 @@ def getVersion() {
     return buildNumber
 }
 
-//idea {
-//    module {
-//        outputDir = file('build/classes/main')
-//    }
-//}
-//sourceSets { main { output.resourcesDir = output.classesDir } }
-
 tasks.test {
     enabled = gradle.startParameter.taskNames.contains("test")
 }
@@ -264,44 +255,4 @@ idea {
     module {
         outputDir = file('build/classes/main')
     }
-}
-
-task gitChangelogTask(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
-    file = file("CHANGELOG.md")
-    fromRepo = file(".")
-    fromCommit = "af8070505337d16db7f47e1b7e17fb4f20c88090"
-    ignoreCommitsIfMessageMatches = "Add changelog for version.*|Update ci.*|\\[ci\\].*"
-    gitLabProjectName = "124"
-    templateContent = """
-    Changelog of AE Additions.
-
-{{#tags}}
-## {{name}}
- {{#issues}}
-  {{#hasIssue}}
-   {{#hasLink}}
-### {{name}} [{{issue}}]({{link}}) {{title}} {{#hasIssueType}} *{{issueType}}* {{/hasIssueType}} {{#hasLabels}} {{#labels}} *{{.}}* {{/labels}} {{/hasLabels}}
-   {{/hasLink}}
-   {{^hasLink}}
-### {{name}} {{issue}} {{title}} {{#hasIssueType}} *{{issueType}}* {{/hasIssueType}} {{#hasLabels}} {{#labels}} *{{.}}* {{/labels}} {{/hasLabels}}
-   {{/hasLink}}
-  {{/hasIssue}}
-  {{^hasIssue}}
-### {{name}}
-  {{/hasIssue}}
-
-  {{#commits}}
-**{{{messageTitle}}}**
-
-{{#messageBodyItems}}
- * {{.}}
-{{/messageBodyItems}}
-
-[{{hash}}](https://github.com/{{ownerName}}/{{repoName}}/commit/{{hash}}) {{authorName}} *{{commitTime}}*
-
-  {{/commits}}
-
- {{/issues}}
-{{/tags}}
- """;
 }
