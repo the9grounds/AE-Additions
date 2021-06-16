@@ -46,7 +46,7 @@ class AEAConfiguration(private val configuration: Configuration) {
                 configuration.addCustomCategoryComment(enum.configCategory, "Do not edit the keys as the keys point to model & texture definitions")
                 val size = configuration.get(category, "size", cell, "Size in K").getInt()
                 val enabled = configuration.get(category, "enabled", true).getBoolean()
-                val numberOfTypes = configuration.get(category, "numberOfTypes", enum.defaultNumberOfTypes).getInt()
+                val numberOfTypes = configuration.get(category, "numberOfTypes", enum.defaultNumberOfTypes, "Be careful to not go too crazy with this on the higher cells, the size of nbt can get crazy and cause issues. I may add an upper limit in the future.").getInt()
 
                 entries[cell] = CellConfig(size, enabled, cell.toString(), numberOfTypes, enum)
             }

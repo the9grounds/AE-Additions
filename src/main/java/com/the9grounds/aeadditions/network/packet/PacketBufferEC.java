@@ -34,25 +34,25 @@ public class PacketBufferEC extends PacketBuffer {
 		return super.readString(1024);
 	}
 
-	public void writeFluidStack(@Nullable FluidStack fluidStack) {
+	public void writeFluidStack(@Nullable IAEFluidStack fluidStack) {
 		if (fluidStack == null) {
-			writeInt(-1);
+			writeLong(-1);
 		} else {
-			writeInt(fluidStack.amount);
+			writeLong(fluidStack.getStackSize());
 			writeFluid(fluidStack.getFluid());
 		}
 	}
 
 	@Nullable
-	public FluidStack readFluidStack() {
-		int amount = readInt();
-		if (amount > 0) {
+	public IAEFluidStack readFluidStack() {
+		long amount = readLong();
+		if (amount > 0L) {
 			Fluid fluid = readFluid();
 			if (fluid == null) {
 				return null;
 			}
 
-			return new FluidStack(fluid, amount);
+			return StorageChannels.FLUID.createStack(new FluidStack(fluid, 1)).setStackSize(amount);
 		}
 		return null;
 	}
@@ -122,19 +122,18 @@ public class PacketBufferEC extends PacketBuffer {
 
 	public void writeAEFluidStacks(IItemList<IAEFluidStack> fluidStackList) throws IOException {
 		for (IAEFluidStack stack : fluidStackList) {
-			FluidStack fluidStack = stack.getFluidStack();
-			writeFluidStack(fluidStack);
+			writeFluidStack(stack);
 		}
 	}
 
 	public IItemList<IAEFluidStack> readAEFluidStacks() throws IOException {
 		IItemList<IAEFluidStack> fluidStackList = StorageChannels.FLUID.createList();
 		while (readableBytes() > 0) {
-			FluidStack fluidStack = readFluidStack();
+			IAEFluidStack fluidStack = readFluidStack();
 			if (fluidStack == null) {
 				continue;
 			}
-			fluidStackList.add(StorageChannels.FLUID.createStack(fluidStack));
+			fluidStackList.add(fluidStack);
 		}
 		return fluidStackList;
 	}
