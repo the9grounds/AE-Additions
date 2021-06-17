@@ -37,7 +37,7 @@ import java.util.*
 
 abstract class PartGasIO : PartECBase(), IGridTickable, IInventoryListener, IFluidSlotListener, IUpgradeable {
     @JvmField val filterFluids = arrayOfNulls<Fluid>(9)
-    val filterOrder = listOf<Int>(4,1,3,5,7,0,2,6,8)
+    val filterOrder = listOf(4,1,3,5,7,0,2,6,8)
     private val upgradeInventory: UpgradeInventory = object : UpgradeInventory(this) {
         override fun onContentsChanged() {
             saveData()

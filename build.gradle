@@ -190,12 +190,15 @@ task apiJar(type: Jar) {
 if (System.getenv("CURSEFORGE_API_KEY") != null) {
     curseforge {
         apiKey = System.getenv("CURSEFORGE_API_KEY")
+
+        def localReleaseType = getReleaseType()
+
         project {
             id = config.cf.project.id
             addGameVersion config.version.minecraft
             changelogType = "markdown"
             changelog = file('CHANGELOG.md')
-            releaseType = getReleaseType()
+            releaseType = localReleaseType
             relations {
                 requiredDependency 'applied-energistics-2'
                 requiredDependency 'shadowfacts-forgelin'
@@ -248,13 +251,19 @@ def getVersion() {
 }
 
 def getReleaseType() {
-    def preRelease = Boolean.parseBoolean(System.getenv("PRERELEASE"))
+    def preReleaseEnv = System.getenv("PRERELEASE")
+
+    if (preReleaseEnv == null) {
+        return "beta"
+    }
+
+    def preRelease = Boolean.parseBoolean(preReleaseEnv)
 
     if (preRelease) {
         return "release"
     }
 
-    return "alpha"
+    return "beta"
 }
 
 tasks.test {

@@ -82,6 +82,7 @@ public class CommonProxy {
 			if (current.getEnabled()) {
 				registerBlock(current.getBlock());
 				registerItem(current.getItem());
+				current.registerUpgrades();
 			}
 		}
 	}
