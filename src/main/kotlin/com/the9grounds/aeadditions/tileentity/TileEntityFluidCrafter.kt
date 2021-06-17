@@ -54,7 +54,7 @@ import java.util.HashMap
 class TileEntityFluidCrafter : TileBase(), IActionHost, ICraftingProvider, ICraftingWatcherHost, IECTileEntity,
     ITickable, IGuiProvider, IInventoryListener, IUpgradeable {
 
-    var speedState: Byte = 0
+    var speedState: Int = 0
 
     val upgradeInventory = object : CraftingUpgradeInventory(this) {
         override fun onContentsChanged() {
@@ -225,7 +225,7 @@ class TileEntityFluidCrafter : TileBase(), IActionHost, ICraftingProvider, ICraf
                     MachineSource(this)
                 )
             }
-            finishCraftingTime = System.currentTimeMillis() + 1000
+            finishCraftingTime = System.currentTimeMillis() + 1000 - (speedState * 150)
             returnStack = patter.getOutput(table, getWorld())
             optionalReturnStack = arrayOfNulls(9)
             for (i in 0..8) {
@@ -242,8 +242,6 @@ class TileEntityFluidCrafter : TileBase(), IActionHost, ICraftingProvider, ICraf
     override fun readFromNBT(tagCompound: NBTTagCompound) {
         super.readFromNBT(tagCompound)
         inventory.readFromNBT(tagCompound)
-        val nbtUpgradeInventory = tagCompound.getTagList("upgradeInventory", 10)
-        upgradeInventory.readFromNBT(nbtUpgradeInventory)
         if (hasWorld()) {
             val node = gridNode
             if (tagCompound.hasKey("nodes") && node != null) {
@@ -251,6 +249,14 @@ class TileEntityFluidCrafter : TileBase(), IActionHost, ICraftingProvider, ICraf
                 node.updateState()
             }
         }
+
+        upgradeInventory.readFromNBT(
+            tagCompound.getTagList(
+                "upgradeInventory",
+                10
+            )
+        )
+        onInventoryChanged()
     }
 
     override fun securityBreak() {}
@@ -341,7 +347,7 @@ class TileEntityFluidCrafter : TileBase(), IActionHost, ICraftingProvider, ICraf
                                     ), Actionable.MODULATE, MachineSource(this)
                                 )
                             }
-                            finishCraftingTime = System.currentTimeMillis() + 1000
+                            finishCraftingTime = System.currentTimeMillis() + 1000 - (speedState * 150)
                             returnStack = patter.condensedOutputs[0].createItemStack()
                             isBusy = true
                             markDirty()
