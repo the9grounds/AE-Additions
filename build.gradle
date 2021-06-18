@@ -260,10 +260,10 @@ def getReleaseType() {
     def preRelease = Boolean.parseBoolean(preReleaseEnv)
 
     if (preRelease) {
-        return "release"
+        return "beta"
     }
 
-    return "beta"
+    return "release"
 }
 
 tasks.test {
