@@ -4,9 +4,9 @@ import com.the9grounds.aeadditions.Constants
 import com.the9grounds.aeadditions.container.fluid.ContainerFluidCrafter
 import com.the9grounds.aeadditions.gui.GuiBase
 import com.the9grounds.aeadditions.gui.ISlotRenderer
+import com.the9grounds.aeadditions.gui.SlotToggleableRenderer
 import com.the9grounds.aeadditions.gui.SlotUpgradeRenderer
 import com.the9grounds.aeadditions.tileentity.TileEntityFluidCrafter
-import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.entity.player.InventoryPlayer
 import net.minecraft.inventory.Slot
 import net.minecraft.util.ResourceLocation
@@ -26,12 +26,27 @@ class GuiFluidCrafter(player: InventoryPlayer?, tileEntity: TileEntityFluidCraft
     }
 
     override fun getSlotRenderer(slot: Slot): ISlotRenderer? {
-        return if ((slot.stack == null || slot.stack.isEmpty) && slot.slotNumber > 44) {
-            SlotUpgradeRenderer.INSTANCE
-        } else null
+
+        val stack = slot.stack
+
+        if (stack != null && !stack.isEmpty) {
+            return null
+        }
+
+        val slotNumber = slot.slotNumber
+
+        return when(true) {
+            slotNumber > 44 -> SlotUpgradeRenderer.INSTANCE
+            slotNumber < 9 -> SlotToggleableRenderer
+            else -> null
+        }
     }
 
     override fun hasSlotRenders(): Boolean = true
+
+    fun onCapacityChanged() {
+//        container.onCapacityChanged()
+    }
 
     init {
         hasNetworkTool = this.inventorySlots.getInventory().size > 50

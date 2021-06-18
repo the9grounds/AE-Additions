@@ -1,7 +1,6 @@
 package com.the9grounds.aeadditions.block
 
 import com.the9grounds.aeadditions.network.GuiHandler.launchGui
-import com.the9grounds.aeadditions.block.BlockEC
 import net.minecraft.world.World
 import net.minecraft.util.math.BlockPos
 import net.minecraft.block.state.IBlockState
@@ -16,7 +15,6 @@ import net.minecraft.util.EnumFacing
 import appeng.api.config.SecurityPermissions
 import net.minecraft.util.math.RayTraceResult
 import net.minecraft.util.math.Vec3d
-import com.the9grounds.aeadditions.api.IWrenchHandler
 import com.the9grounds.aeadditions.util.PermissionUtil
 import com.the9grounds.aeadditions.util.WrenchUtil
 import net.minecraft.block.material.Material

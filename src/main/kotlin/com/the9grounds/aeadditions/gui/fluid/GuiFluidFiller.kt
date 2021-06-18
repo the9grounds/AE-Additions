@@ -1,15 +1,7 @@
 package com.the9grounds.aeadditions.gui.fluid
 
 import com.the9grounds.aeadditions.Constants
-import net.minecraft.entity.player.InventoryPlayer
-import com.the9grounds.aeadditions.tileentity.TileEntityFluidCrafter
-import net.minecraft.client.gui.inventory.GuiContainer
-import com.the9grounds.aeadditions.container.fluid.ContainerFluidCrafter
 import net.minecraft.util.ResourceLocation
-import net.minecraft.client.renderer.GlStateManager
-import net.minecraft.client.Minecraft
-import com.the9grounds.aeadditions.gui.fluid.GuiFluidCrafter
-import com.the9grounds.aeadditions.registries.BlockEnum
 import net.minecraft.entity.player.EntityPlayer
 import com.the9grounds.aeadditions.tileentity.TileEntityFluidFiller
 import com.the9grounds.aeadditions.gui.GuiBase

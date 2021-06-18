@@ -1,6 +1,5 @@
 package com.the9grounds.aeadditions.tileentity
 
-import com.the9grounds.aeadditions.tileentity.TileBase
 import appeng.api.networking.security.IActionHost
 import appeng.api.networking.crafting.ICraftingProvider
 import appeng.api.networking.crafting.ICraftingWatcherHost
@@ -28,13 +27,13 @@ import appeng.api.networking.crafting.ICraftingProviderHelper
 import com.the9grounds.aeadditions.util.ItemStackUtils
 import com.the9grounds.aeadditions.crafting.CraftingPattern
 import net.minecraft.inventory.InventoryCrafting
-import appeng.api.storage.data.IAEFluidStack
 import appeng.api.networking.IGrid
 import appeng.api.networking.storage.IStorageGrid
 import com.the9grounds.aeadditions.util.StorageChannels
 import net.minecraftforge.fluids.FluidStack
 import appeng.api.config.Actionable
 import appeng.api.networking.events.MENetworkCraftingPatternChange
+import com.the9grounds.aeadditions.api.inventory.IToggleableSlotsInventory
 import com.the9grounds.aeadditions.container.IUpgradeable
 import net.minecraftforge.fml.relauncher.SideOnly
 import net.minecraft.client.gui.inventory.GuiContainer
@@ -43,22 +42,42 @@ import com.the9grounds.aeadditions.container.fluid.ContainerFluidCrafter
 import com.the9grounds.aeadditions.inventory.CraftingUpgradeInventory
 import com.the9grounds.aeadditions.inventory.IInventoryListener
 import com.the9grounds.aeadditions.network.IGuiProvider
+import com.the9grounds.aeadditions.network.packet.PacketCrafterCapacity
+import com.the9grounds.aeadditions.network.packet.PacketCrafterDroppedItem
+import com.the9grounds.aeadditions.registries.BlockEnum
 import com.the9grounds.aeadditions.util.MachineSource
+import com.the9grounds.aeadditions.util.NetworkUtil
+import net.minecraft.entity.item.EntityItem
 import net.minecraft.inventory.Container
 import net.minecraft.util.ITickable
 import net.minecraftforge.fluids.Fluid
 import net.minecraftforge.fml.relauncher.Side
-import java.util.ArrayList
-import java.util.HashMap
+import java.util.*
 
 class TileEntityFluidCrafter : TileBase(), IActionHost, ICraftingProvider, ICraftingWatcherHost, IECTileEntity,
     ITickable, IGuiProvider, IInventoryListener, IUpgradeable {
 
     var speedState: Int = 0
+    var capacity: Int = 0
 
-    val upgradeInventory = object : CraftingUpgradeInventory(this) {
+    val inventoryOrder = listOf<List<Int>>(
+        listOf(4),
+        listOf(4,1,3,5,7),
+        listOf(4,1,3,5,7,0,2,6,8)
+    )
+
+    val inventoryOrderSeparated = listOf<List<Int>>(
+        listOf(4),
+        listOf(1,3,5,7),
+        listOf(0,2,6,8)
+    )
+
+    val filterOrder = listOf(4,1,3,5,7,0,2,6,8)
+
+    val upgradeInventory = object : CraftingUpgradeInventory(this, BlockEnum.FLUIDCRAFTER) {
         override fun onContentsChanged() {
             saveData()
+            super.onContentsChanged()
         }
     }
 
@@ -225,7 +244,7 @@ class TileEntityFluidCrafter : TileBase(), IActionHost, ICraftingProvider, ICraf
                     MachineSource(this)
                 )
             }
-            finishCraftingTime = System.currentTimeMillis() + 1000 - (speedState * 150)
+            finishCraftingTime = System.currentTimeMillis() + 1000 - (speedState * 175)
             returnStack = patter.getOutput(table, getWorld())
             optionalReturnStack = arrayOfNulls(9)
             for (i in 0..8) {
@@ -347,7 +366,7 @@ class TileEntityFluidCrafter : TileBase(), IActionHost, ICraftingProvider, ICraf
                                     ), Actionable.MODULATE, MachineSource(this)
                                 )
                             }
-                            finishCraftingTime = System.currentTimeMillis() + 1000 - (speedState * 150)
+                            finishCraftingTime = System.currentTimeMillis() + 1000 - (speedState * 175)
                             returnStack = patter.condensedOutputs[0].createItemStack()
                             isBusy = true
                             markDirty()
@@ -419,15 +438,86 @@ class TileEntityFluidCrafter : TileBase(), IActionHost, ICraftingProvider, ICraf
     }
 
     override fun onInventoryChanged() {
+        val oldCapacity = capacity
         speedState = 0
+        capacity = 0
         for (i in 0 until upgradeInventory.sizeInventory) {
             val currentStack = upgradeInventory.getStackInSlot(i)
             if (currentStack != null) {
                 if (AEApi.instance().definitions().materials().cardSpeed().isSameAs(currentStack)) {
                     speedState++
                 }
+                if (AEApi.instance().definitions().materials().cardCapacity().isSameAs(currentStack)) {
+                    capacity++
+                }
             }
         }
+
+        if (capacity < oldCapacity) {
+            val indexes = mutableListOf<Int>()
+            // Drop other Patterns
+            if (oldCapacity == 2 && capacity == 1) {
+                indexes.addAll(inventoryOrderSeparated[2])
+            }
+
+            if (oldCapacity == 2 && capacity == 0) {
+                indexes.addAll(inventoryOrderSeparated[1])
+            }
+
+            if (oldCapacity == 1 && capacity == 0) {
+                indexes.addAll(inventoryOrderSeparated[1])
+            }
+
+            indexes.forEach{
+                dropItem(it)
+            }
+        }
+
+        inventory.enabledSlots.forEach { k,v ->
+            inventory.enabledSlots[k] = false
+        }
+
+        when(capacity) {
+            0 -> {
+                inventoryOrder[capacity].forEach{
+                    if (!inventory.enabledSlots.containsKey(it)) {
+                        inventory.enabledSlots[it] = true
+                    }
+
+                    inventory.enabledSlots[it] = true
+                }
+            }
+            1 -> {
+                inventoryOrder[capacity].forEach{
+                    if (!inventory.enabledSlots.containsKey(it)) {
+                        inventory.enabledSlots[it] = true
+                    }
+
+                    inventory.enabledSlots[it] = true
+                }
+            }
+            2 -> {
+                inventoryOrder[capacity].forEach{
+                    if (!inventory.enabledSlots.containsKey(it)) {
+                        inventory.enabledSlots[it] = true
+                    }
+
+                    inventory.enabledSlots[it] = true
+                }
+            }
+        }
+
+        if (getGridNode(AEPartLocation.INTERNAL) == null) {
+            return
+        }
+
+
+        val coord = location
+        if (coord == null || coord.world == null || coord.world.isRemote) {
+            return
+        }
+
+        NetworkUtil.sendNetworkPacket(PacketCrafterCapacity(this, capacity), coord.pos, coord.world)
 
         saveData()
     }
@@ -438,10 +528,46 @@ class TileEntityFluidCrafter : TileBase(), IActionHost, ICraftingProvider, ICraf
         instance = this
     }
 
-    inner class FluidCrafterInventory : IInventory {
+    fun removeSlot(index: Int) {
+        val item = inventory.getStackInSlot(index)
+        if (item != null && item.count > 0) {
+            item.count = 0
+        }
+    }
+
+    private fun dropItem(index: Int) {
+        val rand = Random()
+        val item = inventory.getStackInSlot(index)
+        if (item != null && item.count > 0) {
+            if (world.isRemote) {
+                return
+            }
+            val rx = rand.nextFloat() * 0.8f + 0.1f
+            val ry = rand.nextFloat() * 0.8f + 0.1f
+            val rz = rand.nextFloat() * 0.8f + 0.1f
+            val entityItem = EntityItem(
+                world, (pos.x + rx).toDouble(), (pos.y + ry).toDouble(), (pos.z
+                        + rz).toDouble(), item.copy()
+            )
+            if (item.hasTagCompound()) {
+                entityItem.item.tagCompound = item.tagCompound!!.copy()
+            }
+            val factor = 0.05f
+            entityItem.motionX = rand.nextGaussian() * factor
+            entityItem.motionY = rand.nextGaussian() * factor + 0.2f
+            entityItem.motionZ = rand.nextGaussian() * factor
+            world.spawnEntity(entityItem)
+            item.count = 0
+
+            NetworkUtil.sendNetworkPacket(PacketCrafterDroppedItem(this, index), pos, world)
+        }
+    }
+
+    inner class FluidCrafterInventory : IToggleableSlotsInventory {
         val inv = arrayOfNulls<ItemStack>(9)
+        override val enabledSlots = mutableMapOf<Int, Boolean>()
         override fun closeInventory(player: EntityPlayer) {}
-        override fun decrStackSize(slot: Int, amt: Int): ItemStack {
+        override fun decrStackSize(slot: Int, amt: Int): ItemStack? {
             var stack = getStackInSlot(slot)
             if (stack != null && !stack.isEmpty) {
                 if (stack.count <= amt) {
@@ -477,8 +603,8 @@ class TileEntityFluidCrafter : TileBase(), IActionHost, ICraftingProvider, ICraf
             return false
         }
 
-        override fun getStackInSlot(slot: Int): ItemStack {
-            return inv[slot]!!
+        override fun getStackInSlot(slot: Int): ItemStack? {
+            return inv[slot]
         }
 
         override fun removeStackFromSlot(index: Int): ItemStack? {

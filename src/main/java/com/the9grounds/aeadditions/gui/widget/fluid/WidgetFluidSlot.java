@@ -113,9 +113,13 @@ public class WidgetFluidSlot extends AbstractWidget {
 
 		Gas gas = GasUtil.getGas(fluid);
 
-		int color = gas.getTint();
+		if (gas != null) {
+			int color = gas.getTint();
 
-		GlStateManager.color(getRed(color), getGreen(color), getBlue(color));
+			GlStateManager.color(getRed(color), getGreen(color), getBlue(color));
+		} else {
+			GlStateManager.color(1.0f, 1.0f, 1.0f);
+		}
 		manager.gui.drawTexturedModalRect(this.xPos + 1, this.yPos + 1, sprite, 16, 16);
 	}
 

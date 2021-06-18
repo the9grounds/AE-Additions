@@ -5,8 +5,10 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import com.the9grounds.aeadditions.container.slot.SlotRespective
 import com.the9grounds.aeadditions.container.ContainerUpgradeable
+import com.the9grounds.aeadditions.container.slot.SlotDisabled
+import com.the9grounds.aeadditions.container.slot.ToggleableSlot
 import com.the9grounds.aeadditions.tileentity.TileEntityFluidCrafter
-import net.minecraft.inventory.Slot
+import kotlin.math.ceil
 
 class ContainerFluidCrafter(player: InventoryPlayer?, val tileEntity: TileEntityFluidCrafter) : ContainerUpgradeable() {
     override fun canInteractWith(entityplayer: EntityPlayer): Boolean {
@@ -15,6 +17,10 @@ class ContainerFluidCrafter(player: InventoryPlayer?, val tileEntity: TileEntity
 
     override fun onContainerClosed(entityplayer: EntityPlayer) {
         super.onContainerClosed(entityplayer)
+    }
+
+    fun onCapacityChanged() {
+//        bindInventory()
     }
 
     override fun transferStackInSlot(player: EntityPlayer, slotnumber: Int): ItemStack {
@@ -47,19 +53,18 @@ class ContainerFluidCrafter(player: InventoryPlayer?, val tileEntity: TileEntity
         return transferStack
     }
 
+    private fun bindInventory() {
+        tileEntity.filterOrder.forEach {
+            val row = ceil((it + 1) / 3.0).toInt() - 1
+            val column = it % 3
 
+            addSlotToContainer(ToggleableSlot(tileEntity.inventory, it, 62 + column * 18, 27 + row * 18))
+        }
+    }
 
     init {
-        for (i in 0..2) {
-            for (j in 0..2) {
-                addSlotToContainer(
-                    SlotRespective(
-                        tileEntity.inventory, j + i * 3,
-                        62 + j * 18, 27 + i * 18
-                    )
-                )
-            }
-        }
+
+        bindInventory()
         bindPlayerInventory(player, 8, 100)
         bindUpgradeInventory(tileEntity)
         bindNetworkToolInventory(player, tileEntity, 185, 114)

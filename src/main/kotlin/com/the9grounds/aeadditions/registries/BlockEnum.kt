@@ -23,7 +23,7 @@ enum class BlockEnum(
         "certustank",
         BlockCertusTank(),
         Function<Block, ItemBlock> { block: Block? -> ItemBlockCertusTank(block) }),
-    FLUIDCRAFTER("fluidcrafter", BlockFluidCrafter(), Pair(Upgrades.SPEED, 5)),
+    FLUIDCRAFTER("fluidcrafter", BlockFluidCrafter(), Pair(Upgrades.SPEED, 5), Pair(Upgrades.CAPACITY, 2)),
     FILLER(
         "fluidfiller",
         BlockFluidFiller(),
