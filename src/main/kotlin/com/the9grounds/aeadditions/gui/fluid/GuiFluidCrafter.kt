@@ -6,6 +6,8 @@ import com.the9grounds.aeadditions.gui.GuiBase
 import com.the9grounds.aeadditions.gui.ISlotRenderer
 import com.the9grounds.aeadditions.gui.SlotToggleableRenderer
 import com.the9grounds.aeadditions.gui.SlotUpgradeRenderer
+import com.the9grounds.aeadditions.registries.BlockEnum
+import com.the9grounds.aeadditions.registries.PartEnum
 import com.the9grounds.aeadditions.tileentity.TileEntityFluidCrafter
 import net.minecraft.entity.player.InventoryPlayer
 import net.minecraft.inventory.Slot
@@ -23,6 +25,11 @@ class GuiFluidCrafter(player: InventoryPlayer?, tileEntity: TileEntityFluidCraft
         if (hasNetworkTool) {
             drawTexturedModalRect(guiLeft + 176, guiTop + 106, 176, 106, 68, 68)
         }
+    }
+
+    override fun drawGuiContainerForegroundLayer(mouseX: Int, mouseY: Int) {
+        fontRenderer.drawString(BlockEnum.FLUIDCRAFTER.statName, 5, 5, 0x000000)
+        super.drawGuiContainerForegroundLayer(mouseX, mouseY)
     }
 
     override fun getSlotRenderer(slot: Slot): ISlotRenderer? {
