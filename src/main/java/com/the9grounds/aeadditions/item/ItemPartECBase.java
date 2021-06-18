@@ -56,11 +56,7 @@ public class ItemPartECBase extends ItemECBase implements IPartItem, IItemGroup,
 				itemStack.getItemDamage(), 0, PartEnum.values().length - 1)]
 				.newInstance(itemStack);
 		} catch (Throwable ex) {
-			Log.error(
-				"AE Additions severe error - could not create AE2 Part from ItemStack! This should not happen!\n"
-					+ "[AE Additions SEVERE] Contact MasterYodA with the following stack trace.\n"
-					+ "[AE Additions SEVERE] Offending item: '%s'",
-				itemStack.toString(), ex);
+			Log.fatalError(itemStack.toString(), ex);
 			return null;
 		}
 	}

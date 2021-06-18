@@ -7,9 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import com.the9grounds.aeadditions.Constants;
-import com.the9grounds.aeadditions.container.ITickContainer;
 import net.minecraft.block.Block;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
 
 import net.minecraft.item.crafting.IRecipe;
@@ -18,7 +16,6 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fluids.FluidRegistry;
 
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -39,8 +36,6 @@ import com.the9grounds.aeadditions.tileentity.TileEntityVibrationChamberFluid;
 import com.the9grounds.aeadditions.tileentity.TileEntityWalrus;
 import com.the9grounds.aeadditions.util.FuelBurnTime;
 import com.the9grounds.aeadditions.util.recipe.RecipeUniversalTerminal;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.registries.IForgeRegistry;
 
 public class CommonProxy {
 
@@ -82,6 +77,7 @@ public class CommonProxy {
 			if (current.getEnabled()) {
 				registerBlock(current.getBlock());
 				registerItem(current.getItem());
+				current.registerUpgrades();
 			}
 		}
 	}

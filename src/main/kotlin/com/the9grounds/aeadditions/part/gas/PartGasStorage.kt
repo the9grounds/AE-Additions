@@ -127,7 +127,7 @@ class PartGasStorage : PartECBase(), ICellContainer, IInventoryListener, IFluidS
     }
 
     override fun getServerGuiElement(player: EntityPlayer?): Any {
-        return ContainerBusGasStorage(this, player)
+        return ContainerBusGasStorage(this, player!!)
     }
 
     override fun onActivate(player: EntityPlayer?, enumHand: EnumHand?, pos: Vec3d?): Boolean {

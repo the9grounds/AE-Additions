@@ -5,6 +5,7 @@ import com.google.common.base.Preconditions;
 import java.io.IOException;
 
 import com.the9grounds.aeadditions.Constants;
+import com.the9grounds.aeadditions.network.packet.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -20,10 +21,6 @@ import net.minecraftforge.fml.common.network.internal.FMLProxyPacket;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.the9grounds.aeadditions.network.packet.IPacketHandlerClient;
-import com.the9grounds.aeadditions.network.packet.IPacketHandlerServer;
-import com.the9grounds.aeadditions.network.packet.PacketBufferEC;
-import com.the9grounds.aeadditions.network.packet.PacketId;
 import com.the9grounds.aeadditions.network.packet.other.PacketFluidContainerSlot;
 import com.the9grounds.aeadditions.network.packet.other.PacketFluidSlotSelect;
 import com.the9grounds.aeadditions.network.packet.other.PacketFluidSlotUpdate;
@@ -71,6 +68,8 @@ public class PacketHandler {
 		PacketId.STORAGE_UPDATE_FLUID.registerHandler(new PacketStorageUpdateFluid.Handler());
 		PacketId.STORAGE_UPDATE_STATE.registerHandler(new PacketStorageUpdateState.Handler());
 		PacketId.PART_CONFIG.registerHandler(new PacketPartConfig.HandlerClient());
+		PacketId.FLUID_CRAFTER_CAPACITY.registerHandler(new PacketCrafterCapacity.Companion.HandlerClient());
+		PacketId.FLUID_CRAFTER_DROPPED_ITEM.registerHandler(new PacketCrafterDroppedItem.Companion.HandlerClient());
 	}
 
 	@SubscribeEvent

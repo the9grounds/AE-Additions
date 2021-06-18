@@ -31,4 +31,10 @@ public class Log {
 		LogManager.getLogger(Constants.MOD_ID).log(logLevel, message, params);
 	}
 
+	public static void fatalError(String offendingItem, Throwable exception) {
+		LogManager.getLogger().error("AE Additions severe error - could not create AE2 Part from ItemStack! This should not happen!\n"
+				+ "[AE Additions SEVERE] Contact MasterYodA with the following stack trace.\n"
+				+ "[AE Additions SEVERE] Offending item: '%s'", offendingItem, exception);
+	}
+
 }
