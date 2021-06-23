@@ -61,7 +61,7 @@ public class ContainerGasEmitter extends Container {
 			fluidItem.setCount(1);
 			FluidStack fluidStack = FluidHelper.getFluidFromContainer(fluidItem);
 			if (fluidStack == null) {
-				return null;
+				return ItemStack.EMPTY;
 			}
 			this.part.setFluid(0, fluidStack.getFluid(), player);
 			return ItemStack.EMPTY;
