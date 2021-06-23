@@ -1,6 +1,8 @@
 package com.the9grounds.aeadditions.container.gas;
 
 import com.the9grounds.aeadditions.part.gas.PartGasLevelEmitter;
+import com.the9grounds.aeadditions.util.GasUtil;
+import mekanism.api.gas.GasStack;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
@@ -57,9 +59,10 @@ public class ContainerGasEmitter extends Container {
 	public ItemStack transferStackInSlot(EntityPlayer player, int slotnumber) {
 		Slot slot = this.inventorySlots.get(slotnumber);
 		if (slot != null && slot.getHasStack()) {
-			ItemStack fluidItem = slot.getStack().copy();
-			fluidItem.setCount(1);
-			FluidStack fluidStack = FluidHelper.getFluidFromContainer(fluidItem);
+			ItemStack gasItem = slot.getStack().copy();
+			gasItem.setCount(1);
+			GasStack gasStack = GasUtil.getGasFromContainer(gasItem);
+			FluidStack fluidStack = GasUtil.getFluidStack(gasStack);
 			if (fluidStack == null) {
 				return ItemStack.EMPTY;
 			}
