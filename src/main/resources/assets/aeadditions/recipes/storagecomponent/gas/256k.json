@@ -7,7 +7,7 @@
     ],
     "result": {
         "item": "aeadditions:storage.component",
-		"data": 15
+		"data": 11
     },
     "type": "forge:ore_shaped",
     "pattern": [
@@ -24,7 +24,7 @@
 		},
 		"c": {
 			"item": "aeadditions:storage.component",
-			"data": 14
+			"data": 10
 		},
 		"d": {
 			"item": "#aeadditions:logProcessor"

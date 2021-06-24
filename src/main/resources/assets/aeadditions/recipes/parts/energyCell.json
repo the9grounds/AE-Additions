@@ -1,18 +1,18 @@
 {
-    "result": {
-        "item": "aeadditions:part.base",
-		"data": 8
+  "result": {
+    "item": "aeadditions:part.base",
+    "data": 1
+  },
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "baa"
+  ],
+  "key": {
+    "a": {
+      "item": "#aeadditions:iron"
     },
-    "type": "forge:ore_shaped",
-    "pattern": [
-        "baa"
-    ],
-    "key": {
-        "a": {
-			"item": "#aeadditions:iron"
-        },
-		"b": {
-			"item": "appliedenergistics2:energy_cell"
-		}
+    "b": {
+      "item": "appliedenergistics2:energy_cell"
     }
+  }
 }

@@ -7,7 +7,7 @@
     ],
     "result": {
         "item": "aeadditions:storage.component",
-		"data": 13
+		"data": 9
     },
     "type": "forge:ore_shaped",
     "pattern": [
@@ -24,7 +24,7 @@
 		},
 		"c": {
 			"item": "aeadditions:storage.component",
-			"data": 12
+			"data": 8
 		},
 		"d": {
 			"item": "#aeadditions:glassQuartz"

@@ -40,7 +40,7 @@ class Plugin : IModPlugin {
         hideItem(ItemStack(ItemEnum.CRAFTINGPATTERN.item), registry)
 
         for (item in ItemEnum.values()) {
-            if (item.mod != null && item.mod.isEnabled) {
+            if ((item.mod != null && !item.mod.isEnabled) || !item.isEnabled) {
                 val i = item.item
 
                 val list = NonNullList.create<ItemStack>()
@@ -55,7 +55,7 @@ class Plugin : IModPlugin {
         }
 
         for (block in BlockEnum.values()) {
-            if (block.mod != null && !block.mod.isEnabled) {
+            if ((block.mod != null && !block.mod.isEnabled) || !block.enabled) {
                 val b = block.block
 
                 val list = NonNullList.create<ItemStack>()

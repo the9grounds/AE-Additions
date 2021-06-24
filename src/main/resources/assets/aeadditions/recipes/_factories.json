@@ -1,5 +1,5 @@
 {
     "conditions": {
-        "mod_integration": "aeadditions.util.recipe.ConditionModIntegration"
+        "mod_integration": "com.the9grounds.aeadditions.util.recipe.ConditionModIntegration"
     }
 }

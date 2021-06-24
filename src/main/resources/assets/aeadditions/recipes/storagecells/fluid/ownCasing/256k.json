@@ -1,7 +1,7 @@
 {
     "result": {
         "item": "aeadditions:storage.fluid",
-		"data": 4
+		"data": 0
     },
     "type": "forge:ore_shaped",
     "pattern": [
@@ -21,7 +21,7 @@
 		},
 		"s": {
 			"item": "aeadditions:storage.component",
-			"data": 8
+			"data": 4
 		}
     }
 }

@@ -1,7 +1,7 @@
 {
     "result": {
         "item": "aeadditions:storage.fluid",
-		"data": 6
+		"data": 2
     },
     "type": "forge:ore_shapeless",
     "ingredients": [
@@ -11,7 +11,7 @@
         },
 		{
 			"item": "aeadditions:storage.component",
-			"data": 10
+			"data": 6
         }
     ]
 }
