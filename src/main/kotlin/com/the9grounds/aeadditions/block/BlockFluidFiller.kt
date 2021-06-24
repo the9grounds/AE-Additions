@@ -5,6 +5,7 @@ import appeng.api.util.AEPartLocation
 import com.the9grounds.aeadditions.api.IECTileEntity
 import com.the9grounds.aeadditions.network.GuiHandler
 import com.the9grounds.aeadditions.tileentity.IListenerTile
+import com.the9grounds.aeadditions.tileentity.TileEntityFluidCrafter
 import com.the9grounds.aeadditions.tileentity.TileEntityFluidFiller
 import com.the9grounds.aeadditions.tileentity.TileEntityFluidInterface
 import com.the9grounds.aeadditions.util.PermissionUtil
@@ -13,6 +14,7 @@ import com.the9grounds.aeadditions.util.WrenchUtil
 import net.minecraft.block.material.Material
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.EntityLivingBase
+import net.minecraft.entity.item.EntityItem
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
@@ -23,6 +25,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.RayTraceResult
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
+import java.util.*
 
 class BlockFluidFiller : BlockEC(Material.IRON, 2.0f, 10.0f) {
     override fun createNewTileEntity(worldIn: World, meta: Int): TileEntity = TileEntityFluidFiller()
@@ -111,6 +114,8 @@ class BlockFluidFiller : BlockEC(Material.IRON, 2.0f, 10.0f) {
             return
         }
 
+        dropItems(world, pos)
+
         TileUtil.destroy(world, pos)
 
         val tile: TileEntity? = world.getTileEntity(pos)
@@ -119,6 +124,46 @@ class BlockFluidFiller : BlockEC(Material.IRON, 2.0f, 10.0f) {
             tile.removeListener()
         }
 
+        if (tile is TileEntityFluidFiller) {
+            tile.finishCrafting()
+        }
+
         super.breakBlock(world, pos, state)
+    }
+
+    fun dropItems(world: World, pos: BlockPos) {
+        val rand = Random()
+        val tileEntity = world.getTileEntity(pos) as? TileEntityFluidFiller ?: return
+
+        for (i in 0 until tileEntity.upgradeInventory.sizeInventory) {
+            val item = tileEntity.upgradeInventory.getStackInSlot(i)
+            dropItem(item, rand, world, pos)
+        }
+    }
+
+    private fun dropItem(
+        item: ItemStack?,
+        rand: Random,
+        world: World,
+        pos: BlockPos
+    ) {
+        if (item != null && item.count > 0) {
+            val rx = rand.nextFloat() * 0.8f + 0.1f
+            val ry = rand.nextFloat() * 0.8f + 0.1f
+            val rz = rand.nextFloat() * 0.8f + 0.1f
+            val entityItem = EntityItem(
+                world, (pos.x + rx).toDouble(), (pos.y + ry).toDouble(), (pos.z
+                        + rz).toDouble(), item.copy()
+            )
+            if (item.hasTagCompound()) {
+                entityItem.item.tagCompound = item.tagCompound!!.copy()
+            }
+            val factor = 0.05f
+            entityItem.motionX = rand.nextGaussian() * factor
+            entityItem.motionY = rand.nextGaussian() * factor + 0.2f
+            entityItem.motionZ = rand.nextGaussian() * factor
+            world.spawnEntity(entityItem)
+            item.count = 0
+        }
     }
 }

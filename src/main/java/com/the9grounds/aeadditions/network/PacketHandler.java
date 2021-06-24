@@ -70,6 +70,8 @@ public class PacketHandler {
 		PacketId.PART_CONFIG.registerHandler(new PacketPartConfig.HandlerClient());
 		PacketId.FLUID_CRAFTER_CAPACITY.registerHandler(new PacketCrafterCapacity.Companion.HandlerClient());
 		PacketId.FLUID_CRAFTER_DROPPED_ITEM.registerHandler(new PacketCrafterDroppedItem.Companion.HandlerClient());
+		PacketId.FLUID_FILLER_SLOT_UPDATE.registerHandler(new PacketFluidFillerSlotUpdate.Companion.HandlerClient());
+		PacketId.FLUID_FILLER_SYNC_CLIENT.registerHandler(new PacketFluidFillerSyncClient.HandlerServer());
 	}
 
 	@SubscribeEvent

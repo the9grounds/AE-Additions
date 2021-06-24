@@ -16,7 +16,9 @@ public enum PacketId {
 	STORAGE_UPDATE_STATE,
 	PART_CONFIG,
 	FLUID_CRAFTER_CAPACITY,
-	FLUID_CRAFTER_DROPPED_ITEM;
+	FLUID_CRAFTER_DROPPED_ITEM,
+	FLUID_FILLER_SLOT_UPDATE,
+	FLUID_FILLER_SYNC_CLIENT;
 
 	private IPacketHandlerServer handlerServer;
 	private IPacketHandlerClient handlerClient;

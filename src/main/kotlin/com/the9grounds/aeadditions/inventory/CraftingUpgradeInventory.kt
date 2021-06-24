@@ -5,7 +5,7 @@ import appeng.api.config.Upgrades
 import com.the9grounds.aeadditions.registries.BlockEnum
 import net.minecraft.item.ItemStack
 
-open class CraftingUpgradeInventory(listener: IInventoryListener, val enum: BlockEnum) : InventoryPlain("", 5, 1, listener) {
+open class CraftingUpgradeInventory(listener: IInventoryListener, val enum: BlockEnum, size: Int = 5) : InventoryPlain("", size, 1, listener) {
 
     val installedUpgrades = mutableMapOf<Upgrades, Int>()
 

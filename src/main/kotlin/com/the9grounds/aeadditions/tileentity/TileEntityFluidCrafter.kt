@@ -522,7 +522,7 @@ class TileEntityFluidCrafter : TileBase(), IActionHost, ICraftingProvider, ICraf
             getGridNode(AEPartLocation.INTERNAL)!!.grid.postEvent(
                 MENetworkCraftingPatternChange(
                     this,
-                    gridNode
+                    getGridNode(AEPartLocation.INTERNAL)
                 )
             )
         }
