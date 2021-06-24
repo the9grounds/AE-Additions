@@ -6,7 +6,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.RenderHelper;
 
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.fluid.Fluid;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;

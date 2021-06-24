@@ -7,7 +7,7 @@ import com.the9grounds.aeadditions.network.packet.PacketBufferEC;
 import com.the9grounds.aeadditions.network.packet.PacketId;
 import com.the9grounds.aeadditions.util.GuiUtil;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.fluid.Fluid;
 
 import java.io.IOException;
 

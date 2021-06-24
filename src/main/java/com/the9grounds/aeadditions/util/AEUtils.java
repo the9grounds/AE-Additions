@@ -3,7 +3,7 @@ package com.the9grounds.aeadditions.util;
 import appeng.api.storage.IStorageChannel;
 import net.minecraft.item.ItemStack;
 
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.fluid.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 

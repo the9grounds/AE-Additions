@@ -8,7 +8,7 @@ import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.fluid.Fluid;
 
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;

@@ -2,7 +2,7 @@ package com.the9grounds.aeadditions.api;
 
 import net.minecraft.inventory.IInventory;
 
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.fluid.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 

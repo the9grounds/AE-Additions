@@ -2,7 +2,7 @@ package com.the9grounds.aeadditions.network.packet.other;
 
 import java.util.List;
 
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.fluid.Fluid;
 
 public interface IFluidSlotGui {
 

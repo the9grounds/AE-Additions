@@ -23,7 +23,7 @@ import mekanism.api.gas.GasStack;
 import mekanism.api.gas.IGasHandler;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.fluid.Fluid;
 
 import java.util.ArrayList;
 import java.util.List;

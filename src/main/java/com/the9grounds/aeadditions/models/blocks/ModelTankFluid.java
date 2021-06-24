@@ -19,7 +19,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 
 import net.minecraftforge.common.property.IExtendedBlockState;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.fluid.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.util.vector.Vector3f;

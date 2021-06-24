@@ -5,7 +5,7 @@ import java.io.IOException;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.fluid.Fluid;
 
 import com.the9grounds.aeadditions.gui.widget.fluid.IFluidSlotListener;
 import com.the9grounds.aeadditions.network.packet.IPacketHandlerServer;

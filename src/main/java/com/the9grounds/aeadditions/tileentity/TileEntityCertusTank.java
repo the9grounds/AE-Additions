@@ -2,15 +2,15 @@ package com.the9grounds.aeadditions.tileentity;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.fluid.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -243,18 +243,18 @@ public class TileEntityCertusTank extends TileBase {
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
 		super.onDataPacket(net, pkt);
 		world.markBlockRangeForRenderUpdate(pos, pos);
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound tag) {
+	public void readFromNBT(CompoundNBT tag) {
 		super.readFromNBT(tag);
 		readFromNBTWithoutCoords(tag);
 	}
 
-	public void readFromNBTWithoutCoords(NBTTagCompound tag) {
+	public void readFromNBTWithoutCoords(CompoundNBT tag) {
 		this.tank.readFromNBT(tag);
 	}
 
@@ -263,7 +263,7 @@ public class TileEntityCertusTank extends TileBase {
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
+	public CompoundNBT writeToNBT(CompoundNBT tag) {
 		super.writeToNBT(tag);
 		writeToNBTWithoutCoords(tag);
 		return tag;

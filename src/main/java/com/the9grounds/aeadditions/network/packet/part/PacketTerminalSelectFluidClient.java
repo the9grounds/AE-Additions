@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import net.minecraft.entity.player.EntityPlayer;
 
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.fluid.Fluid;
 
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;

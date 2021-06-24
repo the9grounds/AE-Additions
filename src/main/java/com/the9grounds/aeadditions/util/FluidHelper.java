@@ -6,7 +6,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import net.minecraft.item.ItemStack;
 
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.fluid.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;

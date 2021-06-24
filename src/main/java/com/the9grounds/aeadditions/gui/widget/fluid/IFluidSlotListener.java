@@ -2,7 +2,7 @@ package com.the9grounds.aeadditions.gui.widget.fluid;
 
 import net.minecraft.entity.player.EntityPlayer;
 
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.fluid.Fluid;
 
 public interface IFluidSlotListener {
 

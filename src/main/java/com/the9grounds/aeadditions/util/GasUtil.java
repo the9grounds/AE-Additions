@@ -7,7 +7,7 @@ import org.apache.commons.lang3.tuple.MutablePair;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.fluid.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
 import appeng.api.storage.data.IAEFluidStack;

@@ -5,7 +5,7 @@ import appeng.api.config.AccessRestriction;
 import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.IMEMonitorHandlerReceiver;
 import appeng.api.storage.data.IAEStack;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.fluid.Fluid;
 
 public interface IHandlerPartBase<T extends IAEStack<T>> extends IMEInventoryHandler<T>, IMEMonitorHandlerReceiver<T> {
 
