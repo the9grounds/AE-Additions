@@ -153,30 +153,10 @@ class TileEntityFluidCrafter : TileBase(), IActionHost, ICraftingProvider, ICraf
 
     override fun provideCrafting(craftingTracker: ICraftingProviderHelper) {
         patternHandlers = ArrayList()
-        val oldHandler = patternHandlerSlot
         patternHandlerSlot = arrayOfNulls(9)
         var i = 0
         while (inventory.inv.size > i) {
             val currentPatternStack = inventory.inv[i]
-            val oldItem = oldStack[i]
-            if (currentPatternStack != null && oldItem != null && ItemStack.areItemStacksEqual(
-                    currentPatternStack,
-                    oldItem
-                )
-            ) {
-                val pa = oldHandler[i]
-                if (pa != null) {
-                    patternHandlerSlot[i] = pa
-                    patternHandlers.add(pa)
-                    if (pa.condensedInputs.size == 0) {
-                        craftingTracker.setEmitable(pa.condensedOutputs[0])
-                    } else {
-                        craftingTracker.addCraftingOption(this, pa)
-                    }
-                    i++
-                    continue
-                }
-            }
             if (!ItemStackUtils.isEmpty(currentPatternStack)
                 && currentPatternStack!!.item != null && currentPatternStack.item is ICraftingPatternItem
             ) {
@@ -535,6 +515,19 @@ class TileEntityFluidCrafter : TileBase(), IActionHost, ICraftingProvider, ICraf
         }
     }
 
+    fun postUpdateEvent() {
+        if (getGridNode(AEPartLocation.INTERNAL) != null
+            && getGridNode(AEPartLocation.INTERNAL)!!.grid != null
+        ) {
+            getGridNode(AEPartLocation.INTERNAL)!!.grid.postEvent(
+                MENetworkCraftingPatternChange(
+                    this,
+                    gridNode
+                )
+            )
+        }
+    }
+
     private fun dropItem(index: Int) {
         val rand = Random()
         val item = inventory.getStackInSlot(index)
@@ -680,6 +673,11 @@ class TileEntityFluidCrafter : TileBase(), IActionHost, ICraftingProvider, ICraf
 
         protected fun onContentsChanged() {
             saveData()
+            if (hasWorld()) {
+                updateBlock()
+            }
+
+            postUpdateEvent()
         }
 
         init {
