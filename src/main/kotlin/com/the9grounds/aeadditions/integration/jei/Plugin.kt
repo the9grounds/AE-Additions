@@ -49,7 +49,11 @@ class Plugin : IModPlugin {
 
                 val iterator = list.iterator()
                 while (iterator.hasNext()) {
-                    hideItem(iterator.next(), registry)
+                    try {
+                        hideItem(iterator.next(), registry)
+                    } catch(e: Throwable) {
+                        continue
+                    }
                 }
             }
         }
@@ -64,7 +68,11 @@ class Plugin : IModPlugin {
 
                 val iterator = list.iterator()
                 while (iterator.hasNext()) {
-                    hideItem(iterator.next(), registry)
+                    try {
+                        hideItem(iterator.next(), registry)
+                    } catch(e: Throwable) {
+                        continue
+                    }
                 }
             }
         }
