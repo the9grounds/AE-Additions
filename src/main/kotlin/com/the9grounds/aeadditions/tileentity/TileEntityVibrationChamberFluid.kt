@@ -95,7 +95,7 @@ class TileEntityVibrationChamberFluid : TileBase(), IECTileEntity, IActionHost, 
     }
 
     override fun update() {
-        if (hasWorld()) return
+        if (!hasWorld()) return
         var fluidStack1 = tank.fluid
         if (fluidStack1 != null) {
             fluidStack1 = fluidStack1.copy()

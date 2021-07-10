@@ -4,6 +4,7 @@ import com.the9grounds.aeadditions.AEAdditions;
 import com.the9grounds.aeadditions.integration.appeng.AppEng;
 import com.the9grounds.aeadditions.integration.buildcraft.tools.BuildcraftTools;
 import com.the9grounds.aeadditions.integration.cofh.item.CofhItem;
+import com.the9grounds.aeadditions.integration.crafttweaker.CraftTweaker;
 import com.the9grounds.aeadditions.integration.enderio.EnderIO;
 import com.the9grounds.aeadditions.integration.opencomputers.OpenComputers;
 import com.the9grounds.aeadditions.util.Log;
@@ -30,7 +31,8 @@ public class Integration {
 		JEI("jei", "Just Enough Items", Side.CLIENT),
 		BUILDCRAFTTOOLS("BuildCraftAPI|tools", "BuildCraft Wrench"),
 		COFHITEM("cofhapi|item", "COFH Hammer"),
-		ENDERIO("enderio", "Ender IO");
+		ENDERIO("enderio", "Ender IO"),
+		CRAFTTWEAKER("crafttweaker", "CraftTweaker");
 
 		private final String modID;
 
@@ -102,6 +104,9 @@ public class Integration {
 
 //		if (Mods.IGW.correctSide() && Mods.IGW.shouldLoad)
 //			IGW.initNotifier();
+		if (Mods.CRAFTTWEAKER.isEnabled()) {
+			CraftTweaker.preInit();
+		}
 		if (Mods.MEKANISMGAS.isEnabled())
 			MekanismGas.preInit();
 	}

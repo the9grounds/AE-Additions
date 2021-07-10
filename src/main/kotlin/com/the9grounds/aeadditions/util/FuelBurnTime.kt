@@ -5,6 +5,7 @@ import com.the9grounds.aeadditions.integration.Integration
 import net.minecraftforge.fluids.Fluid
 import net.minecraftforge.fml.common.Optional
 
+
 object FuelBurnTime {
     private val fluidBurnTimes = mutableMapOf<Fluid, Int>()
 

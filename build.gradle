@@ -81,6 +81,11 @@ repositories {
         url "https://maven.amadornes.com/"
     }
 
+    maven { // CraftTweaker
+        name 'jared maven'
+        url "http://maven.blamejared.com/"
+    }
+
     maven  {
         name "BuildCraft Maven"
         url "https://mod-buildcraft.com/maven/"
@@ -139,9 +144,8 @@ dependencies {
     compileOnly "p455w0rd:WirelessCraftingTerminal:${config.version.wc}:api"
     runtime "p455w0rd:WirelessCraftingTerminal:${config.version.wc}"
 
-//    deobfCompile ("appeng:appliedenergistics2:${config.version.ae}:api"){
-//        transitive = false
-//    }
+    compileOnly "CraftTweaker2:CraftTweaker2-API:${config.version.crafttweaker}"
+
     deobfCompile "curse.maven:applied-energistics-2-223794:2747063"
 
     deobfCompile "MCMultiPart2:MCMultiPart:${config.version.mcmp}"
