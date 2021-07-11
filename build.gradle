@@ -202,7 +202,7 @@ if (System.getenv("CURSEFORGE_API_KEY") != null) {
             relations {
                 requiredDependency 'applied-energistics-2'
                 requiredDependency 'shadowfacts-forgelin'
-                incompatible 'extracells2-samlam140330s-fork'
+                incompatible 'extra-cells-2-samlam140330s-fork'
                 incompatible 'extracells2'
                 incompatible 'xcpatch'
             }
