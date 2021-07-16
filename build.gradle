@@ -278,3 +278,10 @@ idea {
         outputDir = file('build/classes/main')
     }
 }
+
+def copy = tasks.create("copyResourceToClasses", Copy) {
+    into("$buildDir/classes/kotlin/main")
+    from(tasks.processResources.destinationDir)
+}
+copy.dependsOn(tasks.processResources)
+tasks.classes.dependsOn(copy)
