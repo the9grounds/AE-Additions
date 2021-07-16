@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import com.the9grounds.aeadditions.Constants;
+import com.the9grounds.aeadditions.integration.Integration;
 import com.the9grounds.aeadditions.tileentity.*;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -108,7 +109,9 @@ public class CommonProxy {
 		movable.whiteListTileEntity(TileEntityFluidFiller.class);
 		movable.whiteListTileEntity(TileEntityHardMeDrive.class);
 		movable.whiteListTileEntity(TileEntityVibrationChamberFluid.class);
-		movable.whiteListTileEntity(TileEntityGasInterface.class);
+		if (Integration.Mods.MEKANISMGAS.isEnabled()) {
+			movable.whiteListTileEntity(TileEntityGasInterface.class);
+		}
 	}
 
 	public void registerRenderers() {
@@ -127,7 +130,10 @@ public class CommonProxy {
 		GameRegistry.registerTileEntity(TileEntityFluidFiller.class, "tileEntityFluidFiller");
 		GameRegistry.registerTileEntity(TileEntityHardMeDrive.class, "tileEntityHardMEDrive");
 		GameRegistry.registerTileEntity(TileEntityVibrationChamberFluid.class, "tileEntityVibrationChamberFluid");
-		GameRegistry.registerTileEntity(TileEntityGasInterface.class, "tileEntityGasInterface");
+
+		if (Integration.Mods.MEKANISMGAS.isEnabled()) {
+			GameRegistry.registerTileEntity(TileEntityGasInterface.class, "tileEntityGasInterface");
+		}
 	}
 
 	public void registerFluidBurnTimes() {
