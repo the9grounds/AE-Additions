@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import com.the9grounds.aeadditions.Constants;
+import com.the9grounds.aeadditions.tileentity.*;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 
@@ -27,13 +28,6 @@ import appeng.api.recipes.IRecipeLoader;
 import com.the9grounds.aeadditions.network.PacketHandler;
 import com.the9grounds.aeadditions.registries.BlockEnum;
 import com.the9grounds.aeadditions.registries.ItemEnum;
-import com.the9grounds.aeadditions.tileentity.TileEntityCertusTank;
-import com.the9grounds.aeadditions.tileentity.TileEntityFluidCrafter;
-import com.the9grounds.aeadditions.tileentity.TileEntityFluidFiller;
-import com.the9grounds.aeadditions.tileentity.TileEntityFluidInterface;
-import com.the9grounds.aeadditions.tileentity.TileEntityHardMeDrive;
-import com.the9grounds.aeadditions.tileentity.TileEntityVibrationChamberFluid;
-import com.the9grounds.aeadditions.tileentity.TileEntityWalrus;
 import com.the9grounds.aeadditions.util.FuelBurnTime;
 import com.the9grounds.aeadditions.util.recipe.RecipeUniversalTerminal;
 
@@ -114,6 +108,7 @@ public class CommonProxy {
 		movable.whiteListTileEntity(TileEntityFluidFiller.class);
 		movable.whiteListTileEntity(TileEntityHardMeDrive.class);
 		movable.whiteListTileEntity(TileEntityVibrationChamberFluid.class);
+		movable.whiteListTileEntity(TileEntityGasInterface.class);
 	}
 
 	public void registerRenderers() {
@@ -132,6 +127,7 @@ public class CommonProxy {
 		GameRegistry.registerTileEntity(TileEntityFluidFiller.class, "tileEntityFluidFiller");
 		GameRegistry.registerTileEntity(TileEntityHardMeDrive.class, "tileEntityHardMEDrive");
 		GameRegistry.registerTileEntity(TileEntityVibrationChamberFluid.class, "tileEntityVibrationChamberFluid");
+		GameRegistry.registerTileEntity(TileEntityGasInterface.class, "tileEntityGasInterface");
 	}
 
 	public void registerFluidBurnTimes() {

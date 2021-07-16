@@ -33,6 +33,7 @@ enum class BlockEnum(
         "vibrantchamberfluid",
         BlockVibrationChamberFluid()
     ),
+    GASINTERFACE("gas_interface", BlockGasInterface(), Function<Block, ItemBlock> { block: Block -> com.the9grounds.aeadditions.item.block.ItemBlockGasInterface(block) }, Integration.Mods.MEKANISMGAS),
     UPGRADEDCRAFTINGSTORAGE256(
         "crafting_storage_256",
         BlockCraftingStorage(BlockCraftingUnit.CraftingUnitType.STORAGE_1K),

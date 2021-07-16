@@ -40,7 +40,7 @@ import com.the9grounds.aeadditions.registries.BlockEnum;
 import com.the9grounds.aeadditions.tileentity.TileEntityCertusTank;
 import com.the9grounds.aeadditions.util.TileUtil;
 
-public class BlockCertusTank extends BlockEC implements IStateMapperRegister {
+public class BlockCertusTank extends BlockAE implements IStateMapperRegister {
 
 	public static final PropertyFluid FLUID = new PropertyFluid("fluid");
 	public static final PropertyBool EMPTY = PropertyBool.create("empty");

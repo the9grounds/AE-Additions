@@ -1,7 +1,5 @@
 package com.the9grounds.aeadditions.block;
 
-import javax.annotation.Nullable;
-
 import appeng.api.config.SecurityPermissions;
 import com.the9grounds.aeadditions.api.IWrenchHandler;
 import com.the9grounds.aeadditions.util.PermissionUtil;
@@ -37,7 +35,7 @@ import com.the9grounds.aeadditions.gui.GuiVibrationChamberFluid;
 import com.the9grounds.aeadditions.network.GuiHandler;
 import com.the9grounds.aeadditions.tileentity.TileEntityVibrationChamberFluid;
 
-public class BlockVibrationChamberFluid extends BlockEC implements IGuiBlock {
+public class BlockVibrationChamberFluid extends BlockAE implements IGuiBlock {
 
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 	public static final PropertyBool STATE = PropertyBool.create("state");

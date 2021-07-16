@@ -5,7 +5,6 @@ import appeng.api.util.AEPartLocation
 import com.the9grounds.aeadditions.api.IECTileEntity
 import com.the9grounds.aeadditions.network.GuiHandler
 import com.the9grounds.aeadditions.tileentity.IListenerTile
-import com.the9grounds.aeadditions.tileentity.TileEntityFluidCrafter
 import com.the9grounds.aeadditions.tileentity.TileEntityFluidFiller
 import com.the9grounds.aeadditions.tileentity.TileEntityFluidInterface
 import com.the9grounds.aeadditions.util.PermissionUtil
@@ -27,7 +26,7 @@ import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 import java.util.*
 
-class BlockFluidFiller : BlockEC(Material.IRON, 2.0f, 10.0f) {
+class BlockFluidFiller : BlockAE(Material.IRON, 2.0f, 10.0f) {
     override fun createNewTileEntity(worldIn: World, meta: Int): TileEntity = TileEntityFluidFiller()
 
     override fun onBlockActivated(

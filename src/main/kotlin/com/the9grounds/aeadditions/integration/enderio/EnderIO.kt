@@ -1,7 +1,7 @@
 package com.the9grounds.aeadditions.integration.enderio
 
 import com.the9grounds.aeadditions.api.AEAApi
-import com.the9grounds.aeadditions.block.BlockEC
+import com.the9grounds.aeadditions.block.BlockAE
 import crazypants.enderio.api.tool.ITool
 import net.minecraft.util.EnumHand
 import net.minecraftforge.event.entity.player.PlayerInteractEvent
@@ -24,7 +24,7 @@ object EnderIO {
 
         val item = itemStack.item
 
-        if (item !is ITool || block !is BlockEC || event.face == null) {
+        if (item !is ITool || block !is BlockAE || event.face == null) {
             return
         }
 

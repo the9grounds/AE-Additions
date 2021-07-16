@@ -18,7 +18,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.the9grounds.aeadditions.tileentity.TileEntityWalrus;
 
-public class BlockWalrus extends BlockEC {
+public class BlockWalrus extends BlockAE {
 
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 

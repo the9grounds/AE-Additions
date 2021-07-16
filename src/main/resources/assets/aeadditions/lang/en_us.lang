@@ -90,6 +90,7 @@ tile.com.the9grounds.aeadditions.block.fluidinterface.name=ME Fluid Interface
 tile.com.the9grounds.aeadditions.block.fluidfiller.name=ME Fluid Auto Filler
 tile.com.the9grounds.aeadditions.block.vibrantchamberfluid.name=Fluid Vibration Chamber
 tile.com.the9grounds.aeadditions.block.hardmedrive.name=Blast resistant ME Drive
+tile.com.the9grounds.aeadditions.block.gas_interface.name=ME Gas Interface
 
 //Tooltips and Chat-Messages
 com.the9grounds.aeadditions.tooltip.amount=Amount
