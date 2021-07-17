@@ -27,6 +27,11 @@ object FuelBurnTime {
 
     @Optional.Method(modid = "BuildCraftAPI|fuels")
     private fun getBCBurnTime(fluid: Fluid): Int {
+
+        if (BuildcraftFuelRegistry.fuel == null) {
+            return 0
+        }
+
         val iterator = BuildcraftFuelRegistry.fuel.fuels.iterator()
         while (iterator.hasNext()) {
             val fuel = iterator.next()

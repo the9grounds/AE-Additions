@@ -147,16 +147,20 @@ class PartGasImport: PartGasIO(), IGasHandler, ITubeConnection {
             return 0
         }
 
-        val copy = stack.copy()
+        val action = if (doTransfer) {
+            Actionable.MODULATE
+        } else {
+            Actionable.SIMULATE
+        }
 
         // Workaround to fix duplicate gas when the gas tank auto ejects
-        val amount = (min(copy.amount, 125 + speedState * 125)) / 2
+        val amount = min(stack.amount, 125 + speedState * 125)
 
-        val gasStack = StorageChannels.GAS!!.createStack(GasStack(copy.gas, amount))
+        val gasStack = StorageChannels.GAS!!.createStack(GasStack(stack.gas, amount))
 
-        val notInjected = injectGas(gasStack, Actionable.MODULATE) ?: return amount * 2
+        val notInjected = injectGas(gasStack, action) ?: return amount
 
-        return amount * 2 - notInjected.stackSize.toInt()
+        return amount - notInjected.stackSize.toInt()
     }
 
     @Optional.Method(modid = "MekanismAPI|gas")
