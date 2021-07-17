@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.the9grounds.aeadditions.Constants;
 import com.the9grounds.aeadditions.part.gas.PartGasLevelEmitter;
+import com.the9grounds.aeadditions.tileentity.TileEntityGasInterface;
 import mekanism.api.gas.Gas;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -150,7 +151,7 @@ public class WidgetFluidSlot extends AbstractWidget {
 		if (!isVisable()) {
 			return;
 		}
-		if ((listener instanceof PartGasImport || listener instanceof PartGasExport || listener instanceof PartGasStorage || listener instanceof PartGasLevelEmitter) && Integration.Mods.MEKANISMGAS.isEnabled()) {
+		if ((listener instanceof PartGasImport || listener instanceof PartGasExport || listener instanceof PartGasStorage || listener instanceof PartGasLevelEmitter || listener instanceof TileEntityGasInterface) && Integration.Mods.MEKANISMGAS.isEnabled()) {
 			handleGasContainer(stack);
 		} else {
 			handleFluidContainer(stack);

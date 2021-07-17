@@ -56,6 +56,8 @@ public class PacketHandler {
 		PacketId.STORAGE_OPEN_CONTAINER.registerHandler(new PacketStorageOpenContainer.Handler());
 		PacketId.STORAGE_SELECT_FLUID.registerHandler(new PacketStorageSelectFluid.Handler());
 		PacketId.PART_CONFIG.registerHandler(new PacketPartConfig.HandlerServer());
+		PacketId.FLUID_FILLER_SYNC_CLIENT.registerHandler(new PacketFluidFillerSyncClient.HandlerServer());
+		PacketId.GAS_INTERFACE_SERVER.registerHandler(new PacketGasInterfaceServer.HandlerServer());
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -71,7 +73,7 @@ public class PacketHandler {
 		PacketId.FLUID_CRAFTER_CAPACITY.registerHandler(new PacketCrafterCapacity.Companion.HandlerClient());
 		PacketId.FLUID_CRAFTER_DROPPED_ITEM.registerHandler(new PacketCrafterDroppedItem.Companion.HandlerClient());
 		PacketId.FLUID_FILLER_SLOT_UPDATE.registerHandler(new PacketFluidFillerSlotUpdate.Companion.HandlerClient());
-		PacketId.FLUID_FILLER_SYNC_CLIENT.registerHandler(new PacketFluidFillerSyncClient.HandlerServer());
+		PacketId.GAS_INTERFACE.registerHandler(new PacketGasInterface.Handler());
 	}
 
 	@SubscribeEvent

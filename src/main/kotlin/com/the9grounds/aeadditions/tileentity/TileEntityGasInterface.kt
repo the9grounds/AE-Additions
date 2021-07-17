@@ -13,39 +13,53 @@ import appeng.api.util.AEPartLocation
 import appeng.api.util.DimensionalCoord
 import com.the9grounds.aeadditions.api.IECTileEntity
 import com.the9grounds.aeadditions.api.gas.IAEGasStack
+import com.the9grounds.aeadditions.container.IContainerListener
+import com.the9grounds.aeadditions.container.gas.ContainerGasInterface
 import com.the9grounds.aeadditions.gridblock.AEGridBlockGasInterface
+import com.the9grounds.aeadditions.gui.gas.GuiGasInterface
+import com.the9grounds.aeadditions.gui.widget.fluid.IFluidSlotListener
 import com.the9grounds.aeadditions.integration.mekanism.gas.Capabilities
-import com.the9grounds.aeadditions.inventory.IInventoryListener
+import com.the9grounds.aeadditions.integration.waila.IWailaTile
 import com.the9grounds.aeadditions.network.IGuiProvider
+import com.the9grounds.aeadditions.network.packet.PacketGasInterface
+import com.the9grounds.aeadditions.util.GasUtil
 import com.the9grounds.aeadditions.util.MachineSource
+import com.the9grounds.aeadditions.util.NetworkUtil
 import com.the9grounds.aeadditions.util.StorageChannels
-import mekanism.api.gas.Gas
-import mekanism.api.gas.GasStack
-import mekanism.api.gas.GasTank
-import mekanism.api.gas.IGasHandler
+import mekanism.api.gas.*
+import mekanism.common.util.GasUtils
 import net.minecraft.client.gui.inventory.GuiContainer
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.Container
+import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.EnumFacing
+import net.minecraft.util.text.translation.I18n
 import net.minecraftforge.common.capabilities.Capability
+import net.minecraftforge.fluids.Fluid
 import net.minecraftforge.fml.common.FMLCommonHandler
+import java.util.*
 
-class TileEntityGasInterface : TileBase(), IECTileEntity, IActionHost, IGridTickable, IGuiProvider, IInventoryListener,
-    IGasHandler {
+class TileEntityGasInterface : TileBase(), IECTileEntity, IActionHost, IGridTickable, IGuiProvider,
+    IGasHandler, IFluidSlotListener, IWailaTile {
+
+    var listeners: MutableList<IContainerListener> = mutableListOf()
+
     private var node: IGridNode? = null
     private var isFirstGetGridNode = true
+    private var doUpdate = false
     private var gridBlock: AEGridBlockGasInterface = AEGridBlockGasInterface(this)
-    private var gasTanks: MutableList<GasTank> = mutableListOf()
-    private var gasConfig: MutableList<Gas?> = mutableListOf()
+    var gasTanks: MutableList<GasTank> = mutableListOf()
+    var gasConfig: MutableList<Gas?> = mutableListOf()
+    var useSides = false
 
     private var previousGas: Gas? = null
     private var previousGasIndex: Int? = null
 
     init {
-        for (i in 0 until 5) {
-            gasTanks.add(i, GasTank(5000))
+        for (i in 0 until 6) {
+            gasTanks.add(i, GasTank(10000))
         }
-        for (i in 0 until 5) {
+        for (i in 0 until 6 ) {
             gasConfig.add(i, null)
         }
     }
@@ -74,21 +88,59 @@ class TileEntityGasInterface : TileBase(), IECTileEntity, IActionHost, IGridTick
             return 0
         }
 
+        val originalAmount = gas.amount
+
+        var gasAmount = gas.amount
+
         val action = if (doTransfer) {
             Actionable.MODULATE
         } else {
             Actionable.SIMULATE
         }
 
+        val gasTankIndexesForGas = mutableListOf<Int>()
+
+        gasConfig.forEachIndexed { index, item ->
+            if (gas.gas.equals(item)) {
+                gasTankIndexesForGas.add(index)
+            }
+        }
+
+        for (gasTankIndex in gasTankIndexesForGas) {
+            val tank = gasTanks[gasTankIndex]
+
+            if (tank.canReceive(gas.gas)) {
+                val amtReceived = tank.receive(gas, doTransfer)
+
+                gasAmount -= amtReceived
+
+                if (gasAmount <= 0) {
+                    break
+                }
+            }
+        }
+
+        if (gasAmount <= 0) {
+            return gas.amount
+        }
+
+        gas.amount = gasAmount
+
         val aeGasStack = StorageChannels.GAS!!.createStack(gas) ?: return 0
 
         val amount = aeGasStack.stackSize
 
-        var notInjected = injectGas(aeGasStack, action) ?: return amount.toInt()
+        var notInjected = injectGas(aeGasStack, action) ?: return originalAmount
+
+        var didFillGasTanks = false
 
         run loop@{
             gasTanks.forEach {
                 val amountInserted = it.receive(notInjected.gasStack as GasStack, doTransfer)
+
+                if (amountInserted != 0) {
+                    didFillGasTanks = true
+                }
 
                 notInjected.stackSize = notInjected.stackSize - amountInserted.toLong()
 
@@ -98,13 +150,25 @@ class TileEntityGasInterface : TileBase(), IECTileEntity, IActionHost, IGridTick
             }
         }
 
-        return (amount - notInjected.stackSize).toInt()
+        if (didFillGasTanks) {
+            doUpdate = true
+        }
+
+        return (originalAmount - notInjected.stackSize).toInt()
     }
 
     override fun drawGas(direction: EnumFacing?, amount: Int, doDrain: Boolean): GasStack? {
         var gas : Gas? = if (previousGas == null) {
             if (getAmountOfGasInConfig() == 1) {
                 gasConfig[0]
+            } else if (getAmountOfGasInConfig() == 0) {
+                val tank = getFirstTankWithGas()
+
+                if (tank != null) {
+                    tank.gasType!!
+                } else {
+                    null
+                }
             } else {
                 null
             }
@@ -118,7 +182,31 @@ class TileEntityGasInterface : TileBase(), IECTileEntity, IActionHost, IGridTick
             return null
         }
 
+        val action = if (doDrain) {
+            Actionable.MODULATE
+        } else {
+            Actionable.SIMULATE
+        }
+
         val stack = gasTank.draw(amount, doDrain)
+
+        // Attempt to fill from network
+
+        val gasTankDiff = gasTank.needed
+
+        if (gasTankDiff > 0) {
+            val gasStack = StorageChannels.GAS!!.createStack(gas)!!
+            gasStack.stackSize = gasTankDiff.toLong()
+            val extracted = extractGas(gasStack, action)
+
+            if (extracted != null) {
+                gasTank.receive(extracted.gasStack as GasStack, doDrain)
+
+                if (extracted.stackSize.toInt() != gasTankDiff) {
+                    doUpdate = true
+                }
+            }
+        }
 
         previousGas = null
         previousGasIndex = null
@@ -128,8 +216,8 @@ class TileEntityGasInterface : TileBase(), IECTileEntity, IActionHost, IGridTick
 
     private fun getGasTankForGas(gas: Gas): GasTank? {
         var tankIndex: Int? = null
-        gasConfig.forEachIndexed { index, gas ->
-            if (gas == gas) {
+        gasConfig.forEachIndexed { index, gasInTank ->
+            if (gasInTank == gas) {
                 tankIndex = index
             }
         }
@@ -139,6 +227,16 @@ class TileEntityGasInterface : TileBase(), IECTileEntity, IActionHost, IGridTick
         }
 
         return gasTanks[tankIndex!!]
+    }
+
+    private fun getFirstTankWithGas(): GasTank? {
+        for (gasTank in gasTanks) {
+            if (gasTank.gasType != null && gasTank.getStored() != 0) {
+                return gasTank
+            }
+        }
+
+        return null
     }
 
     override fun canReceiveGas(direction: EnumFacing?, gas: Gas?): Boolean {
@@ -204,6 +302,10 @@ class TileEntityGasInterface : TileBase(), IECTileEntity, IActionHost, IGridTick
 
     override fun tickingRequest(node: IGridNode, ticksSinceLastCall: Int): TickRateModulation {
 
+        if (doUpdate) {
+            forceUpdate()
+        }
+
         // 1. Attempt to fill config slots
         // 2. Empty gas tanks that aren't attached to a config or if the gas doesn't match.
         // Example: Config is hydrogen and there is oxygen, we want to empty the oxygen
@@ -211,6 +313,7 @@ class TileEntityGasInterface : TileBase(), IECTileEntity, IActionHost, IGridTick
         val storageChannel = StorageChannels.GAS!!
 
         run {
+            var didFillTank = false
             gasConfig.forEachIndexed { index, gas ->
                 if (gas == null) {
                     return@forEachIndexed
@@ -224,17 +327,27 @@ class TileEntityGasInterface : TileBase(), IECTileEntity, IActionHost, IGridTick
 
                 val stack = storageChannel.createStack(gas)!!
 
-                stack.stackSize = 3000
+                stack.stackSize = 1500
 
                 val extracted = extractGas(stack, Actionable.MODULATE)
 
                 if (extracted != null) {
-                    tank.receive(extracted.gasStack as GasStack, true)
+                    val amt = tank.receive(extracted.gasStack as GasStack, true)
+
+                    if (amt > 0) {
+                        didFillTank = true
+                    }
                 }
+            }
+
+            if (didFillTank) {
+                doUpdate = true
             }
         }
 
         run {
+            var didEmptyTank = false
+
             gasTanks.forEachIndexed { index, gasTank ->
                 if (gasTank.getStored() == 0) {
                     return@forEachIndexed
@@ -254,25 +367,69 @@ class TileEntityGasInterface : TileBase(), IECTileEntity, IActionHost, IGridTick
                     }
 
                     if (toDraw > 0) {
-                        gasTank.draw(toDraw, true)
+                        val amt = gasTank.draw(toDraw, true)
+
+                        if (amt.amount > 0) {
+                            didEmptyTank = true
+                        }
                     }
                 }
+
+                if (gasTank.getStored() > 0) {
+                    val stack = gasTank.stored
+                    val drained = gasTank.draw(GasUtils.emit(stack, this, EnumSet.allOf(EnumFacing::class.java)), true);
+
+                    if (drained != null && drained.amount > 0) {
+                        didEmptyTank = true
+                    }
+                }
+            }
+
+            if (didEmptyTank) {
+                doUpdate = true
             }
         }
 
         return TickRateModulation.FASTER
     }
 
-    override fun onInventoryChanged() {
-//        TODO("Not yet implemented")
+    override fun writeToNBT(compound: NBTTagCompound): NBTTagCompound {
+        super.writeToNBT(compound)
+        for (i in 0 until 6) {
+            val tank = gasTanks[i]
+            val config = gasConfig[i]
+
+            compound.setTag("tank#${i}", tank.write(NBTTagCompound()))
+
+            if (config != null) {
+                compound.setString("gasConfig#${i}", config.name)
+            }
+        }
+
+        return compound
     }
 
-    override fun getClientGuiElement(player: EntityPlayer?, vararg args: Any?): GuiContainer {
-        TODO("Not yet implemented")
+    override fun readFromNBT(compound: NBTTagCompound) {
+        super.readFromNBT(compound)
+
+        for (i in 0 until 6) {
+            if (compound.hasKey("tank#${i}")) {
+                val newTank = GasTank.readFromNBT(compound.getCompoundTag("tank#${i}"))
+                gasTanks[i].gas = newTank.gas
+            }
+
+            if (compound.hasKey("gasConfig#${i}")) {
+                gasConfig[i] = GasRegistry.getGas(compound.getString("gasConfig#${i}"))
+            }
+        }
     }
 
-    override fun getServerGuiElement(player: EntityPlayer?, vararg args: Any?): Container {
-        TODO("Not yet implemented")
+    override fun getClientGuiElement(player: EntityPlayer, vararg args: Any?): GuiContainer {
+        return GuiGasInterface(player, this)
+    }
+
+    override fun getServerGuiElement(player: EntityPlayer, vararg args: Any?): Container {
+        return ContainerGasInterface(player, this)
     }
 
     override fun hasCapability(capability: Capability<*>, facing: EnumFacing?): Boolean {
@@ -301,5 +458,85 @@ class TileEntityGasInterface : TileBase(), IECTileEntity, IActionHost, IGridTick
         }
         val monitor: IMEMonitor<IAEGasStack> = gridBlock.getGasMonitor() ?: return toInject
         return monitor.injectItems(toInject, action, MachineSource(this))
+    }
+
+    fun registerListener(listener: IContainerListener) {
+        listeners.add(listener)
+    }
+
+    fun removeListener(listener: IContainerListener) {
+        listeners.remove(listener)
+    }
+
+    private fun forceUpdate() {
+        updateBlock()
+        for (listener in listeners) {
+            listener.updateContainer()
+        }
+        saveData()
+        doUpdate = false
+    }
+
+    override fun setFluid(index: Int, fluid: Fluid?, player: EntityPlayer?) {
+        gasConfig[index] = GasUtil.getGas(fluid)
+
+        doUpdate = true
+    }
+
+    fun syncClientGui(player: EntityPlayer) {
+        NetworkUtil.sendToPlayer(PacketGasInterface(gasTanks, gasConfig), player)
+    }
+
+    override fun getWailaBody(
+        list: MutableList<String>,
+        tag: NBTTagCompound,
+        side: EnumFacing?
+    ): MutableList<String> {
+        if (side == null) {
+            return list
+        }
+
+        val sideIndex = side.ordinal
+
+        list.add(
+            I18n.translateToLocal(
+                "com.the9grounds.aeadditions.tooltip.direction."
+                        + sideIndex
+            )
+        )
+
+        val tank = GasTank.readFromNBT(tag.getCompoundTag("tank#${sideIndex}"))
+
+        if (tag.hasKey("gasConfig#${sideIndex}")) {
+            val gas = GasRegistry.getGas(tag.getString("gasConfig#${sideIndex}"))
+
+            list.add("Selected Gas: ${gas.localizedName}")
+            list.add("Amount: ${tank.getStored()} / ${tank.maxGas}")
+        } else {
+            if (tank.gasType != null) {
+                list.add("Filled Gas: ${tank.gasType.localizedName}")
+                list.add("Amount: ${tank.getStored()} / ${tank.maxGas}")
+            } else {
+                list.add("Tank Empty")
+            }
+        }
+
+
+        return list
+    }
+
+    override fun getWailaTag(tag: NBTTagCompound): NBTTagCompound {
+        for (i in 0 until 6) {
+            val tank = gasTanks[i]
+            val gas = gasConfig[i]
+
+            tag.setTag("tank#${i}", tank.write(NBTTagCompound()))
+
+            if (gas != null) {
+                tag.setString("gasConfig#${i}", gas.name)
+            }
+        }
+
+        return tag
     }
 }
