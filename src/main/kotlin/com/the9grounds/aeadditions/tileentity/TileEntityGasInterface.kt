@@ -42,10 +42,10 @@ class TileEntityGasInterface : TileBase(), IECTileEntity, IActionHost, IGridTick
     private var previousGasIndex: Int? = null
 
     init {
-        for (i in 0 until 8) {
+        for (i in 0 until 5) {
             gasTanks.add(i, GasTank(5000))
         }
-        for (i in 0 until 8) {
+        for (i in 0 until 5) {
             gasConfig.add(i, null)
         }
     }

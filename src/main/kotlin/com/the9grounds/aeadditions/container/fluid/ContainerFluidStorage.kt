@@ -1,18 +1,7 @@
 package com.the9grounds.aeadditions.container.fluid
 
-import net.minecraft.entity.player.InventoryPlayer
-import net.minecraft.inventory.IInventory
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.item.ItemStack
-import com.the9grounds.aeadditions.container.slot.SlotRespective
-import com.the9grounds.aeadditions.tileentity.TileEntityFluidFiller
-import com.the9grounds.aeadditions.api.IFluidInterface
-import net.minecraftforge.fml.relauncher.SideOnly
-import com.the9grounds.aeadditions.gui.gas.GuiGasInterface
-import appeng.api.util.AEPartLocation
-import com.the9grounds.aeadditions.tileentity.TileEntityFluidInterface
 import net.minecraftforge.fluids.FluidStack
-import com.the9grounds.aeadditions.network.packet.part.PacketFluidInterface
 import com.the9grounds.aeadditions.container.ContainerStorage
 import net.minecraft.util.EnumHand
 import appeng.api.storage.IMEMonitor
