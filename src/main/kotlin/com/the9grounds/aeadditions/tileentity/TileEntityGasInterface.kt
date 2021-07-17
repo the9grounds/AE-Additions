@@ -158,25 +158,15 @@ class TileEntityGasInterface : TileBase(), IECTileEntity, IActionHost, IGridTick
     }
 
     override fun drawGas(direction: EnumFacing?, amount: Int, doDrain: Boolean): GasStack? {
-        var gas : Gas? = if (previousGas == null) {
-            if (getAmountOfGasInConfig() == 1) {
-                gasConfig[0]
-            } else if (getAmountOfGasInConfig() == 0) {
-                val tank = getFirstTankWithGas()
+        if (direction == null) {
+            return null
+        }
 
-                if (tank != null) {
-                    tank.gasType!!
-                } else {
-                    null
-                }
-            } else {
-                null
-            }
-        } else {
-            previousGas
-        } ?: return null
+        val sideIndex = direction.ordinal
 
-        val gasTank = getGasTankForGas(gas!!) ?: return null
+        val gasTank = gasTanks[sideIndex]
+
+        val gas = gasTank.gasType
 
         if (!gasTank.canDraw(gas)) {
             return null
@@ -258,24 +248,15 @@ class TileEntityGasInterface : TileBase(), IECTileEntity, IActionHost, IGridTick
     }
 
     override fun canDrawGas(direction: EnumFacing?, gas: Gas?): Boolean {
-        var foundGas: Gas? = null
-        var foundGasIndex: Int? = null
-
-        gasConfig.forEachIndexed { index, gasFromConfig ->
-            if (gasFromConfig == gas) {
-                foundGas = gasFromConfig
-                foundGasIndex = index
-            }
-        }
-
-        if (foundGas == null && getAmountOfGasInConfig() != 1) {
+        if (direction == null) {
             return false
         }
 
-        previousGas = foundGas
-        previousGasIndex = foundGasIndex
+        val sideIndex = direction.ordinal
 
-        return true
+        val tank = gasTanks[sideIndex]
+
+        return tank.gasType != null
     }
 
     private fun getAmountOfGasInConfig(): Int {
@@ -327,7 +308,13 @@ class TileEntityGasInterface : TileBase(), IECTileEntity, IActionHost, IGridTick
 
                 val stack = storageChannel.createStack(gas)!!
 
-                stack.stackSize = 1500
+                var amountToExtract = 1500
+
+                if (tank.needed < amountToExtract) {
+                    amountToExtract = tank.needed
+                }
+
+                stack.stackSize = amountToExtract.toLong()
 
                 val extracted = extractGas(stack, Actionable.MODULATE)
 
@@ -377,7 +364,7 @@ class TileEntityGasInterface : TileBase(), IECTileEntity, IActionHost, IGridTick
 
                 if (gasTank.getStored() > 0) {
                     val stack = gasTank.stored
-                    val drained = gasTank.draw(GasUtils.emit(stack, this, EnumSet.allOf(EnumFacing::class.java)), true);
+                    val drained = gasTank.draw(GasUtils.emit(stack, this, EnumSet.of(EnumFacing.byIndex(index))), true);
 
                     if (drained != null && drained.amount > 0) {
                         didEmptyTank = true
