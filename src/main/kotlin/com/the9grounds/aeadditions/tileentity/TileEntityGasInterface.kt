@@ -18,6 +18,7 @@ import com.the9grounds.aeadditions.container.gas.ContainerGasInterface
 import com.the9grounds.aeadditions.gridblock.AEGridBlockGasInterface
 import com.the9grounds.aeadditions.gui.gas.GuiGasInterface
 import com.the9grounds.aeadditions.gui.widget.fluid.IFluidSlotListener
+import com.the9grounds.aeadditions.integration.Integration
 import com.the9grounds.aeadditions.integration.mekanism.gas.Capabilities
 import com.the9grounds.aeadditions.integration.waila.IWailaTile
 import com.the9grounds.aeadditions.network.IGuiProvider
@@ -26,6 +27,8 @@ import com.the9grounds.aeadditions.util.GasUtil
 import com.the9grounds.aeadditions.util.MachineSource
 import com.the9grounds.aeadditions.util.NetworkUtil
 import com.the9grounds.aeadditions.util.StorageChannels
+import crazypants.enderio.conduits.conduit.TileConduitBundle
+import gg.galaxygaming.gasconduits.common.conduit.ender.EnderGasConduit
 import mekanism.api.gas.*
 import mekanism.common.util.GasUtils
 import net.minecraft.client.gui.inventory.GuiContainer
@@ -364,7 +367,12 @@ class TileEntityGasInterface : TileBase(), IECTileEntity, IActionHost, IGridTick
 
                 if (gasTank.getStored() > 0) {
                     val stack = gasTank.stored
-                    val drained = gasTank.draw(GasUtils.emit(stack, this, EnumSet.of(EnumFacing.byIndex(index))), true);
+
+                    val set = EnumSet.of(EnumFacing.byIndex(index))
+
+                    set.addAll(getSidesWithGasConduits())
+
+                    val drained = gasTank.draw(GasUtils.emit(stack, this, set), true);
 
                     if (drained != null && drained.amount > 0) {
                         didEmptyTank = true
@@ -525,5 +533,26 @@ class TileEntityGasInterface : TileBase(), IECTileEntity, IActionHost, IGridTick
         }
 
         return tag
+    }
+
+    fun getSidesWithGasConduits(): EnumSet<EnumFacing> {
+        if (Integration.Mods.ENDERIOGASCONDUITS.isEnabled) {
+            val set = EnumSet.noneOf(EnumFacing::class.java)
+            EnumFacing.values().forEach {
+                val tile = world.getTileEntity(pos.offset(it))
+
+                if (tile is TileConduitBundle) {
+                    tile.serverConduits.forEach { conduit ->
+                        if (conduit is EnderGasConduit) {
+                            set.add(it)
+                        }
+                    }
+                }
+            }
+
+            return set
+        }
+
+        return EnumSet.noneOf(EnumFacing::class.java)
     }
 }

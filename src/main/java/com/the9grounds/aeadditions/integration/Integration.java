@@ -30,7 +30,8 @@ public class Integration {
 		JEI("jei", "Just Enough Items", Side.CLIENT),
 		BUILDCRAFTTOOLS("BuildCraftAPI|tools", "BuildCraft Wrench"),
 		COFHITEM("cofhapi|item", "COFH Hammer"),
-		ENDERIO("enderio", "Ender IO");
+		ENDERIO("enderio", "Ender IO"),
+		ENDERIOGASCONDUITS("gasconduits", "Gas Conduits");
 
 		private final String modID;
 
