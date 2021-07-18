@@ -19,15 +19,15 @@ import com.the9grounds.aeadditions.gui.widget.WidgetFluidTank;
 import com.the9grounds.aeadditions.gui.widget.fluid.IFluidSlotListener;
 import com.the9grounds.aeadditions.gui.widget.fluid.WidgetFluidSlot;
 
-public class GuiGasInterface extends GuiBase<ContainerFluidInterface> {
+public class GuiFluidInterface extends GuiBase<ContainerFluidInterface> {
 	private AEPartLocation partSide;
 	public WidgetFluidSlot[] filter = new WidgetFluidSlot[6];
 
-	public GuiGasInterface(EntityPlayer player, IFluidInterface fluidInterface) {
+	public GuiFluidInterface(EntityPlayer player, IFluidInterface fluidInterface) {
 		this(player, fluidInterface, AEPartLocation.INTERNAL);
 	}
 
-	public GuiGasInterface(EntityPlayer player, IFluidInterface fluidInterface, AEPartLocation side) {
+	public GuiFluidInterface(EntityPlayer player, IFluidInterface fluidInterface, AEPartLocation side) {
 		super(new ResourceLocation(Constants.MOD_ID, "textures/gui/interfacefluid.png"), new ContainerFluidInterface(player, fluidInterface));
 		this.ySize = 230;
 		this.partSide = side;

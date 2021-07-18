@@ -69,7 +69,7 @@ import com.the9grounds.aeadditions.container.IContainerListener;
 import com.the9grounds.aeadditions.container.fluid.ContainerFluidInterface;
 import com.the9grounds.aeadditions.crafting.CraftingPattern;
 import com.the9grounds.aeadditions.crafting.CraftingPattern2;
-import com.the9grounds.aeadditions.gui.gas.GuiGasInterface;
+import com.the9grounds.aeadditions.gui.gas.GuiFluidInterface;
 import com.the9grounds.aeadditions.gui.widget.fluid.IFluidSlotListener;
 import com.the9grounds.aeadditions.integration.Capabilities;
 import com.the9grounds.aeadditions.inventory.FluidInterfaceInventory;
@@ -232,7 +232,7 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler, IFl
 
 	@Override
 	public Object getClientGuiElement(EntityPlayer player) {
-		return new GuiGasInterface(player, this, getSide());
+		return new GuiFluidInterface(player, this, getSide());
 	}
 
 	@SideOnly(Side.CLIENT)

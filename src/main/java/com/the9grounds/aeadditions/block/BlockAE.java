@@ -14,16 +14,16 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 
-public abstract class BlockEC extends BlockContainer implements IItemModelRegister {
+public abstract class BlockAE extends BlockContainer implements IItemModelRegister {
 
-	protected BlockEC(Material material, float hardness, float resistance) {
+	protected BlockAE(Material material, float hardness, float resistance) {
 		super(material);
 		setHardness(hardness);
 		setResistance(resistance);
 		setCreativeTab(CreativeTabEC.INSTANCE);
 	}
 
-	protected BlockEC(Material material) {
+	protected BlockAE(Material material) {
 		super(material);
 	}
 

@@ -7,14 +7,12 @@ import appeng.api.util.AEPartLocation
 import com.the9grounds.aeadditions.block.properties.PropertyDrive
 import com.the9grounds.aeadditions.models.drive.DriveSlotsState
 import com.the9grounds.aeadditions.network.GuiHandler
-import com.the9grounds.aeadditions.tileentity.TileEntityFluidInterface
 import com.the9grounds.aeadditions.tileentity.TileEntityHardMeDrive
 import com.the9grounds.aeadditions.util.PermissionUtil
 import com.the9grounds.aeadditions.util.TileUtil
 import com.the9grounds.aeadditions.util.WrenchUtil
 import net.minecraft.block.BlockHorizontal
 import net.minecraft.block.material.Material
-import net.minecraft.block.properties.IProperty
 import net.minecraft.block.properties.PropertyDirection
 import net.minecraft.block.state.BlockStateContainer
 import net.minecraft.block.state.IBlockState
@@ -22,7 +20,6 @@ import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.item.EntityItem
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.*
 import net.minecraft.util.math.BlockPos
@@ -35,7 +32,7 @@ import net.minecraftforge.common.property.ExtendedBlockState
 import net.minecraftforge.common.property.IExtendedBlockState
 import kotlin.random.Random
 
-class BlockHardMEDrive : BlockEC(Material.ROCK, 2.0f, 1000000f) {
+class BlockHardMEDrive : BlockAE(Material.ROCK, 2.0f, 1000000f) {
 
     private var _facing: PropertyDirection? = null
 

@@ -18,7 +18,9 @@ public enum PacketId {
 	FLUID_CRAFTER_CAPACITY,
 	FLUID_CRAFTER_DROPPED_ITEM,
 	FLUID_FILLER_SLOT_UPDATE,
-	FLUID_FILLER_SYNC_CLIENT;
+	FLUID_FILLER_SYNC_CLIENT,
+	GAS_INTERFACE,
+	GAS_INTERFACE_SERVER;
 
 	private IPacketHandlerServer handlerServer;
 	private IPacketHandlerClient handlerClient;

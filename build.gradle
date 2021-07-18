@@ -139,6 +139,8 @@ dependencies {
     compileOnly "p455w0rd:WirelessCraftingTerminal:${config.version.wc}:api"
     runtime "p455w0rd:WirelessCraftingTerminal:${config.version.wc}"
 
+    deobfProvided "curse.maven:gas-conduits-309756:3328809"
+
 //    deobfCompile ("appeng:appliedenergistics2:${config.version.ae}:api"){
 //        transitive = false
 //    }
@@ -152,9 +154,14 @@ dependencies {
         transitive = false
     }
 
-    runtime ("com.enderio:EnderIO:1.12.2-5.3.70") {
+    deobfProvided ("com.enderio:EnderIO:1.12.2-5.3.70") {
         transitive = false
     }
+
+    deobfProvided "com.enderio.core:EnderCore:1.12.2-0.5.76"
+
+    compile "info.loenwind.autoconfig:AutoConfig:1.12.2-1.0.2"
+    compile "info.loenwind.autosave:AutoSave:1.12.2-1.0.11"
 }
 
 processResources {

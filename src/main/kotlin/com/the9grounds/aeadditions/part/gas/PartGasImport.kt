@@ -141,8 +141,6 @@ class PartGasImport: PartGasIO(), IGasHandler, ITubeConnection {
         return false
     }
 
-
-    // This is bugged, it duplicates the amount
     @Optional.Method(modid = "MekanismAPI|gas")
     override fun receiveGas(side: EnumFacing?, stack: GasStack?, doTransfer: Boolean): Int {
         if (stack == null || stack.amount <= 0 || !canReceiveGas(side, stack.gas) || !isActive) {

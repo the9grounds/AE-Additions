@@ -65,7 +65,7 @@ import com.the9grounds.aeadditions.container.fluid.ContainerFluidInterface;
 import com.the9grounds.aeadditions.crafting.CraftingPattern;
 import com.the9grounds.aeadditions.crafting.CraftingPattern2;
 import com.the9grounds.aeadditions.gridblock.ECFluidGridBlock;
-import com.the9grounds.aeadditions.gui.gas.GuiGasInterface;
+import com.the9grounds.aeadditions.gui.gas.GuiFluidInterface;
 import com.the9grounds.aeadditions.gui.widget.fluid.IFluidSlotListener;
 import com.the9grounds.aeadditions.integration.Capabilities;
 import com.the9grounds.aeadditions.integration.waila.IWailaTile;
@@ -1112,7 +1112,7 @@ public class TileEntityFluidInterface extends TileBase implements
 	@SideOnly(Side.CLIENT)
 	@Override
 	public GuiContainer getClientGuiElement(EntityPlayer player, Object... args) {
-		return new GuiGasInterface(player, this);
+		return new GuiFluidInterface(player, this);
 	}
 
 	@Override

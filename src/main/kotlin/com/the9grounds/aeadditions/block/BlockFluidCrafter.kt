@@ -22,7 +22,7 @@ import net.minecraft.entity.EntityLivingBase
 import net.minecraft.tileentity.TileEntity
 import java.util.*
 
-class BlockFluidCrafter : BlockEC(Material.IRON, 2.0f, 10.0f) {
+class BlockFluidCrafter : BlockAE(Material.IRON, 2.0f, 10.0f) {
     override fun breakBlock(world: World, pos: BlockPos, state: IBlockState) {
         dropItems(world, pos)
         if (!world.isRemote) TileUtil.destroy(world, pos)

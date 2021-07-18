@@ -13,7 +13,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import appeng.api.util.AEPartLocation;
 import com.the9grounds.aeadditions.container.fluid.ContainerFluidInterface;
-import com.the9grounds.aeadditions.gui.gas.GuiGasInterface;
+import com.the9grounds.aeadditions.gui.gas.GuiFluidInterface;
 import com.the9grounds.aeadditions.network.packet.IPacketHandlerClient;
 import com.the9grounds.aeadditions.network.packet.Packet;
 import com.the9grounds.aeadditions.network.packet.PacketBufferEC;
@@ -77,7 +77,7 @@ public class PacketFluidInterface extends Packet {
 				}
 			}
 
-			GuiGasInterface gui = GuiUtil.getGui(GuiGasInterface.class);
+			GuiFluidInterface gui = GuiUtil.getGui(GuiFluidInterface.class);
 			ContainerFluidInterface container = GuiUtil.getContainer(gui, ContainerFluidInterface.class);
 			if (container == null) {
 				return;
