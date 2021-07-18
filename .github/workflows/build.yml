@@ -37,10 +37,8 @@ jobs:
         distribution: 'adopt'
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-    - name: Setup CI
-      run: ./gradlew setupCiWorkspace
     - name: Build with Gradle
-      run: ./gradlew build
+      run: ./gradlew setupCiWorkspace build
       env:
         SHORT_SHA: ${{ steps.short-sha.outputs.sha }}
         BRANCH_NAME: ${{ steps.extract_branch.outputs.branch }}

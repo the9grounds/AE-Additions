@@ -155,8 +155,10 @@ dependencies {
     }
 
     deobfProvided ("com.enderio:EnderIO:1.12.2-5.3.70") {
-        exclude module: "ap"
+        transitive = false
     }
+
+    deobfProvided "com.enderio.core:EnderCore:1.12.2-0.5.76"
 
     compile "info.loenwind.autoconfig:AutoConfig:1.12.2-1.0.2"
     compile "info.loenwind.autosave:AutoSave:1.12.2-1.0.11"
