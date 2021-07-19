@@ -1,0 +1,6 @@
+{
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "aeadditions:item/item_storage_component_256"
+    }
+}

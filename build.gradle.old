@@ -45,7 +45,7 @@ logger.lifecycle "" + version
 
 minecraft {
     version = "${config.version.minecraft}-${config.version.forge}"
-    runDir = "run"
+    runDir = "run1.12"
     mappings = 'snapshot_20180814'
 
     replace "@VERSION@", actualVersion
