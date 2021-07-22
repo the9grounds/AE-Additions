@@ -1,4 +1,5 @@
 import net.minecraftforge.gradle.userdev.UserDevExtension
+import com.matthewprenger.cursegradle.CurseExtension
 import net.minecraftforge.gradle.userdev.DependencyManagementExtension
 import org.gradle.jvm.tasks.Jar
 
@@ -14,20 +15,18 @@ buildscript {
             isChanging = true
         }
 
-        classpath(group = "com.matthewprenger.cursegradle", name = "CurseGradle", version = "1.4.0")
-
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.10")
     }
 }
 
 plugins {
     `java-library`
+    id("com.matthewprenger.cursegradle") version "1.4.0"
 }
 
 apply {
     plugin("net.minecraftforge.gradle")
     plugin("kotlin")
-    plugin("com.matthewprenger.cursegradle")
     plugin("idea")
 }
 
@@ -44,9 +43,10 @@ val mekanismVersion: String by project
 val cofhVersion: String by project
 val curseForgeProjectId: String by project
 val modBaseName: String by project
+val modCurseId: String by project
 
 project.group = "com.the9grounds.aeadditions"
-//base.archivesBaseName = "AEAdditions-${minecraftVersion}"
+base.archivesBaseName = "AEAdditions-${minecraftVersion}"
 
 configure<UserDevExtension> {
     mappings(mcpChannel, mcpMappings)
@@ -149,6 +149,30 @@ tasks.withType<Jar> {
     }
 }
 
+
+curseforge {
+    if (System.getenv("CURSEFORGE_API_KEY") != null) {
+        apiKey = System.getenv("CURSEFORGE_API_KEY")
+    }
+
+    val localReleaseType = getReleaseType()
+
+    project(closureOf<com.matthewprenger.cursegradle.CurseProject> {
+        id = modCurseId
+        releaseType = localReleaseType
+        changelogType = "markdown"
+        changelog = file("CHANGELOG.md")
+        relations(closureOf<com.matthewprenger.cursegradle.CurseRelation> {
+            requiredDependency("applied-energistics-2")
+            requiredDependency("kotlin-for-forge")
+            optionalDependency("mekanism")
+        })
+        mainArtifact(closureOf<com.matthewprenger.cursegradle.CurseArtifact> {
+            displayName = "${base.archivesBaseName}-${version}"
+        })
+    })
+}
+
 fun getReleaseType(): String {
     val preReleaseEnv = System.getenv("PRERELEASE")
 
@@ -156,7 +180,7 @@ fun getReleaseType(): String {
         return "beta"
     }
 
-    val preRelease = preReleaseEnv?.toBoolean()
+    val preRelease = preReleaseEnv.toBoolean()
 
     if (preRelease) {
         return "beta"

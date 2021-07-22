@@ -9,7 +9,7 @@ import appeng.api.storage.cells.ISaveProvider
 import appeng.api.storage.data.IAEItemStack
 import appeng.api.storage.data.IAEStack
 import appeng.core.AELog
-import com.the9grounds.aeadditions.LOGGER
+import com.the9grounds.aeadditions.Logger
 import com.the9grounds.aeadditions.api.IAEAdditionsStorageCell
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
@@ -26,7 +26,7 @@ class AEAdditionsCellInventory<T: IAEStack<T>>(val cell: IAEAdditionsStorageCell
         try {
             t = this.channel.createFromNBT(compoundTag!!)
             if (t == null) {
-                LOGGER.warn(
+                Logger.warn(
                     "Removing item " + compoundTag
                             + " from storage cell because the associated item type couldn't be found."
                 )

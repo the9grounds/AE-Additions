@@ -15,5 +15,7 @@ object Cells {
         AppEng.API!!.client().cells().registerModel(Items.FLUID_STORAGE_CELL_256k, ResourceLocation("aeadditions:block/drive/cells/fluid/256k"))
         AppEng.API!!.client().cells().registerModel(Items.FLUID_STORAGE_CELL_1024k, ResourceLocation("aeadditions:block/drive/cells/fluid/1024k"))
         AppEng.API!!.client().cells().registerModel(Items.FLUID_STORAGE_CELL_4096k, ResourceLocation("aeadditions:block/drive/cells/fluid/4096k"))
+        
+        AppEng.API!!.client().cells().registerModel(Items.CHEMICAL_STORAGE_CELL_64k, ResourceLocation("aeadditions:block/drive/cells/chemical/64k"))
     }
 }

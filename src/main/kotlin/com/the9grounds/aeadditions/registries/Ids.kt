@@ -13,6 +13,7 @@ object Ids {
     val FLUID_STORAGE_COMPONENT_256 = id("fluid_storage_component_256")
     val FLUID_STORAGE_COMPONENT_1024 = id("fluid_storage_component_1024")
     val FLUID_STORAGE_COMPONENT_4096 = id("fluid_storage_component_4096")
+    val CHEMICAL_STORAGE_COMPONENT_64 = id("chemical_storage_component_64")
 
     // Cells
     val ITEM_STORAGE_CELL_256 = id("item_storage_cell_256")
@@ -23,6 +24,10 @@ object Ids {
     val FLUID_STORAGE_CELL_256 = id("fluid_storage_cell_256")
     val FLUID_STORAGE_CELL_1024 = id("fluid_storage_cell_1024")
     val FLUID_STORAGE_CELL_4096 = id("fluid_storage_cell_4096")
+    
+    val CHEMICAL_STORAGE_CELL_64 = id("chemical_storage_cell_64")
+    
+    val DUMMY_CHEMICAL_ITEM = id("dummy_chemical_item")
 
 
 

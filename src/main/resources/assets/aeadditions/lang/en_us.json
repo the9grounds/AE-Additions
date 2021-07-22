@@ -5,6 +5,7 @@
   "item.aeadditions.fluid_storage_cell_256": "ME 256k Fluid Storage Cell",
   "item.aeadditions.fluid_storage_cell_1024": "ME 1024k Fluid Storage Cell",
   "item.aeadditions.fluid_storage_cell_4096": "ME 4096k Fluid Storage Cell",
+  "item.aeadditions.chemical_storage_cell_64": "ME 64k Chemical Storage Cell",
   "item.aeadditions.item_storage_cell_16384": "ME 16384k Storage Cell",
   "item.aeadditions.item_storage_component_256": "ME 256k Storage Component",
   "item.aeadditions.item_storage_component_1024": "ME 1024k Storage Component",
@@ -13,5 +14,6 @@
   "item.aeadditions.fluid_storage_component_256": "ME 256k Fluid Storage Component",
   "item.aeadditions.fluid_storage_component_1024": "ME 1024k Fluid Storage Component",
   "item.aeadditions.fluid_storage_component_4096": "ME 4096k Fluid Storage Component",
+  "item.aeadditions.chemical_storage_component_64": "ME 64k Storage Component",
   "itemGroup.aeadditions": "AE Additions"
 }
