@@ -2,15 +2,16 @@ package com.the9grounds.aeadditions.registries
 
 import com.the9grounds.aeadditions.AEAdditions
 import com.the9grounds.aeadditions.core.CreativeTab
-import com.the9grounds.aeadditions.items.ChemicalDummyItem
-import com.the9grounds.aeadditions.items.storage.ChemicalStorageCell
-import com.the9grounds.aeadditions.items.storage.FluidStorageCell
-import com.the9grounds.aeadditions.items.storage.PhysicalStorageCell
-import com.the9grounds.aeadditions.items.storage.StorageComponentItem
+import com.the9grounds.aeadditions.item.ChemicalDummyItem
+import com.the9grounds.aeadditions.item.storage.ChemicalStorageCell
+import com.the9grounds.aeadditions.item.storage.FluidStorageCell
+import com.the9grounds.aeadditions.item.storage.PhysicalStorageCell
+import com.the9grounds.aeadditions.item.storage.StorageComponentItem
 import net.minecraft.item.Item
 import net.minecraft.item.Rarity
 import net.minecraft.util.ResourceLocation
 import net.minecraftforge.registries.ForgeRegistries
+import net.minecraftforge.registries.IForgeRegistry
 import thedarkcolour.kotlinforforge.forge.KDeferredRegister
 
 object Items {
@@ -40,7 +41,20 @@ object Items {
     
     val DUMMY_CHEMICAL_ITEM = createItem(Ids.DUMMY_CHEMICAL_ITEM) { properties -> ChemicalDummyItem(properties) }
 
-    private fun <T: Item> createItem(id: ResourceLocation, factory: (Item.Properties) -> T): Item {
+    fun <T: Item> createItem(id: ResourceLocation, factory: (Item.Properties) -> T): T {
+        val item = constructItem(factory, id)
+
+        REGISTRY.registerObject(id.path) {
+            item
+        }
+
+        return item
+    }
+
+    private fun <T : Item> constructItem(
+        factory: (Item.Properties) -> T,
+        id: ResourceLocation
+    ): T {
         val props = Item.Properties().group(CreativeTab.group)
 
         val item = factory(props)
@@ -48,11 +62,16 @@ object Items {
         if (item.registryName != null) {
             item.registryName = id
         }
+        return item
+    }
 
-        REGISTRY.registerObject(id.path) {
+    fun <T: Item> createItem(id: ResourceLocation, factory: (Item.Properties) -> T, registry: KDeferredRegister<Item>): T {
+        val item = constructItem(factory, id)
+        
+        registry.registerObject(id.path) {
             item
         }
-
+        
         return item
     }
 }

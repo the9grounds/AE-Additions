@@ -1,7 +1,6 @@
-package com.the9grounds.aeadditions.items.storage
+package com.the9grounds.aeadditions.item.storage
 
 import appeng.api.config.FuzzyMode
-import appeng.api.implementations.items.IStorageCell
 import appeng.api.storage.data.IAEStack
 import appeng.items.contents.CellConfig
 import appeng.items.contents.CellUpgrades

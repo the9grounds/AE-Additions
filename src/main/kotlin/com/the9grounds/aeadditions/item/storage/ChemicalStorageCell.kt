@@ -1,7 +1,6 @@
-package com.the9grounds.aeadditions.items.storage
+package com.the9grounds.aeadditions.item.storage
 
 import appeng.api.storage.IStorageChannel
-import appeng.api.storage.data.IAEFluidStack
 import com.the9grounds.aeadditions.api.gas.IAEChemicalStack
 import com.the9grounds.aeadditions.util.StorageChannels
 import net.minecraft.item.Item

@@ -1,4 +1,4 @@
-package com.the9grounds.aeadditions.items.storage
+package com.the9grounds.aeadditions.item.storage
 
 import appeng.api.implementations.items.IStorageComponent
 import net.minecraft.item.Item

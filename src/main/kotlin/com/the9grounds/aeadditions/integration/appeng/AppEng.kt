@@ -3,6 +3,7 @@ package com.the9grounds.aeadditions.integration.appeng
 import appeng.api.AEAddon
 import appeng.api.IAEAddon
 import appeng.api.IAppEngApi
+import com.the9grounds.aeadditions.AEAdditions
 import com.the9grounds.aeadditions.api.gas.IChemicalStorageChannel
 import com.the9grounds.aeadditions.integration.Mods
 import com.the9grounds.aeadditions.integration.mekanism.chemical.ChemicalStorageChannel
@@ -23,10 +24,6 @@ class AppEng : IAEAddon {
     override fun onAPIAvailable(api: IAppEngApi) {
         API = api
 
-        initCellHandler()
-        Cells.init()
-        if (Mods.MEKANISM.isEnabled) {
-            api.storage().registerStorageChannel(IChemicalStorageChannel::class.java, ChemicalStorageChannel())
-        }
+        AEAdditions.onAppEngReady(api)
     }
 }

@@ -17,7 +17,7 @@ abstract class AbstractAEAdditionsInventory<T: IAEStack<T>>(val cellType: IAEAdd
     private var tagCompound: CompoundNBT? = null
     private var maxItemTypes = MAX_ITEM_TYPES
     private var storedItems: Short = 0
-    private var storedItemCount = 0
+    private var storedItemCount = 0L
     protected var cellItems: IItemList<T>? = null
     get() {
         if (field == null) {
@@ -62,7 +62,7 @@ abstract class AbstractAEAdditionsInventory<T: IAEStack<T>>(val cellType: IAEAdd
         }
         tagCompound = itemStack.orCreateTag
         storedItems = tagCompound!!.getShort(ITEM_TYPE_TAG)
-        storedItemCount = tagCompound!!.getInt(ITEM_COUNT_TAG)
+        storedItemCount = tagCompound!!.getLong(ITEM_COUNT_TAG)
         cellItems = null
     }
 
@@ -70,16 +70,16 @@ abstract class AbstractAEAdditionsInventory<T: IAEStack<T>>(val cellType: IAEAdd
         if (isPersisted) {
             return
         }
-        var itemCount = 0
+        var itemCount = 0L
 
         // add new pretty stuff...
         var x = 0
         for (v in cellItems!!) {
-            itemCount += v.stackSize.toInt()
+            itemCount += v.stackSize
             val g = CompoundNBT()
             v.writeToNBT(g)
             tagCompound!!.put(ITEM_SLOT_KEYS[x], g)
-            tagCompound!!.putInt(ITEM_SLOT_COUNT_KEYS[x], v.stackSize.toInt())
+            tagCompound!!.putLong(ITEM_SLOT_COUNT_KEYS[x], v.stackSize)
             x++
         }
         val oldStoredItems = storedItems
@@ -90,10 +90,10 @@ abstract class AbstractAEAdditionsInventory<T: IAEStack<T>>(val cellType: IAEAdd
             tagCompound!!.putShort(ITEM_TYPE_TAG, storedItems)
         }
         storedItemCount = itemCount
-        if (itemCount == 0) {
+        if (itemCount == 0L) {
             tagCompound!!.remove(ITEM_COUNT_TAG)
         } else {
-            tagCompound!!.putInt(ITEM_COUNT_TAG, itemCount)
+            tagCompound!!.putLong(ITEM_COUNT_TAG, itemCount)
         }
 
         // clean any old crusty stuff...
@@ -130,7 +130,7 @@ abstract class AbstractAEAdditionsInventory<T: IAEStack<T>>(val cellType: IAEAdd
         var needsUpdate = false
         for (slot in 0 until types) {
             val compoundTag = tagCompound!!.getCompound(ITEM_SLOT_KEYS[slot])
-            val stackSize = tagCompound!!.getInt(ITEM_SLOT_COUNT_KEYS[slot])
+            val stackSize = tagCompound!!.getLong(ITEM_SLOT_COUNT_KEYS[slot])
             needsUpdate = needsUpdate or !loadCellItem(compoundTag, stackSize)
         }
         if (needsUpdate) {
@@ -145,7 +145,7 @@ abstract class AbstractAEAdditionsInventory<T: IAEStack<T>>(val cellType: IAEAdd
      * @param stackSize
      * @return true when successfully loaded
      */
-    protected abstract fun loadCellItem(compoundTag: CompoundNBT?, stackSize: Int): Boolean
+    protected abstract fun loadCellItem(compoundTag: CompoundNBT?, stackSize: Long): Boolean
 
     override fun getAvailableItems(out: IItemList<T>): IItemList<T> {
         for (item in cellItems!!) {

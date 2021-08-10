@@ -1,12 +1,8 @@
-package com.the9grounds.aeadditions.items
+package com.the9grounds.aeadditions.item
 
 import com.the9grounds.aeadditions.integration.mekanism.Mekanism
 import mekanism.api.chemical.ChemicalStack
-import mekanism.api.chemical.gas.Gas
 import mekanism.api.chemical.gas.GasStack
-import mekanism.api.chemical.infuse.InfuseType
-import mekanism.api.chemical.pigment.Pigment
-import mekanism.api.chemical.slurry.Slurry
 import net.minecraft.item.Item
 import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack

@@ -30,6 +30,10 @@ object Ids {
     val DUMMY_CHEMICAL_ITEM = id("dummy_chemical_item")
 
 
+    
+    // Parts
+    
+    val CHEMICAL_TERMINAL_PART = id("chemical_terminal")
 
     private fun id(id: String): ResourceLocation = ResourceLocation(AEAdditions.ID, id)
 }

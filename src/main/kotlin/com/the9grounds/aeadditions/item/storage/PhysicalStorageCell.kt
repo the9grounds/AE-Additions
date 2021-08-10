@@ -1,4 +1,4 @@
-package com.the9grounds.aeadditions.items.storage
+package com.the9grounds.aeadditions.item.storage
 
 import appeng.api.storage.IStorageChannel
 import appeng.api.storage.data.IAEItemStack

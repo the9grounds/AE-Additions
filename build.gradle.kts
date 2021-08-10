@@ -50,6 +50,8 @@ base.archivesBaseName = "AEAdditions-${minecraftVersion}"
 
 configure<UserDevExtension> {
     mappings(mcpChannel, mcpMappings)
+    
+    accessTransformer(file("src/main/resources/META-INF/accesstransformer.cfg"))
 
     runs {
         create("client") {

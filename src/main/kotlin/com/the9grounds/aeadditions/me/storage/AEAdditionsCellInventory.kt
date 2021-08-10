@@ -18,7 +18,7 @@ import net.minecraft.nbt.CompoundNBT
 class AEAdditionsCellInventory<T: IAEStack<T>>(val cell: IAEAdditionsStorageCell<T>, itemStack: ItemStack, container: ISaveProvider?) : AbstractAEAdditionsInventory<T>(cell, itemStack, container) {
 
 
-    override fun loadCellItem(compoundTag: CompoundNBT?, stackSize: Int): Boolean {
+    override fun loadCellItem(compoundTag: CompoundNBT?, stackSize: Long): Boolean {
         // Now load the item stack
 
         // Now load the item stack
@@ -43,7 +43,7 @@ class AEAdditionsCellInventory<T: IAEStack<T>>(val cell: IAEAdditionsStorageCell
             throw ex
         }
 
-        t.stackSize = stackSize.toLong()
+        t.stackSize = stackSize
 
         if (stackSize > 0) {
             cellItems!!.add(t)

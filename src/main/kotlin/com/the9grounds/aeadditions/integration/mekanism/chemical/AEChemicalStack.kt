@@ -4,14 +4,13 @@ import appeng.api.config.FuzzyMode
 import appeng.api.storage.IStorageChannel
 import com.the9grounds.aeadditions.api.gas.IAEChemicalStack
 import com.the9grounds.aeadditions.integration.mekanism.Mekanism
-import com.the9grounds.aeadditions.items.ChemicalDummyItem
+import com.the9grounds.aeadditions.item.ChemicalDummyItem
 import com.the9grounds.aeadditions.registries.Items
 import com.the9grounds.aeadditions.util.StorageChannels
-import mekanism.api.MekanismAPI
-import mekanism.api.NBTConstants
 import mekanism.api.chemical.Chemical
 import mekanism.api.chemical.ChemicalStack
 import mekanism.api.chemical.ChemicalUtils
+import mekanism.api.chemical.IChemicalHandler
 import mekanism.api.chemical.gas.Gas
 import mekanism.api.chemical.gas.GasStack
 import mekanism.api.chemical.infuse.InfuseType
@@ -20,9 +19,11 @@ import mekanism.api.chemical.pigment.Pigment
 import mekanism.api.chemical.pigment.PigmentStack
 import mekanism.api.chemical.slurry.Slurry
 import mekanism.api.chemical.slurry.SlurryStack
+import mekanism.common.util.ChemicalUtil
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundNBT
 import net.minecraft.network.PacketBuffer
+import java.util.*
 
 class AEChemicalStack() : IAEChemicalStack {
 
@@ -176,6 +177,10 @@ class AEChemicalStack() : IAEChemicalStack {
         }
         
         return ItemStack.EMPTY
+    }
+
+    override fun getCapabilityForChemical(): Optional<IChemicalHandler<*, *>> {
+        return asItemStackRepresentation().getCapability(ChemicalUtil.getCapabilityForChemical(_chemical)).resolve()
     }
 
     override fun equals(other: Any?): Boolean {

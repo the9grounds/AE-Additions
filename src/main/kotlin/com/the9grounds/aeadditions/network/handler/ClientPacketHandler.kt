@@ -1,0 +1,18 @@
+package com.the9grounds.aeadditions.network.handler
+
+import com.the9grounds.aeadditions.Logger
+import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.network.INetHandler
+import net.minecraft.network.PacketBuffer
+
+class ClientPacketHandler : BasePacketHandler(), IPacketHandler {
+    override fun onPacketData(handler: INetHandler, packet: PacketBuffer, player: PlayerEntity?) {
+        try {
+            val packetType = packet.readInt()
+            val pack = Packets.getPacket(packetType).parsePacket(packet)
+            pack.clientPacketData(player)
+        } catch (e: Throwable) {
+            Logger.warn(e)
+        }
+    }
+}

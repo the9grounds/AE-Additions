@@ -1,15 +1,12 @@
 package com.the9grounds.aeadditions.client.render
 
-import com.the9grounds.aeadditions.items.ChemicalDummyItem
-import mekanism.api.MekanismAPI
-import mekanism.api.chemical.gas.GasStack
+import com.the9grounds.aeadditions.item.ChemicalDummyItem
 import mekanism.common.registries.MekanismGases
 import net.minecraft.block.BlockState
 import net.minecraft.client.renderer.model.BakedQuad
 import net.minecraft.client.renderer.model.IBakedModel
 import net.minecraft.client.renderer.model.ItemOverrideList
 import net.minecraft.client.renderer.model.RenderMaterial
-import net.minecraft.client.renderer.texture.AtlasTexture
 import net.minecraft.client.renderer.texture.TextureAtlasSprite
 import net.minecraft.client.world.ClientWorld
 import net.minecraft.entity.LivingEntity
