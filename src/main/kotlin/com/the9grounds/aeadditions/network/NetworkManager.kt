@@ -57,8 +57,8 @@ object NetworkManager {
                 val ctx = event.source.get()
                 val netHandler = ctx.networkManager.netHandler as ServerPlayNetHandler
                 ctx.packetHandled = true
-                
-                ctx.enqueueWork { this.serverPacketHandler.onPacketData(netHandler, event.payload,  netHandler.player) }
+                val packet = event.payload as AEAPacketBuffer
+                ctx.enqueueWork { this.serverPacketHandler.onPacketData(netHandler, packet,  netHandler.player) }
             } catch (e: ThreadQuickExitException) {
                 //
             }
@@ -75,7 +75,8 @@ object NetworkManager {
             try {
                 val ctx = event.source.get()
                 val netHandler = ctx.networkManager.netHandler
-                ctx.enqueueWork { this.clientPacketHandler.onPacketData(netHandler, event.payload, null) }
+                val packet = event.payload as AEAPacketBuffer
+                ctx.enqueueWork { this.clientPacketHandler.onPacketData(netHandler, packet, null) }
             } catch (e: ThreadQuickExitException) {
                 //
             }

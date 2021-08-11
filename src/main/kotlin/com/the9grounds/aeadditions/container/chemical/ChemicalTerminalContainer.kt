@@ -13,6 +13,7 @@ import appeng.api.networking.storage.IBaseMonitor
 import appeng.api.storage.IMEMonitor
 import appeng.api.storage.IMEMonitorHandlerReceiver
 import appeng.api.storage.ITerminalHost
+import appeng.api.storage.data.IItemList
 import appeng.api.util.AEPartLocation
 import appeng.container.me.common.IClientRepo
 import appeng.container.me.common.IMEInteractionHandler
@@ -26,6 +27,7 @@ import com.the9grounds.aeadditions.container.AbstractContainer
 import com.the9grounds.aeadditions.container.ContainerTypeBuilder
 import com.the9grounds.aeadditions.integration.appeng.AppEng
 import com.the9grounds.aeadditions.integration.mekanism.Mekanism
+import com.the9grounds.aeadditions.integration.mekanism.chemical.AEChemicalStack
 import com.the9grounds.aeadditions.network.NetworkManager
 import com.the9grounds.aeadditions.network.packets.MEInteractionPacket
 import com.the9grounds.aeadditions.network.packets.MEInventoryUpdatePacket
@@ -55,13 +57,10 @@ class ChemicalTerminalContainer(
     private val host: ITerminalHost,
     bindPlayerInventory: Boolean
 ) : AbstractContainer(type, windowId, playerInventory, bindPlayerInventory, host),
-    IMEMonitorHandlerReceiver<IAEChemicalStack>, IMEInteractionHandler {
+    IMEMonitorHandlerReceiver<IAEChemicalStack> {
 
-//    val clientCM = ConfigManager(this)
-//
-//    var serverCM: IConfigManager? = null
-
-    val updateHelper = IncrementalUpdateHelper<IAEChemicalStack>()
+//    val updateHelper = IncrementalUpdateHelper<IAEChemicalStack>()
+    var chemicalList: IItemList<IAEChemicalStack>? = null
 
     var gui: IConfigManagerHost? = null
     var networkNode: IGridNode? = null
@@ -74,13 +73,11 @@ class ChemicalTerminalContainer(
 
     var monitor: IMEMonitor<IAEChemicalStack>? = null
 
-    var clientRepo: IClientRepo<IAEChemicalStack>? = null
-
     companion object {
         val TYPE = ContainerTypeBuilder({ windowId, playerInventory, host ->
             ChemicalTerminalContainer(windowId, playerInventory!!, host)
         }, ITerminalHost::class)
-            .requirePermission(SecurityPermissions.BUILD)
+            .requirePermission(SecurityPermissions.EXTRACT)
             .build("chemical_terminal")
     }
 
@@ -149,25 +146,25 @@ class ChemicalTerminalContainer(
                 return
             }
 
-            if (updateHelper.hasChanges()) {
-                try {
-                    val builder = MEInventoryUpdatePacket.Builder(windowId, updateHelper.isFullUpdate)
-
-                    val storageList = monitor!!.storageList
-
-                    if (updateHelper.isFullUpdate) {
-                        builder.addFull(updateHelper, storageList)
-                    } else {
-                        builder.addChanges(updateHelper, storageList)
-                    }
-
-                    builder.buildAndSend(this::sendPacketToClient)
-                } catch (e: Throwable) {
-                    Logger.warn("Could not sync me data", e)
-                }
-
-                updateHelper.commitChanges()
-            }
+//            if (updateHelper.hasChanges()) {
+//                try {
+//                    val builder = MEInventoryUpdatePacket.Builder(windowId, updateHelper.isFullUpdate)
+//
+//                    val storageList = monitor!!.storageList
+//
+//                    if (updateHelper.isFullUpdate) {
+//                        builder.addFull(updateHelper, storageList)
+//                    } else {
+//                        builder.addChanges(updateHelper, storageList)
+//                    }
+//
+//                    builder.buildAndSend(this::sendPacketToClient)
+//                } catch (e: Throwable) {
+//                    Logger.warn("Could not sync me data", e)
+//                }
+//
+//                updateHelper.commitChanges()
+//            }
 
             updatePowerStatus()
 
@@ -209,20 +206,20 @@ class ChemicalTerminalContainer(
         change: MutableIterable<IAEChemicalStack>?,
         actionSource: IActionSource?
     ) {
-        for (stack in change!!) {
-            updateHelper.addChange(stack)
-        }
+        val storageList = (monitor!! as IMEMonitor<IAEChemicalStack>).storageList
+        
+        NetworkManager.sendTo(MEInventoryUpdatePacket(windowId, storageList), playerInventory.player as ServerPlayerEntity)
     }
 
     override fun onListUpdate() {
         if (isServer) {
-            updateHelper.clear()
+//            updateHelper.clear()
         }
     }
 
-    override fun handleInteraction(serial: Long, action: InventoryAction) {
+    fun handleInteraction(slot: Int, action: InventoryAction) {
         if (isClient) {
-            NetworkManager.sendToServer(MEInteractionPacket(windowId, serial, action))
+            NetworkManager.sendToServer(MEInteractionPacket(windowId, slot, action))
 
             return
         }
@@ -233,19 +230,15 @@ class ChemicalTerminalContainer(
 
         val player = this.playerInventory.player as ServerPlayerEntity
 
-        if (serial == -1L) {
+        if (slot == -1) {
             handleNetworkInteraction(player, null, action)
             
             return
         }
         
-        val stack = getStackBySerial(serial) ?: return
+        val stack = chemicalList!!.toList()[slot]
 
         handleNetworkInteraction(player, stack, action)
-    }
-    
-    private fun getStackBySerial(serial: Long): IAEChemicalStack? {
-        return updateHelper.getBySerial(serial)
     }
 
     private fun handleNetworkInteraction(
@@ -263,9 +256,14 @@ class ChemicalTerminalContainer(
             return
         }
         
-        val handler = Mekanism.capabilityFromChemicalStorageItem(held) ?: return
+        var handler = if (stack != null) {
+            Mekanism.getCapabilityFromChemicalStorageItemForChemicalStack(held, stack.getChemicalStack())
+        } else {
+            Mekanism.capabilityFromChemicalStorageItem(held)
+        }?: return
         
         if (action == InventoryAction.FILL_ITEM && stack != null) {
+            
             stack.stackSize = Integer.MAX_VALUE.toLong()
             
             val maxFill = fillContainer(stack, handler) ?: return
@@ -307,8 +305,41 @@ class ChemicalTerminalContainer(
                 Logger.warn("Filled is different than can fill for {}", held.displayName)
             }
             
-        } else if (action == InventoryAction.EMPTY_ITEM) {
+            player.sendAllContents(this, this.inventory)
             
+        } else if (action == InventoryAction.EMPTY_ITEM) {
+            handler = Mekanism.capabilityFromChemicalStorageItem(held)?: return
+            
+            val extracted = extractFromContainer(Int.MAX_VALUE.toLong(), handler)
+            
+            if (extracted == null || extracted.isEmpty() || extracted.getAmount() < 1) {
+                return
+            }
+            
+            val notStorable = AppEng.API!!.storage().poweredInsert(powerSource, monitor, AEChemicalStack(extracted), mySrc, Actionable.SIMULATE)
+            
+            if (notStorable != null && notStorable.stackSize > 0) {
+                val toStore = extracted.getAmount() - notStorable.stackSize
+                val storable = extractFromContainer(toStore, handler)
+                
+                if (storable == null || storable.isEmpty() || storable.getAmount() < 1) {
+                    return
+                }
+
+                extracted.setAmount(storable.getAmount())
+            }
+            
+            val drained = extractFromContainer(extracted.getAmount(), handler, Action.EXECUTE)
+            
+            extracted.setAmount(drained!!.getAmount())
+            
+            val notInserted = AppEng.API!!.storage().poweredInsert(powerSource, monitor, AEChemicalStack(extracted), mySrc, Actionable.MODULATE)
+            
+            if (notInserted != null && notInserted.stackSize > 0) {
+                Logger.warn("Chemical Item {} reported a different possible amount to drain than it actually provided.", held.displayName)
+            }
+            
+            player.sendAllContents(this, inventory)
         }
     }
 
@@ -323,6 +354,20 @@ class ChemicalTerminalContainer(
             is IPigmentHandler -> handler.insertChemical(stack.getChemicalStack() as PigmentStack, action)
             is ISlurryHandler -> handler.insertChemical(stack.getChemicalStack() as SlurryStack, action)
             else -> null
-        } ?: return null
+        }
+    }
+    
+    private fun extractFromContainer(
+        amount: Long,
+        handler: IChemicalHandler<*, *>,
+        action: Action = Action.SIMULATE
+    ): ChemicalStack<*>? {
+        return when (handler) {
+            is IGasHandler -> handler.extractChemical(amount, action)
+            is IInfusionHandler -> handler.extractChemical(amount, action)
+            is IPigmentHandler -> handler.extractChemical(amount, action)
+            is ISlurryHandler -> handler.extractChemical(amount, action)
+            else -> null
+        }
     }
 }

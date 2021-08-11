@@ -17,6 +17,7 @@ import mekanism.common.capabilities.Capabilities
 import mekanism.common.util.StorageUtils
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundNBT
+import net.minecraftforge.common.capabilities.Capability
 
 object Mekanism {
     fun getType(chemical: Chemical<*>): String {
@@ -50,8 +51,12 @@ object Mekanism {
     }
     
     fun capabilityFromChemicalStorageItem(itemStack: ItemStack): IChemicalHandler<*, *>? {
-        val chemicalStack = getStoredChemicalStackFromStack(itemStack)
+        val chemicalStack = getStoredChemicalStackFromStack(itemStack)?: return null
         
+        return getCapabilityFromChemicalStorageItemForChemicalStack(itemStack, chemicalStack)
+    }
+    
+    fun getCapabilityFromChemicalStorageItemForChemicalStack(itemStack: ItemStack, chemicalStack: ChemicalStack<*>): IChemicalHandler<*, *>? {
         return when(chemicalStack) {
             is GasStack -> itemStack.getCapability(Capabilities.GAS_HANDLER_CAPABILITY).resolve().get()
             is InfusionStack -> itemStack.getCapability(Capabilities.INFUSION_HANDLER_CAPABILITY).resolve().get()

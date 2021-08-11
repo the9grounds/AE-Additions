@@ -1,6 +1,7 @@
 package com.the9grounds.aeadditions.sync.gui
 
 import com.the9grounds.aeadditions.Logger
+import com.the9grounds.aeadditions.network.AEAPacketBuffer
 import net.minecraft.inventory.container.Container
 import net.minecraft.network.PacketBuffer
 import kotlin.reflect.KClass
@@ -52,15 +53,15 @@ class DataSync(val host: Any) {
         return false
     }
 
-    fun writeFull(data: PacketBuffer) {
+    fun writeFull(data: AEAPacketBuffer) {
         writeFields(data, true)
     }
     
-    fun writeUpdate(data: PacketBuffer) {
+    fun writeUpdate(data: AEAPacketBuffer) {
         writeFields(data, false)
     }
     
-    private fun writeFields(data: PacketBuffer, includeUnchanged: Boolean) {
+    private fun writeFields(data: AEAPacketBuffer, includeUnchanged: Boolean) {
         for (item in fields) {
             if (includeUnchanged || item.value.hasChanges()) {
                 data.writeString(item.key)
@@ -71,7 +72,7 @@ class DataSync(val host: Any) {
         data.writeString("-1")
     }
     
-    fun readUpdate(data: PacketBuffer) {
+    fun readUpdate(data: AEAPacketBuffer) {
         var key = data.readString()
         var i = 0
         

@@ -1,0 +1,48 @@
+package com.the9grounds.aeadditions.network
+
+import appeng.api.storage.data.IItemList
+import com.the9grounds.aeadditions.api.gas.IAEChemicalStack
+import com.the9grounds.aeadditions.integration.mekanism.chemical.AEChemicalStack
+import com.the9grounds.aeadditions.network.packets.BasePacket
+import com.the9grounds.aeadditions.util.StorageChannels
+import io.netty.buffer.ByteBuf
+import mekanism.api.chemical.ChemicalStack
+import net.minecraft.network.PacketBuffer
+
+class AEAPacketBuffer(wrapped: ByteBuf) : PacketBuffer(wrapped) {
+
+    override fun readString(): String {
+        return super.readString(BasePacket.MAX_STRING_LENGTH)
+    }
+    
+    fun writeIAEChemicalStack(chemicalStack: IAEChemicalStack) {
+        chemicalStack.writeToPacket(this)
+    }
+    
+    fun writeChemicalStack(chemicalStack: ChemicalStack<*>) {
+        chemicalStack.writeToPacket(this)
+    }
+    
+    fun writeIAEChemicalStackList(chemicalStackList: IItemList<IAEChemicalStack>) {
+        writeInt(chemicalStackList.size())
+        for (chemicalStack in chemicalStackList) {
+            writeIAEChemicalStack(chemicalStack)
+        }
+    }
+    
+    fun readIAEChemicalStackList(): IItemList<IAEChemicalStack> {
+        val list = StorageChannels.CHEMICAL.createList()
+        
+        val size = readInt()
+        
+        for (i in 0 until size) {
+            list.add(readIAEChemicalStack())
+        }
+        
+        return list
+    }
+    
+    fun readIAEChemicalStack(): IAEChemicalStack {
+        return AEChemicalStack.fromPacket(this)
+    }
+}

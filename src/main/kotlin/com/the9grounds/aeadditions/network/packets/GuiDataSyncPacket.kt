@@ -1,25 +1,42 @@
 package com.the9grounds.aeadditions.network.packets
 
+import com.the9grounds.aeadditions.container.AbstractContainer
+import com.the9grounds.aeadditions.network.AEAPacketBuffer
 import io.netty.buffer.Unpooled
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.network.PacketBuffer
 import java.util.function.Consumer
 
 class GuiDataSyncPacket : BasePacket {
     var windowId: Int = 0
     
-    var data: PacketBuffer? = null
+    var data: AEAPacketBuffer? = null
     
-    constructor(windowId: Int, writer: Consumer<PacketBuffer>) {
+    constructor(windowId: Int, writer: Consumer<AEAPacketBuffer>) {
         this.windowId = 0
-        val data = PacketBuffer(Unpooled.buffer());
+        val data = AEAPacketBuffer(Unpooled.buffer());
         data.writeInt(getPacketId())
         data.writeVarInt(windowId)
         writer.accept(data)
         configureWrite(data)
     }
     
-    constructor(data: PacketBuffer) {
+    constructor(data: AEAPacketBuffer) {
         this.windowId = data.readVarInt()
-        this.data = PacketBuffer(data.copy())
+        this.data = AEAPacketBuffer(data.copy())
+    }
+
+    override fun clientPacketData(player: PlayerEntity?) {
+        val openContainer = player!!.openContainer
+        if (openContainer is AbstractContainer && this.windowId == openContainer.windowId) {
+            openContainer.receiveServerDataSync(this)
+        }
+    }
+
+    override fun serverClientData(player: PlayerEntity?) {
+        val openContainer = player!!.openContainer
+        if (openContainer is AbstractContainer && this.windowId == openContainer.windowId) {
+            openContainer.receiveServerDataSync(this)
+        }
     }
 }
