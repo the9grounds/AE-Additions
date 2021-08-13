@@ -9,6 +9,7 @@ import com.the9grounds.aeadditions.network.NetworkManager
 import com.the9grounds.aeadditions.network.packets.BasePacket
 import com.the9grounds.aeadditions.network.packets.GuiDataSyncPacket
 import com.the9grounds.aeadditions.sync.gui.DataSync
+import com.the9grounds.aeadditions.sync.gui.GuiSync
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.entity.player.ServerPlayerEntity
@@ -20,14 +21,14 @@ import net.minecraft.inventory.container.Slot
 import net.minecraft.tileentity.TileEntity
 import javax.annotation.OverridingMethodsMustInvokeSuper
 
-abstract class AbstractContainer(type: ContainerType<*>?, id: Int, protected val playerInventory: PlayerInventory, protected val bindInventory: Boolean, host: Any) : Container(type, id) {
+abstract class AbstractContainer<T>(type: ContainerType<*>?, id: Int, protected val playerInventory: PlayerInventory, protected val bindInventory: Boolean, host: Any) : Container(type, id) {
     val mySrc: IActionSource
     var tileEntity: TileEntity? = null
     var part: IPart? = null
     
     var isValidContainer = true
     
-    val dataSync = DataSync(this)
+    val dataSync = DataSync<T>(this)
     
     // Wait until portable cell to use
     var guiItem: IGuiItemObject? = null
@@ -40,6 +41,9 @@ abstract class AbstractContainer(type: ContainerType<*>?, id: Int, protected val
     val isServer: Boolean
     get() = !isClient
     
+    var posX = 0
+    var posY = 0
+    
     init {
         tileEntity = host as? TileEntity
         part = host as? IPart
@@ -51,7 +55,7 @@ abstract class AbstractContainer(type: ContainerType<*>?, id: Int, protected val
         mySrc = PlayerSource(playerInventory.player, getActionHost())
         
         if (bindInventory) {
-            bindPlayerInventory()
+//            bindPlayerInventory(posX, posY)
         }
     }
     
@@ -116,9 +120,15 @@ abstract class AbstractContainer(type: ContainerType<*>?, id: Int, protected val
         }
     }
     
-    protected fun bindPlayerInventory() {
-        for (i in 0 until playerInventory.mainInventory.size) {
-            addSlot(Slot(playerInventory, i, 0, 0))
+    protected fun bindPlayerInventory(posX: Int, posY: Int) {
+        for (i in 0..2) {
+            for (j in 0..8) {
+                addSlot(Slot(playerInventory, j + i * 9 + 9, posX + j * 18, posY + i * 18))
+            }
+        }
+
+        for (i in 0..8) {
+            addSlot(Slot(playerInventory, i, posX + i * 18, 58 + posY))
         }
     }
 }
