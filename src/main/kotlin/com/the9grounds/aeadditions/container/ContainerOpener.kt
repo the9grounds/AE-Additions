@@ -5,13 +5,13 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.inventory.container.ContainerType
 
 object ContainerOpener {
-    val openers = mutableMapOf<ContainerType<out AbstractContainer>, Opener>()
+    val openers = mutableMapOf<ContainerType<out AbstractContainer<*>>, Opener>()
     
-    fun <T : AbstractContainer> add(container: ContainerType<T>, opener: Opener) {
+    fun <T : AbstractContainer<T>> add(container: ContainerType<T>, opener: Opener) {
         openers[container] = opener
     }
     
-    fun openContainer(type: ContainerType<out AbstractContainer>, playerEntity: PlayerEntity, locator: Locator): Boolean {
+    fun openContainer(type: ContainerType<*>, playerEntity: PlayerEntity, locator: Locator): Boolean {
         val opener = openers[type]
         
         if (opener == null) {

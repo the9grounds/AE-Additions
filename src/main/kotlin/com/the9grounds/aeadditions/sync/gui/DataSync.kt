@@ -6,6 +6,7 @@ import net.minecraft.inventory.container.Container
 import net.minecraft.network.PacketBuffer
 import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty
+import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.hasAnnotation
 import kotlin.reflect.full.memberProperties
@@ -13,8 +14,8 @@ import kotlin.reflect.full.memberProperties
 /**
  * Again, taken from AE2 for more control.
  */
-class DataSync(val host: Any) {
-    val fields = mutableMapOf<String, Field<*>>()
+class DataSync<T>(val host: Any) {
+    val fields = mutableMapOf<String, Field<*, T>>()
     
     init {
         collectMutableProperties(host, host::class)
@@ -22,7 +23,7 @@ class DataSync(val host: Any) {
     
     fun collectMutableProperties(host: Any, clazz: KClass<*>) {
         for (property in clazz.memberProperties) {
-            if (property is KMutableProperty<*>) {
+            if (property is KMutableProperty1<*, *>) {
                 if (property.hasAnnotation<GuiSync>()) {
                     val annotation = property.findAnnotation<GuiSync>()!!
                     
@@ -32,15 +33,9 @@ class DataSync(val host: Any) {
                         throw IllegalStateException("Class ${host.javaClass} declares the same sync key twice: ${value}")
                     }
                     
-                    fields[value] = Field.create(host, property)
+                    fields[value] = Field.create<T>(host, property as KMutableProperty1<T, *>)
                 }
             }
-        }
-        
-        val superClass = clazz.java
-        
-        if (superClass != Container::class.java && superClass != Any::class.java) {
-            collectMutableProperties(host, superClass.kotlin)
         }
     }
 

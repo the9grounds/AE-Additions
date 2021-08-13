@@ -40,6 +40,10 @@ object Items {
     val CHEMICAL_STORAGE_CELL_64k = createItem(Ids.CHEMICAL_STORAGE_CELL_64) { properties ->  ChemicalStorageCell(properties.maxStackSize(1), CHEMICAL_STORAGE_COMPONENT_64k, 64, .5, 512)}
     
     val DUMMY_CHEMICAL_ITEM = createItem(Ids.DUMMY_CHEMICAL_ITEM) { properties -> ChemicalDummyItem(properties) }
+    
+    fun init() {
+        
+    }
 
     fun <T: Item> createItem(id: ResourceLocation, factory: (Item.Properties) -> T): T {
         val item = constructItem(factory, id)

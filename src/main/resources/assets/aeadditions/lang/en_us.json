@@ -15,5 +15,6 @@
   "item.aeadditions.fluid_storage_component_1024": "ME 1024k Fluid Storage Component",
   "item.aeadditions.fluid_storage_component_4096": "ME 4096k Fluid Storage Component",
   "item.aeadditions.chemical_storage_component_64": "ME 64k Storage Component",
+  "item.aeadditions.chemical_terminal": "Chemical Terminal",
   "itemGroup.aeadditions": "AE Additions"
 }

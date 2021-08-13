@@ -152,9 +152,11 @@ class AEChemicalStack() : IAEChemicalStack {
     override fun fuzzyComparison(other: IAEChemicalStack?, mode: FuzzyMode?): Boolean = other != null && this.getChemical() == other.getChemical()
 
     override fun writeToPacket(data: PacketBuffer) {
-        val tag = CompoundNBT()
-        writeToNBT(tag)
-        data.writeCompoundTag(tag)
+        data.writeString(Mekanism.getType(_chemical!!))
+        data.writeString(_chemical!!.getRegistryName().toString())
+        data.writeBoolean(isCraftable)
+        data.writeLong(stackSize)
+        data.writeLong(countRequestable)
     }
 
     override fun copy(): IAEChemicalStack = AEChemicalStack(this)
@@ -202,9 +204,17 @@ class AEChemicalStack() : IAEChemicalStack {
 
     companion object {
         fun fromPacket(packet: PacketBuffer): IAEChemicalStack {
-            val tag = packet.readCompoundTag()!!
+            val chemical = Mekanism.readChemicalFromPacket(packet)
+            val isCraftable = packet.readBoolean()
+            val stackSize = packet.readLong()
+            val countRequestable = packet.readLong()
             
-            return AEChemicalStack(tag)
+            val chemicalStack = AEChemicalStack(chemical)
+            chemicalStack.isCraftable = isCraftable
+            chemicalStack.stackSize = stackSize
+            chemicalStack.countRequestable = countRequestable
+            
+            return chemicalStack
         }
     }
     

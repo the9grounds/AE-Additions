@@ -33,7 +33,7 @@ abstract class BasePacket {
     
     protected fun configureWrite(data: PacketBuffer) {
         data.capacity(data.readableBytes())
-        packet = data 
+        packet = data
     }
     
     fun toPacket(direction: NetworkDirection): IPacket<*> {

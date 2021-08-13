@@ -3,10 +3,10 @@ package com.the9grounds.aeadditions.container
 import appeng.api.config.SecurityPermissions
 import appeng.api.implementations.guiobjects.IGuiItem
 import appeng.api.parts.IPartHost
-import appeng.helpers.ICustomNameObject
 import appeng.util.Platform
 import com.the9grounds.aeadditions.AEAdditions
 import com.the9grounds.aeadditions.Logger
+import com.the9grounds.aeadditions.helpers.ICustomNameObject
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.entity.player.ServerPlayerEntity
@@ -21,7 +21,7 @@ import net.minecraftforge.fml.network.NetworkHooks
 import kotlin.reflect.KClass
 import kotlin.reflect.cast
 
-class ContainerTypeBuilder<C : AbstractContainer, I : Any>(private val factory: (Int, PlayerInventory?, I) -> C, private val hostInterface: KClass<out I>) {
+class ContainerTypeBuilder<C : AbstractContainer<C>, I : Any>(private val factory: (Int, PlayerInventory?, I) -> C, private val hostInterface: KClass<out I>) {
     private var requiredPermission: SecurityPermissions? = null
     
     private var containerType: ContainerType<C>? = null
@@ -63,9 +63,8 @@ class ContainerTypeBuilder<C : AbstractContainer, I : Any>(private val factory: 
 
     private fun getDefaultContainerTitle(accessInterface: I): ITextComponent {
         if (accessInterface is ICustomNameObject) {
-            val customNameObject = accessInterface as ICustomNameObject
-            if (customNameObject.hasCustomInventoryName()) {
-                return customNameObject.customInventoryName
+            if (accessInterface.hasCustomInventoryName) {
+                return accessInterface.customInventoryName
             }
         }
         return StringTextComponent.EMPTY
@@ -145,7 +144,7 @@ class ContainerTypeBuilder<C : AbstractContainer, I : Any>(private val factory: 
     }
     
     fun build(id: String): ContainerType<C> {
-        require(containerType != null) { "build was already called" }
+        require(containerType == null) { "build was already called" }
         
         containerType = IForgeContainerType.create(this::fromNetwork)
         containerType!!.setRegistryName(AEAdditions.ID, id)

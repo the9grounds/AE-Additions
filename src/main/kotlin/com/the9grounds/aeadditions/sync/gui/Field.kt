@@ -3,13 +3,11 @@ package com.the9grounds.aeadditions.sync.gui
 import net.minecraft.network.PacketBuffer
 import net.minecraft.util.text.ITextComponent
 import java.util.*
-import kotlin.reflect.KClass
-import kotlin.reflect.KMutableProperty
-import kotlin.reflect.KProperty
-import kotlin.reflect.javaType
+import kotlin.reflect.*
+import kotlin.reflect.full.starProjectedType
 import kotlin.reflect.jvm.isAccessible
 
-abstract class Field<T>(val source: Any, val property: KMutableProperty<*>) {
+abstract class Field<T, HOST_VAL>(val source: Any, val property: KMutableProperty1<HOST_VAL, T?>) {
     
     private var clientVersion: T? = null
     
@@ -18,7 +16,7 @@ abstract class Field<T>(val source: Any, val property: KMutableProperty<*>) {
     }
     
     private fun getCurrentValue(): T {
-        return property.getter.call() as T
+        return property.get(source as HOST_VAL) as T
     }
     
     fun hasChanges(): Boolean {
@@ -35,7 +33,7 @@ abstract class Field<T>(val source: Any, val property: KMutableProperty<*>) {
     fun read(data: PacketBuffer) {
         val value = readValue(data)
         
-        property.setter.call(value)
+        property.set(source as HOST_VAL, value)
     }
     
     protected abstract fun writeValue(data: PacketBuffer, value: T?)
@@ -44,25 +42,25 @@ abstract class Field<T>(val source: Any, val property: KMutableProperty<*>) {
     
     companion object {
         
-        fun create(source: Any, property: KMutableProperty<*>): Field<*> {
+        fun <T> create(source: Any, property: KMutableProperty1<T, *>): Field<*, T> {
             val kClass = property.returnType
             
             return when(true) {
                 kClass.javaClass.isAssignableFrom(ITextComponent::class.java) -> TextComponentField(source, property)
-                kClass.javaClass == String::class.java -> StringField(source, property)
-                kClass.javaClass == Int::class.java -> IntegerField(source, property)
-                kClass.javaClass == Long::class.java -> LongField(source, property)
-                kClass.javaClass == Boolean::class.java -> BooleanField(source, property)
+                kClass == String::class.starProjectedType -> StringField(source, property)
+                kClass == Int::class.starProjectedType -> IntegerField(source, property)
+                kClass == Long::class.starProjectedType -> LongField(source, property)
+                kClass == Boolean::class.starProjectedType -> BooleanField(source, property)
                 kClass.javaClass.isEnum -> createEnumField(source, property, kClass.javaClass.asSubclass(Enum::class.java))
                 else -> throw IllegalArgumentException("Cannot sync field ${property.name}")
             }
         }
         
-        fun <T: Enum<T>> createEnumField(source: Any, property: KMutableProperty<*>, fieldType: Class<T>): EnumField<T> {
+        fun <T: Enum<T>, HOST_VAL> createEnumField(source: Any, property: KMutableProperty1<HOST_VAL, *>, fieldType: Class<T>): EnumField<T, HOST_VAL> {
             return EnumField(source, property, fieldType.enumConstants)
         }
         
-        class StringField(source: Any, property: KMutableProperty<*>) : Field<String>(source, property) {
+        class StringField<HOST_VAL>(source: Any, property: KMutableProperty1<HOST_VAL, *>) : Field<String, HOST_VAL>(source, property as KMutableProperty1<HOST_VAL, String?>) {
             override fun writeValue(data: PacketBuffer, value: String?) {
                 data.writeString(value)
             }
@@ -70,7 +68,7 @@ abstract class Field<T>(val source: Any, val property: KMutableProperty<*>) {
             override fun readValue(data: PacketBuffer): String = data.readString()
         }
         
-        class IntegerField(source: Any, property: KMutableProperty<*>): Field<Int>(source, property) {
+        class IntegerField<HOST_VAL>(source: Any, property: KMutableProperty1<HOST_VAL, *>): Field<Int, HOST_VAL>(source, property as KMutableProperty1<HOST_VAL, Int?>) {
             override fun writeValue(data: PacketBuffer, value: Int?) {
                 data.writeInt(value!!)
             }
@@ -78,7 +76,7 @@ abstract class Field<T>(val source: Any, val property: KMutableProperty<*>) {
             override fun readValue(data: PacketBuffer): Int = data.readInt()
         }
         
-        class LongField(source: Any, property: KMutableProperty<*>): Field<Long>(source, property) {
+        class LongField<HOST_VAL>(source: Any, property: KMutableProperty1<HOST_VAL, *>): Field<Long, HOST_VAL>(source, property as KMutableProperty1<HOST_VAL, Long?>) {
             override fun writeValue(data: PacketBuffer, value: Long?) {
                 data.writeLong(value!!)
             }
@@ -86,7 +84,7 @@ abstract class Field<T>(val source: Any, val property: KMutableProperty<*>) {
             override fun readValue(data: PacketBuffer): Long = data.readLong()
         }
         
-        class BooleanField(source: Any, property: KMutableProperty<*>): Field<Boolean>(source, property) {
+        class BooleanField<HOST_VAL>(source: Any, property: KMutableProperty1<HOST_VAL, *>): Field<Boolean, HOST_VAL>(source, property as KMutableProperty1<HOST_VAL, Boolean?>) {
             override fun writeValue(data: PacketBuffer, value: Boolean?) {
                 data.writeBoolean(value!!)
             }
@@ -94,7 +92,7 @@ abstract class Field<T>(val source: Any, val property: KMutableProperty<*>) {
             override fun readValue(data: PacketBuffer): Boolean = data.readBoolean()
         }
         
-        class EnumField<T: Enum<T>>(source: Any, property: KMutableProperty<*>, private val values: Array<T>): Field<T>(source, property) {
+        class EnumField<T: Enum<T>, HOST_VAL>(source: Any, property: KMutableProperty1<HOST_VAL, *>, private val values: Array<T>): Field<T, HOST_VAL>(source, property as KMutableProperty1<HOST_VAL, T?>) {
             override fun writeValue(data: PacketBuffer, value: T?) {
                 data.writeVarInt(value!!.ordinal)
             }
@@ -104,7 +102,7 @@ abstract class Field<T>(val source: Any, val property: KMutableProperty<*>) {
             }
         }
         
-        class TextComponentField(source: Any, property: KMutableProperty<*>): Field<ITextComponent>(source, property) {
+        class TextComponentField<HOST_VAL>(source: Any, property: KMutableProperty1<HOST_VAL, *>): Field<ITextComponent, HOST_VAL>(source, property as KMutableProperty1<HOST_VAL, ITextComponent?>) {
             override fun writeValue(data: PacketBuffer, value: ITextComponent?) {
                 if (value == null) {
                     data.writeBoolean(false)

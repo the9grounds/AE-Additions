@@ -106,7 +106,7 @@ class ChemicalList : IItemList<IAEChemicalStack> {
 
     override fun getFirstItem(): IAEChemicalStack? = this.firstOrNull()
 
-    override fun size(): Int = records.values.size
+    override fun size(): Int = records.size
 
     override fun resetStatus() {
         this.forEach { 

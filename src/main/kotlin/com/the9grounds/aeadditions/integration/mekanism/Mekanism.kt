@@ -5,19 +5,22 @@ import mekanism.api.chemical.ChemicalStack
 import mekanism.api.chemical.IChemicalHandler
 import mekanism.api.chemical.gas.Gas
 import mekanism.api.chemical.gas.GasStack
-import mekanism.api.chemical.gas.IGasHandler
-import mekanism.api.chemical.infuse.IInfusionHandler
 import mekanism.api.chemical.infuse.InfuseType
 import mekanism.api.chemical.infuse.InfusionStack
 import mekanism.api.chemical.pigment.Pigment
 import mekanism.api.chemical.pigment.PigmentStack
 import mekanism.api.chemical.slurry.Slurry
 import mekanism.api.chemical.slurry.SlurryStack
+import mekanism.common.Mekanism
 import mekanism.common.capabilities.Capabilities
 import mekanism.common.util.StorageUtils
+import net.minecraft.client.Minecraft
+import net.minecraft.client.renderer.texture.TextureAtlasSprite
+import net.minecraft.inventory.container.PlayerContainer
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundNBT
-import net.minecraftforge.common.capabilities.Capability
+import net.minecraft.network.PacketBuffer
+import net.minecraft.util.ResourceLocation
 
 object Mekanism {
     fun getType(chemical: Chemical<*>): String {
@@ -78,5 +81,39 @@ object Mekanism {
             !slurryStack.isEmpty -> slurryStack
             else -> null
         }
+    }
+    
+    fun readChemicalFromPacket(packet: PacketBuffer): Chemical<*> {
+        val chemicalType = packet.readString()
+        
+        val chemicalName = packet.readString()
+        
+        return when(chemicalType) {
+            "gas" -> Gas.getFromRegistry(ResourceLocation(chemicalName))
+            "pigment" -> Pigment.getFromRegistry(ResourceLocation(chemicalName))
+            "infusion" -> InfuseType.getFromRegistry(ResourceLocation(chemicalName))
+            "slurry" -> Slurry.getFromRegistry(ResourceLocation(chemicalName))
+            else -> throw RuntimeException("Invalid chemical type")
+        }
+    } 
+
+    fun getChemicalTexture(chemical: Chemical<*>): TextureAtlasSprite? {
+        return getSprite(chemical.icon)
+    }
+
+    fun getSprite(spriteLocation: ResourceLocation?): TextureAtlasSprite? {
+        return Minecraft.getInstance().getAtlasSpriteGetter(PlayerContainer.LOCATION_BLOCKS_TEXTURE).apply(spriteLocation)
+    }
+
+    fun getRed(color: Int): Float {
+        return (color shr 16 and 0xFF) / 255.0f
+    }
+
+    fun getGreen(color: Int): Float {
+        return (color shr 8 and 0xFF) / 255.0f
+    }
+
+    fun getBlue(color: Int): Float {
+        return (color and 0xFF) / 255.0f
     }
 }

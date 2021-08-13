@@ -23,6 +23,7 @@ import appeng.me.helpers.ChannelPowerSrc
 import appeng.util.IConfigManagerHost
 import com.the9grounds.aeadditions.Logger
 import com.the9grounds.aeadditions.api.gas.IAEChemicalStack
+import com.the9grounds.aeadditions.client.gui.me.chemical.ChemicalTerminalScreen
 import com.the9grounds.aeadditions.container.AbstractContainer
 import com.the9grounds.aeadditions.container.ContainerTypeBuilder
 import com.the9grounds.aeadditions.integration.appeng.AppEng
@@ -56,18 +57,17 @@ class ChemicalTerminalContainer(
     playerInventory: PlayerInventory,
     private val host: ITerminalHost,
     bindPlayerInventory: Boolean
-) : AbstractContainer(type, windowId, playerInventory, bindPlayerInventory, host),
+) : AbstractContainer<ChemicalTerminalContainer>(type, windowId, playerInventory, bindPlayerInventory, host),
     IMEMonitorHandlerReceiver<IAEChemicalStack> {
 
 //    val updateHelper = IncrementalUpdateHelper<IAEChemicalStack>()
     var chemicalList: IItemList<IAEChemicalStack>? = null
 
-    var gui: IConfigManagerHost? = null
+    var gui: ChemicalTerminalScreen? = null
     var networkNode: IGridNode? = null
     var powerSource: IEnergySource? = null
 
-    @GuiSync("hasPower")
-    var hasPower = false
+    @GuiSync("hasPower") var hasPower = false
 
     val storageChannel = StorageChannels.CHEMICAL
 
@@ -93,7 +93,13 @@ class ChemicalTerminalContainer(
     init {
 //        clientCM.registerSetting(Settings.SORT_BY, SortOrder.NAME)
 //        clientCM.registerSetting(Settings.SORT_DIRECTION, SortDir.ASCENDING)
+        posY = 139
+        posX = 8
 
+        if (bindPlayerInventory) {
+            bindPlayerInventory(posX, posY)
+        }
+        
         var powerSource: IEnergySource? = null
         if (isServer) {
 //            serverCM = host.configManager
@@ -172,6 +178,14 @@ class ChemicalTerminalContainer(
         }
     }
 
+    override fun addListener(listener: IContainerListener) {
+        super.addListener(listener)
+        
+        if (listener is ServerPlayerEntity) {
+            sendChemicalList(monitor)
+        }
+    }
+
     private fun updatePowerStatus() {
         try {
             if (networkNode != null) {
@@ -206,9 +220,15 @@ class ChemicalTerminalContainer(
         change: MutableIterable<IAEChemicalStack>?,
         actionSource: IActionSource?
     ) {
+        sendChemicalList(monitor)
+    }
+
+    private fun sendChemicalList(monitor: IBaseMonitor<IAEChemicalStack>?) {
         val storageList = (monitor!! as IMEMonitor<IAEChemicalStack>).storageList
         
-        NetworkManager.sendTo(MEInventoryUpdatePacket(windowId, storageList), playerInventory.player as ServerPlayerEntity)
+        chemicalList = storageList
+
+        sendPacketToClient(MEInventoryUpdatePacket(windowId, storageList))
     }
 
     override fun onListUpdate() {
@@ -246,7 +266,7 @@ class ChemicalTerminalContainer(
         stack: IAEChemicalStack?,
         action: InventoryAction?
     ) {
-        if (action != InventoryAction.FILL_ITEM || action != InventoryAction.EMPTY_ITEM) {
+        if (action != InventoryAction.FILL_ITEM && action != InventoryAction.EMPTY_ITEM) {
             return
         }
 
@@ -282,7 +302,7 @@ class ChemicalTerminalContainer(
                 return
             }
             
-            stack.stackSize = stack.stackSize - cannotFill.getAmount()
+            stack.stackSize = canPull.stackSize - cannotFill.getAmount()
             
             val pulled = AppEng.API!!.storage().poweredExtraction(powerSource, monitor, stack, mySrc, Actionable.MODULATE)
             
@@ -299,6 +319,10 @@ class ChemicalTerminalContainer(
                 monitor!!.injectItems(pulled, Actionable.MODULATE, mySrc)
                 
                 return
+            }
+            
+            if (notFilled.getAmount() != 0L) {
+                monitor!!.injectItems(AEChemicalStack(notFilled), Actionable.MODULATE, mySrc)
             }
             
             if (notFilled.getAmount() != cannotFill.getAmount()) {

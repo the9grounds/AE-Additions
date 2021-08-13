@@ -1,5 +1,6 @@
 package com.the9grounds.aeadditions.network.handler
 
+import com.the9grounds.aeadditions.network.AEAPacketBuffer
 import com.the9grounds.aeadditions.network.packets.BasePacket
 import com.the9grounds.aeadditions.network.packets.GuiDataSyncPacket
 import com.the9grounds.aeadditions.network.packets.MEInteractionPacket
@@ -12,7 +13,7 @@ abstract class BasePacketHandler {
         val lookup = mutableMapOf<KClass<out BasePacket>, Packets>()
     }
     
-    enum class Packets(val clazz: KClass<out BasePacket>, val factory: (PacketBuffer) -> BasePacket) {
+    enum class Packets(val clazz: KClass<out BasePacket>, val factory: (AEAPacketBuffer) -> BasePacket) {
         GUIDATASYNC(GuiDataSyncPacket::class, factory = { packetBuffer ->  GuiDataSyncPacket(packetBuffer)}),
         MEINVENTORYUPDATE(MEInventoryUpdatePacket::class, factory = { packetBuffer -> MEInventoryUpdatePacket(packetBuffer) }),
         MEINTERACTION(MEInteractionPacket::class, { packetBuffer -> MEInteractionPacket(packetBuffer) });
@@ -21,7 +22,7 @@ abstract class BasePacketHandler {
             lookup[clazz] = this
         }
         
-        fun parsePacket(packet: PacketBuffer) : BasePacket {
+        fun parsePacket(packet: AEAPacketBuffer) : BasePacket {
             return factory(packet)
         }
         

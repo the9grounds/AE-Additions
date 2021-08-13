@@ -8,11 +8,13 @@ import com.the9grounds.aeadditions.integration.Mods
 import com.the9grounds.aeadditions.integration.appeng.AppEng
 import com.the9grounds.aeadditions.integration.mekanism.chemical.ChemicalStorageChannel
 import com.the9grounds.aeadditions.network.NetworkManager
-import com.the9grounds.aeadditions.registries.Cells
-import com.the9grounds.aeadditions.registries.Items
-import com.the9grounds.aeadditions.registries.Models
-import com.the9grounds.aeadditions.registries.Parts
+import com.the9grounds.aeadditions.registries.*
+import com.the9grounds.aeadditions.registries.client.Models
+import com.the9grounds.aeadditions.registries.client.PartModels
+import com.the9grounds.aeadditions.registries.client.Screens
+import net.minecraft.inventory.container.ContainerType
 import net.minecraftforge.client.event.ModelRegistryEvent
+import net.minecraftforge.event.RegistryEvent
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent
@@ -26,22 +28,31 @@ object AEAdditions {
     const val ID = "aeadditions"
 
     init {
+        Items.init()
         Items.REGISTRY.register(MOD_BUS)
+        Parts.init()
+        Parts.REGISTRY.register(MOD_BUS)
         
         MOD_BUS.addListener(::onClientSetup)
         MOD_BUS.addListener(::modelRegistryEvent)
         MOD_BUS.addListener(::commonSetup)
+        MOD_BUS.addGenericListener(::registerContainerTypes)
         FORGE_BUS.addListener(::serverStarting)
 
         Integration.init()
     }
+    
+    private fun registerContainerTypes(event: RegistryEvent.Register<ContainerType<*>>) {
+        ContainerTypes.init(event.registry)
+    }
 
     private fun onClientSetup(event: FMLClientSetupEvent) {
-
+        Screens.init()
     }
     
     private fun modelRegistryEvent(event: ModelRegistryEvent) {
         Models.init()
+        PartModels.init()
     }
     
     private fun serverStarting(event: FMLServerStartingEvent) {
@@ -49,7 +60,9 @@ object AEAdditions {
     }
     
     private fun commonSetup(event: FMLCommonSetupEvent) {
-        NetworkManager.init()
+        event.enqueueWork {
+            NetworkManager.init()
+        }
     }
 
     internal fun onAppEngReady(api: IAppEngApi) {
@@ -58,7 +71,5 @@ object AEAdditions {
         if (Mods.MEKANISM.isEnabled) {
             api.storage().registerStorageChannel(IChemicalStorageChannel::class.java, ChemicalStorageChannel())
         }
-
-//        Parts.REGISTRY.register(MOD_BUS)
     }
 }

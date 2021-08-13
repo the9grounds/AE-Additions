@@ -1,6 +1,5 @@
-package com.the9grounds.aeadditions.registries
+package com.the9grounds.aeadditions.registries.client
 
-import appeng.client.render.DummyFluidItemModel
 import appeng.client.render.SimpleModelLoader
 import com.the9grounds.aeadditions.AEAdditions
 import com.the9grounds.aeadditions.client.render.DummyChemicalItemModel

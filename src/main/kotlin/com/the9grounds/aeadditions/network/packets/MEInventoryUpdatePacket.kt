@@ -37,7 +37,7 @@ class MEInventoryUpdatePacket : BasePacket {
         val packet = AEAPacketBuffer(Unpooled.buffer())
         
         packet.writeInt(getPacketId())
-        packet.writeInt(windowId)
+        packet.writeVarInt(windowId)
         packet.writeIAEChemicalStackList(chemicalStackList)
         configureWrite(packet)
     }
@@ -49,14 +49,14 @@ class MEInventoryUpdatePacket : BasePacket {
         val player = Minecraft.getInstance().player
             ?: // Probably a race-condition when the player already has left the game
             return null
-        val currentContainer = player.openContainer as? MEMonitorableContainer<*>
+        val currentContainer = player.openContainer as? ChemicalTerminalContainer
             ?: // Ignore a packet for a screen that has already been closed
             return null
 
         // If the window id matches, this unsafe cast should actually be safe
         val meContainer = currentContainer
         return if (meContainer.windowId == windowId) {
-            meContainer as ChemicalTerminalContainer
+            meContainer
         } else null
     }
 
@@ -69,5 +69,7 @@ class MEInventoryUpdatePacket : BasePacket {
         }
         
         container.chemicalList = chemicalStackList
+        
+        container.gui?.onFluidListChange()
     }
 }

@@ -28,14 +28,14 @@ class GuiDataSyncPacket : BasePacket {
 
     override fun clientPacketData(player: PlayerEntity?) {
         val openContainer = player!!.openContainer
-        if (openContainer is AbstractContainer && this.windowId == openContainer.windowId) {
+        if (openContainer is AbstractContainer<*> && this.windowId == openContainer.windowId) {
             openContainer.receiveServerDataSync(this)
         }
     }
 
     override fun serverClientData(player: PlayerEntity?) {
         val openContainer = player!!.openContainer
-        if (openContainer is AbstractContainer && this.windowId == openContainer.windowId) {
+        if (openContainer is AbstractContainer<*> && this.windowId == openContainer.windowId) {
             openContainer.receiveServerDataSync(this)
         }
     }

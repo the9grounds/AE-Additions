@@ -9,9 +9,9 @@ import appeng.api.util.AECableType
 import appeng.api.util.AEPartLocation
 import appeng.api.util.DimensionalCoord
 import appeng.api.util.IConfigManager
-import appeng.helpers.ICustomNameObject
 import appeng.me.helpers.AENetworkProxy
 import appeng.me.helpers.IGridProxyable
+import com.the9grounds.aeadditions.helpers.ICustomNameObject
 import com.the9grounds.aeadditions.util.Utils
 import net.minecraft.crash.CrashReportCategory
 import net.minecraft.entity.Entity
@@ -81,9 +81,11 @@ abstract class AEABasePart(val itemStack: ItemStack) : IPart, IGridProxyable, IA
 
     override fun saveChanges() = host!!.markForSave()
 
-    override fun getCustomInventoryName(): ITextComponent = itemStack.displayName
+    override val customInventoryName: ITextComponent
+    get() = itemStack.displayName
 
-    override fun hasCustomInventoryName(): Boolean = itemStack.hasDisplayName()
+    override val hasCustomInventoryName: Boolean
+        get() = itemStack.hasDisplayName()
 
     override fun addEntityCrashInfo(section: CrashReportCategory?) {
         section!!.addDetail("Part Side", this.side)

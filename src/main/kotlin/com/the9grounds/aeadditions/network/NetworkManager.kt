@@ -2,6 +2,7 @@ package com.the9grounds.aeadditions.network
 
 import appeng.core.sync.network.TargetPoint
 import com.the9grounds.aeadditions.AEAdditions
+import com.the9grounds.aeadditions.Logger
 import com.the9grounds.aeadditions.network.handler.ClientPacketHandler
 import com.the9grounds.aeadditions.network.handler.IPacketHandler
 import com.the9grounds.aeadditions.network.handler.ServerPacketHandler
@@ -57,7 +58,7 @@ object NetworkManager {
                 val ctx = event.source.get()
                 val netHandler = ctx.networkManager.netHandler as ServerPlayNetHandler
                 ctx.packetHandled = true
-                val packet = event.payload as AEAPacketBuffer
+                val packet = AEAPacketBuffer(event.payload.copy())
                 ctx.enqueueWork { this.serverPacketHandler.onPacketData(netHandler, packet,  netHandler.player) }
             } catch (e: ThreadQuickExitException) {
                 //
@@ -75,10 +76,11 @@ object NetworkManager {
             try {
                 val ctx = event.source.get()
                 val netHandler = ctx.networkManager.netHandler
-                val packet = event.payload as AEAPacketBuffer
+                ctx.packetHandled = true
+                val packet = AEAPacketBuffer(event.payload.copy())
                 ctx.enqueueWork { this.clientPacketHandler.onPacketData(netHandler, packet, null) }
             } catch (e: ThreadQuickExitException) {
-                //
+                Logger.warn(e)
             }
         }
     }
