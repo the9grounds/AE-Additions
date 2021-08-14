@@ -49,14 +49,14 @@ abstract class AbstractReportingPart(itemStack: ItemStack, requireChannel: Boole
     constructor(itemStack: ItemStack) : this(itemStack, false) {}
 
     @MENetworkEventSubscribe
-    final fun bootingRender(event: MENetworkBootingStatusChange) {
+    fun bootingRender(event: MENetworkBootingStatusChange) {
         if (this.isLightSource()) {
             this.host!!.markForUpdate()
         }
     }
 
     @MENetworkEventSubscribe
-    final fun powerRender(event: MENetworkPowerStatusChange) {
+    fun powerRender(event: MENetworkPowerStatusChange) {
         this.host!!.markForUpdate()
     }
 

@@ -2,19 +2,13 @@ package com.the9grounds.aeadditions.network.packets
 
 import appeng.api.storage.data.IItemList
 import appeng.container.me.common.GridInventoryEntry
-import appeng.container.me.common.IncrementalUpdateHelper
-import appeng.container.me.common.MEMonitorableContainer
 import com.the9grounds.aeadditions.Logger
 import com.the9grounds.aeadditions.api.gas.IAEChemicalStack
 import com.the9grounds.aeadditions.container.chemical.ChemicalTerminalContainer
 import com.the9grounds.aeadditions.network.AEAPacketBuffer
-import com.the9grounds.aeadditions.network.handler.BasePacketHandler
 import io.netty.buffer.Unpooled
 import net.minecraft.client.Minecraft
 import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.network.PacketBuffer
-import java.util.function.Consumer
-import kotlin.reflect.KFunction1
 
 class MEInventoryUpdatePacket : BasePacket {
     
@@ -70,6 +64,6 @@ class MEInventoryUpdatePacket : BasePacket {
         
         container.chemicalList = chemicalStackList
         
-        container.gui?.onFluidListChange()
+        container.gui?.onChemicalListChange()
     }
 }
