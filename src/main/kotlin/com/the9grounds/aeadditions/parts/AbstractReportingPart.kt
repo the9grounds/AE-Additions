@@ -27,15 +27,15 @@ abstract class AbstractReportingPart(itemStack: ItemStack, requireChannel: Boole
     IMonitorPart, IPowerChannelState {
 
     companion object {
-        protected val POWERED_FLAG = 4
-        protected val CHANNEL_FLAG = 16
+        @JvmStatic protected val POWERED_FLAG = 4
+        @JvmStatic protected val CHANNEL_FLAG = 16
         private val BOOTING_FLAG = 8
     }
 
     // Rotation of the part
-    private var rotation: Byte = 0
-    private var clientFlags = 0
-    private var opacity = 0
+    var rotation: Byte = 0
+    var clientFlags = 0
+    var opacity = 0
 
     init {
         if (requireChannel) {

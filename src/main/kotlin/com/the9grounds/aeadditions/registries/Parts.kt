@@ -8,7 +8,9 @@ import com.the9grounds.aeadditions.AEAdditions
 import com.the9grounds.aeadditions.integration.appeng.AppEng
 import com.the9grounds.aeadditions.item.AEAPartItem
 import com.the9grounds.aeadditions.parts.AEABasePart
+import com.the9grounds.aeadditions.parts.chemical.ChemicalStorageMonitorPart
 import com.the9grounds.aeadditions.parts.chemical.ChemicalTerminalPart
+import com.the9grounds.aeadditions.parts.fluid.FluidStorageMonitorPart
 import com.the9grounds.aeadditions.registries.client.PartModels
 import net.minecraft.item.ItemStack
 import net.minecraft.util.ResourceLocation
@@ -22,6 +24,9 @@ object Parts {
     val REGISTRY = KDeferredRegister(ForgeRegistries.ITEMS, AEAdditions.ID)
     
     val CHEMICAL_TERMINAL = createPart(Ids.CHEMICAL_TERMINAL_PART, ChemicalTerminalPart::class.java) { ChemicalTerminalPart(it) }
+    val CHEMICAL_STORAGE_MONITOR = createPart(Ids.CHEMICAL_STORAGE_MONITOR, ChemicalStorageMonitorPart::class.java) { ChemicalStorageMonitorPart(it) }
+    
+    val FLUID_STORAGE_MONITOR = createPart(Ids.FLUID_STORAGE_MONITOR, FluidStorageMonitorPart::class.java) { FluidStorageMonitorPart(it) }
     
     fun init() {
         

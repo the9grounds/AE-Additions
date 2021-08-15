@@ -13,6 +13,7 @@ import com.the9grounds.aeadditions.registries.client.Models
 import com.the9grounds.aeadditions.registries.client.PartModels
 import com.the9grounds.aeadditions.registries.client.Screens
 import net.minecraft.inventory.container.ContainerType
+import net.minecraftforge.client.event.ColorHandlerEvent
 import net.minecraftforge.client.event.ModelRegistryEvent
 import net.minecraftforge.event.RegistryEvent
 import net.minecraftforge.fml.common.Mod
@@ -37,6 +38,7 @@ object AEAdditions {
         MOD_BUS.addListener(::modelRegistryEvent)
         MOD_BUS.addListener(::commonSetup)
         MOD_BUS.addGenericListener(::registerContainerTypes)
+        MOD_BUS.addListener(::registerItemColors)
         FORGE_BUS.addListener(::serverStarting)
 
         Integration.init()
@@ -63,6 +65,10 @@ object AEAdditions {
         event.enqueueWork {
             NetworkManager.init()
         }
+    }
+    
+    fun registerItemColors(event: ColorHandlerEvent.Item) {
+        ItemColors.init(event.itemColors)
     }
 
     internal fun onAppEngReady(api: IAppEngApi) {

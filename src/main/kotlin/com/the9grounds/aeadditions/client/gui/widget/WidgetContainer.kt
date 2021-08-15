@@ -1,6 +1,7 @@
 package com.the9grounds.aeadditions.client.gui.widget
 
 import com.mojang.blaze3d.matrix.MatrixStack
+import net.minecraft.client.gui.FontRenderer
 import net.minecraft.inventory.container.ClickType
 import net.minecraft.util.text.ITextComponent
 
@@ -23,9 +24,9 @@ class WidgetContainer {
         }
     }
     
-    fun drawWidgets(matrixStack: MatrixStack) {
+    fun drawWidgets(matrixStack: MatrixStack, font: FontRenderer) {
         for (widget in widgets) {
-            widget.drawWidget(matrixStack)
+            widget.drawWidget(matrixStack, font)
         }
     }
     

@@ -11,9 +11,14 @@ import com.the9grounds.aeadditions.AEAdditions
 import com.the9grounds.aeadditions.container.chemical.ChemicalTerminalContainer
 import com.the9grounds.aeadditions.parts.AbstractDisplayPart
 import appeng.items.parts.PartModels
+import com.the9grounds.aeadditions.container.ContainerOpener
+import com.the9grounds.aeadditions.container.Locator
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.inventory.container.ContainerType
 import net.minecraft.item.ItemStack
+import net.minecraft.util.Hand
 import net.minecraft.util.ResourceLocation
+import net.minecraft.util.math.vector.Vector3d
 
 class ChemicalTerminalPart(itemStack: ItemStack) : AbstractDisplayPart(itemStack), ITerminalHost {
     
@@ -27,7 +32,15 @@ class ChemicalTerminalPart(itemStack: ItemStack) : AbstractDisplayPart(itemStack
     val MODELS_ON = PartModel(MODEL_BASE, MODEL_ON, MODEL_STATUS_ON)
     val MODELS_HAS_CHANNEL = PartModel(MODEL_BASE, MODEL_ON, MODEL_STATUS_HAS_CHANNEL)
 
-    override fun getContainerType(): ContainerType<*> = ChemicalTerminalContainer.TYPE
+    override fun onPartActivate(player: PlayerEntity?, hand: Hand?, pos: Vector3d?): Boolean {
+        if (!super.onPartActivate(player, hand, pos)) {
+            ContainerOpener.openContainer(getContainerType(), player!!, Locator.forPart(this))
+        }
+
+        return true
+    }
+    
+    fun getContainerType(): ContainerType<*> = ChemicalTerminalContainer.TYPE
 
     override fun getStaticModels(): IPartModel = this.selectModel(MODELS_OFF, MODELS_ON, MODELS_HAS_CHANNEL)
     

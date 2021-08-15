@@ -6,8 +6,9 @@ import mekanism.api.chemical.Chemical
 import mekanism.api.chemical.IChemicalHandler
 import net.minecraft.item.ItemStack
 import java.util.*
+import kotlin.Comparator
 
-interface IAEChemicalStack : IAEStack<IAEChemicalStack> {
+interface IAEChemicalStack : IAEStack<IAEChemicalStack>, Comparable<IAEChemicalStack> {
     /**
      * @return [ChemicalStack]
      */

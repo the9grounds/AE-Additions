@@ -23,15 +23,5 @@ abstract class AbstractDisplayPart(itemStack: ItemStack) : AbstractReportingPart
         @PartModels val MODEL_STATUS_HAS_CHANNEL = ResourceLocation(AppEng.MOD_ID, "part/display_status_has_channel")
     }
 
-    override fun onPartActivate(player: PlayerEntity?, hand: Hand?, pos: Vector3d?): Boolean {
-        if (!super.onPartActivate(player, hand, pos)) {
-            ContainerOpener.openContainer(getContainerType(), player!!, Locator.forPart(this))
-        }
-        
-        return true
-    }
-    
-    abstract fun getContainerType(): ContainerType<*>
-
     override fun isLightSource(): Boolean = false
 }

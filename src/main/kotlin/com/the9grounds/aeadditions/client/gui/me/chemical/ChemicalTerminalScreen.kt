@@ -9,6 +9,7 @@ import com.the9grounds.aeadditions.client.gui.widget.ChemicalWidget
 import com.the9grounds.aeadditions.client.gui.widget.WidgetContainer
 import com.the9grounds.aeadditions.container.chemical.ChemicalTerminalContainer
 import com.the9grounds.aeadditions.integration.mekanism.chemical.ChemicalList
+import mekanism.api.text.TextComponentUtil
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screen.inventory.ContainerScreen
 import net.minecraft.client.gui.widget.TextFieldWidget
@@ -17,14 +18,18 @@ import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.container.ClickType
 import net.minecraft.util.ResourceLocation
 import net.minecraft.util.text.ITextComponent
+import net.minecraft.util.text.StringTextComponent
+import net.minecraft.util.text.TextComponent
+import net.minecraft.util.text.TextComponentUtils
 import net.minecraftforge.fml.client.gui.GuiUtils
+import net.minecraftforge.server.command.TextComponentHelper
 import org.lwjgl.glfw.GLFW
 
 class ChemicalTerminalScreen(
     container: ChemicalTerminalContainer,
     playerInventory: PlayerInventory,
     title: ITextComponent
-) : ContainerScreen<ChemicalTerminalContainer>(container, playerInventory, title) {
+) : ContainerScreen<ChemicalTerminalContainer>(container, playerInventory, StringTextComponent("Chemical Terminal")) {
     
     private val texture = ResourceLocation(AEAdditions.ID, "textures/gui/chemical_terminal.png")
     
@@ -115,7 +120,7 @@ class ChemicalTerminalScreen(
         matrixStack.push()
         matrixStack.translate(guiLeft.toDouble(), guiTop.toDouble(), 0.0)
         
-        widgetContainer.drawWidgets(matrixStack)
+        widgetContainer.drawWidgets(matrixStack, font)
         
         matrixStack.pop()
         RenderSystem.enableLighting()
@@ -143,6 +148,8 @@ class ChemicalTerminalScreen(
                 it.getChemical().getName().lowercase().contains(searchTerm)
             }
         }
+        
+        tempList = tempList.sortedWith(compareBy { it })
         
         for (i in 0..53) {
 

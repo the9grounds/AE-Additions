@@ -217,7 +217,13 @@ class AEChemicalStack() : IAEChemicalStack {
             return chemicalStack
         }
     }
-    
-    
-    
+
+
+    override fun compareTo(other: IAEChemicalStack): Int {
+        return when {
+            stackSize == other.stackSize -> 0
+            stackSize > other.stackSize -> -1
+            else -> 1
+        }
+    }
 }

@@ -16,6 +16,8 @@ import thedarkcolour.kotlinforforge.forge.KDeferredRegister
 
 object Items {
     val REGISTRY = KDeferredRegister(ForgeRegistries.ITEMS, AEAdditions.ID)
+    
+    val ITEMS = mutableListOf<Item>()
 
     val ITEM_STORAGE_COMPONENT_256k = createItem(Ids.ITEM_STORAGE_COMPONENT_256) { properties ->  StorageComponentItem(properties, 256)}
     val ITEM_STORAGE_COMPONENT_1024k = createItem(Ids.ITEM_STORAGE_COMPONENT_1024) { properties ->  StorageComponentItem(properties, 1024)}
@@ -66,6 +68,9 @@ object Items {
         if (item.registryName != null) {
             item.registryName = id
         }
+        
+        ITEMS.add(item)
+        
         return item
     }
 

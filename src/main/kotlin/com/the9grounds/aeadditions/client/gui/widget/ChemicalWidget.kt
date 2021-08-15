@@ -6,13 +6,18 @@ import com.mojang.blaze3d.systems.RenderSystem
 import com.the9grounds.aeadditions.api.gas.IAEChemicalStack
 import com.the9grounds.aeadditions.client.gui.me.chemical.ChemicalTerminalScreen
 import com.the9grounds.aeadditions.integration.mekanism.Mekanism
+import com.the9grounds.aeadditions.util.Utils
 import mekanism.api.text.TextComponentUtil
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.AbstractGui
+import net.minecraft.client.gui.FontRenderer
+import net.minecraft.client.renderer.RenderHelper
 import net.minecraft.inventory.container.ClickType
 import net.minecraft.inventory.container.PlayerContainer
 import net.minecraft.util.text.ITextComponent
 import org.lwjgl.opengl.GL11
+import java.lang.Float.max
+import kotlin.math.min
 
 class ChemicalWidget(
     val guiTerminal: ChemicalTerminalScreen,
@@ -61,7 +66,7 @@ class ChemicalWidget(
         guiTerminal.onWidgetClicked(this, mouseButton, clickType)
     }
 
-    override fun drawWidget(matrixStack: MatrixStack) {
+    override fun drawWidget(matrixStack: MatrixStack, font: FontRenderer) {
         Minecraft.getInstance().textureManager.bindTexture(PlayerContainer.LOCATION_BLOCKS_TEXTURE)
         RenderSystem.disableLighting()
         RenderSystem.enableBlend()
@@ -76,6 +81,20 @@ class ChemicalWidget(
             RenderSystem.color3f(Mekanism.getRed(tint), Mekanism.getGreen(tint), Mekanism.getBlue(tint))
 
             blit(matrixStack, posX + 1, posY + 1, 0, height - 2, width - 2, sprite)
+            
+            val amount = Utils.getAmountTextForStack(chemical)
+            
+            matrixStack.push()
+            matrixStack.translate(posX.toDouble(), posY.toDouble(), 0.0)
+            val scale = .48f
+            matrixStack.scale(scale, scale, scale)
+            
+            val x = (1 + 16f - font.getStringWidth(amount) * scale) * (1f / scale)
+            
+//            val x = max(18f, 18f - (18f - font.getStringWidth(amount) * scale))
+            
+            font.drawString(matrixStack, amount, x, 26f, 0xFFFFFF)
+            matrixStack.pop()
         }
 
         RenderSystem.disableBlend()
