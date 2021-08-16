@@ -1,11 +1,9 @@
 package com.the9grounds.aeadditions.parts
 
-import com.the9grounds.aeadditions.Logger
-import com.the9grounds.aeadditions.parts.chemical.ChemicalTerminalPart
 import net.minecraft.util.ResourceLocation
-import kotlin.reflect.*
+import kotlin.reflect.KClass
+import kotlin.reflect.KProperty1
 import kotlin.reflect.full.companionObject
-import kotlin.reflect.full.companionObjectInstance
 import kotlin.reflect.full.hasAnnotation
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.isAccessible

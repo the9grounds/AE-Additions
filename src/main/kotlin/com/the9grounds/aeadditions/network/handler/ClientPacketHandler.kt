@@ -5,7 +5,6 @@ import com.the9grounds.aeadditions.network.AEAPacketBuffer
 import net.minecraft.client.Minecraft
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.network.INetHandler
-import net.minecraft.network.PacketBuffer
 
 class ClientPacketHandler : BasePacketHandler(), IPacketHandler {
     override fun onPacketData(handler: INetHandler, packet: AEAPacketBuffer, player: PlayerEntity?) {

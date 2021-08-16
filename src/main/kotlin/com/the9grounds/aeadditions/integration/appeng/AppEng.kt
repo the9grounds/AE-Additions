@@ -4,11 +4,7 @@ import appeng.api.AEAddon
 import appeng.api.IAEAddon
 import appeng.api.IAppEngApi
 import com.the9grounds.aeadditions.AEAdditions
-import com.the9grounds.aeadditions.api.gas.IChemicalStorageChannel
-import com.the9grounds.aeadditions.integration.Mods
-import com.the9grounds.aeadditions.integration.mekanism.chemical.ChemicalStorageChannel
 import com.the9grounds.aeadditions.me.storage.AEAdditionsCellHandler
-import com.the9grounds.aeadditions.registries.Cells
 
 @AEAddon
 class AppEng : IAEAddon {

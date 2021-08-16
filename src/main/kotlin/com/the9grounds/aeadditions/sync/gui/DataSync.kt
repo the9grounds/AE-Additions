@@ -2,10 +2,7 @@ package com.the9grounds.aeadditions.sync.gui
 
 import com.the9grounds.aeadditions.Logger
 import com.the9grounds.aeadditions.network.AEAPacketBuffer
-import net.minecraft.inventory.container.Container
-import net.minecraft.network.PacketBuffer
 import kotlin.reflect.KClass
-import kotlin.reflect.KMutableProperty
 import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.hasAnnotation

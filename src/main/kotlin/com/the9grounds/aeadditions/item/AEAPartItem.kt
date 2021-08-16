@@ -1,7 +1,6 @@
 package com.the9grounds.aeadditions.item
 
 import appeng.api.parts.IPartItem
-import appeng.core.Api
 import com.the9grounds.aeadditions.integration.appeng.AppEng
 import com.the9grounds.aeadditions.parts.AEABasePart
 import net.minecraft.item.Item

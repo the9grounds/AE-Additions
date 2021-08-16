@@ -2,8 +2,7 @@ package com.the9grounds.aeadditions.sync.gui
 
 import net.minecraft.network.PacketBuffer
 import net.minecraft.util.text.ITextComponent
-import java.util.*
-import kotlin.reflect.*
+import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.full.starProjectedType
 import kotlin.reflect.jvm.isAccessible
 

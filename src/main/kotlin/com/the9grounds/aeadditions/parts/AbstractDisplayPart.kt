@@ -2,14 +2,8 @@ package com.the9grounds.aeadditions.parts
 
 import appeng.core.AppEng
 import appeng.items.parts.PartModels
-import com.the9grounds.aeadditions.container.ContainerOpener
-import com.the9grounds.aeadditions.container.Locator
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.inventory.container.ContainerType
 import net.minecraft.item.ItemStack
-import net.minecraft.util.Hand
 import net.minecraft.util.ResourceLocation
-import net.minecraft.util.math.vector.Vector3d
 
 abstract class AbstractDisplayPart(itemStack: ItemStack) : AbstractReportingPart(itemStack, true) {
 

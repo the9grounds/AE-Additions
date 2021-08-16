@@ -7,7 +7,6 @@ import com.the9grounds.aeadditions.network.packets.BasePacket
 import com.the9grounds.aeadditions.util.StorageChannels
 import io.netty.buffer.ByteBuf
 import mekanism.api.chemical.ChemicalStack
-import net.minecraft.nbt.CompoundNBT
 import net.minecraft.network.PacketBuffer
 
 class AEAPacketBuffer(wrapped: ByteBuf) : PacketBuffer(wrapped) {

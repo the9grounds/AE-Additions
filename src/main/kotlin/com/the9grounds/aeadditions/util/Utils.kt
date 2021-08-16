@@ -1,6 +1,5 @@
 package com.the9grounds.aeadditions.util
 
-import appeng.api.storage.data.IAEItemStack
 import appeng.api.storage.data.IAEStack
 import appeng.api.util.DimensionalCoord
 import appeng.client.render.TesrRenderHelper

@@ -14,9 +14,6 @@ import com.the9grounds.aeadditions.integration.mekanism.chemical.AEChemicalStack
 import com.the9grounds.aeadditions.util.StorageChannels
 import mekanism.api.MekanismAPI
 import mekanism.api.chemical.Chemical
-import mekanism.common.registration.impl.SlurryDeferredRegister
-import net.minecraft.client.Minecraft
-import net.minecraft.client.MinecraftGame
 import net.minecraft.command.CommandSource
 import net.minecraft.command.Commands
 import net.minecraft.server.MinecraftServer

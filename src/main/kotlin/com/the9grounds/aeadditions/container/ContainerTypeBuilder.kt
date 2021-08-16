@@ -11,7 +11,6 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.entity.player.ServerPlayerEntity
 import net.minecraft.inventory.container.ContainerType
-import net.minecraft.inventory.container.INamedContainerProvider
 import net.minecraft.inventory.container.SimpleNamedContainerProvider
 import net.minecraft.network.PacketBuffer
 import net.minecraft.util.text.ITextComponent

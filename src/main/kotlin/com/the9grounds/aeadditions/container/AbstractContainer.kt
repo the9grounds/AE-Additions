@@ -9,7 +9,6 @@ import com.the9grounds.aeadditions.network.NetworkManager
 import com.the9grounds.aeadditions.network.packets.BasePacket
 import com.the9grounds.aeadditions.network.packets.GuiDataSyncPacket
 import com.the9grounds.aeadditions.sync.gui.DataSync
-import com.the9grounds.aeadditions.sync.gui.GuiSync
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.entity.player.ServerPlayerEntity

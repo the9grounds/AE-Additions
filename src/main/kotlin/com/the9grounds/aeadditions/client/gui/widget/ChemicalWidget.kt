@@ -1,6 +1,5 @@
 package com.the9grounds.aeadditions.client.gui.widget
 
-import appeng.helpers.InventoryAction
 import com.mojang.blaze3d.matrix.MatrixStack
 import com.mojang.blaze3d.systems.RenderSystem
 import com.the9grounds.aeadditions.api.gas.IAEChemicalStack
@@ -11,13 +10,10 @@ import mekanism.api.text.TextComponentUtil
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.AbstractGui
 import net.minecraft.client.gui.FontRenderer
-import net.minecraft.client.renderer.RenderHelper
 import net.minecraft.inventory.container.ClickType
 import net.minecraft.inventory.container.PlayerContainer
 import net.minecraft.util.text.ITextComponent
 import org.lwjgl.opengl.GL11
-import java.lang.Float.max
-import kotlin.math.min
 
 class ChemicalWidget(
     val guiTerminal: ChemicalTerminalScreen,

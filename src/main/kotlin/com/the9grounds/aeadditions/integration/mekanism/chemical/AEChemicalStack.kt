@@ -9,7 +9,6 @@ import com.the9grounds.aeadditions.registries.Items
 import com.the9grounds.aeadditions.util.StorageChannels
 import mekanism.api.chemical.Chemical
 import mekanism.api.chemical.ChemicalStack
-import mekanism.api.chemical.ChemicalUtils
 import mekanism.api.chemical.IChemicalHandler
 import mekanism.api.chemical.gas.Gas
 import mekanism.api.chemical.gas.GasStack

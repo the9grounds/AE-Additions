@@ -8,10 +8,6 @@ import appeng.fluids.util.AEFluidStack
 import appeng.items.parts.PartModels
 import appeng.parts.PartModel
 import com.the9grounds.aeadditions.AEAdditions
-import com.the9grounds.aeadditions.api.gas.IAEChemicalStack
-import com.the9grounds.aeadditions.integration.mekanism.Mekanism
-import com.the9grounds.aeadditions.integration.mekanism.chemical.AEChemicalStack
-import com.the9grounds.aeadditions.item.ChemicalDummyItem
 import com.the9grounds.aeadditions.parts.AbstractMonitorPart
 import com.the9grounds.aeadditions.util.StorageChannels
 import net.minecraft.entity.player.PlayerEntity

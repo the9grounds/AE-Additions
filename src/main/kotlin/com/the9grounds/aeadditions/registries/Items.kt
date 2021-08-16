@@ -11,7 +11,6 @@ import net.minecraft.item.Item
 import net.minecraft.item.Rarity
 import net.minecraft.util.ResourceLocation
 import net.minecraftforge.registries.ForgeRegistries
-import net.minecraftforge.registries.IForgeRegistry
 import thedarkcolour.kotlinforforge.forge.KDeferredRegister
 
 object Items {

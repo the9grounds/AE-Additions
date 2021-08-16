@@ -1,7 +1,6 @@
 package com.the9grounds.aeadditions.me.storage
 
 import appeng.api.config.FuzzyMode
-import appeng.api.implementations.items.IStorageCell
 import appeng.api.storage.cells.CellState
 import appeng.api.storage.cells.ICellInventory
 import appeng.api.storage.cells.ISaveProvider
