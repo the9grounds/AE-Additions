@@ -2,8 +2,8 @@
   "parent": "appliedenergistics2:item/display_base",
   "textures": {
     "front": "aeadditions:part/storage_monitor",
-    "front_bright": "aeadditions:part/chemical_storage_monitor_bright",
-    "front_medium": "aeadditions:part/chemical_storage_monitor_medium",
-    "front_dark": "aeadditions:part/chemical_storage_monitor_dark"
+    "front_bright": "aeadditions:part/storage_monitor_bright",
+    "front_medium": "aeadditions:part/chemical/storage_monitor_medium",
+    "front_dark": "aeadditions:part/chemical/storage_monitor_dark"
   }
 }

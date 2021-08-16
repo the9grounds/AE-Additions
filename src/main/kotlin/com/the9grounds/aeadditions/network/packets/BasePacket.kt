@@ -19,7 +19,7 @@ abstract class BasePacket {
         return BasePacketHandler.Packets.getId(this::class)!!.ordinal
     }
     
-    open fun serverClientData(player: PlayerEntity?) {
+    open fun serverPacketData(player: PlayerEntity?) {
         throw UnsupportedOperationException(
             "This packet ( " + this.getPacketId() + " does not implement a server side handler."
         )

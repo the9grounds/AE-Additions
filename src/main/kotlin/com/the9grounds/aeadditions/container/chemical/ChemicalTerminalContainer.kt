@@ -15,36 +15,18 @@ import appeng.api.storage.IMEMonitorHandlerReceiver
 import appeng.api.storage.ITerminalHost
 import appeng.api.storage.data.IItemList
 import appeng.api.util.AEPartLocation
-import appeng.container.me.common.IClientRepo
-import appeng.container.me.common.IMEInteractionHandler
-import appeng.container.me.common.IncrementalUpdateHelper
 import appeng.helpers.InventoryAction
 import appeng.me.helpers.ChannelPowerSrc
-import appeng.util.IConfigManagerHost
-import com.the9grounds.aeadditions.Logger
 import com.the9grounds.aeadditions.api.gas.IAEChemicalStack
 import com.the9grounds.aeadditions.client.gui.me.chemical.ChemicalTerminalScreen
 import com.the9grounds.aeadditions.container.AbstractContainer
 import com.the9grounds.aeadditions.container.ContainerTypeBuilder
-import com.the9grounds.aeadditions.integration.appeng.AppEng
 import com.the9grounds.aeadditions.integration.mekanism.Mekanism
-import com.the9grounds.aeadditions.integration.mekanism.chemical.AEChemicalStack
 import com.the9grounds.aeadditions.network.NetworkManager
 import com.the9grounds.aeadditions.network.packets.MEInteractionPacket
 import com.the9grounds.aeadditions.network.packets.MEInventoryUpdatePacket
 import com.the9grounds.aeadditions.sync.gui.GuiSync
 import com.the9grounds.aeadditions.util.StorageChannels
-import mekanism.api.Action
-import mekanism.api.chemical.ChemicalStack
-import mekanism.api.chemical.IChemicalHandler
-import mekanism.api.chemical.gas.GasStack
-import mekanism.api.chemical.gas.IGasHandler
-import mekanism.api.chemical.infuse.IInfusionHandler
-import mekanism.api.chemical.infuse.InfusionStack
-import mekanism.api.chemical.pigment.IPigmentHandler
-import mekanism.api.chemical.pigment.PigmentStack
-import mekanism.api.chemical.slurry.ISlurryHandler
-import mekanism.api.chemical.slurry.SlurryStack
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.entity.player.ServerPlayerEntity
@@ -284,114 +266,19 @@ class ChemicalTerminalContainer(
         
         if (action == InventoryAction.FILL_ITEM && stack != null) {
             
-            stack.stackSize = Integer.MAX_VALUE.toLong()
-            
-            val maxFill = fillContainer(stack, handler) ?: return
-            
-            stack.stackSize = maxFill.getAmount()
-            
-            val canPull = AppEng.API!!.storage().poweredExtraction(powerSource, monitor, stack, mySrc, Actionable.SIMULATE)
-            
-            if (canPull == null || canPull.stackSize < 1) {
+            if (!Mekanism.insertChemicalIntoContainer(stack, held, handler, monitor!!, powerSource!!, mySrc)) {
                 return
-            }
-            
-            val cannotFill = fillContainer(canPull, handler) ?: return
-            
-            if (cannotFill.getAmount() == 0L) {
-                return
-            }
-            
-            stack.stackSize = canPull.stackSize - cannotFill.getAmount()
-            
-            val pulled = AppEng.API!!.storage().poweredExtraction(powerSource, monitor, stack, mySrc, Actionable.MODULATE)
-            
-            if (pulled == null || pulled.stackSize < 1) {
-                Logger.warn("Unable to pull chemical from ME system even though simulation said yes")
-                return
-            }
-            
-            val notFilled = fillContainer(pulled, handler, Action.EXECUTE)
-            
-            if (notFilled == null || notFilled.getAmount() == pulled.stackSize) {
-                Logger.warn("Unable to insert chemical into held tank, even though simulation worked, reinserting into ME system")
-                
-                monitor!!.injectItems(pulled, Actionable.MODULATE, mySrc)
-                
-                return
-            }
-            
-            if (notFilled.getAmount() != 0L) {
-                monitor!!.injectItems(AEChemicalStack(notFilled), Actionable.MODULATE, mySrc)
-            }
-            
-            if (notFilled.getAmount() != cannotFill.getAmount()) {
-                Logger.warn("Filled is different than can fill for {}", held.displayName)
             }
             
             player.sendAllContents(this, this.inventory)
             
         } else if (action == InventoryAction.EMPTY_ITEM) {
-            handler = Mekanism.capabilityFromChemicalStorageItem(held)?: return
-            
-            val extracted = extractFromContainer(Int.MAX_VALUE.toLong(), handler)
-            
-            if (extracted == null || extracted.isEmpty() || extracted.getAmount() < 1) {
+
+            if (!Mekanism.extractChemicalFromContainer(held, monitor!!, powerSource!!, mySrc)) {
                 return
             }
             
-            val notStorable = AppEng.API!!.storage().poweredInsert(powerSource, monitor, AEChemicalStack(extracted), mySrc, Actionable.SIMULATE)
-            
-            if (notStorable != null && notStorable.stackSize > 0) {
-                val toStore = extracted.getAmount() - notStorable.stackSize
-                val storable = extractFromContainer(toStore, handler)
-                
-                if (storable == null || storable.isEmpty() || storable.getAmount() < 1) {
-                    return
-                }
-
-                extracted.setAmount(storable.getAmount())
-            }
-            
-            val drained = extractFromContainer(extracted.getAmount(), handler, Action.EXECUTE)
-            
-            extracted.setAmount(drained!!.getAmount())
-            
-            val notInserted = AppEng.API!!.storage().poweredInsert(powerSource, monitor, AEChemicalStack(extracted), mySrc, Actionable.MODULATE)
-            
-            if (notInserted != null && notInserted.stackSize > 0) {
-                Logger.warn("Chemical Item {} reported a different possible amount to drain than it actually provided.", held.displayName)
-            }
-            
             player.sendAllContents(this, inventory)
-        }
-    }
-
-    private fun fillContainer(
-        stack: IAEChemicalStack,
-        handler: IChemicalHandler<*, *>,
-        action: Action = Action.SIMULATE
-    ): ChemicalStack<*>? {
-        return when (handler) {
-            is IGasHandler -> handler.insertChemical(stack.getChemicalStack() as GasStack, action)
-            is IInfusionHandler -> handler.insertChemical(stack.getChemicalStack() as InfusionStack, action)
-            is IPigmentHandler -> handler.insertChemical(stack.getChemicalStack() as PigmentStack, action)
-            is ISlurryHandler -> handler.insertChemical(stack.getChemicalStack() as SlurryStack, action)
-            else -> null
-        }
-    }
-    
-    private fun extractFromContainer(
-        amount: Long,
-        handler: IChemicalHandler<*, *>,
-        action: Action = Action.SIMULATE
-    ): ChemicalStack<*>? {
-        return when (handler) {
-            is IGasHandler -> handler.extractChemical(amount, action)
-            is IInfusionHandler -> handler.extractChemical(amount, action)
-            is IPigmentHandler -> handler.extractChemical(amount, action)
-            is ISlurryHandler -> handler.extractChemical(amount, action)
-            else -> null
         }
     }
 }

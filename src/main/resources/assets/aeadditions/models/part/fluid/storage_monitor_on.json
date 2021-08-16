@@ -1,8 +1,8 @@
 {
   "textures": {
     "lightsBright": "aeadditions:part/storage_monitor_bright",
-    "lightsMedium": "aeadditions:part/fluid_storage_monitor_medium",
-    "lightsDark": "aeadditions:part/fluid_storage_monitor_dark"
+    "lightsMedium": "aeadditions:part/fluid/storage_monitor_medium",
+    "lightsDark": "aeadditions:part/fluid/storage_monitor_dark"
   },
   "elements": [
     {

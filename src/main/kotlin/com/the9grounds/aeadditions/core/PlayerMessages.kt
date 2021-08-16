@@ -4,7 +4,7 @@ import net.minecraft.util.text.ITextComponent
 import net.minecraft.util.text.TranslationTextComponent
 
 enum class PlayerMessages {
-    isNowLocked, isNowUnlocked;
+    isNowLocked, isNowUnlocked, handMustBeEmpty;
     
     fun get(): ITextComponent = TranslationTextComponent(getTranslationKey())
         

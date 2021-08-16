@@ -3,6 +3,8 @@ package com.the9grounds.aeadditions.parts
 import appeng.api.config.Upgrades
 import appeng.api.implementations.IUpgradeableHost
 import appeng.api.networking.IGridNode
+import appeng.api.networking.energy.IEnergyGrid
+import appeng.api.networking.energy.IEnergySource
 import appeng.api.networking.security.IActionHost
 import appeng.api.parts.*
 import appeng.api.util.AECableType
@@ -10,6 +12,7 @@ import appeng.api.util.AEPartLocation
 import appeng.api.util.DimensionalCoord
 import appeng.api.util.IConfigManager
 import appeng.me.helpers.AENetworkProxy
+import appeng.me.helpers.ChannelPowerSrc
 import appeng.me.helpers.IGridProxyable
 import com.the9grounds.aeadditions.helpers.ICustomNameObject
 import com.the9grounds.aeadditions.util.Utils
@@ -45,6 +48,9 @@ abstract class AEABasePart(val itemStack: ItemStack) : IPart, IGridProxyable, IA
     init {
         proxy.setValidSides(EnumSet.noneOf(Direction::class.java))
     }
+    
+    protected val powerSource: IEnergySource
+    get() = ChannelPowerSrc(proxy.node, proxy.node.grid.getCache(IEnergyGrid::class.java))
 
     val isRemote: Boolean
         get() = this.tile == null || this.tile!!.world == null || this.tile!!.world!!.isRemote

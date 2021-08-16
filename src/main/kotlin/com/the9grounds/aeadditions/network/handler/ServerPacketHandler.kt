@@ -4,14 +4,13 @@ import com.the9grounds.aeadditions.Logger
 import com.the9grounds.aeadditions.network.AEAPacketBuffer
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.network.INetHandler
-import net.minecraft.network.PacketBuffer
 
 class ServerPacketHandler : BasePacketHandler(), IPacketHandler {
     override fun onPacketData(handler: INetHandler, packet: AEAPacketBuffer, player: PlayerEntity?) {
         try {
             val packetType = packet.readInt()
             val pack = Packets.getPacket(packetType).parsePacket(packet)
-            pack.serverClientData(player)
+            pack.serverPacketData(player)
         } catch (e: Throwable) {
             Logger.warn(e)
         }

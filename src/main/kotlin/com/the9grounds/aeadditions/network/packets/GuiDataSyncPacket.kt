@@ -4,7 +4,6 @@ import com.the9grounds.aeadditions.container.AbstractContainer
 import com.the9grounds.aeadditions.network.AEAPacketBuffer
 import io.netty.buffer.Unpooled
 import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.network.PacketBuffer
 import java.util.function.Consumer
 
 class GuiDataSyncPacket : BasePacket {
@@ -33,7 +32,7 @@ class GuiDataSyncPacket : BasePacket {
         }
     }
 
-    override fun serverClientData(player: PlayerEntity?) {
+    override fun serverPacketData(player: PlayerEntity?) {
         val openContainer = player!!.openContainer
         if (openContainer is AbstractContainer<*> && this.windowId == openContainer.windowId) {
             openContainer.receiveServerDataSync(this)

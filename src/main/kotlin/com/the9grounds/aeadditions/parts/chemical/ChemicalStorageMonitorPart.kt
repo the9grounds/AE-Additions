@@ -22,16 +22,16 @@ class ChemicalStorageMonitorPart(itemStack: ItemStack) :
 
     companion object {
         @PartModels
-        val MODEL_OFF = ResourceLocation(AEAdditions.ID, "part/chemical_storage_monitor_off")
+        val MODEL_OFF = ResourceLocation(AEAdditions.ID, "part/chemical/storage_monitor_off")
 
         @PartModels
-        val MODEL_ON = ResourceLocation(AEAdditions.ID, "part/chemical_storage_monitor_on")
+        val MODEL_ON = ResourceLocation(AEAdditions.ID, "part/chemical/storage_monitor_on")
 
         @PartModels
-        val MODEL_LOCKED_OFF = ResourceLocation(AEAdditions.ID, "part/chemical_storage_monitor_locked_off")
+        val MODEL_LOCKED_OFF = ResourceLocation(AEAdditions.ID, "part/chemical/storage_monitor_locked_off")
 
         @PartModels
-        val MODEL_LOCKED_ON = ResourceLocation(AEAdditions.ID, "part/chemical_storage_monitor_locked_on")
+        val MODEL_LOCKED_ON = ResourceLocation(AEAdditions.ID, "part/chemical/storage_monitor_locked_on")
 
         val MODELS_ON = PartModel(MODEL_BASE, MODEL_ON, MODEL_STATUS_ON)
         val MODELS_OFF = PartModel(MODEL_BASE, MODEL_OFF, MODEL_STATUS_OFF)

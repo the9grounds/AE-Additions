@@ -18,7 +18,10 @@
   "item.aeadditions.chemical_terminal": "ME Chemical Terminal",
   "item.aeadditions.chemical_storage_monitor": "ME Chemical Storage Monitor",
   "item.aeadditions.fluid_storage_monitor": "ME Fluid Storage Monitor",
+  "item.aeadditions.chemical_conversion_monitor": "ME Chemical Conversion Monitor",
+  "item.aeadditions.fluid_conversion_monitor": "ME Fluid Conversion Monitor",
   "itemGroup.aeadditions": "AE Additions",
   "chat.aeadditions.isNowLocked": "Monitor is now locked",
-  "chat.aeadditions.isNowUnlocked": "Monitor is now unlocked"
+  "chat.aeadditions.isNowUnlocked": "Monitor is now unlocked",
+  "chat.aeadditions.handMustBeEmpty": "Your hand must be empty to perform that action."
 }

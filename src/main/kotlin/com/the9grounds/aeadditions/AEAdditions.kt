@@ -2,6 +2,7 @@ package com.the9grounds.aeadditions
 
 import appeng.api.IAppEngApi
 import com.the9grounds.aeadditions.api.gas.IChemicalStorageChannel
+import com.the9grounds.aeadditions.core.EventHandler
 import com.the9grounds.aeadditions.debug.AEACommandRegistry
 import com.the9grounds.aeadditions.integration.Integration
 import com.the9grounds.aeadditions.integration.Mods
@@ -15,6 +16,7 @@ import com.the9grounds.aeadditions.registries.client.Screens
 import net.minecraft.inventory.container.ContainerType
 import net.minecraftforge.client.event.ColorHandlerEvent
 import net.minecraftforge.client.event.ModelRegistryEvent
+import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.RegistryEvent
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent
@@ -37,6 +39,7 @@ object AEAdditions {
         MOD_BUS.addListener(::onClientSetup)
         MOD_BUS.addListener(::modelRegistryEvent)
         MOD_BUS.addListener(::commonSetup)
+        MinecraftForge.EVENT_BUS.register(EventHandler)
         MOD_BUS.addGenericListener(::registerContainerTypes)
         MOD_BUS.addListener(::registerItemColors)
         FORGE_BUS.addListener(::serverStarting)

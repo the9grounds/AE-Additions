@@ -5,14 +5,14 @@ import appeng.api.storage.IMEMonitor
 import appeng.api.storage.IStorageChannel
 import appeng.api.storage.ITerminalHost
 import appeng.api.storage.data.IAEStack
+import appeng.items.parts.PartModels
 import appeng.me.GridAccessException
 import appeng.parts.PartModel
 import com.the9grounds.aeadditions.AEAdditions
-import com.the9grounds.aeadditions.container.chemical.ChemicalTerminalContainer
-import com.the9grounds.aeadditions.parts.AbstractDisplayPart
-import appeng.items.parts.PartModels
 import com.the9grounds.aeadditions.container.ContainerOpener
 import com.the9grounds.aeadditions.container.Locator
+import com.the9grounds.aeadditions.container.chemical.ChemicalTerminalContainer
+import com.the9grounds.aeadditions.parts.AbstractDisplayPart
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.inventory.container.ContainerType
 import net.minecraft.item.ItemStack
@@ -23,9 +23,9 @@ import net.minecraft.util.math.vector.Vector3d
 class ChemicalTerminalPart(itemStack: ItemStack) : AbstractDisplayPart(itemStack), ITerminalHost {
     
     companion object {
-        @PartModels val MODEL_OFF: ResourceLocation = ResourceLocation(AEAdditions.ID, "part/chemical_terminal_off")
+        @PartModels val MODEL_OFF: ResourceLocation = ResourceLocation(AEAdditions.ID, "part/chemical/terminal_off")
 
-        @PartModels val MODEL_ON: ResourceLocation = ResourceLocation(AEAdditions.ID, "part/chemical_terminal_on")
+        @PartModels val MODEL_ON: ResourceLocation = ResourceLocation(AEAdditions.ID, "part/chemical/terminal_on")
     }
     
     val MODELS_OFF = PartModel(MODEL_BASE, MODEL_OFF, MODEL_STATUS_OFF)

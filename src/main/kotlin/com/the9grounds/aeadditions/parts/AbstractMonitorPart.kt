@@ -9,16 +9,12 @@ import appeng.api.storage.IStorageChannel
 import appeng.api.storage.data.IAEFluidStack
 import appeng.api.storage.data.IAEStack
 import appeng.api.storage.data.IItemList
-import appeng.client.render.TesrRenderHelper
-import com.the9grounds.aeadditions.integration.appeng.AppEng
 import appeng.fluids.util.AEFluidStack
 import appeng.me.GridAccessException
 import com.mojang.blaze3d.matrix.MatrixStack
 import com.the9grounds.aeadditions.api.gas.IAEChemicalStack
 import com.the9grounds.aeadditions.core.PlayerMessages
 import com.the9grounds.aeadditions.integration.mekanism.chemical.AEChemicalStack
-import com.the9grounds.aeadditions.network.AEAPacketBuffer
-import com.the9grounds.aeadditions.util.StorageChannels
 import com.the9grounds.aeadditions.util.Utils
 import net.minecraft.client.renderer.IRenderTypeBuffer
 import net.minecraft.entity.player.PlayerEntity
@@ -156,6 +152,13 @@ abstract class AbstractMonitorPart<T : IAEStack<T>>(itemStack: ItemStack) : Abst
         }
         
         if (locked || watchedItem == null) {
+            return false
+        }
+
+        val heldItem = player.getHeldItem(hand)
+
+        if (!heldItem.isEmpty) {
+            player.sendMessage(PlayerMessages.handMustBeEmpty.get(), Util.DUMMY_UUID)
             return false
         }
         

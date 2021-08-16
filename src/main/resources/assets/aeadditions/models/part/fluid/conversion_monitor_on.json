@@ -1,8 +1,8 @@
 {
   "textures": {
-    "lightsBright": "aeadditions:part/chemical_terminal_bright",
-    "lightsMedium": "aeadditions:part/chemical_terminal_medium",
-    "lightsDark": "aeadditions:part/chemical_terminal_dark"
+    "lightsBright": "aeadditions:part/storage_monitor_bright",
+    "lightsMedium": "aeadditions:part/fluid/conversion_monitor_medium",
+    "lightsDark": "aeadditions:part/fluid/conversion_monitor_dark"
   },
   "elements": [
     {
@@ -22,7 +22,6 @@
       "faces": {
         "north": {
           "texture": "#lightsMedium",
-          "tintindex": 2,
           "unlit": true
         }
       }
@@ -33,7 +32,6 @@
       "faces": {
         "north": {
           "texture": "#lightsDark",
-          "tintindex": 1,
           "unlit": true
         }
       }

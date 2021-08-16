@@ -1,6 +1,5 @@
 package com.the9grounds.aeadditions.network.packets
 
-import appeng.container.me.common.IMEInteractionHandler
 import appeng.helpers.InventoryAction
 import com.the9grounds.aeadditions.container.chemical.ChemicalTerminalContainer
 import io.netty.buffer.Unpooled
@@ -33,7 +32,7 @@ class MEInteractionPacket : BasePacket {
         configureWrite(packet)
     }
 
-    override fun serverClientData(player: PlayerEntity?) {
+    override fun serverPacketData(player: PlayerEntity?) {
         val container = player!!.openContainer
         if (container is ChemicalTerminalContainer) {
             if (container.windowId != windowId) {
