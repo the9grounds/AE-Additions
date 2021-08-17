@@ -1,19 +1,16 @@
 package com.the9grounds.aeadditions.client.gui.widget
 
 import com.mojang.blaze3d.matrix.MatrixStack
-import com.mojang.blaze3d.systems.RenderSystem
 import com.the9grounds.aeadditions.api.gas.IAEChemicalStack
 import com.the9grounds.aeadditions.client.gui.me.chemical.ChemicalTerminalScreen
+import com.the9grounds.aeadditions.client.helpers.Blit
 import com.the9grounds.aeadditions.integration.mekanism.Mekanism
 import com.the9grounds.aeadditions.util.Utils
 import mekanism.api.text.TextComponentUtil
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.AbstractGui
 import net.minecraft.client.gui.FontRenderer
 import net.minecraft.inventory.container.ClickType
-import net.minecraft.inventory.container.PlayerContainer
 import net.minecraft.util.text.ITextComponent
-import org.lwjgl.opengl.GL11
 
 class ChemicalWidget(
     val guiTerminal: ChemicalTerminalScreen,
@@ -24,6 +21,7 @@ class ChemicalWidget(
     val slot: Int,
     val chemical: IAEChemicalStack?
 ) : AbstractGui(), IWidget {
+    
     override fun getTooltip(): List<ITextComponent> {
         if (chemical == null) {
             return listOf()
@@ -63,20 +61,12 @@ class ChemicalWidget(
     }
 
     override fun drawWidget(matrixStack: MatrixStack, font: FontRenderer) {
-        Minecraft.getInstance().textureManager.bindTexture(PlayerContainer.LOCATION_BLOCKS_TEXTURE)
-        RenderSystem.disableLighting()
-        RenderSystem.enableBlend()
-        RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA)
-        RenderSystem.color3f(1f, 1f, 1f)
-
         if (chemical != null) {
             val sprite = Mekanism.getChemicalTexture(chemical.getChemical())
 
-            val tint = chemical.getChemical().getTint()
-
-            RenderSystem.color3f(Mekanism.getRed(tint), Mekanism.getGreen(tint), Mekanism.getBlue(tint))
-
-            blit(matrixStack, posX + 1, posY + 1, 0, height - 2, width - 2, sprite)
+            val tint = chemical.getChemical().tint
+            
+            Blit(sprite!!).colorRgb(tint).dest(posX + 1, posY + 1, width - 2, height - 2).draw(matrixStack, 0f)
             
             val amount = Utils.getAmountTextForStack(chemical)
             
@@ -87,13 +77,8 @@ class ChemicalWidget(
             
             val x = (1 + 16f - font.getStringWidth(amount) * scale) * (1f / scale)
             
-//            val x = max(18f, 18f - (18f - font.getStringWidth(amount) * scale))
-            
             font.drawString(matrixStack, amount, x, 26f, 0xFFFFFF)
             matrixStack.pop()
         }
-
-        RenderSystem.disableBlend()
-        RenderSystem.enableLighting()
     }
 }

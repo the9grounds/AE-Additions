@@ -233,18 +233,7 @@ object Mekanism {
     }
 
     fun getSprite(spriteLocation: ResourceLocation?): TextureAtlasSprite? {
-        return Minecraft.getInstance().getAtlasSpriteGetter(PlayerContainer.LOCATION_BLOCKS_TEXTURE).apply(spriteLocation)
-    }
-
-    fun getRed(color: Int): Float {
-        return (color shr 16 and 0xFF) / 255.0f
-    }
-
-    fun getGreen(color: Int): Float {
-        return (color shr 8 and 0xFF) / 255.0f
-    }
-
-    fun getBlue(color: Int): Float {
-        return (color and 0xFF) / 255.0f
+        return Minecraft.getInstance().getAtlasSpriteGetter(PlayerContainer.LOCATION_BLOCKS_TEXTURE)
+            .apply(spriteLocation)
     }
 }

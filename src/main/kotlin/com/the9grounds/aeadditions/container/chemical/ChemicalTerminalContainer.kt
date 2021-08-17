@@ -56,9 +56,9 @@ class ChemicalTerminalContainer(
     var monitor: IMEMonitor<IAEChemicalStack>? = null
 
     companion object {
-        val TYPE = ContainerTypeBuilder({ windowId, playerInventory, host ->
+        val TYPE = ContainerTypeBuilder(ITerminalHost::class) { windowId, playerInventory, host ->
             ChemicalTerminalContainer(windowId, playerInventory!!, host)
-        }, ITerminalHost::class)
+        }
             .requirePermission(SecurityPermissions.EXTRACT)
             .build("chemical_terminal")
     }

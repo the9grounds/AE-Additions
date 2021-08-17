@@ -20,28 +20,41 @@ import net.minecraftforge.fml.network.NetworkHooks
 import kotlin.reflect.KClass
 import kotlin.reflect.cast
 
-class ContainerTypeBuilder<C : AbstractContainer<C>, I : Any>(private val factory: (Int, PlayerInventory?, I) -> C, private val hostInterface: KClass<out I>) {
-    private var requiredPermission: SecurityPermissions? = null
+class ContainerTypeBuilder<C : AbstractContainer<C>, I : Any> {
+    var hostInterface: KClass<out I>
+    var factory: (Int, PlayerInventory?, I) -> C
     
-    private var containerType: ContainerType<C>? = null
-    
-    fun requirePermission(permission: SecurityPermissions): ContainerTypeBuilder<C, I> {
-        requiredPermission = permission
-        
-        return this
+    constructor(hostInterface: KClass<out I>, factory: (Int, PlayerInventory?, I) -> C) {
+        this.hostInterface = hostInterface
+        this.factory = factory
     }
     
+    constructor(hostInterface: KClass<out I>, factory: (ContainerType<C>, Int, PlayerInventory?, I) -> C) {
+        this.hostInterface = hostInterface
+        this.factory = { windowId, playerInventory, host ->  factory(containerType!!, windowId, playerInventory, host)}
+    }
+
+    private var requiredPermission: SecurityPermissions? = null
+
+    private var containerType: ContainerType<C>? = null
+
+    fun requirePermission(permission: SecurityPermissions): ContainerTypeBuilder<C, I> {
+        requiredPermission = permission
+
+        return this
+    }
+
     private fun open(player: PlayerEntity, locator: Locator): Boolean {
         if (player !is ServerPlayerEntity) {
             return false;
         }
-        
+
         val accessInterface: I = getHostFromLocator(player, locator) ?: return false
-        
+
         if (!checkPermission(player, accessInterface)) {
             return false
         }
-        
+
         val title = getDefaultContainerTitle(accessInterface)
 
         val container =
@@ -52,7 +65,7 @@ class ContainerTypeBuilder<C : AbstractContainer<C>, I : Any>(private val factor
                 c.locator = locator
                 c
             }, title!!)
-        
+
         NetworkHooks.openGui(player, container) { packetBuffer: PacketBuffer ->
             locator.write(packetBuffer)
         }
@@ -68,15 +81,15 @@ class ContainerTypeBuilder<C : AbstractContainer<C>, I : Any>(private val factor
         }
         return StringTextComponent.EMPTY
     }
-    
+
     private fun fromNetwork(windowId: Int, inventory: PlayerInventory, packetBuffer: PacketBuffer): C? {
         val host: I? = getHostFromLocator(inventory.player, Locator.read(packetBuffer))
-        
+
         if (host != null) {
 
             return factory(windowId, inventory, host)
         }
-        
+
         return null
     }
 
@@ -141,14 +154,14 @@ class ContainerTypeBuilder<C : AbstractContainer<C>, I : Any>(private val factor
         }
         return null
     }
-    
+
     fun build(id: String): ContainerType<C> {
         require(containerType == null) { "build was already called" }
-        
+
         containerType = IForgeContainerType.create(this::fromNetwork)
         containerType!!.setRegistryName(AEAdditions.ID, id)
         ContainerOpener.add(containerType!!, this::open)
-        
+
         return containerType!!
     }
 }
