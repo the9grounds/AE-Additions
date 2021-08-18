@@ -151,7 +151,7 @@ public class WidgetFluidSlot extends AbstractWidget {
 		if (!isVisable()) {
 			return;
 		}
-		if ((listener instanceof PartGasImport || listener instanceof PartGasExport || listener instanceof PartGasStorage || listener instanceof PartGasLevelEmitter || listener instanceof TileEntityGasInterface) && Integration.Mods.MEKANISMGAS.isEnabled()) {
+		if (Integration.Mods.MEKANISMGAS.isEnabled() && (listener instanceof PartGasImport || listener instanceof PartGasExport || listener instanceof PartGasStorage || listener instanceof PartGasLevelEmitter || listener instanceof TileEntityGasInterface)) {
 			handleGasContainer(stack);
 		} else {
 			handleFluidContainer(stack);
