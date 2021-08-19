@@ -12,7 +12,7 @@ import appeng.api.storage.data.IItemList
 import appeng.fluids.util.AEFluidStack
 import appeng.me.GridAccessException
 import com.mojang.blaze3d.matrix.MatrixStack
-import com.the9grounds.aeadditions.api.gas.IAEChemicalStack
+import com.the9grounds.aeadditions.api.chemical.IAEChemicalStack
 import com.the9grounds.aeadditions.core.PlayerMessages
 import com.the9grounds.aeadditions.integration.mekanism.chemical.AEChemicalStack
 import com.the9grounds.aeadditions.util.Utils

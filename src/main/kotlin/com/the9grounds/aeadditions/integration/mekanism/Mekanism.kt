@@ -5,7 +5,7 @@ import appeng.api.networking.energy.IEnergySource
 import appeng.api.networking.security.IActionSource
 import appeng.api.storage.IMEMonitor
 import com.the9grounds.aeadditions.Logger
-import com.the9grounds.aeadditions.api.gas.IAEChemicalStack
+import com.the9grounds.aeadditions.api.chemical.IAEChemicalStack
 import com.the9grounds.aeadditions.integration.appeng.AppEng
 import com.the9grounds.aeadditions.integration.mekanism.chemical.AEChemicalStack
 import mekanism.api.Action

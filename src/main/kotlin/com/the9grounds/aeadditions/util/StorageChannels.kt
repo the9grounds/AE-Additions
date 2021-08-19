@@ -2,7 +2,7 @@ package com.the9grounds.aeadditions.util
 
 import appeng.api.storage.channels.IFluidStorageChannel
 import appeng.api.storage.channels.IItemStorageChannel
-import com.the9grounds.aeadditions.api.gas.IChemicalStorageChannel
+import com.the9grounds.aeadditions.api.chemical.IChemicalStorageChannel
 import com.the9grounds.aeadditions.integration.appeng.AppEng
 
 object StorageChannels {

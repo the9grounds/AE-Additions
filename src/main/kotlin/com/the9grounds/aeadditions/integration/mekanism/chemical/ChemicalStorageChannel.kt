@@ -1,8 +1,8 @@
 package com.the9grounds.aeadditions.integration.mekanism.chemical
 
 import appeng.api.storage.data.IItemList
-import com.the9grounds.aeadditions.api.gas.IAEChemicalStack
-import com.the9grounds.aeadditions.api.gas.IChemicalStorageChannel
+import com.the9grounds.aeadditions.api.chemical.IAEChemicalStack
+import com.the9grounds.aeadditions.api.chemical.IChemicalStorageChannel
 import mekanism.api.chemical.Chemical
 import mekanism.api.chemical.ChemicalStack
 import net.minecraft.nbt.CompoundNBT

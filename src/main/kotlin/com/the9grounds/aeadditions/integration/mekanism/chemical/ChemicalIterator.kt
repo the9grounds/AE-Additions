@@ -1,6 +1,6 @@
 package com.the9grounds.aeadditions.integration.mekanism.chemical
 
-import com.the9grounds.aeadditions.api.gas.IAEChemicalStack
+import com.the9grounds.aeadditions.api.chemical.IAEChemicalStack
 
 class ChemicalIterator<T: IAEChemicalStack>(val parent: MutableIterator<T>) : MutableIterator<T> {
     

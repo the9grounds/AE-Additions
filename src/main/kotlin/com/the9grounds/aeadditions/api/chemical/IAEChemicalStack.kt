@@ -1,4 +1,4 @@
-package com.the9grounds.aeadditions.api.gas
+package com.the9grounds.aeadditions.api.chemical
 
 import appeng.api.storage.data.IAEStack
 import mekanism.api.chemical.Chemical

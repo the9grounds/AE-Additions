@@ -1,7 +1,7 @@
 package com.the9grounds.aeadditions
 
 import appeng.api.IAppEngApi
-import com.the9grounds.aeadditions.api.gas.IChemicalStorageChannel
+import com.the9grounds.aeadditions.api.chemical.IChemicalStorageChannel
 import com.the9grounds.aeadditions.core.EventHandler
 import com.the9grounds.aeadditions.debug.AEACommandRegistry
 import com.the9grounds.aeadditions.integration.Integration

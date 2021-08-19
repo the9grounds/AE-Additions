@@ -2,7 +2,7 @@ package com.the9grounds.aeadditions.integration.mekanism.chemical
 
 import appeng.api.config.FuzzyMode
 import appeng.api.storage.IStorageChannel
-import com.the9grounds.aeadditions.api.gas.IAEChemicalStack
+import com.the9grounds.aeadditions.api.chemical.IAEChemicalStack
 import com.the9grounds.aeadditions.integration.mekanism.Mekanism
 import com.the9grounds.aeadditions.item.ChemicalDummyItem
 import com.the9grounds.aeadditions.registries.Items

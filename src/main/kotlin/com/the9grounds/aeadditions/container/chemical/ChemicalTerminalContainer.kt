@@ -17,7 +17,7 @@ import appeng.api.storage.data.IItemList
 import appeng.api.util.AEPartLocation
 import appeng.helpers.InventoryAction
 import appeng.me.helpers.ChannelPowerSrc
-import com.the9grounds.aeadditions.api.gas.IAEChemicalStack
+import com.the9grounds.aeadditions.api.chemical.IAEChemicalStack
 import com.the9grounds.aeadditions.client.gui.me.chemical.ChemicalTerminalScreen
 import com.the9grounds.aeadditions.container.AbstractContainer
 import com.the9grounds.aeadditions.container.ContainerTypeBuilder

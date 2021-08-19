@@ -3,7 +3,7 @@ package com.the9grounds.aeadditions.network.packets
 import appeng.api.storage.data.IItemList
 import appeng.container.me.common.GridInventoryEntry
 import com.the9grounds.aeadditions.Logger
-import com.the9grounds.aeadditions.api.gas.IAEChemicalStack
+import com.the9grounds.aeadditions.api.chemical.IAEChemicalStack
 import com.the9grounds.aeadditions.container.chemical.ChemicalTerminalContainer
 import com.the9grounds.aeadditions.network.AEAPacketBuffer
 import io.netty.buffer.Unpooled

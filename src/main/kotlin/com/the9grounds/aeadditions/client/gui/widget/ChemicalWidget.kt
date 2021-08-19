@@ -1,7 +1,7 @@
 package com.the9grounds.aeadditions.client.gui.widget
 
 import com.mojang.blaze3d.matrix.MatrixStack
-import com.the9grounds.aeadditions.api.gas.IAEChemicalStack
+import com.the9grounds.aeadditions.api.chemical.IAEChemicalStack
 import com.the9grounds.aeadditions.client.gui.me.chemical.ChemicalTerminalScreen
 import com.the9grounds.aeadditions.client.helpers.Blit
 import com.the9grounds.aeadditions.integration.mekanism.Mekanism

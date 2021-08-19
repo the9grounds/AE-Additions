@@ -2,7 +2,7 @@ package com.the9grounds.aeadditions.integration.mekanism.chemical
 
 import appeng.api.config.FuzzyMode
 import appeng.api.storage.data.IItemList
-import com.the9grounds.aeadditions.api.gas.IAEChemicalStack
+import com.the9grounds.aeadditions.api.chemical.IAEChemicalStack
 
 class ChemicalList : IItemList<IAEChemicalStack> {
     

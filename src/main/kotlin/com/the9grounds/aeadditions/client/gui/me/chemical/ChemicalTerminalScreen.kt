@@ -4,7 +4,7 @@ import appeng.helpers.InventoryAction
 import com.mojang.blaze3d.matrix.MatrixStack
 import com.mojang.blaze3d.systems.RenderSystem
 import com.the9grounds.aeadditions.AEAdditions
-import com.the9grounds.aeadditions.api.gas.IAEChemicalStack
+import com.the9grounds.aeadditions.api.chemical.IAEChemicalStack
 import com.the9grounds.aeadditions.client.gui.widget.ChemicalWidget
 import com.the9grounds.aeadditions.client.gui.widget.WidgetContainer
 import com.the9grounds.aeadditions.container.chemical.ChemicalTerminalContainer

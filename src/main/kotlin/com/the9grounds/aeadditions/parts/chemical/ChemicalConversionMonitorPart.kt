@@ -9,7 +9,7 @@ import appeng.me.helpers.ChannelPowerSrc
 import appeng.me.helpers.PlayerSource
 import appeng.parts.PartModel
 import com.the9grounds.aeadditions.AEAdditions
-import com.the9grounds.aeadditions.api.gas.IAEChemicalStack
+import com.the9grounds.aeadditions.api.chemical.IAEChemicalStack
 import com.the9grounds.aeadditions.integration.mekanism.Mekanism
 import com.the9grounds.aeadditions.integration.mekanism.chemical.AEChemicalStack
 import com.the9grounds.aeadditions.item.ChemicalDummyItem
