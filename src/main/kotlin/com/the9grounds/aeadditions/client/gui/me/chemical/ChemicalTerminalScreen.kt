@@ -2,34 +2,30 @@ package com.the9grounds.aeadditions.client.gui.me.chemical
 
 import appeng.helpers.InventoryAction
 import com.mojang.blaze3d.matrix.MatrixStack
-import com.mojang.blaze3d.systems.RenderSystem
 import com.the9grounds.aeadditions.AEAdditions
 import com.the9grounds.aeadditions.api.chemical.IAEChemicalStack
+import com.the9grounds.aeadditions.client.gui.AEABaseScreen
 import com.the9grounds.aeadditions.client.gui.widget.ChemicalWidget
-import com.the9grounds.aeadditions.client.gui.widget.WidgetContainer
+import com.the9grounds.aeadditions.client.gui.widget.IWidget
+import com.the9grounds.aeadditions.client.helpers.Blit
 import com.the9grounds.aeadditions.container.chemical.ChemicalTerminalContainer
 import com.the9grounds.aeadditions.integration.mekanism.chemical.ChemicalList
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.screen.inventory.ContainerScreen
 import net.minecraft.client.gui.widget.TextFieldWidget
-import net.minecraft.client.renderer.RenderHelper
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.container.ClickType
 import net.minecraft.util.ResourceLocation
 import net.minecraft.util.text.ITextComponent
 import net.minecraft.util.text.StringTextComponent
-import net.minecraftforge.fml.client.gui.GuiUtils
 import org.lwjgl.glfw.GLFW
 
 class ChemicalTerminalScreen(
     container: ChemicalTerminalContainer,
     playerInventory: PlayerInventory,
     title: ITextComponent
-) : ContainerScreen<ChemicalTerminalContainer>(container, playerInventory, StringTextComponent("Chemical Terminal")) {
+) : AEABaseScreen<ChemicalTerminalContainer>(container, playerInventory, StringTextComponent("Chemical Terminal")) {
     
     private val texture = ResourceLocation(AEAdditions.ID, "textures/gui/chemical/terminal.png")
-    
-    val widgetContainer = WidgetContainer()
     var searchBox: TextFieldWidget? = null
     
     init {
@@ -90,40 +86,15 @@ class ChemicalTerminalScreen(
         
         return true
     }
-
-    override fun render(matrixStack: MatrixStack, mouseX: Int, mouseY: Int, partialTicks: Float) {
-        super.renderBackground(matrixStack)
-        super.render(matrixStack, mouseX, mouseY, partialTicks)
-        
-        val tooltip = widgetContainer.drawTooltips(mouseX.toDouble(), mouseY.toDouble())
-        if (tooltip.isNotEmpty()) {
-            GuiUtils.drawHoveringText(matrixStack, tooltip, mouseX, mouseY, width, height, 200, font)
-        }
-        this.renderHoveredTooltip(matrixStack, mouseX, mouseY)
-    }
     
     override fun drawGuiContainerBackgroundLayer(matrixStack: MatrixStack, partialTicks: Float, x: Int, y: Int) {
-        RenderSystem.color4f(1f, 1f, 1f, 1f)
+        super.drawGuiContainerBackgroundLayer(matrixStack, partialTicks, x, y)
+        
         Minecraft.getInstance().textureManager.bindTexture(texture)
         
-        blit(matrixStack, guiLeft, guiTop, 0, 0, getXSize(), getYSize())
+        Blit(texture).dest(guiLeft, guiTop, getXSize(), getYSize()).draw(matrixStack, 0f)
         
-        RenderHelper.enableStandardItemLighting()
-        RenderSystem.disableLighting()
-        RenderSystem.enableRescaleNormal()
-        
-        RenderSystem.color4f(1f, 1f, 1f, 1f)
-        matrixStack.push()
-        matrixStack.translate(guiLeft.toDouble(), guiTop.toDouble(), 0.0)
-        
-        widgetContainer.drawWidgets(matrixStack, font)
-        
-        matrixStack.pop()
-        RenderSystem.enableLighting()
-        RenderSystem.enableRescaleNormal()
-        RenderHelper.disableStandardItemLighting()
         searchBox!!.renderWidget(matrixStack, x, y, partialTicks)
-        Minecraft.getInstance().textureManager.bindTexture(texture)
     }
     
     fun onChemicalListChange() {
@@ -160,7 +131,12 @@ class ChemicalTerminalScreen(
         }
     }
     
-    fun onWidgetClicked(widget: ChemicalWidget, mouseButton: Int, clickType: ClickType) {
+    override fun onWidgetClicked(widget: IWidget, mouseButton: Int, clickType: ClickType) {
+        
+        if (widget !is ChemicalWidget) {
+            return
+        }
+        
         val chemicalList = container.chemicalList as? ChemicalList ?: return
         
         var slot = -1
@@ -193,7 +169,6 @@ class ChemicalTerminalScreen(
     }
 
     override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
-        widgetContainer.mouseClicked(mouseX, mouseY, button)
         searchBox!!.mouseClicked(mouseX, mouseY, button)
         
         return super.mouseClicked(mouseX, mouseY, button)

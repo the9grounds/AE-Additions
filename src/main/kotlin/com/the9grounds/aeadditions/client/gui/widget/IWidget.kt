@@ -9,9 +9,11 @@ interface IWidget {
     
     fun drawWidget(matrixStack: MatrixStack, font: FontRenderer)
     
-    fun getTooltip(): List<ITextComponent>
+    fun drawForeground(matrixStack: MatrixStack, mouseX: Double, mouseY: Double) {}
     
-    fun mouseClicked(mouseButton: Int, clickType: ClickType)
+    fun getTooltip(): List<ITextComponent> = listOf()
     
-    fun isMouseOver(mouseX: Double, mouseY: Double): Boolean
+    fun mouseClicked(mouseButton: Int, clickType: ClickType) {}
+    
+    fun isMouseOver(mouseX: Double, mouseY: Double): Boolean = false
 }

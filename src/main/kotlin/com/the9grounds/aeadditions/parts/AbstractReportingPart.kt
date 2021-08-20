@@ -66,7 +66,12 @@ abstract class AbstractReportingPart(itemStack: ItemStack, requireChannel: Boole
     }
 
     override fun onNeighborChanged(w: IBlockReader?, pos: BlockPos?, neighbor: BlockPos?) {
-        if (pos!!.offset(side!!.facing).equals(neighbor)) {
+        
+        if (pos == null || neighbor == null) {
+            return
+        }
+        
+        if (pos.offset(side!!.facing).equals(neighbor)) {
             this.opacity = -1
             this.host!!.markForUpdate()
         }

@@ -1,7 +1,6 @@
 package com.the9grounds.aeadditions.parts
 
 import appeng.api.config.Upgrades
-import appeng.api.implementations.IUpgradeableHost
 import appeng.api.networking.IGridNode
 import appeng.api.networking.energy.IEnergyGrid
 import appeng.api.networking.energy.IEnergySource
@@ -14,8 +13,11 @@ import appeng.api.util.IConfigManager
 import appeng.me.helpers.AENetworkProxy
 import appeng.me.helpers.ChannelPowerSrc
 import appeng.me.helpers.IGridProxyable
+import com.the9grounds.aeadditions.api.IUpgradeableHost
 import com.the9grounds.aeadditions.helpers.ICustomNameObject
+import com.the9grounds.aeadditions.integration.Mods
 import com.the9grounds.aeadditions.util.Utils
+import mekanism.common.capabilities.Capabilities
 import net.minecraft.crash.CrashReportCategory
 import net.minecraft.entity.Entity
 import net.minecraft.entity.LivingEntity
@@ -33,29 +35,30 @@ import net.minecraft.world.IBlockReader
 import net.minecraft.world.World
 import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.api.distmarker.OnlyIn
+import net.minecraftforge.common.capabilities.Capability
 import net.minecraftforge.items.IItemHandler
 import java.util.*
 
-abstract class AEABasePart(val itemStack: ItemStack) : IPart, IGridProxyable, IActionHost, IUpgradeableHost,
-    ICustomNameObject {
+abstract class AEABasePart(val itemStack: ItemStack) : IPart, IGridProxyable, IActionHost,
+    ICustomNameObject, IUpgradeableHost {
 
     private val proxy: AENetworkProxy = AENetworkProxy(this, "part", itemStack, false)
 
-    private var tile: TileEntity? = null
+    var facingChemicalTank: TileEntity? = null
+
+    override var tile: TileEntity? = null
     var host: IPartHost? = null
     var side: AEPartLocation? = null
 
     init {
         proxy.setValidSides(EnumSet.noneOf(Direction::class.java))
     }
-    
+
     protected val powerSource: IEnergySource
-    get() = ChannelPowerSrc(proxy.node, proxy.node.grid.getCache(IEnergyGrid::class.java))
+        get() = ChannelPowerSrc(proxy.node, proxy.node.grid.getCache(IEnergyGrid::class.java))
 
-    val isRemote: Boolean
+    open val isRemote: Boolean
         get() = this.tile == null || this.tile!!.world == null || this.tile!!.world!!.isRemote
-
-    override fun getTile(): TileEntity? = tile
 
     override fun getGridNode(): IGridNode? = proxy.node
 
@@ -75,7 +78,7 @@ abstract class AEABasePart(val itemStack: ItemStack) : IPart, IGridProxyable, IA
         // Do nothing
     }
 
-    override fun getInstalledUpgrades(u: Upgrades?): Int = 0
+    override fun getInstalledUpgrades(upgrade: Upgrades): Int = 0
 
     override fun getLocation(): DimensionalCoord = DimensionalCoord(tile)
 
@@ -88,7 +91,7 @@ abstract class AEABasePart(val itemStack: ItemStack) : IPart, IGridProxyable, IA
     override fun saveChanges() = host!!.markForSave()
 
     override val customInventoryName: ITextComponent
-    get() = itemStack.displayName
+        get() = itemStack.displayName
 
     override val hasCustomInventoryName: Boolean
         get() = itemStack.hasDisplayName()
@@ -110,9 +113,37 @@ abstract class AEABasePart(val itemStack: ItemStack) : IPart, IGridProxyable, IA
     }
 
     override fun isSolid(): Boolean = false
+    
+    
 
     override fun onNeighborChanged(w: IBlockReader?, pos: BlockPos?, neighbor: BlockPos?) {
-        //
+        val tileEntity: TileEntity? = tile!!.world!!.getTileEntity(pos!!.offset(side!!.facing))
+
+        if (Mods.MEKANISM.isEnabled) {
+            if (tileEntity != null) {
+                val hasCapabilities =
+                    hasChemicalCapability(tileEntity, Capabilities.GAS_HANDLER_CAPABILITY) || hasChemicalCapability(
+                        tileEntity,
+                        Capabilities.PIGMENT_HANDLER_CAPABILITY
+                    ) || hasChemicalCapability(
+                        tileEntity,
+                        Capabilities.INFUSION_HANDLER_CAPABILITY
+                    ) || hasChemicalCapability(tileEntity, Capabilities.SLURRY_HANDLER_CAPABILITY)
+                
+                if (hasCapabilities) {
+                    facingChemicalTank = tileEntity
+                }
+                
+            } else {
+                facingChemicalTank = null
+            }
+        } else {
+            facingChemicalTank = null
+        }
+    }
+
+    private fun hasChemicalCapability(tileEntity: TileEntity, capability: Capability<*>): Boolean {
+        return tileEntity.getCapability(capability).resolve().orElse(null) != null
     }
 
     override fun canConnectRedstone(): Boolean = false
@@ -155,6 +186,11 @@ abstract class AEABasePart(val itemStack: ItemStack) : IPart, IGridProxyable, IA
 
     override fun addToWorld() {
         this.proxy.onReady()
+        
+        if (!isRemote) {
+            // We need to check if there is a facing chemical tank
+            onNeighborChanged(null, null, null)
+        }
     }
 
     override fun getExternalFacingNode(): IGridNode? = null
@@ -198,5 +234,5 @@ abstract class AEABasePart(val itemStack: ItemStack) : IPart, IGridProxyable, IA
 
     override fun getConfigManager(): IConfigManager? = null
 
-    override fun getInventoryByName(name: String?): IItemHandler? = null
+    override fun getInventoryByName(name: String): IItemHandler? = null
 }

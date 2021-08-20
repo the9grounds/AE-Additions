@@ -36,6 +36,8 @@ object Ids {
     val CHEMICAL_TERMINAL_PART = id("chemical_terminal")
     val CHEMICAL_STORAGE_MONITOR = id("chemical_storage_monitor")
     val CHEMICAL_CONVERSION_MONITOR = id("chemical_conversion_monitor")
+    val CHEMICAL_IMPORT_BUS = id("chemical_import_bus")
+    val CHEMICAL_EXPORT_BUS = id("chemical_export_bus")
     
     //Fluid
     val FLUID_STORAGE_MONITOR = id("fluid_storage_monitor")

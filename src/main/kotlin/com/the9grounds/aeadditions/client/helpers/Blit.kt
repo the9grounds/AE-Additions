@@ -2,6 +2,7 @@ package com.the9grounds.aeadditions.client.helpers
 
 import com.mojang.blaze3d.matrix.MatrixStack
 import com.mojang.blaze3d.systems.RenderSystem
+import com.the9grounds.aeadditions.AEAdditions
 import com.the9grounds.aeadditions.util.Colors
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.Rectangle2d
@@ -49,6 +50,9 @@ class Blit(val texture: ResourceLocation, val referenceWidth: Int, val reference
             ((sprite.maxV - sprite.minV) * Int.MAX_VALUE).toInt()
         )
     }
+    
+    constructor(resource: String): this(ResourceLocation(AEAdditions.ID, resource), DEFAULT_WIDTH, DEFAULT_HEIGHT)
+    constructor(resource: String, width: Int, height: Int): this(ResourceLocation(AEAdditions.ID, resource), width, height)
 
     fun src(x: Int, y: Int, width: Int, height: Int): Blit {
         srcRect = Rectangle2d(x, y, width, height)

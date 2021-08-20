@@ -10,6 +10,8 @@ import net.minecraft.network.PacketBuffer
 
 class ChemicalStorageChannel : IChemicalStorageChannel {
 
+    override fun transferFactor(): Int = 125
+    
     override fun getUnitsPerByte(): Int = 8000
     
     override fun createList(): IItemList<IAEChemicalStack> = ChemicalList()

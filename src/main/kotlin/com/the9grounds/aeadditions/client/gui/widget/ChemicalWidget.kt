@@ -2,7 +2,7 @@ package com.the9grounds.aeadditions.client.gui.widget
 
 import com.mojang.blaze3d.matrix.MatrixStack
 import com.the9grounds.aeadditions.api.chemical.IAEChemicalStack
-import com.the9grounds.aeadditions.client.gui.me.chemical.ChemicalTerminalScreen
+import com.the9grounds.aeadditions.client.gui.AEABaseScreen
 import com.the9grounds.aeadditions.client.helpers.Blit
 import com.the9grounds.aeadditions.integration.mekanism.Mekanism
 import com.the9grounds.aeadditions.util.Utils
@@ -13,7 +13,7 @@ import net.minecraft.inventory.container.ClickType
 import net.minecraft.util.text.ITextComponent
 
 class ChemicalWidget(
-    val guiTerminal: ChemicalTerminalScreen,
+    val guiTerminal: AEABaseScreen<*>,
     val posX: Int,
     val posY: Int,
     val height: Int,

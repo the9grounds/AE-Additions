@@ -32,6 +32,7 @@ import net.minecraft.inventory.container.PlayerContainer
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundNBT
 import net.minecraft.network.PacketBuffer
+import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.ResourceLocation
 import net.minecraftforge.common.capabilities.Capability
 
@@ -226,7 +227,7 @@ object Mekanism {
             "slurry" -> Slurry.getFromRegistry(ResourceLocation(chemicalName))
             else -> throw RuntimeException("Invalid chemical type")
         }
-    } 
+    }
 
     fun getChemicalTexture(chemical: Chemical<*>): TextureAtlasSprite? {
         return getSprite(chemical.icon)
@@ -235,5 +236,65 @@ object Mekanism {
     fun getSprite(spriteLocation: ResourceLocation?): TextureAtlasSprite? {
         return Minecraft.getInstance().getAtlasSpriteGetter(PlayerContainer.LOCATION_BLOCKS_TEXTURE)
             .apply(spriteLocation)
+    }
+    
+    fun insertChemicalForChemicalCapability(tileEntity: TileEntity, chemicalStack: ChemicalStack<*>, action: Action): ChemicalStack<*>? {
+        return when(chemicalStack.getType()) {
+            is Gas -> insertChemicalForCapability(tileEntity, Capabilities.GAS_HANDLER_CAPABILITY, chemicalStack as GasStack, action)
+            is Pigment -> insertChemicalForCapability(tileEntity, Capabilities.PIGMENT_HANDLER_CAPABILITY, chemicalStack as PigmentStack, action)
+            is Slurry -> insertChemicalForCapability(tileEntity, Capabilities.SLURRY_HANDLER_CAPABILITY, chemicalStack as SlurryStack, action)
+            is InfuseType -> insertChemicalForCapability(tileEntity, Capabilities.INFUSION_HANDLER_CAPABILITY, chemicalStack as InfusionStack, action)
+            else -> null
+        }
+    }
+    
+    fun insertChemical(tileEntity: TileEntity, chemicalStack: ChemicalStack<*>, action: Action): ChemicalStack<*>? {
+        val gasStack = insertChemicalForCapability(tileEntity, Capabilities.GAS_HANDLER_CAPABILITY, chemicalStack as GasStack, action)
+        if (gasStack == null || gasStack.getAmount() != chemicalStack.getAmount()) {
+            return gasStack
+        }
+        val slurryStack = insertChemicalForCapability(tileEntity, Capabilities.SLURRY_HANDLER_CAPABILITY, chemicalStack as SlurryStack, action)
+        if (slurryStack == null || slurryStack.getAmount() != chemicalStack.getAmount()) {
+            return slurryStack
+        }
+        val infusionStack = insertChemicalForCapability(tileEntity, Capabilities.INFUSION_HANDLER_CAPABILITY, chemicalStack as InfusionStack, action)
+        if (infusionStack == null || infusionStack.getAmount() != chemicalStack.getAmount()) {
+            return infusionStack
+        }
+        val pigmentStack = insertChemicalForCapability(tileEntity, Capabilities.PIGMENT_HANDLER_CAPABILITY, chemicalStack as PigmentStack, action)
+        if (pigmentStack == null || pigmentStack.getAmount() != chemicalStack.getAmount()) {
+            return pigmentStack
+        }
+
+        return null
+    }
+    
+    fun <T: IChemicalHandler<CHEMICAL, STACK>, CHEMICAL: Chemical<CHEMICAL>, STACK: ChemicalStack<CHEMICAL>> insertChemicalForCapability(tileEntity: TileEntity, capability: Capability<T>, chemicalStack: STACK, action: Action): ChemicalStack<*>? {
+        return tileEntity.getCapability(capability).resolve().get().insertChemical(chemicalStack, action)
+    }
+    
+    fun extractChemical(tileEntity: TileEntity, amount: Long, action: Action): ChemicalStack<*>? {
+        val gasStack = extractChemicalForCapability(tileEntity, Capabilities.GAS_HANDLER_CAPABILITY, amount, action)
+        if (gasStack != null) {
+            return gasStack
+        }
+        val slurryStack = extractChemicalForCapability(tileEntity, Capabilities.SLURRY_HANDLER_CAPABILITY, amount, action)
+        if (slurryStack != null) {
+            return slurryStack
+        }
+        val infusionStack = extractChemicalForCapability(tileEntity, Capabilities.INFUSION_HANDLER_CAPABILITY, amount, action)
+        if (infusionStack != null) {
+            return infusionStack
+        }
+        val pigmentStack = extractChemicalForCapability(tileEntity, Capabilities.PIGMENT_HANDLER_CAPABILITY, amount, action)
+        if (pigmentStack != null) {
+            return pigmentStack
+        }
+        
+        return null
+    }
+    
+    fun <T: IChemicalHandler<*, *>> extractChemicalForCapability(tileEntity: TileEntity, capability: Capability<T>, amount: Long, action: Action): ChemicalStack<*>? {
+        return tileEntity.getCapability(capability).resolve().get().extractChemical(amount, action)
     }
 }

@@ -68,7 +68,7 @@ class ChemicalTerminalContainer(
         windowId,
         playerInventory,
         host,
-        true
+        false
     ) {
     }
 

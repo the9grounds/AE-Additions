@@ -20,7 +20,7 @@ class AEAChemicalConfig(private val size: Int) : IAEAChemicalConfig {
     override fun readFromNbt(nbt: CompoundNBT, name: String) {
         if (nbt.contains(name)) {
             val compound = nbt.getCompound(name)
-            for (i in 0..size) {
+            for (i in 0 until size) {
                 if (compound.contains("config#${i}")) {
                     val chemicalNbt = compound.getCompound("config#${i}")
 
@@ -35,7 +35,7 @@ class AEAChemicalConfig(private val size: Int) : IAEAChemicalConfig {
     override fun writeToNbt(nbt: CompoundNBT, name: String) {
         val compound = CompoundNBT()
 
-        for (i in 0..size) {
+        for (i in 0 until size) {
             val chemical = getChemicalInSlot(i)
 
             if (chemical != null) {

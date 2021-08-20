@@ -5,6 +5,8 @@ import appeng.api.networking.security.IActionHost
 import appeng.api.networking.security.IActionSource
 import appeng.api.parts.IPart
 import appeng.me.helpers.PlayerSource
+import com.the9grounds.aeadditions.container.slot.AEASlot
+import com.the9grounds.aeadditions.container.slot.DisabledSlot
 import com.the9grounds.aeadditions.network.NetworkManager
 import com.the9grounds.aeadditions.network.packets.BasePacket
 import com.the9grounds.aeadditions.network.packets.GuiDataSyncPacket
@@ -18,9 +20,15 @@ import net.minecraft.inventory.container.ContainerType
 import net.minecraft.inventory.container.IContainerListener
 import net.minecraft.inventory.container.Slot
 import net.minecraft.tileentity.TileEntity
+import net.minecraftforge.items.wrapper.PlayerInvWrapper
 import javax.annotation.OverridingMethodsMustInvokeSuper
 
 abstract class AbstractContainer<T>(type: ContainerType<*>?, id: Int, protected val playerInventory: PlayerInventory, protected val bindInventory: Boolean, host: Any) : Container(type, id) {
+    
+    val lockedSlots = mutableSetOf<Int>()
+    
+    val slotsByType = mutableMapOf<SlotType, MutableList<Slot>>()
+    
     val mySrc: IActionSource
     var tileEntity: TileEntity? = null
     var part: IPart? = null
@@ -54,7 +62,7 @@ abstract class AbstractContainer<T>(type: ContainerType<*>?, id: Int, protected 
         mySrc = PlayerSource(playerInventory.player, getActionHost())
         
         if (bindInventory) {
-//            bindPlayerInventory(posX, posY)
+            bindPlayerInventory(posX, posY)
         }
     }
     
@@ -91,6 +99,26 @@ abstract class AbstractContainer<T>(type: ContainerType<*>?, id: Int, protected 
         this.dataSync.readUpdate(packet.data!!)
         this.onServerDataSync()
     }
+    
+    fun addSlot(slotIn: Slot, slotType: SlotType): Slot {
+        val slot = addSlot(slotIn)
+        
+        slotsByType.getOrDefault(slotType, mutableListOf()).add(slot)
+        
+        return slot
+    }
+    
+    fun getSlotsForType(slotType: SlotType): List<Slot> {
+        return slotsByType.getOrDefault(slotType, mutableListOf()).toList()
+    }
+
+    override fun addSlot(slotIn: Slot): Slot {
+        if (slotIn is AEASlot) {
+            slotIn.container = this
+        }
+        
+        return super.addSlot(slotIn)
+    }
 
     override fun detectAndSendChanges() {
         if (isServer) {
@@ -120,14 +148,23 @@ abstract class AbstractContainer<T>(type: ContainerType<*>?, id: Int, protected 
     }
     
     protected fun bindPlayerInventory(posX: Int, posY: Int) {
-        for (i in 0..2) {
-            for (j in 0..8) {
-                addSlot(Slot(playerInventory, j + i * 9 + 9, posX + j * 18, posY + i * 18))
+        
+        val itemHandler = PlayerInvWrapper(playerInventory)
+        
+        for (i in 0 until playerInventory.sizeInventory) {
+            val slot = if (lockedSlots.contains(i)) {
+                DisabledSlot(itemHandler, i)
+            } else {
+                Slot(playerInventory, i, 0, 0)
             }
-        }
-
-        for (i in 0..8) {
-            addSlot(Slot(playerInventory, i, posX + i * 18, 58 + posY))
+            
+            val type = if (i < PlayerInventory.getHotbarSize()) {
+                SlotType.PlayerHotbar
+            } else {
+                SlotType.PlayerInventory
+            }
+            
+            addSlot(slot, type)
         }
     }
 }
