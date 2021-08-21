@@ -16,11 +16,16 @@ class ChemicalConfigChangedPacket : BasePacket {
     constructor(packet: AEAPacketBuffer) {
         val nbt = packet.readCompoundTag()!!
         
-        this.chemical = Mekanism.readChemicalFromNbt(nbt)
+        val hasChemical = nbt.getBoolean("hasChemical")
+        
+        if (hasChemical) {
+            this.chemical = Mekanism.readChemicalFromNbt(nbt)
+        }
+        
         this.slot = nbt.getInt("slot")
     }
     
-    constructor(chemical: Chemical<*>, slot: Int) {
+    constructor(chemical: Chemical<*>?, slot: Int) {
         this.chemical = chemical
         this.slot = slot
         
@@ -30,7 +35,10 @@ class ChemicalConfigChangedPacket : BasePacket {
         
         val nbt = CompoundNBT()
         
-        Mekanism.writeChemicalWithTypeToNbt(nbt, chemical)
+        nbt.putBoolean("hasChemical", chemical != null)
+        if (chemical != null) {
+            Mekanism.writeChemicalWithTypeToNbt(nbt, chemical)
+        }
         nbt.putInt("slot", slot)
         
         packet.writeCompoundTag(nbt)
@@ -43,7 +51,7 @@ class ChemicalConfigChangedPacket : BasePacket {
         val container = player!!.openContainer
         
         if (container is IChemicalSyncContainer) {
-            container.setChemicalForSlot(chemical!!, slot)
+            container.setChemicalForSlot(chemical, slot)
         }
     }
     

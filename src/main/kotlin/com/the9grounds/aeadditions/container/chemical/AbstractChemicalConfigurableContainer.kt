@@ -39,9 +39,7 @@ abstract class AbstractChemicalConfigurableContainer<T>(
         }
     }
 
-    override fun setChemicalForSlot(chemical: Chemical<*>, slot: Int) {
-        chemicalList[slot] = chemical
-        
+    override fun setChemicalForSlot(chemical: Chemical<*>?, slot: Int) {
         chemicalConfig.setChemicalInSlot(slot, chemical)
         
         sendChemicalListToAllValidListeners()

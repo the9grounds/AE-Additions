@@ -52,6 +52,8 @@ class ChemicalWidgetConfig(
                 
                 NetworkManager.sendToServer(ChemicalConfigChangedPacket(chemical.getType(), slot))
             }
+        } else if (mouseStack.isEmpty && this.chemical != null) {
+            NetworkManager.sendToServer(ChemicalConfigChangedPacket(null, slot))
         }
         
         
@@ -62,11 +64,11 @@ class ChemicalWidgetConfig(
 
         super.drawWidgetForeground(matrixStack, mouseX, mouseY)
         
-        if ((guiTerminal.container as AbstractUpgradableContainer).isConfigGroupEnabled(group)) {
+        if ((guiTerminal.container as AbstractUpgradableContainer<*>).isConfigGroupEnabled(group)) {
             if (isMouseOver(mouseX, mouseY)) {
-                val mouseStack: ItemStack = Minecraft.getInstance().player!!.inventory.getItemStack()
+                val mouseStack: ItemStack = Minecraft.getInstance().player!!.inventory.itemStack
                 
-                if (!mouseStack.isEmpty && Mekanism.isItemStackAChemicalContainer(mouseStack)) {
+                if (mouseStack.isEmpty || Mekanism.isItemStackAChemicalContainer(mouseStack)) {
                     RenderSystem.colorMask(true, true, true, false)
                     this.fillGradient(matrixStack, posX, posY, posX + width, posY + height, -2130706433, -2130706433)
                     RenderSystem.colorMask(true, true, true, true)

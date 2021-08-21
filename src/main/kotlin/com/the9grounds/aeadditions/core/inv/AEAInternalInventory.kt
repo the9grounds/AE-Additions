@@ -6,7 +6,7 @@ import net.minecraftforge.items.ItemStackHandler
 
 open class AEAInternalInventory(var host: IAEAInventory?, size: Int, maxStack: Int, var filter: ItemFilter?) : ItemStackHandler(size), Iterable<ItemStack?> {
     
-    val maxStack = arrayOf<Int>()
+    val maxStack = IntArray(size)
     var previousStack = ItemStack.EMPTY
     var isDirty = false
     

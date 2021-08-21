@@ -5,5 +5,5 @@ import mekanism.api.chemical.Chemical
 interface IChemicalSyncContainer {
     fun receiveChemicals(chemicals: Array<Chemical<*>?>)
     
-    fun setChemicalForSlot(chemical: Chemical<*>, slot: Int)
+    fun setChemicalForSlot(chemical: Chemical<*>?, slot: Int)
 }

@@ -25,7 +25,7 @@ abstract class AbstractUpgradableScreen <T: AbstractUpgradableContainer<T>>(
     override fun init(minecraft: Minecraft, width: Int, height: Int) {
         val upgradePanel = UpgradePanel(
             container.getSlotsForType(SlotType.Upgrade),
-            guiLeft + xSize + 5,
+            guiLeft + xSize + 2,
             guiTop,
             ::getCompatibleUpgrades
         )
@@ -33,7 +33,7 @@ abstract class AbstractUpgradableScreen <T: AbstractUpgradableContainer<T>>(
 
         if ((container as T).hasToolbox) {
             widgetContainer.add(ToolboxPanel(
-                guiLeft + xSize + 5,
+                guiLeft + xSize + 2,
                 guiTop + upgradePanel.height + 10,
                 container.getSlotsForType(SlotType.NetworkTool),
                 container.toolboxName

@@ -48,6 +48,8 @@ abstract class AbstractUpgradableContainer<T>(
                 addSlot(slot, SlotType.NetworkTool)
             }
         }
+        
+        setupConfig()
     }
     
     val hasToolbox: Boolean
@@ -56,7 +58,8 @@ abstract class AbstractUpgradableContainer<T>(
     val toolboxName: ITextComponent
     get() = if (networkToolInventory != null) networkToolInventory!!.itemStack.displayName else StringTextComponent.EMPTY
     
-    open val availableUpgrades = 4
+    open val availableUpgrades: Int
+    get() = 4
     
     abstract fun setupConfig()
     
@@ -73,6 +76,6 @@ abstract class AbstractUpgradableContainer<T>(
     fun isConfigGroupEnabled(group: Int): Boolean {
         val capacityUpgrades = upgradable.getInstalledUpgrades(Upgrades.CAPACITY)
         
-        return (group == 1 && capacityUpgrades > 0) || (group == 2 && capacityUpgrades > 1)
+        return group == 0 || (group == 1 && capacityUpgrades > 0) || (group == 2 && capacityUpgrades > 1)
     }
 }

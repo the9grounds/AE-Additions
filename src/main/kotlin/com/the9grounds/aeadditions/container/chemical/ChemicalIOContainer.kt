@@ -19,7 +19,7 @@ class ChemicalIOContainer(
 ) : AbstractChemicalConfigurableContainer<ChemicalIOContainer>(type, id, playerInventory, host as IUpgradeableHost) {
     
     init {
-        bindPlayerInventory(0, 0)
+        bindPlayerInventory(7, 101)
     }
     
     companion object {

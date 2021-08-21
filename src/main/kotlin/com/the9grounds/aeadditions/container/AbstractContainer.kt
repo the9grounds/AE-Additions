@@ -161,20 +161,37 @@ abstract class AbstractContainer<T>(type: ContainerType<*>?, id: Int, protected 
         
         val itemHandler = PlayerInvWrapper(playerInventory)
         
-        for (i in 0 until playerInventory.sizeInventory) {
+        var slotX = posX
+        var slotY = posY + (18 * 2) + 18 + 4
+        
+        var isHotBar = true
+        
+        for (i in 0 until 36) {
             val slot = if (lockedSlots.contains(i)) {
-                DisabledSlot(itemHandler, i)
+                DisabledSlot(itemHandler, i, slotX + 1, slotY + 1)
             } else {
-                Slot(playerInventory, i, 0, 0)
+                Slot(playerInventory, i, slotX + 1, slotY + 1)
             }
-            
+
             val type = if (i < PlayerInventory.getHotbarSize()) {
                 SlotType.PlayerHotbar
             } else {
                 SlotType.PlayerInventory
             }
-            
+
             addSlot(slot, type)
+
+            slotX += 18
+
+            if ((i + 1).rem(9) == 0) {
+                if (isHotBar) {
+                    slotY -= 4
+                    isHotBar = false
+                }
+
+                slotY -= 18
+                slotX = posX
+            }
         }
     }
 }

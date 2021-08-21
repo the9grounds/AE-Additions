@@ -37,9 +37,8 @@ class ChemicalTerminalContainer(
     type: ContainerType<*>,
     windowId: Int,
     playerInventory: PlayerInventory,
-    private val host: ITerminalHost,
-    bindPlayerInventory: Boolean
-) : AbstractContainer<ChemicalTerminalContainer>(type, windowId, playerInventory, bindPlayerInventory, host),
+    private val host: ITerminalHost
+) : AbstractContainer<ChemicalTerminalContainer>(type, windowId, playerInventory, false, host),
     IMEMonitorHandlerReceiver<IAEChemicalStack> {
 
 //    val updateHelper = IncrementalUpdateHelper<IAEChemicalStack>()
@@ -67,8 +66,7 @@ class ChemicalTerminalContainer(
         TYPE,
         windowId,
         playerInventory,
-        host,
-        false
+        host
     ) {
     }
 
@@ -78,9 +76,7 @@ class ChemicalTerminalContainer(
         posY = 139
         posX = 8
 
-        if (bindPlayerInventory) {
-            bindPlayerInventory(posX, posY)
-        }
+        bindPlayerInventory(posX, posY)
         
         var powerSource: IEnergySource? = null
         if (isServer) {

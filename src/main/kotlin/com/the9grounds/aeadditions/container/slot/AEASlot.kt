@@ -10,7 +10,10 @@ import net.minecraftforge.api.distmarker.OnlyIn
 import net.minecraftforge.items.IItemHandler
 import kotlin.math.min
 
-open class AEASlot(val inv: IItemHandler, slot: Int) : Slot(Inventory(0), slot, 0, 0) {
+open class AEASlot(val inv: IItemHandler, slot: Int, x: Int, y: Int) : Slot(Inventory(0), slot, x, y) {
+    
+    constructor(inv: IItemHandler, slot: Int): this(inv, slot, 0, 0)
+    
     override fun onSlotChange(oldStackIn: ItemStack, newStackIn: ItemStack) {
         super.onSlotChange(oldStackIn, newStackIn)
     }
