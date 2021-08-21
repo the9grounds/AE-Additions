@@ -10,11 +10,20 @@ class WidgetContainer {
     val widgets = mutableMapOf<SlotType, MutableList<IWidget>>()
     
     fun add(widget: IWidget, slotType: SlotType) {
-        widgets.getOrDefault(slotType, mutableListOf()).add(widget)
+        
+        if (!widgets.containsKey(slotType)) {
+            widgets[slotType] = mutableListOf()
+        }
+        
+        widgets[slotType]?.add(widget)
     }
     
     fun addAll(widgets: List<IWidget>, slotType: SlotType) {
-        this.widgets.getOrDefault(slotType, mutableListOf()).addAll(widgets)
+        if (!this.widgets.containsKey(slotType)) {
+            this.widgets[slotType] = mutableListOf()
+        }
+        
+        this.widgets[slotType]?.addAll(widgets)
     }
     
     fun resetAll() {
@@ -36,7 +45,7 @@ class WidgetContainer {
         }
     }
     
-    fun drawWidgets(matrixStack: MatrixStack, font: FontRenderer, mouseX: Double, mouseY: Double) {
+    fun drawWidgetBackground(matrixStack: MatrixStack, font: FontRenderer, mouseX: Double, mouseY: Double) {
         widgets.forEach { t, u ->
             u.forEach { widget ->
                 widget.drawWidgetBackground(matrixStack, font, mouseX, mouseY)

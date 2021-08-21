@@ -1,6 +1,6 @@
 {
   "parent": "appliedenergistics2:block/drive/drive_cell",
   "textures": {
-    "cell": "aeadditions:block/cells/item/1024k"
+    "cell": "aeadditions:block/drive/cells/item/1024k"
   }
 }

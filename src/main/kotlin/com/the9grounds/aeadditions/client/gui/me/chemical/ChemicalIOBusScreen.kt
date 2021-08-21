@@ -28,10 +28,10 @@ class ChemicalIOBusScreen(
         ySize = 184
         xSize = 176
         
-        titleX = 7
-        titleY = 8
+        titleX = 5
+        titleY = 5
 
-        playerInventoryTitleX = 8
+        playerInventoryTitleX = 7
         playerInventoryTitleY = 92
 
         font = Minecraft.getInstance().fontRenderer

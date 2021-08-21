@@ -104,14 +104,22 @@ abstract class AbstractContainer<T>(type: ContainerType<*>?, id: Int, protected 
     fun addSlot(slotIn: Slot, slotType: SlotType): Slot {
         val slot = addSlot(slotIn)
         
-        slotsByType.getOrDefault(slotType, mutableListOf()).add(slot)
+        if (!slotsByType.containsKey(slotType)) {
+            slotsByType[slotType] = mutableListOf()
+        }
+        
+        slotsByType[slotType]?.add(slot)
         typeBySlot[slot] = slotType
         
         return slot
     }
     
     fun getSlotsForType(slotType: SlotType): List<Slot> {
-        return slotsByType.getOrDefault(slotType, mutableListOf()).toList()
+        if (!slotsByType.containsKey(slotType)) {
+            slotsByType[slotType] = mutableListOf()
+        }
+
+        return slotsByType[slotType]!!.toList()
     }
 
     override fun addSlot(slotIn: Slot): Slot {

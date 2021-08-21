@@ -18,6 +18,10 @@ class ChemicalIOContainer(
     host: Any
 ) : AbstractChemicalConfigurableContainer<ChemicalIOContainer>(type, id, playerInventory, host as IUpgradeableHost) {
     
+    init {
+        bindPlayerInventory(0, 0)
+    }
+    
     companion object {
         val EXPORT_BUS = ContainerTypeBuilder(ChemicalExportBus::class) { containerType: ContainerType<ChemicalIOContainer>, windowId, playerInventory, host ->
             ChemicalIOContainer(containerType, windowId, playerInventory!!, host)
