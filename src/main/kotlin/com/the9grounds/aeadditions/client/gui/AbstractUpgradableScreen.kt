@@ -5,9 +5,11 @@ import appeng.api.parts.IPart
 import appeng.api.parts.PartItemStack
 import appeng.core.localization.GuiText
 import com.the9grounds.aeadditions.api.IUpgradeableHost
+import com.the9grounds.aeadditions.client.gui.widget.ToolboxPanel
 import com.the9grounds.aeadditions.client.gui.widget.UpgradePanel
 import com.the9grounds.aeadditions.container.AbstractUpgradableContainer
 import com.the9grounds.aeadditions.container.SlotType
+import net.minecraft.client.Minecraft
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.item.Item
 import net.minecraft.tileentity.TileEntity
@@ -17,18 +19,28 @@ import net.minecraft.util.text.TextFormatting
 abstract class AbstractUpgradableScreen <T: AbstractUpgradableContainer<T>>(
     screenContainer: T,
     inv: PlayerInventory,
-    titleIn: ITextComponent,
-    upgradeX: Int,
-    upgradeY: Int
+    titleIn: ITextComponent
 ) : AEABaseScreen<T>(screenContainer, inv, titleIn) {
-    
-    init {
-        this.widgetContainer.add(UpgradePanel(
+
+    override fun init(minecraft: Minecraft, width: Int, height: Int) {
+        val upgradePanel = UpgradePanel(
             container.getSlotsForType(SlotType.Upgrade),
-            upgradeX,
-            upgradeY,
+            guiLeft + xSize + 5,
+            guiTop,
             ::getCompatibleUpgrades
-        ))
+        )
+        this.widgetContainer.add(upgradePanel, SlotType.Upgrade)
+
+        if ((container as T).hasToolbox) {
+            widgetContainer.add(ToolboxPanel(
+                guiLeft + xSize + 5,
+                guiTop + upgradePanel.height + 10,
+                container.getSlotsForType(SlotType.NetworkTool),
+                container.toolboxName
+            ), SlotType.NetworkTool)
+        }
+        
+        super.init(minecraft, width, height)
     }
 
     protected open fun getCompatibleUpgrades(): List<ITextComponent> {

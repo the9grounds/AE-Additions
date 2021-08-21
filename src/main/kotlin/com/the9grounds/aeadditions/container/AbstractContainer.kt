@@ -28,6 +28,7 @@ abstract class AbstractContainer<T>(type: ContainerType<*>?, id: Int, protected 
     val lockedSlots = mutableSetOf<Int>()
     
     val slotsByType = mutableMapOf<SlotType, MutableList<Slot>>()
+    val typeBySlot = mutableMapOf<Slot, SlotType>()
     
     val mySrc: IActionSource
     var tileEntity: TileEntity? = null
@@ -104,6 +105,7 @@ abstract class AbstractContainer<T>(type: ContainerType<*>?, id: Int, protected 
         val slot = addSlot(slotIn)
         
         slotsByType.getOrDefault(slotType, mutableListOf()).add(slot)
+        typeBySlot[slot] = slotType
         
         return slot
     }

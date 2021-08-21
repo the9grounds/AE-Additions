@@ -6,6 +6,7 @@ import com.the9grounds.aeadditions.integration.mekanism.chemical.AEChemicalStack
 import com.the9grounds.aeadditions.network.packets.BasePacket
 import com.the9grounds.aeadditions.util.StorageChannels
 import io.netty.buffer.ByteBuf
+import mekanism.api.chemical.Chemical
 import mekanism.api.chemical.ChemicalStack
 import net.minecraft.network.PacketBuffer
 
@@ -21,6 +22,10 @@ class AEAPacketBuffer(wrapped: ByteBuf) : PacketBuffer(wrapped) {
     
     fun writeChemicalStack(chemicalStack: ChemicalStack<*>) {
         chemicalStack.writeToPacket(this)
+    }
+    
+    fun writeChemical(chemical: Chemical<*>) {
+        
     }
     
     fun writeIAEChemicalStackList(chemicalStackList: IItemList<IAEChemicalStack>) {

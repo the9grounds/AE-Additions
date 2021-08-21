@@ -20,8 +20,11 @@
   "item.aeadditions.fluid_storage_monitor": "ME Fluid Storage Monitor",
   "item.aeadditions.chemical_conversion_monitor": "ME Chemical Conversion Monitor",
   "item.aeadditions.fluid_conversion_monitor": "ME Fluid Conversion Monitor",
+  "item.aeadditions.chemical_export_bus": "ME Chemical Export Bus",
+  "item.aeadditions.chemical_import_bus": "ME Chemical Import Bus",
   "itemGroup.aeadditions": "AE Additions",
   "chat.aeadditions.isNowLocked": "Monitor is now locked",
   "chat.aeadditions.isNowUnlocked": "Monitor is now unlocked",
-  "chat.aeadditions.handMustBeEmpty": "Your hand must be empty to perform that action."
+  "chat.aeadditions.handMustBeEmpty": "Your hand must be empty to perform that action.",
+  "gui.aeadditions.chemicalIO": "ME Chemical Import/Export Bus"
 }

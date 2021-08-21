@@ -67,6 +67,13 @@ object Mekanism {
         }
     }
     
+    fun writeChemicalWithTypeToNbt(nbt: CompoundNBT, chemical: Chemical<*>) {
+        val chemicalType = getType(chemical)
+        
+        nbt.putString("chemicalType", chemicalType)
+        chemical.write(nbt)
+    }
+    
     fun capabilityFromChemicalStorageItem(itemStack: ItemStack): IChemicalHandler<*, *>? {
         val chemicalStack = getStoredChemicalStackFromStack(itemStack)?: return null
         
@@ -80,6 +87,16 @@ object Mekanism {
             is PigmentStack -> getCapabilityFromChemicalStorageItem(itemStack, Capabilities.PIGMENT_HANDLER_CAPABILITY)
             is SlurryStack -> getCapabilityFromChemicalStorageItem(itemStack, Capabilities.SLURRY_HANDLER_CAPABILITY)
             else -> null
+        }
+    }
+    
+    fun isItemStackAChemicalContainer(itemStack: ItemStack): Boolean {
+        return when {
+            getCapabilityFromChemicalStorageItem(itemStack, Capabilities.GAS_HANDLER_CAPABILITY) != null -> true
+            getCapabilityFromChemicalStorageItem(itemStack, Capabilities.INFUSION_HANDLER_CAPABILITY) != null -> true
+            getCapabilityFromChemicalStorageItem(itemStack, Capabilities.PIGMENT_HANDLER_CAPABILITY) != null -> true
+            getCapabilityFromChemicalStorageItem(itemStack, Capabilities.SLURRY_HANDLER_CAPABILITY) != null -> true
+            else -> false
         }
     }
     

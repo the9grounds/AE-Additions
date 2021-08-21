@@ -65,6 +65,7 @@ object AEAdditions {
     }
     
     private fun commonSetup(event: FMLCommonSetupEvent) {
+        InitUpgrades.init()
         event.enqueueWork {
             NetworkManager.init()
         }

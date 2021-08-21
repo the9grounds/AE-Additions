@@ -5,11 +5,11 @@ import com.the9grounds.aeadditions.integration.mekanism.Mekanism
 import mekanism.api.chemical.Chemical
 import net.minecraft.nbt.CompoundNBT
 
-class AEAChemicalConfig(private val size: Int) : IAEAChemicalConfig {
+class AEAChemicalConfig(override val size: Int) : IAEAChemicalConfig {
     
-    val config = arrayOfNulls<Chemical<*>>(size)
+    override val config = arrayOfNulls<Chemical<*>?>(size)
     
-    override fun setChemicalInSlot(slot: Int, chemical: Chemical<*>) {
+    override fun setChemicalInSlot(slot: Int, chemical: Chemical<*>?) {
         config[slot] = chemical
     }
 

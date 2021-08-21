@@ -1,11 +1,14 @@
 package com.the9grounds.aeadditions.container
 
+import appeng.api.config.Upgrades
 import appeng.items.contents.NetworkToolViewer
 import appeng.items.tools.NetworkToolItem
 import com.the9grounds.aeadditions.api.IUpgradeableHost
 import com.the9grounds.aeadditions.container.slot.FilterSlot
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.container.ContainerType
+import net.minecraft.util.text.ITextComponent
+import net.minecraft.util.text.StringTextComponent
 
 abstract class AbstractUpgradableContainer<T>(
     type: ContainerType<*>?,
@@ -18,6 +21,8 @@ abstract class AbstractUpgradableContainer<T>(
     
     var networkToolSlot: Int? = null
     var networkToolInventory: NetworkToolViewer? = null
+    
+    open val supportCapacity: Boolean = true
     
     init {
         upgradable = host
@@ -45,6 +50,12 @@ abstract class AbstractUpgradableContainer<T>(
         }
     }
     
+    val hasToolbox: Boolean
+    get () = networkToolInventory != null
+    
+    val toolboxName: ITextComponent
+    get() = if (networkToolInventory != null) networkToolInventory!!.itemStack.displayName else StringTextComponent.EMPTY
+    
     open val availableUpgrades = 4
     
     abstract fun setupConfig()
@@ -57,5 +68,11 @@ abstract class AbstractUpgradableContainer<T>(
             
             addSlot(slot, SlotType.Upgrade)
         }
+    }
+    
+    fun isConfigGroupEnabled(group: Int): Boolean {
+        val capacityUpgrades = upgradable.getInstalledUpgrades(Upgrades.CAPACITY)
+        
+        return (group == 1 && capacityUpgrades > 0) || (group == 2 && capacityUpgrades > 1)
     }
 }

@@ -7,9 +7,9 @@ import net.minecraft.util.text.ITextComponent
 
 interface IWidget {
     
-    fun drawWidget(matrixStack: MatrixStack, font: FontRenderer)
+    fun drawWidgetBackground(matrixStack: MatrixStack, font: FontRenderer, mouseX: Double, mouseY: Double) {}
     
-    fun drawForeground(matrixStack: MatrixStack, mouseX: Double, mouseY: Double) {}
+    fun drawWidgetForeground(matrixStack: MatrixStack, mouseX: Double, mouseY: Double) {}
     
     fun getTooltip(): List<ITextComponent> = listOf()
     

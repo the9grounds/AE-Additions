@@ -5,7 +5,6 @@ import com.the9grounds.aeadditions.client.helpers.Blit
 import com.the9grounds.aeadditions.container.slot.AEASlot
 import net.minecraft.client.gui.AbstractGui
 import net.minecraft.client.gui.FontRenderer
-import net.minecraft.inventory.container.ClickType
 import net.minecraft.inventory.container.Slot
 import net.minecraft.util.text.ITextComponent
 import kotlin.math.min
@@ -48,7 +47,7 @@ class UpgradePanel(
         }
     }
     
-    override fun drawWidget(matrixStack: MatrixStack, font: FontRenderer) {
+    override fun drawWidgetBackground(matrixStack: MatrixStack, font: FontRenderer, mouseX: Double, mouseY: Double) {
         val slotCount = upgradeSlotCount
         if (slotCount <= 0) {
             return
@@ -122,14 +121,6 @@ class UpgradePanel(
         }
 
         return tooltipFactory()
-    }
-
-    override fun mouseClicked(mouseButton: Int, clickType: ClickType) {
-        TODO("Not yet implemented")
-    }
-
-    override fun isMouseOver(mouseX: Double, mouseY: Double): Boolean {
-        TODO("Not yet implemented")
     }
     
     val upgradeSlotCount: Int

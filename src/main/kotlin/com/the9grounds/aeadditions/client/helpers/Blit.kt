@@ -16,8 +16,8 @@ import org.lwjgl.opengl.GL11
 class Blit(val texture: ResourceLocation, val referenceWidth: Int, val referenceHeight: Int) {
 
     companion object {
-        const val DEFAULT_WIDTH = 255
-        const val DEFAULT_HEIGHT = 255
+        const val DEFAULT_WIDTH = 256
+        const val DEFAULT_HEIGHT = 256
     }
 
     var r = 255
@@ -42,17 +42,17 @@ class Blit(val texture: ResourceLocation, val referenceWidth: Int, val reference
 
     constructor(texture: ResourceLocation) : this(texture, DEFAULT_WIDTH, DEFAULT_HEIGHT)
 
-    constructor(sprite: TextureAtlasSprite) : this(sprite.atlasTexture.textureLocation, Int.MAX_VALUE, Int.MAX_VALUE) {
+    constructor(sprite: TextureAtlasSprite) : this(sprite.atlasTexture.textureLocation, DEFAULT_WIDTH, DEFAULT_HEIGHT) {
         src(
-            (sprite.minU * Int.MAX_VALUE).toInt(),
-            (sprite.minV * Int.MAX_VALUE).toInt(),
-            ((sprite.maxU - sprite.minU) * Int.MAX_VALUE).toInt(),
-            ((sprite.maxV - sprite.minV) * Int.MAX_VALUE).toInt()
+            (sprite.minU * DEFAULT_WIDTH).toInt(),
+            (sprite.minV * DEFAULT_HEIGHT).toInt(),
+            ((sprite.maxU - sprite.minU) * DEFAULT_WIDTH).toInt(),
+            ((sprite.maxV - sprite.minV) * DEFAULT_HEIGHT).toInt()
         )
     }
     
-    constructor(resource: String): this(ResourceLocation(AEAdditions.ID, resource), DEFAULT_WIDTH, DEFAULT_HEIGHT)
-    constructor(resource: String, width: Int, height: Int): this(ResourceLocation(AEAdditions.ID, resource), width, height)
+    constructor(resource: String): this(ResourceLocation(AEAdditions.ID, "textures/${resource}"), DEFAULT_WIDTH, DEFAULT_HEIGHT)
+    constructor(resource: String, width: Int, height: Int): this(ResourceLocation(AEAdditions.ID, "textures/${resource}"), width, height)
 
     fun src(x: Int, y: Int, width: Int, height: Int): Blit {
         srcRect = Rectangle2d(x, y, width, height)
@@ -153,22 +153,24 @@ class Blit(val texture: ResourceLocation, val referenceWidth: Int, val reference
             x2 += srcRect!!.width.toFloat()
             y2 += srcRect!!.height.toFloat()
         }
+        
+        val matrix = matrixStack.last.matrix
 
         val bufferBuilder = Tessellator.getInstance().buffer
         bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR_TEX)
-        bufferBuilder.pos(matrixStack.last.matrix, x1, y2, zIndex)
+        bufferBuilder.pos(matrix, x1, y2, zIndex)
             .color(r, g, b, a)
             .tex(minU, maxV)
             .endVertex()
-        bufferBuilder.pos(matrixStack.last.matrix, x2, y2, zIndex)
+        bufferBuilder.pos(matrix, x2, y2, zIndex)
             .color(r, g, b, a)
             .tex(maxU, maxV)
             .endVertex()
-        bufferBuilder.pos(matrixStack.last.matrix, x2, y1, zIndex)
+        bufferBuilder.pos(matrix, x2, y1, zIndex)
             .color(r, g, b, a)
             .tex(maxU, minV)
             .endVertex()
-        bufferBuilder.pos(matrixStack.last.matrix, x1, y1, zIndex)
+        bufferBuilder.pos(matrix, x1, y1, zIndex)
             .color(r, g, b, a)
             .tex(minU, minV)
             .endVertex()
@@ -182,7 +184,6 @@ class Blit(val texture: ResourceLocation, val referenceWidth: Int, val reference
         }
 
         RenderSystem.enableTexture()
-
         WorldVertexBufferUploader.draw(bufferBuilder)
     }
 }

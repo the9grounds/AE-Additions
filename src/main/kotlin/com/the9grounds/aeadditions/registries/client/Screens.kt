@@ -1,7 +1,9 @@
 package com.the9grounds.aeadditions.registries.client
 
+import com.the9grounds.aeadditions.client.gui.me.chemical.ChemicalIOBusScreen
 import com.the9grounds.aeadditions.client.gui.me.chemical.ChemicalTerminalScreen
 import com.the9grounds.aeadditions.container.AbstractContainer
+import com.the9grounds.aeadditions.container.chemical.ChemicalIOContainer
 import com.the9grounds.aeadditions.container.chemical.ChemicalTerminalContainer
 import net.minecraft.client.gui.ScreenManager
 import net.minecraft.client.gui.screen.inventory.ContainerScreen
@@ -16,6 +18,20 @@ object Screens {
     
     fun init() {
         register(ChemicalTerminalContainer.TYPE) { container, playerInventory, iTextComponent -> ChemicalTerminalScreen(container, playerInventory, iTextComponent) }
+        register(ChemicalIOContainer.IMPORT_BUS) { chemicalIOContainer, playerInventory, iTextComponent ->
+            ChemicalIOBusScreen(
+                chemicalIOContainer,
+                playerInventory,
+                iTextComponent
+            )
+        }
+        register(ChemicalIOContainer.EXPORT_BUS) { chemicalIOContainer, playerInventory, iTextComponent ->
+            ChemicalIOBusScreen(
+                chemicalIOContainer,
+                playerInventory,
+                iTextComponent
+            )
+        }
     }
     
     

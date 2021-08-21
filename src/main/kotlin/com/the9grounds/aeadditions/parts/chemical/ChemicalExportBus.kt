@@ -8,7 +8,6 @@ import appeng.api.networking.ticking.TickingRequest
 import appeng.api.parts.IPartCollisionHelper
 import appeng.api.parts.IPartModel
 import appeng.api.util.AECableType
-import appeng.container.implementations.IOBusContainer
 import appeng.items.parts.PartModels
 import appeng.me.GridAccessException
 import appeng.me.helpers.MachineSource
@@ -16,6 +15,7 @@ import appeng.parts.PartModel
 import com.the9grounds.aeadditions.AEAdditions
 import com.the9grounds.aeadditions.container.ContainerOpener
 import com.the9grounds.aeadditions.container.Locator
+import com.the9grounds.aeadditions.container.chemical.ChemicalIOContainer
 import com.the9grounds.aeadditions.core.TickRates
 import com.the9grounds.aeadditions.integration.Mods
 import com.the9grounds.aeadditions.integration.appeng.AppEng
@@ -60,10 +60,10 @@ class ChemicalExportBus(itemStack: ItemStack) : SharedIOBus(itemStack), IGridTic
     override fun onPartActivate(player: PlayerEntity?, hand: Hand?, pos: Vector3d?): Boolean {
         
         if (!isRemote) {
-            ContainerOpener.openContainer(IOBusContainer.EXPORT_TYPE, player!!, Locator.forPart(this))
+            ContainerOpener.openContainer(ChemicalIOContainer.EXPORT_BUS, player!!, Locator.forPart(this))
         }
         
-        return super.onPartActivate(player, hand, pos)
+        return true
     }
 
     override fun getTickingRequest(node: IGridNode): TickingRequest = TickingRequest(TickRates.ChemicalExportBus.min, TickRates.ChemicalExportBus.max, isSleeping, false)

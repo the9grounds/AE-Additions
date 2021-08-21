@@ -42,7 +42,7 @@ abstract class AEABaseScreen<T: AbstractContainer<T>>(screenContainer: T, inv: P
         matrixStack.push()
         matrixStack.translate(guiLeft.toDouble(), guiTop.toDouble(), 0.0)
 
-        widgetContainer.drawWidgets(matrixStack, font)
+        widgetContainer.drawWidgets(matrixStack, font, x.toDouble(), y.toDouble())
 
         matrixStack.pop()
     }

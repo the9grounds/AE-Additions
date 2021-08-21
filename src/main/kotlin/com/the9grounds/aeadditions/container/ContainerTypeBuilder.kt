@@ -24,6 +24,8 @@ class ContainerTypeBuilder<C : AbstractContainer<C>, I : Any> {
     var hostInterface: KClass<out I>
     var factory: (Int, PlayerInventory?, I) -> C
     
+    var titleComponent: ITextComponent? = null
+    
     constructor(hostInterface: KClass<out I>, factory: (Int, PlayerInventory?, I) -> C) {
         this.hostInterface = hostInterface
         this.factory = factory
@@ -55,8 +57,12 @@ class ContainerTypeBuilder<C : AbstractContainer<C>, I : Any> {
             return false
         }
 
-        val title = getDefaultContainerTitle(accessInterface)
-
+        val title = if (titleComponent != null) {
+            titleComponent
+        } else {
+            getDefaultContainerTitle(accessInterface)
+        }
+        
         val container =
             SimpleNamedContainerProvider({ window: Int, playerInventory: PlayerInventory?, _: PlayerEntity? ->
                 val c: C = factory(window, playerInventory, accessInterface)
@@ -123,7 +129,7 @@ class ContainerTypeBuilder<C : AbstractContainer<C>, I : Any> {
                 hostInterface.cast(part)
             } else {
                 Logger.debug(
-                    "Trying to open a container @ %s for a %s, but the container requires %s", locator,
+                    "Trying to open a container @ {} for a {}, but the container requires {}", locator,
                     part::class.java, hostInterface
                 )
                 null

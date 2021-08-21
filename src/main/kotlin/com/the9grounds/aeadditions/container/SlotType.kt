@@ -5,5 +5,6 @@ enum class SlotType {
     PlayerHotbar,
     NetworkTool,
     Upgrade,
-    Config
+    Config,
+    Storage
 }

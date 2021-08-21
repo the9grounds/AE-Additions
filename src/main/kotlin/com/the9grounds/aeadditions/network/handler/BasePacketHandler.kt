@@ -13,7 +13,9 @@ abstract class BasePacketHandler {
         GUIDATASYNC(GuiDataSyncPacket::class, factory = { packetBuffer ->  GuiDataSyncPacket(packetBuffer)}),
         MEINVENTORYUPDATE(MEInventoryUpdatePacket::class, factory = { packetBuffer -> MEInventoryUpdatePacket(packetBuffer) }),
         MEINTERACTION(MEInteractionPacket::class, { packetBuffer -> MEInteractionPacket(packetBuffer) }),
-        UPDATESLOTINHAND(UpdateSlotInHandPacket::class, { packetBuffer -> UpdateSlotInHandPacket(packetBuffer) });
+        UPDATESLOTINHAND(UpdateSlotInHandPacket::class, { packetBuffer -> UpdateSlotInHandPacket(packetBuffer) }),
+        CHEMICALCONFIG(ChemicalConfigPacket::class, { packetBuffer -> ChemicalConfigPacket(packetBuffer) }),
+        CHEMICALCONFIGCHANGED(ChemicalConfigChangedPacket::class, { buffer -> ChemicalConfigChangedPacket(buffer) });
         
         init {
             lookup[clazz] = this

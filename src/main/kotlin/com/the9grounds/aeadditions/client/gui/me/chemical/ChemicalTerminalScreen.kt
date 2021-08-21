@@ -5,9 +5,10 @@ import com.mojang.blaze3d.matrix.MatrixStack
 import com.the9grounds.aeadditions.AEAdditions
 import com.the9grounds.aeadditions.api.chemical.IAEChemicalStack
 import com.the9grounds.aeadditions.client.gui.AEABaseScreen
-import com.the9grounds.aeadditions.client.gui.widget.ChemicalWidget
 import com.the9grounds.aeadditions.client.gui.widget.IWidget
+import com.the9grounds.aeadditions.client.gui.widget.TerminalChemicalWidget
 import com.the9grounds.aeadditions.client.helpers.Blit
+import com.the9grounds.aeadditions.container.SlotType
 import com.the9grounds.aeadditions.container.chemical.ChemicalTerminalContainer
 import com.the9grounds.aeadditions.integration.mekanism.chemical.ChemicalList
 import net.minecraft.client.Minecraft
@@ -88,19 +89,16 @@ class ChemicalTerminalScreen(
     }
     
     override fun drawGuiContainerBackgroundLayer(matrixStack: MatrixStack, partialTicks: Float, x: Int, y: Int) {
-        super.drawGuiContainerBackgroundLayer(matrixStack, partialTicks, x, y)
-        
-        Minecraft.getInstance().textureManager.bindTexture(texture)
-        
-        Blit(texture).dest(guiLeft, guiTop, getXSize(), getYSize()).draw(matrixStack, 0f)
-        
+        Blit(texture).dest(guiLeft, guiTop).src(0, 0, getXSize(), getYSize()).draw(matrixStack, 0f)
         searchBox!!.renderWidget(matrixStack, x, y, partialTicks)
+        
+        super.drawGuiContainerBackgroundLayer(matrixStack, partialTicks, x, y)
     }
     
     fun onChemicalListChange() {
         val chemicalList = container.chemicalList as? ChemicalList ?: return
 
-        widgetContainer.reset()
+        widgetContainer.reset(SlotType.Storage)
         var startingX = 8
         var startingY = 17
         
@@ -122,7 +120,7 @@ class ChemicalTerminalScreen(
 
             val chemicalStack: IAEChemicalStack? = tempList.getOrNull(i)
             
-            widgetContainer.add(ChemicalWidget(this, startingX, startingY, 18, 18, i, chemicalStack))
+            widgetContainer.add(TerminalChemicalWidget(this, startingX, startingY, 18, 18, i, chemicalStack), SlotType.Storage)
             startingX += 18
             if ((i + 1).rem(9) == 0) {
                 startingX = 8
@@ -133,7 +131,7 @@ class ChemicalTerminalScreen(
     
     override fun onWidgetClicked(widget: IWidget, mouseButton: Int, clickType: ClickType) {
         
-        if (widget !is ChemicalWidget) {
+        if (widget !is TerminalChemicalWidget) {
             return
         }
         
