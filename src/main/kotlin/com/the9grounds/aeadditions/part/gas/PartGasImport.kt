@@ -111,11 +111,7 @@ class PartGasImport: PartGasIO(), IGasHandler, ITubeConnection {
             return false
         }
 
-        val toFill = StorageChannels.GAS!!.createStack(drained)
-
-        if (toFill == null) {
-            return false
-        }
+        val toFill = StorageChannels.GAS!!.createStack(drained) ?: return false
 
         val notInjected = injectGas(toFill, Actionable.MODULATE)
 

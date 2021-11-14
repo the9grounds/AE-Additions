@@ -41,6 +41,7 @@ import net.minecraft.util.math.Vec3d
 import net.minecraft.world.IBlockAccess
 import net.minecraftforge.fluids.Fluid
 import net.minecraftforge.fluids.FluidRegistry
+import net.minecraftforge.fml.common.FMLCommonHandler
 import java.util.*
 import net.minecraftforge.fml.common.Optional
 
@@ -135,9 +136,14 @@ class PartGasStorage : PartECBase(), ICellContainer, IInventoryListener, IFluidS
     }
 
     override fun onInventoryChanged() {
+        val isCurrentlyInverted = this.handler.isInverted
         this.handler.setInverted(AEApi.instance().definitions().materials().cardInverter().isSameAs(upgradeInventory.getStackInSlot(0)))
 
         saveData()
+        
+        if (isCurrentlyInverted !== this.handler.isInverted && !FMLCommonHandler.instance().effectiveSide.isClient) {
+            gridNode.grid.postEvent(MENetworkCellArrayUpdate())
+        }
     }
 
     override fun onNeighborChanged(var1: IBlockAccess?, var2: BlockPos?, var3: BlockPos?) {
@@ -218,6 +224,7 @@ class PartGasStorage : PartECBase(), ICellContainer, IInventoryListener, IFluidS
         handler.setPrioritizedFluids(filterGases)
         sendInformation(player)
         saveData()
+        updateNeighbor()
     }
 
     fun updateAccess(access: AccessRestriction?) {
@@ -269,14 +276,24 @@ class PartGasStorage : PartECBase(), ICellContainer, IInventoryListener, IFluidS
 
     @Optional.Method(modid = "MekanismAPI|gas")
     private fun updateNeighborGases() {
+        var changed = false
+        var oldList = gasList.toMap()
         gasList.clear()
 
         if ((access == AccessRestriction.READ) || (access == AccessRestriction.READ_WRITE)) {
             for (stack in (handler as IHandlerPartBase<IAEGasStack>).getAvailableItems(StorageChannels.GAS!!.createList())) {
-                val gasStack = stack.gas as GasStack
+                val gasStack = stack.gasStack as GasStack
 
-                gasList.set(gasStack, gasStack.amount)
+                gasList[gasStack] = gasStack.amount
+                
+                if (oldList[gasStack] != gasStack.amount) {
+                    changed = true
+                }
             }
+        }
+        
+        if (changed || oldList.size != gasList.size) {
+            gridNode.grid.postEvent(MENetworkCellArrayUpdate())
         }
     }
 

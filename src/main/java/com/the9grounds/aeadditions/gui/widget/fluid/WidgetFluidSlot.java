@@ -50,6 +50,7 @@ public class WidgetFluidSlot extends AbstractWidget {
 	private static final ResourceLocation guiTexture = new ResourceLocation(Constants.MOD_ID, "textures/gui/busiofluid.png");
 	private IFluidSlotListener listener;
 	private IConfigurable configurable;
+	private boolean isAlwaysAvailable = false;
 
 	private byte configOption;
 
@@ -86,7 +87,16 @@ public class WidgetFluidSlot extends AbstractWidget {
 		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GlStateManager.color(1.0F, 1.0F, 1.0F);
 		textureManager.bindTexture(guiTexture);
-		manager.gui.drawTexturedModalRect(xPos, yPos, 79, 39, 18, 18);
+		
+		int textX = 79;
+		int textY = 39;
+		
+		if (isAlwaysAvailable) {
+			textY = 101;
+			textX = 7;
+		}
+		
+		manager.gui.drawTexturedModalRect(xPos, yPos, textX, textY, 18, 18);
 
 		if (this.fluid != null) {
 			drawFluid(textureManager);
@@ -182,5 +192,9 @@ public class WidgetFluidSlot extends AbstractWidget {
 
 	public void setFluid(Fluid fluid) {
 		this.fluid = fluid;
+	}
+
+	public void setAlwaysAvailable(boolean alwaysAvailable) {
+		isAlwaysAvailable = alwaysAvailable;
 	}
 }
