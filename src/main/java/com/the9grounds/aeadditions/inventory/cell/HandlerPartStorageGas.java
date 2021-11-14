@@ -26,7 +26,9 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.Fluid;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 //TODO: rewrite
 public class HandlerPartStorageGas implements IHandlerPartBase<IAEGasStack> {
@@ -35,7 +37,7 @@ public class HandlerPartStorageGas implements IHandlerPartBase<IAEGasStack> {
 	protected PartGasStorage node;
 	protected IGasHandler tank;
 	protected AccessRestriction access = AccessRestriction.READ_WRITE;
-	protected List<Fluid> prioritizedFluids = new ArrayList<Fluid>();
+	protected HashSet<Fluid> prioritizedFluids = new HashSet<Fluid>();
 	protected boolean inverted;
 	protected TileEntity tile = null;
 	private IExternalGasStorageHandler externalHandler = null;
@@ -100,7 +102,9 @@ public class HandlerPartStorageGas implements IHandlerPartBase<IAEGasStack> {
 			}
 			IItemList<IAEGasStack> list = inventory.getAvailableItems(StorageChannels.GAS.createList());
 			for (IAEGasStack stack : list) {
-				out.add(stack);
+				if (isPrioritized(stack)) {
+					out.add(stack);
+				}
 			}
 		}
 		return out;
@@ -142,12 +146,7 @@ public class HandlerPartStorageGas implements IHandlerPartBase<IAEGasStack> {
 			return false;
 		}
 		Fluid gasFluid = GasUtil.getFluidStack((GasStack)input.getGasStack()).getFluid();
-		for (Fluid fluid : this.prioritizedFluids) {
-			if (fluid == gasFluid) {
-				return true;
-			}
-		}
-		return false;
+		return prioritizedFluids.size() == 0 || ((!inverted && prioritizedFluids.contains(gasFluid)) || (inverted && !prioritizedFluids.contains(gasFluid)));
 	}
 
 	@Override
@@ -203,6 +202,10 @@ public class HandlerPartStorageGas implements IHandlerPartBase<IAEGasStack> {
 
 	public void setInverted(boolean _inverted) {
 		this.inverted = _inverted;
+	}
+
+	public boolean isInverted() {
+		return inverted;
 	}
 
 	public void setPrioritizedFluids(Fluid[] _fluids) {

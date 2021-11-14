@@ -19,7 +19,7 @@ object HandlerMekanismGasTank : IExternalGasStorageHandler {
     val clazz = Class.forName("mekanism.common.tile.TileEntityGasTank")
 
     override fun canHandle(tile: TileEntity?, d: EnumFacing?, mySrc: IActionSource?): Boolean {
-        return tile != null && tile::class.java == clazz::class.java
+        return tile != null && tile::class.java == clazz
     }
 
     override fun getInventory(tile: TileEntity?, d: EnumFacing?, src: IActionSource?): IMEInventory<IAEGasStack>? {

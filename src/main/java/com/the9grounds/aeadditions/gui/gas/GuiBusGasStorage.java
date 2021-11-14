@@ -48,6 +48,8 @@ public class GuiBusGasStorage extends GuiBase<ContainerBusGasStorage> implements
 				WidgetFluidSlot fluidSlot = new WidgetFluidSlot(widgetManager, this.part, i * 6 + j, 18 * i + 7, 18 * j + 17);
 				fluidSlotList.add(fluidSlot);
 				widgetManager.add(fluidSlot);
+				
+				fluidSlot.setAlwaysAvailable(true);
 			}
 		}
 
