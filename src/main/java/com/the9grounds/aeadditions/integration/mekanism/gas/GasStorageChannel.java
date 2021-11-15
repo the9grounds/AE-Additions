@@ -9,11 +9,13 @@ import appeng.util.Platform;
 import com.google.common.base.Preconditions;
 import com.the9grounds.aeadditions.api.gas.IAEGasStack;
 import com.the9grounds.aeadditions.api.gas.IGasStorageChannel;
+import com.the9grounds.aeadditions.item.ItemGas;
 import com.the9grounds.aeadditions.util.GasUtil;
 import io.netty.buffer.ByteBuf;
 import mekanism.api.gas.Gas;
 import mekanism.api.gas.GasRegistry;
 import mekanism.api.gas.GasStack;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -59,6 +61,10 @@ public class GasStorageChannel implements IGasStorageChannel {
             return new AEGasStack((GasStack) o);
         } else if (o instanceof AEGasStack) {
             return new AEGasStack((AEGasStack) o);
+        } else if (o instanceof ItemStack && ((ItemStack) o).getItem() instanceof ItemGas) {
+            String gasName = ItemGas.getGasName((ItemStack) o);
+            
+            return new AEGasStack(new GasStack(GasRegistry.getGas(gasName), 1000));
         } else if (o instanceof Fluid) {
             Fluid fluid = (Fluid) o;
             if (GasUtil.isGas(fluid)) {
