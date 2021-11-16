@@ -8,10 +8,12 @@ class FilterSlot(val itemType: FilterSlot.ItemTypes, inv: IItemHandler, slot: In
     AEASlot(inv, slot) {
 
     override fun isItemValid(stack: ItemStack): Boolean {
-        return when(itemType) {
+        val bool = when(itemType) {
             ItemTypes.UPGRADES -> stack.item is IUpgradeModule && ((stack.item as IUpgradeModule).getType(stack)) != null
             else -> false
         }
+        
+        return bool && inv.isItemValid(slotIndex, stack)
     }
         
         

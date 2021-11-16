@@ -36,6 +36,7 @@ class ChemicalIOContainer(
         this.setupUpgrades()
     }
 
-    override val chemicalConfig: IAEAChemicalConfig
-        get() = (part as IAEAHasChemicalConfig).chemicalConfig
+    override fun getChemicalConfig(): IAEAChemicalConfig {
+        return  (part as IAEAHasChemicalConfig).getChemicalConfig()
+    }
 }

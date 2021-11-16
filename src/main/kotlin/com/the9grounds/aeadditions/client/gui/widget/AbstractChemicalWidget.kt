@@ -5,7 +5,6 @@ import com.the9grounds.aeadditions.api.chemical.IAEChemicalStack
 import com.the9grounds.aeadditions.client.gui.AEABaseScreen
 import com.the9grounds.aeadditions.client.helpers.Blit
 import com.the9grounds.aeadditions.integration.mekanism.Mekanism
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.AbstractGui
 
 abstract class AbstractChemicalWidget(
@@ -31,8 +30,6 @@ abstract class AbstractChemicalWidget(
     }
 
     override fun drawWidgetForeground(matrixStack: MatrixStack, mouseX: Double, mouseY: Double) {
-        
-        val font = Minecraft.getInstance().fontRenderer
         
         if (chemical != null) {
             val sprite = Mekanism.getChemicalTexture(chemical!!.getChemical())

@@ -235,4 +235,8 @@ abstract class AEABasePart(val itemStack: ItemStack) : IPart, IGridProxyable, IA
     override fun getConfigManager(): IConfigManager? = null
 
     override fun getInventoryByName(name: String): IItemHandler? = null
+
+    override fun sendUpgradesToClient() {
+        
+    }
 }

@@ -55,10 +55,8 @@ abstract class AbstractUpgradeInventory(private val parent: IAEAInventory?, size
             if (stack == null || stack.item == Items.AIR || stack.item !is IUpgradeModule) {
                 continue
             }
-            
-            val upgrade = (stack.item as IUpgradeModule).getType(stack)
-            
-            when(upgrade) {
+
+            when((stack.item as IUpgradeModule).getType(stack)) {
                 Upgrades.CAPACITY -> capacityUpgrades++
                 Upgrades.FUZZY -> fuzzyUpgrades++
                 Upgrades.REDSTONE -> redstoneUpgrades++
@@ -79,9 +77,7 @@ abstract class AbstractUpgradeInventory(private val parent: IAEAInventory?, size
     abstract fun getMaxInstalled(upgrade: Upgrades): Int
 
     override fun saveChanges() {
-        if (parent != null) {
-            parent.saveChanges()
-        }
+        parent?.saveChanges()
     }
 
     override fun onInventoryChanged(
@@ -101,6 +97,16 @@ abstract class AbstractUpgradeInventory(private val parent: IAEAInventory?, size
     override fun readFromNBT(data: CompoundNBT, name: String) {
         super.readFromNBT(data, name)
         gatherUpgrades()
+    }
+    
+    fun getUpgradeMap(): Map<Upgrades, Int> {
+        val map = mutableMapOf<Upgrades, Int>()
+        
+        for (upgrade in Upgrades.values()) {
+            map[upgrade] = getInstalledUpgrades(upgrade)
+        }
+        
+        return map
     }
 
     override val isRemote: Boolean

@@ -84,7 +84,7 @@ class ChemicalExportBus(itemStack: ItemStack) : SharedIOBus(itemStack), IGridTic
         try {
             val alreadyUsedChemicals = mutableMapOf<Chemical<*>, Boolean>()
             var didWork = false
-            for (item in chemicalConfig) {
+            for (item in getChemicalConfig()) {
                 if (item == null) {
                     continue
                 }

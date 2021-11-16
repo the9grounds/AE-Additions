@@ -2,10 +2,13 @@ package com.the9grounds.aeadditions.parts
 
 import appeng.api.config.RedstoneMode
 import appeng.api.config.Upgrades
+import appeng.core.sync.network.TargetPoint
 import com.the9grounds.aeadditions.core.inv.AbstractUpgradeInventory
 import com.the9grounds.aeadditions.core.inv.IAEAInventory
 import com.the9grounds.aeadditions.core.inv.Operation
 import com.the9grounds.aeadditions.core.inv.StackUpgradeInventory
+import com.the9grounds.aeadditions.network.NetworkManager
+import com.the9grounds.aeadditions.network.packets.UpgradesUpdatedPacket
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundNBT
 import net.minecraftforge.items.IItemHandler
@@ -90,7 +93,14 @@ abstract class AbstractUpgradablePart(itemStack: ItemStack) : AbstractBasicState
     ) {
         if (inv == upgrades) {
             onUpgradesChanged()
+            
+            sendUpgradesToClient()
         }
+    }
+    
+    override fun sendUpgradesToClient() {
+        NetworkManager.sendToAllAround(UpgradesUpdatedPacket(upgrades.getUpgradeMap()), TargetPoint(location.x.toDouble(),
+            location.y.toDouble(), location.z.toDouble(), 32.toDouble(), location.world))
     }
 
     open fun onUpgradesChanged() {

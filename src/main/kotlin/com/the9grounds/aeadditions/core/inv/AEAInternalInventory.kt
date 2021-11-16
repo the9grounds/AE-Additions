@@ -30,7 +30,6 @@ open class AEAInternalInventory(var host: IAEAInventory?, size: Int, maxStack: I
     }
 
     override fun insertItem(slot: Int, stack: ItemStack, simulate: Boolean): ItemStack {
-        
         if (filter != null && !filter!!.allowInsert(this, slot, stack)) {
             return stack
         }

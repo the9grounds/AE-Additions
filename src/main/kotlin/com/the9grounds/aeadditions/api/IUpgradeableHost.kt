@@ -12,4 +12,6 @@ interface IUpgradeableHost: IConfigurableObject, ISegmentedInventory {
     fun getInstalledUpgrades(upgrade: Upgrades): Int
     
     fun getUpgradeInventory(): IItemHandler? = getInventoryByName("upgrades")
+    
+    fun sendUpgradesToClient()
 }

@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack
 import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.api.distmarker.OnlyIn
 import net.minecraftforge.items.IItemHandler
+import net.minecraftforge.items.IItemHandlerModifiable
 import kotlin.math.min
 
 open class AEASlot(val inv: IItemHandler, slot: Int, x: Int, y: Int) : Slot(Inventory(0), slot, x, y) {
@@ -20,7 +21,13 @@ open class AEASlot(val inv: IItemHandler, slot: Int, x: Int, y: Int) : Slot(Inve
     
     lateinit var container: AbstractContainer<*>
 
-    override fun isItemValid(stack: ItemStack): Boolean = inv.isItemValid(slotIndex, stack)
+    override fun isItemValid(stack: ItemStack): Boolean {
+        if (isSlotEnabled) {
+            return inv.isItemValid(slotIndex, stack)
+        }
+        
+        return false
+    }
 
     override fun getStack(): ItemStack {
         if (!isSlotEnabled) {
@@ -37,8 +44,14 @@ open class AEASlot(val inv: IItemHandler, slot: Int, x: Int, y: Int) : Slot(Inve
     val isSlotEnabled: Boolean = true
 
     override fun putStack(stack: ItemStack) {
-        inv.extractItem(slotIndex, Int.MAX_VALUE, false)
-        inv.insertItem(slotIndex, stack, false)
+        if (inv is IItemHandlerModifiable) {
+            inv.setStackInSlot(slotIndex, stack)
+        } else {
+            inv.extractItem(slotIndex, Int.MAX_VALUE, false)
+            inv.insertItem(slotIndex, stack, false)
+        }
+        
+        onSlotChanged()
     }
 
     override fun getSlotStackLimit(): Int = inv.getSlotLimit(slotIndex)

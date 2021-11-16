@@ -7,7 +7,7 @@ interface IAEAChemicalConfig: Iterable<Chemical<*>?> {
     
     val size: Int
     
-    val config: Array<Chemical<*>?>
+    fun getConfig(): Array<Chemical<*>?>
     
     fun setChemicalInSlot(slot: Int, chemical: Chemical<*>?)
     

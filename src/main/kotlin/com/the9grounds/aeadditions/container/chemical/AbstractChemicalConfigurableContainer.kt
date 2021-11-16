@@ -29,7 +29,7 @@ abstract class AbstractChemicalConfigurableContainer<T>(
 
     var gui: IChemicalConfigListener? = null
     
-    abstract val chemicalConfig: IAEAChemicalConfig
+    abstract fun getChemicalConfig(): IAEAChemicalConfig
     
     override fun receiveChemicals(chemicals: Array<Chemical<*>?>) {
         chemicalList = chemicals
@@ -40,7 +40,7 @@ abstract class AbstractChemicalConfigurableContainer<T>(
     }
 
     override fun setChemicalForSlot(chemical: Chemical<*>?, slot: Int) {
-        chemicalConfig.setChemicalInSlot(slot, chemical)
+        getChemicalConfig().setChemicalInSlot(slot, chemical)
         
         sendChemicalListToAllValidListeners()
     }
@@ -67,7 +67,7 @@ abstract class AbstractChemicalConfigurableContainer<T>(
             val chemicalInStack = Mekanism.getStoredChemicalStackFromStack(tis)
             
             if (chemicalInStack != null) {
-                val config = chemicalConfig
+                val config = getChemicalConfig()
                 
                 for (i in 0 until config.size) {
                     if (config.hasChemicalInSlot(i) && isValidForConfig(i)) {
@@ -107,7 +107,7 @@ abstract class AbstractChemicalConfigurableContainer<T>(
     override fun detectAndSendChanges() {
         
         if (isServer) {
-            val config = chemicalConfig
+            val config = getChemicalConfig()
             
             var shouldSendPacket = false
             
@@ -142,10 +142,9 @@ abstract class AbstractChemicalConfigurableContainer<T>(
         if (listener is ServerPlayerEntity) {
             sendChemicalListToPlayer(listener)
         }
-        
     }
 
     private fun sendChemicalListToPlayer(player: ServerPlayerEntity) {
-        NetworkManager.sendTo(ChemicalConfigPacket(windowId, chemicalConfig.config), player)
+        NetworkManager.sendTo(ChemicalConfigPacket(windowId, getChemicalConfig().getConfig()), player)
     }
 }

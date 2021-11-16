@@ -20,7 +20,8 @@ class UpdateSlotInHandPacket : BasePacket {
         this.itemStack = itemStack
         
         val packet = AEAPacketBuffer(Unpooled.buffer())
-        
+
+        packet.writeInt(getPacketId())
         packet.writeItemStack(itemStack)
         packet.writeString(slot!!.getName())
         configureWrite(packet)

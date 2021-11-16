@@ -6,7 +6,9 @@ import appeng.items.tools.NetworkToolItem
 import com.the9grounds.aeadditions.api.IUpgradeableHost
 import com.the9grounds.aeadditions.container.slot.FilterSlot
 import net.minecraft.entity.player.PlayerInventory
+import net.minecraft.entity.player.ServerPlayerEntity
 import net.minecraft.inventory.container.ContainerType
+import net.minecraft.inventory.container.IContainerListener
 import net.minecraft.util.text.ITextComponent
 import net.minecraft.util.text.StringTextComponent
 
@@ -18,6 +20,8 @@ abstract class AbstractUpgradableContainer<T>(
 ) : AbstractContainer<T>(type, id, playerInventory, false, host) {
     
     val upgradable: IUpgradeableHost
+    
+    var currentUpgrades = mapOf<Upgrades, Int>()
     
     var networkToolSlot: Int? = null
     var networkToolInventory: NetworkToolViewer? = null
@@ -52,6 +56,10 @@ abstract class AbstractUpgradableContainer<T>(
         setupConfig()
     }
     
+    fun updateUpgrades(upgrades: Map<Upgrades, Int>) {
+        this.currentUpgrades = upgrades
+    }
+    
     val hasToolbox: Boolean
     get () = networkToolInventory != null
     
@@ -72,10 +80,18 @@ abstract class AbstractUpgradableContainer<T>(
             addSlot(slot, SlotType.Upgrade)
         }
     }
+
+    override fun addListener(listener: IContainerListener) {
+        super.addListener(listener)
+        
+        if (listener is ServerPlayerEntity) {
+            upgradable.sendUpgradesToClient()
+        }
+    }
     
     fun isConfigGroupEnabled(group: Int): Boolean {
-        val capacityUpgrades = upgradable.getInstalledUpgrades(Upgrades.CAPACITY)
-        
+        val capacityUpgrades = currentUpgrades[Upgrades.CAPACITY] ?: return false
+
         return group == 0 || (group == 1 && capacityUpgrades > 0) || (group == 2 && capacityUpgrades > 1)
     }
 }

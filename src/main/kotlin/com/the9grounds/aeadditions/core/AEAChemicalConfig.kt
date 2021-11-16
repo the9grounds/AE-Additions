@@ -7,15 +7,17 @@ import net.minecraft.nbt.CompoundNBT
 
 class AEAChemicalConfig(override val size: Int) : IAEAChemicalConfig {
     
-    override val config = arrayOfNulls<Chemical<*>?>(size)
+    private val _config = arrayOfNulls<Chemical<*>?>(size)
+
+    override fun getConfig(): Array<Chemical<*>?> = _config
     
     override fun setChemicalInSlot(slot: Int, chemical: Chemical<*>?) {
-        config[slot] = chemical
+        _config[slot] = chemical
     }
 
-    override fun getChemicalInSlot(slot: Int): Chemical<*>? = config[slot]
+    override fun getChemicalInSlot(slot: Int): Chemical<*>? = _config[slot]
 
-    override fun hasChemicalInSlot(slot: Int): Boolean = config[slot] != null
+    override fun hasChemicalInSlot(slot: Int): Boolean = _config[slot] != null
 
     override fun readFromNbt(nbt: CompoundNBT, name: String) {
         if (nbt.contains(name)) {
@@ -26,7 +28,7 @@ class AEAChemicalConfig(override val size: Int) : IAEAChemicalConfig {
 
                     val chemical = Mekanism.readChemicalFromNbt(chemicalNbt)
 
-                    config[i] = chemical
+                    _config[i] = chemical
                 }
             }
         }
@@ -52,5 +54,5 @@ class AEAChemicalConfig(override val size: Int) : IAEAChemicalConfig {
         nbt.put(name, compound)
     }
 
-    override fun iterator(): Iterator<Chemical<*>?> = config.iterator()
+    override fun iterator(): Iterator<Chemical<*>?> = _config.iterator()
 }

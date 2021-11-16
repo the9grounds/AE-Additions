@@ -61,8 +61,6 @@ class ChemicalWidgetConfig(
     }
 
     override fun drawWidgetForeground(matrixStack: MatrixStack, mouseX: Double, mouseY: Double) {
-
-        super.drawWidgetForeground(matrixStack, mouseX, mouseY)
         
         if ((guiTerminal.container as AbstractUpgradableContainer<*>).isConfigGroupEnabled(group)) {
             if (isMouseOver(mouseX, mouseY)) {
@@ -75,5 +73,7 @@ class ChemicalWidgetConfig(
                 }
             }
         }
+
+        super.drawWidgetForeground(matrixStack, mouseX, mouseY)
     }
 }

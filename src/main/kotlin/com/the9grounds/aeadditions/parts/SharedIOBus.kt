@@ -17,19 +17,24 @@ import net.minecraft.world.IBlockReader
 import kotlin.math.floor
 
 abstract class SharedIOBus(itemStack: ItemStack) : AbstractUpgradablePart(itemStack), IAEAHasChemicalConfig {
-    override val chemicalConfig: IAEAChemicalConfig
-        get() = AEAChemicalConfig(9)
+
+    val _chemicalConfig: IAEAChemicalConfig = AEAChemicalConfig(9)
+
+    override fun getChemicalConfig(): IAEAChemicalConfig {
+        return _chemicalConfig
+    }
+    
     
     var lastRedstone = false
 
     override fun readFromNBT(data: CompoundNBT?) {
         super.readFromNBT(data)
-        chemicalConfig.readFromNbt(data!!, "config")
+        _chemicalConfig.readFromNbt(data!!, "config")
     }
 
     override fun writeToNBT(data: CompoundNBT?) {
         super.writeToNBT(data)
-        chemicalConfig.writeToNbt(data!!, "config")
+        _chemicalConfig.writeToNbt(data!!, "config")
     }
     
     abstract fun doWork(): TickRateModulation
@@ -84,7 +89,7 @@ abstract class SharedIOBus(itemStack: ItemStack) : AbstractUpgradablePart(itemSt
     }
     
     protected fun isInFilter(chemical: Chemical<*>): Boolean {
-        for (item in chemicalConfig) {
+        for (item in _chemicalConfig) {
             if (chemical == item) {
                 return true
             }
@@ -94,7 +99,7 @@ abstract class SharedIOBus(itemStack: ItemStack) : AbstractUpgradablePart(itemSt
     }
     
     protected fun filterEnabled(): Boolean {
-        for (chemical in chemicalConfig) {
+        for (chemical in _chemicalConfig) {
             if (chemical != null) {
                 return true
             }
