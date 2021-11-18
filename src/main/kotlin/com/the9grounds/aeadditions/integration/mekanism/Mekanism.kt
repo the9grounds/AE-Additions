@@ -33,6 +33,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundNBT
 import net.minecraft.network.PacketBuffer
 import net.minecraft.tileentity.TileEntity
+import net.minecraft.util.Direction
 import net.minecraft.util.ResourceLocation
 import net.minecraftforge.common.capabilities.Capability
 
@@ -290,28 +291,28 @@ object Mekanism {
         return tileEntity.getCapability(capability).resolve().get().insertChemical(chemicalStack, action)
     }
     
-    fun extractChemical(tileEntity: TileEntity, amount: Long, action: Action): ChemicalStack<*>? {
-        val gasStack = extractChemicalForCapability(tileEntity, Capabilities.GAS_HANDLER_CAPABILITY, amount, action)
-        if (gasStack != null) {
+    fun extractChemical(tileEntity: TileEntity, side: Direction, amount: Long, action: Action): ChemicalStack<*>? {
+        val gasStack = extractChemicalForCapability(tileEntity, side, Capabilities.GAS_HANDLER_CAPABILITY, amount, action)
+        if (gasStack != null && !gasStack.isEmpty) {
             return gasStack
         }
-        val slurryStack = extractChemicalForCapability(tileEntity, Capabilities.SLURRY_HANDLER_CAPABILITY, amount, action)
-        if (slurryStack != null) {
+        val slurryStack = extractChemicalForCapability(tileEntity, side, Capabilities.SLURRY_HANDLER_CAPABILITY, amount, action)
+        if (slurryStack != null && !slurryStack.isEmpty) {
             return slurryStack
         }
-        val infusionStack = extractChemicalForCapability(tileEntity, Capabilities.INFUSION_HANDLER_CAPABILITY, amount, action)
-        if (infusionStack != null) {
+        val infusionStack = extractChemicalForCapability(tileEntity, side, Capabilities.INFUSION_HANDLER_CAPABILITY, amount, action)
+        if (infusionStack != null && !infusionStack.isEmpty) {
             return infusionStack
         }
-        val pigmentStack = extractChemicalForCapability(tileEntity, Capabilities.PIGMENT_HANDLER_CAPABILITY, amount, action)
-        if (pigmentStack != null) {
+        val pigmentStack = extractChemicalForCapability(tileEntity, side, Capabilities.PIGMENT_HANDLER_CAPABILITY, amount, action)
+        if (pigmentStack != null && !pigmentStack.isEmpty) {
             return pigmentStack
         }
         
         return null
     }
     
-    fun <T: IChemicalHandler<*, *>> extractChemicalForCapability(tileEntity: TileEntity, capability: Capability<T>, amount: Long, action: Action): ChemicalStack<*>? {
-        return tileEntity.getCapability(capability).resolve().get().extractChemical(amount, action)
+    fun <T: IChemicalHandler<*, *>> extractChemicalForCapability(tileEntity: TileEntity, side: Direction, capability: Capability<T>, amount: Long, action: Action): ChemicalStack<*>? {
+        return tileEntity.getCapability(capability, side).resolve().get().extractChemical(amount, action)
     }
 }

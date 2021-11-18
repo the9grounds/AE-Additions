@@ -80,7 +80,7 @@ class ChemicalImportBus(itemStack: ItemStack) : SharedIOBus(itemStack), IGridTic
         }
         
         try {
-            val extracted = Mekanism.extractChemical(facingChemicalTank!!, calculateThroughput(), Action.SIMULATE)
+            val extracted = Mekanism.extractChemical(facingChemicalTank!!, side!!.facing.opposite, calculateThroughput(), Action.SIMULATE)
                 ?: return TickRateModulation.IDLE
 
             if (filterEnabled() && !isInFilter(extracted.getType())) {
@@ -95,7 +95,7 @@ class ChemicalImportBus(itemStack: ItemStack) : SharedIOBus(itemStack), IGridTic
                 aeChemicalStack.stackSize -= notInserted.stackSize
             }
 
-            Mekanism.extractChemical(facingChemicalTank!!, aeChemicalStack.stackSize, Action.EXECUTE)
+            Mekanism.extractChemical(facingChemicalTank!!, side!!.facing.opposite, aeChemicalStack.stackSize, Action.EXECUTE)
             
             return TickRateModulation.FASTER
             

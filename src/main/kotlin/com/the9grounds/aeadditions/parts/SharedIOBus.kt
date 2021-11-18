@@ -52,6 +52,8 @@ abstract class SharedIOBus(itemStack: ItemStack) : AbstractUpgradablePart(itemSt
                 doWork()
             }
         }
+        
+        super.onNeighborChanged(w, pos, neighbor)
     }
     
     protected fun updateState() {

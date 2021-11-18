@@ -113,11 +113,9 @@ abstract class AEABasePart(val itemStack: ItemStack) : IPart, IGridProxyable, IA
     }
 
     override fun isSolid(): Boolean = false
-    
-    
 
     override fun onNeighborChanged(w: IBlockReader?, pos: BlockPos?, neighbor: BlockPos?) {
-        val tileEntity: TileEntity? = tile!!.world!!.getTileEntity(pos!!.offset(side!!.facing))
+        val tileEntity: TileEntity? = tile!!.world!!.getTileEntity(tile!!.pos.offset(side!!.facing))
 
         if (Mods.MEKANISM.isEnabled) {
             if (tileEntity != null) {

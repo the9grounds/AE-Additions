@@ -13,6 +13,8 @@ abstract class AbstractUpgradeInventory(private val parent: IAEAInventory?, size
         host = this
         
         filter = UpgradeFilter()
+
+        clientEventsEnabled = true
     }
     
     var capacityUpgrades = 0
