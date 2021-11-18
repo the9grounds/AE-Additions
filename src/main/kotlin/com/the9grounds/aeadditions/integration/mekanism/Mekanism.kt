@@ -256,12 +256,12 @@ object Mekanism {
             .apply(spriteLocation)
     }
     
-    fun insertChemicalForChemicalCapability(tileEntity: TileEntity, chemicalStack: ChemicalStack<*>, action: Action): ChemicalStack<*>? {
+    fun insertChemicalForChemicalCapability(tileEntity: TileEntity, side: Direction, chemicalStack: ChemicalStack<*>, action: Action): ChemicalStack<*>? {
         return when(chemicalStack.getType()) {
-            is Gas -> insertChemicalForCapability(tileEntity, Capabilities.GAS_HANDLER_CAPABILITY, chemicalStack as GasStack, action)
-            is Pigment -> insertChemicalForCapability(tileEntity, Capabilities.PIGMENT_HANDLER_CAPABILITY, chemicalStack as PigmentStack, action)
-            is Slurry -> insertChemicalForCapability(tileEntity, Capabilities.SLURRY_HANDLER_CAPABILITY, chemicalStack as SlurryStack, action)
-            is InfuseType -> insertChemicalForCapability(tileEntity, Capabilities.INFUSION_HANDLER_CAPABILITY, chemicalStack as InfusionStack, action)
+            is Gas -> insertChemicalForCapability(tileEntity, side, Capabilities.GAS_HANDLER_CAPABILITY, chemicalStack as GasStack, action)
+            is Pigment -> insertChemicalForCapability(tileEntity, side, Capabilities.PIGMENT_HANDLER_CAPABILITY, chemicalStack as PigmentStack, action)
+            is Slurry -> insertChemicalForCapability(tileEntity, side, Capabilities.SLURRY_HANDLER_CAPABILITY, chemicalStack as SlurryStack, action)
+            is InfuseType -> insertChemicalForCapability(tileEntity, side, Capabilities.INFUSION_HANDLER_CAPABILITY, chemicalStack as InfusionStack, action)
             else -> null
         }
     }
@@ -289,6 +289,10 @@ object Mekanism {
     
     fun <T: IChemicalHandler<CHEMICAL, STACK>, CHEMICAL: Chemical<CHEMICAL>, STACK: ChemicalStack<CHEMICAL>> insertChemicalForCapability(tileEntity: TileEntity, capability: Capability<T>, chemicalStack: STACK, action: Action): ChemicalStack<*>? {
         return tileEntity.getCapability(capability).resolve().get().insertChemical(chemicalStack, action)
+    }
+
+    fun <T: IChemicalHandler<CHEMICAL, STACK>, CHEMICAL: Chemical<CHEMICAL>, STACK: ChemicalStack<CHEMICAL>> insertChemicalForCapability(tileEntity: TileEntity, side: Direction, capability: Capability<T>, chemicalStack: STACK, action: Action): ChemicalStack<*>? {
+        return tileEntity.getCapability(capability, side).resolve().get().insertChemical(chemicalStack, action)
     }
     
     fun extractChemical(tileEntity: TileEntity, side: Direction, amount: Long, action: Action): ChemicalStack<*>? {

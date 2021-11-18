@@ -102,7 +102,7 @@ class ChemicalExportBus(itemStack: ItemStack) : SharedIOBus(itemStack), IGridTic
                 val extracted = AppEng.API!!.storage().poweredExtraction(powerSource, proxy.storage.getInventory(StorageChannels.CHEMICAL), aeChemicalStack, MachineSource(this), Actionable.SIMULATE)
                     ?: continue
 
-                val remaining = Mekanism.insertChemicalForChemicalCapability(facingChemicalTank!!, extracted.getChemicalStack(), Action.EXECUTE)
+                val remaining = Mekanism.insertChemicalForChemicalCapability(facingChemicalTank!!, side!!.facing.opposite, extracted.getChemicalStack(), Action.EXECUTE)
                 
                 if (remaining != null && remaining.getAmount() > 0) {
                     extracted.stackSize -= remaining.getAmount()
@@ -117,7 +117,7 @@ class ChemicalExportBus(itemStack: ItemStack) : SharedIOBus(itemStack), IGridTic
                 return TickRateModulation.FASTER
             }
             
-            return TickRateModulation.IDLE
+            return TickRateModulation.SLOWER
         } catch (e: GridAccessException) {
             //
         }

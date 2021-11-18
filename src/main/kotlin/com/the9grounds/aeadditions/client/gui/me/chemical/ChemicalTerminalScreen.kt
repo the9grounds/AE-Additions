@@ -116,7 +116,7 @@ class ChemicalTerminalScreen(
         
         tempList = tempList.sortedWith(compareBy { it })
         
-        for (i in 0..53) {
+        for (i in 0 until 53) {
 
             val chemicalStack: IAEChemicalStack? = tempList.getOrNull(i)
             
