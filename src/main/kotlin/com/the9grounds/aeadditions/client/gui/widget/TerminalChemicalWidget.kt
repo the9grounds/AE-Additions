@@ -54,7 +54,7 @@ class TerminalChemicalWidget(
             val amount = Utils.getAmountTextForStack(chemical!!)
 
             matrixStack.push()
-            matrixStack.translate(posX.toDouble(), posY.toDouble(), 0.0)
+            matrixStack.translate(posX.toDouble(), posY.toDouble(), 10.0)
             val scale = .48f
             matrixStack.scale(scale, scale, scale)
 
