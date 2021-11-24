@@ -14,6 +14,7 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.FontRenderer
 import net.minecraft.inventory.container.ClickType
 import net.minecraft.item.ItemStack
+import net.minecraft.util.text.ITextComponent
 
 class ChemicalWidgetConfig(
     guiTerminal: AEABaseScreen<*>,
@@ -27,6 +28,14 @@ class ChemicalWidgetConfig(
 ) : AbstractChemicalWidget(guiTerminal, posX, posY, height, width, slot, chemical) {
     
     val background = Blit("gui/states.png").src(0, 0, 18, 18)
+
+    override fun getTooltip(): List<ITextComponent> {
+        if (chemical === null) {
+            return listOf()
+        }
+
+        return listOf(chemical!!.getChemical().textComponent)
+    }
 
     override fun drawWidgetBackground(matrixStack: MatrixStack, font: FontRenderer, mouseX: Double, mouseY: Double) {
         
