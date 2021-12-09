@@ -141,6 +141,10 @@ class ContainerFluidStorage : ContainerStorage {
                     PlayerSource(player, null)
                 )
                 decreaseFirstSlot()
+                
+                if (!monitor.storageList.contains(AEUtils.createFluidStack(selectedFluid, capacity.toLong()))) {
+                    selectedFluid = null
+                }
             }
         }
     }
