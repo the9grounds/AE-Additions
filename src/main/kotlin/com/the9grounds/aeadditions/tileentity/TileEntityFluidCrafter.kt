@@ -391,6 +391,7 @@ class TileEntityFluidCrafter : TileBase(), IActionHost, ICraftingProvider, ICraf
     override fun writeToNBT(tagCompound: NBTTagCompound): NBTTagCompound {
         super.writeToNBT(tagCompound)
         inventory.writeToNBT(tagCompound)
+        tagCompound.setTag("upgradeInventory", upgradeInventory.writeToNBT())
         if (!hasWorld()) {
             return tagCompound
         }
@@ -400,7 +401,6 @@ class TileEntityFluidCrafter : TileBase(), IActionHost, ICraftingProvider, ICraf
             node.saveToNBT("node0", nodeTag)
             tagCompound.setTag("nodes", nodeTag)
         }
-        tagCompound.setTag("upgradeInventory", upgradeInventory.writeToNBT())
         return tagCompound
     }
 
@@ -418,6 +418,10 @@ class TileEntityFluidCrafter : TileBase(), IActionHost, ICraftingProvider, ICraf
     }
 
     override fun onInventoryChanged() {
+        if (!hasWorld()) {
+            return
+        }
+        
         val oldCapacity = capacity
         speedState = 0
         capacity = 0
@@ -454,7 +458,9 @@ class TileEntityFluidCrafter : TileBase(), IActionHost, ICraftingProvider, ICraf
         }
 
         inventory.enabledSlots.forEach { k,v ->
-            inventory.enabledSlots[k] = false
+            if (k != 4) {
+                inventory.enabledSlots[k] = false
+            }
         }
 
         when(capacity) {
@@ -558,7 +564,9 @@ class TileEntityFluidCrafter : TileBase(), IActionHost, ICraftingProvider, ICraf
 
     inner class FluidCrafterInventory : IToggleableSlotsInventory {
         val inv = arrayOfNulls<ItemStack>(9)
-        override val enabledSlots = mutableMapOf<Int, Boolean>()
+        override val enabledSlots = mutableMapOf<Int, Boolean>(
+            4 to true
+        )
         override fun closeInventory(player: EntityPlayer) {}
         override fun decrStackSize(slot: Int, amt: Int): ItemStack? {
             var stack = getStackInSlot(slot)

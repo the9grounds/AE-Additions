@@ -40,6 +40,8 @@ import net.minecraft.util.text.translation.I18n
 import net.minecraftforge.common.capabilities.Capability
 import net.minecraftforge.fluids.Fluid
 import net.minecraftforge.fml.common.FMLCommonHandler
+import net.minecraftforge.fml.relauncher.Side
+import net.minecraftforge.fml.relauncher.SideOnly
 import java.util.*
 
 class TileEntityGasInterface : TileBase(), IECTileEntity, IActionHost, IGridTickable, IGuiProvider,
@@ -419,6 +421,7 @@ class TileEntityGasInterface : TileBase(), IECTileEntity, IActionHost, IGridTick
         }
     }
 
+    @SideOnly(Side.CLIENT)
     override fun getClientGuiElement(player: EntityPlayer, vararg args: Any?): GuiContainer {
         return GuiGasInterface(player, this)
     }
