@@ -150,7 +150,7 @@ class PartGasImport: PartGasIO(), IGasHandler, ITubeConnection {
         }
 
         // Workaround to fix duplicate gas when the gas tank auto ejects
-        val amount = min(stack.amount, 125 + speedState * 125)
+        val amount = min(stack.amount, maxAmountToTransfer)
 
         val gasStack = StorageChannels.GAS!!.createStack(GasStack(stack.gas, amount))
 

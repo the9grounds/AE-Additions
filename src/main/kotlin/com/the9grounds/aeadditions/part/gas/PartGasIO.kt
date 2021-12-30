@@ -46,7 +46,7 @@ abstract class PartGasIO : PartECBase(), IGridTickable, IInventoryListener, IFlu
     var redstoneMode = RedstoneMode.IGNORE
         private set
     protected var filterSize: Byte = 0
-    var speedState: Byte = 0
+    var speedState: Int = 0
         protected set
     protected var redstoneControlled = false
 
@@ -117,7 +117,7 @@ abstract class PartGasIO : PartECBase(), IGridTickable, IInventoryListener, IFlu
     }
 
     override fun getWailaTag(tag: NBTTagCompound): NBTTagCompound {
-        tag.setInteger("speed", 125 + speedState * 125)
+        tag.setInteger("speed", maxAmountToTransfer)
         return tag
     }
 
@@ -267,7 +267,7 @@ abstract class PartGasIO : PartECBase(), IGridTickable, IInventoryListener, IFlu
     ): TickRateModulation {
         return if (canDoWork()) {
             if (doWork(
-                    125 + speedState * 125,
+                    maxAmountToTransfer,
                     TicksSinceLastCall
                 )
             ) TickRateModulation.FASTER else TickRateModulation.SLOWER
@@ -291,5 +291,24 @@ abstract class PartGasIO : PartECBase(), IGridTickable, IInventoryListener, IFlu
     @Throws(IOException::class)
     override fun writeToStream(data: ByteBuf) {
         super.writeToStream(data)
+    }
+    
+    protected val maxAmountToTransfer: Int
+    get() {
+        // Base
+        var amount = 125.00
+        if (speedState == 4) {
+            amount *= 1.50
+        }
+        if (speedState >= 3) {
+            amount *= 2.0
+        }
+        if (speedState >= 2) {
+            amount *= 4.0
+        }
+        if (speedState >= 1) {
+            amount *= 8.0
+        }
+        return amount.toInt()
     }
 }
