@@ -18,6 +18,7 @@ import com.the9grounds.aeadditions.api.gas.IAEGasStack
 import com.the9grounds.aeadditions.container.gas.ContainerGasEmitter
 import com.the9grounds.aeadditions.gui.gas.GuiGasEmitter
 import com.the9grounds.aeadditions.gui.widget.fluid.IFluidSlotListener
+import com.the9grounds.aeadditions.integration.mekanism.gas.AEGasStack
 import com.the9grounds.aeadditions.models.PartModels
 import com.the9grounds.aeadditions.network.packet.other.PacketFluidSlotUpdate
 import com.the9grounds.aeadditions.network.packet.part.PacketPartConfig
@@ -27,6 +28,7 @@ import com.the9grounds.aeadditions.util.NetworkUtil
 import com.the9grounds.aeadditions.util.PermissionUtil
 import com.the9grounds.aeadditions.util.StorageChannels
 import io.netty.buffer.ByteBuf
+import mekanism.api.gas.GasStack
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Blocks
 import net.minecraft.nbt.NBTTagCompound
@@ -229,6 +231,24 @@ class PartGasLevelEmitter : PartECBase(), IStackWatcherHost, IFluidSlotListener 
         if (host != null) {
             host.markForUpdate()
         }
+        
+        this.currentAmount = this.gridBlock.gasMonitor.storageList.findPrecise(AEGasStack(GasStack(GasUtil.getGas(this.selectedFluid), 1000))).stackSize
+
+        val isOn = isLevelEmitterOn()
+
+        if (previousState != isOn) {
+
+            val node = gridNode
+
+            if (node != null) {
+
+                isActive = node.isActive
+                host?.markForUpdate()
+                notifyTargetBlock(hostTile, facing)
+                previousState = isOn
+            }
+        }
+        
         saveData()
     }
 
