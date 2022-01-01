@@ -2,7 +2,9 @@ package com.the9grounds.aeadditions.tileentity
 
 import appeng.api.AEApi
 import appeng.api.config.Actionable
+import appeng.api.networking.IGrid
 import appeng.api.networking.IGridNode
+import appeng.api.networking.energy.IEnergyGrid
 import appeng.api.networking.security.IActionHost
 import appeng.api.networking.ticking.IGridTickable
 import appeng.api.networking.ticking.TickRateModulation
@@ -11,6 +13,7 @@ import appeng.api.storage.IMEMonitor
 import appeng.api.util.AECableType
 import appeng.api.util.AEPartLocation
 import appeng.api.util.DimensionalCoord
+import appeng.me.GridAccessException
 import com.the9grounds.aeadditions.api.IECTileEntity
 import com.the9grounds.aeadditions.api.gas.IAEGasStack
 import com.the9grounds.aeadditions.container.IContainerListener
@@ -447,7 +450,7 @@ class TileEntityGasInterface : TileBase(), IECTileEntity, IActionHost, IGridTick
             return null
         }
         val monitor: IMEMonitor<IAEGasStack> = gridBlock.getGasMonitor() ?: return null
-        return monitor.extractItems(toExtract, action, MachineSource(this))
+        return AEApi.instance().storage().poweredExtraction(getEnergy(), monitor, toExtract, MachineSource(this), action)
     }
 
     protected fun injectGas(toInject: IAEGasStack, action: Actionable?): IAEGasStack? {
@@ -455,7 +458,13 @@ class TileEntityGasInterface : TileBase(), IECTileEntity, IActionHost, IGridTick
             return toInject
         }
         val monitor: IMEMonitor<IAEGasStack> = gridBlock.getGasMonitor() ?: return toInject
-        return monitor.injectItems(toInject, action, MachineSource(this))
+        return AEApi.instance().storage().poweredInsert(getEnergy(), monitor, toInject, MachineSource(this), action)
+    }
+
+    @Throws(GridAccessException::class)
+    fun getEnergy(): IEnergyGrid? {
+        val grid: IGrid = this.node?.grid ?: throw GridAccessException()
+        return grid.getCache(IEnergyGrid::class.java) ?: throw GridAccessException()
     }
 
     fun registerListener(listener: IContainerListener) {

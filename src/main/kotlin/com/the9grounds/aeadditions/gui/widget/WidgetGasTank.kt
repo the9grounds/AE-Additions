@@ -51,6 +51,7 @@ class WidgetGasTank @JvmOverloads constructor(
         val description: MutableList<String> = ArrayList()
         if (tank == null || tank!!.gas == null) {
             description.add(I18n.translateToLocal("com.the9grounds.aeadditions.tooltip.empty1"))
+            description.add("Side: ${EnumFacing.byIndex(index).name}")
         } else {
             if (tank!!.gas!!.amount > 0
                 && tank!!.gas != null
