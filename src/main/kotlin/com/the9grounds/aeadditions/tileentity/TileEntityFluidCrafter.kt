@@ -33,6 +33,7 @@ import com.the9grounds.aeadditions.util.StorageChannels
 import net.minecraftforge.fluids.FluidStack
 import appeng.api.config.Actionable
 import appeng.api.networking.events.MENetworkCraftingPatternChange
+import appeng.core.AELog
 import com.the9grounds.aeadditions.api.inventory.IToggleableSlotsInventory
 import com.the9grounds.aeadditions.container.IUpgradeable
 import net.minecraftforge.fml.relauncher.SideOnly
@@ -73,6 +74,8 @@ class TileEntityFluidCrafter : TileBase(), IActionHost, ICraftingProvider, ICraf
     )
 
     val filterOrder = listOf(4,1,3,5,7,0,2,6,8)
+    
+    val craftingList = mutableListOf<ICraftingPatternDetails>()
 
     val upgradeInventory = object : CraftingUpgradeInventory(this, BlockEnum.FLUIDCRAFTER) {
         override fun onContentsChanged() {
@@ -83,10 +86,8 @@ class TileEntityFluidCrafter : TileBase(), IActionHost, ICraftingProvider, ICraf
 
     private val gridBlock: ECFluidGridBlock
     private var node: IGridNode? = null
-    private var patternHandlers: MutableList<ICraftingPatternDetails> = ArrayList()
     private var requestedItems: MutableList<IAEItemStack> = ArrayList()
     private val removeList: MutableList<IAEItemStack> = ArrayList()
-    private var patternHandlerSlot = arrayOfNulls<ICraftingPatternDetails>(9)
     private val oldStack = arrayOfNulls<ItemStack>(9)
     private var isBusy = false
     private var watcher: ICraftingWatcher? = null
@@ -152,34 +153,13 @@ class TileEntityFluidCrafter : TileBase(), IActionHost, ICraftingProvider, ICraf
     }
 
     override fun provideCrafting(craftingTracker: ICraftingProviderHelper) {
-        patternHandlers = ArrayList()
-        patternHandlerSlot = arrayOfNulls(9)
-        var i = 0
-        while (inventory.inv.size > i) {
-            val currentPatternStack = inventory.inv[i]
-            if (!ItemStackUtils.isEmpty(currentPatternStack)
-                && currentPatternStack!!.item != null && currentPatternStack.item is ICraftingPatternItem
-            ) {
-                val currentPattern = currentPatternStack
-                    .item as ICraftingPatternItem
-                if (currentPattern != null && currentPattern.getPatternForItem(
-                        currentPatternStack,
-                        getWorld()
-                    ) != null && currentPattern.getPatternForItem(currentPatternStack, getWorld()).isCraftable
-                ) {
-                    val pattern: ICraftingPatternDetails =
-                        CraftingPattern(currentPattern.getPatternForItem(currentPatternStack, getWorld()))
-                    patternHandlers.add(pattern)
-                    patternHandlerSlot[i] = pattern
-                    if (pattern.condensedInputs.size == 0) {
-                        craftingTracker.setEmitable(pattern.condensedOutputs[0])
-                    } else {
-                        craftingTracker.addCraftingOption(this, pattern)
-                    }
-                }
+        
+        craftingList.forEach {
+            if (it.condensedInputs.size == 0) {
+                craftingTracker.setEmitable(it.condensedOutputs[0])
+            } else {
+                craftingTracker.addCraftingOption(this, it)
             }
-            oldStack[i] = currentPatternStack
-            i++
         }
         updateWatcher()
     }
@@ -236,6 +216,11 @@ class TileEntityFluidCrafter : TileBase(), IActionHost, ICraftingProvider, ICraf
             isBusy = true
         }
         return true
+    }
+
+    override fun onLoad() {
+        super.onLoad()
+        onInventoryChanged()
     }
 
     override fun readFromNBT(tagCompound: NBTTagCompound) {
@@ -302,7 +287,7 @@ class TileEntityFluidCrafter : TileBase(), IActionHost, ICraftingProvider, ICraf
                         removeList.add(s)
                         continue
                     }
-                    for (details in patternHandlers) {
+                    for (details in craftingList) {
                         if (details.condensedOutputs[0] == s) {
                             val patter = details as CraftingPattern
                             val fluids = HashMap<Fluid, Long?>()
@@ -369,7 +354,7 @@ class TileEntityFluidCrafter : TileBase(), IActionHost, ICraftingProvider, ICraf
                 crafting = grid.getCache(ICraftingGrid::class.java)
             }
         }
-        for (patter in patternHandlers) {
+        for (patter in craftingList) {
             watcher!!.reset()
             if (patter.condensedInputs.size == 0) {
                 watcher!!.add(patter.condensedOutputs[0])
@@ -503,9 +488,39 @@ class TileEntityFluidCrafter : TileBase(), IActionHost, ICraftingProvider, ICraf
             return
         }
 
+        updateCraftingList()
+
         NetworkUtil.sendNetworkPacket(PacketCrafterCapacity(this, capacity), coord.pos, coord.world)
 
         saveData()
+    }
+    
+    fun updateCraftingList() {
+
+        if (getGridNode(AEPartLocation.INTERNAL) == null || !hasWorld()) {
+            return
+        }
+
+        this.craftingList.clear()
+
+        inventory.inv.forEach {
+            if (!ItemStackUtils.isEmpty(it) && it!!.item !== null && it!!.item is ICraftingPatternItem) {
+                val pattern = CraftingPattern((it.item as ICraftingPatternItem).getPatternForItem(it, getWorld()))
+
+                craftingList.add(pattern)
+            }
+        }
+
+        try {
+            getGridNode(AEPartLocation.INTERNAL)!!.grid.postEvent(
+                MENetworkCraftingPatternChange(
+                    this,
+                    getGridNode(AEPartLocation.INTERNAL)
+                )
+            )
+        } catch (e: Throwable) {
+            AELog.error(e)
+        }
     }
 
     init {
@@ -681,6 +696,7 @@ class TileEntityFluidCrafter : TileBase(), IActionHost, ICraftingProvider, ICraf
 
         protected fun onContentsChanged() {
             saveData()
+            onInventoryChanged()
             if (hasWorld()) {
                 updateBlock()
             }
