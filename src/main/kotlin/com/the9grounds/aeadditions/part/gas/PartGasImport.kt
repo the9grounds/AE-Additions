@@ -139,6 +139,10 @@ class PartGasImport: PartGasIO(), IGasHandler, ITubeConnection {
 
     @Optional.Method(modid = "MekanismAPI|gas")
     override fun receiveGas(side: EnumFacing?, stack: GasStack?, doTransfer: Boolean): Int {
+        if (!canDoWork()) {
+            return 0
+        }
+        
         if (stack == null || stack.amount <= 0 || !canReceiveGas(side, stack.gas) || !isActive) {
             return 0
         }
@@ -164,6 +168,11 @@ class PartGasImport: PartGasIO(), IGasHandler, ITubeConnection {
 
     @Optional.Method(modid = "MekanismAPI|gas")
     override fun canReceiveGas(side: EnumFacing?, gas: Gas?): Boolean {
+        
+        if (!canDoWork()) {
+            return false
+        }
+        
         val fluid = MekanismGas.fluidGas.get(gas)
 
         var isEmpty = true

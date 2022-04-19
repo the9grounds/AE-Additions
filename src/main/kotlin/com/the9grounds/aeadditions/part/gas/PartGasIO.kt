@@ -32,6 +32,8 @@ import com.the9grounds.aeadditions.container.IUpgradeable
 import com.the9grounds.aeadditions.inventory.UpgradeInventory
 import com.the9grounds.aeadditions.util.NetworkUtil
 import net.minecraft.tileentity.TileEntity
+import net.minecraft.util.math.BlockPos
+import net.minecraft.world.IBlockAccess
 import net.minecraftforge.fluids.Fluid
 import java.util.*
 
@@ -45,6 +47,7 @@ abstract class PartGasIO : PartECBase(), IGridTickable, IInventoryListener, IFlu
     }
     var redstoneMode = RedstoneMode.IGNORE
         private set
+    var lastRedstone = false
     protected var filterSize: Byte = 0
     var speedState: Int = 0
         protected set
@@ -72,7 +75,7 @@ abstract class PartGasIO : PartECBase(), IGridTickable, IInventoryListener, IFlu
         return 5.0f
     }
 
-    private fun canDoWork(): Boolean {
+    protected fun canDoWork(): Boolean {
         val redstonePowered = isRedstonePowered
         return if (!redstoneControlled) {
             true
@@ -194,11 +197,16 @@ abstract class PartGasIO : PartECBase(), IGridTickable, IInventoryListener, IFlu
         )
         saveData()
     }
+    
+    override fun onNeighborChanged(var1: IBlockAccess?, var2: BlockPos?, var3: BlockPos?) {
+        super.onNeighborChanged(var1, var2, var3)
+        if (lastRedstone != host.hasRedstone(side)) {
+            lastRedstone = isRedstonePowered
 
-    public override fun onNeighborChanged() {
-        super.onNeighborChanged()
-        /*boolean redstonePowered = isRedstonePowered();
-		this.lastRedstone = redstonePowered;*/
+            if (lastRedstone && redstoneMode === RedstoneMode.SIGNAL_PULSE) {
+                doWork(maxAmountToTransfer, 1)
+            }
+        }
     }
 
     override fun readFromNBT(data: NBTTagCompound) {
