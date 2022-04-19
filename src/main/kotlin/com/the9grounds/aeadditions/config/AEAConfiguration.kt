@@ -9,6 +9,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 
 class AEAConfiguration(private val configuration: Configuration) {
     val cellEntries = mutableMapOf<CellDefinition, Map<Int, CellConfig>>()
+    var aeWirelessTransmitterPowerMultiplier = 4.0
 
     companion object {
         @JvmField var components: StorageRegistry? = null
@@ -38,6 +39,8 @@ class AEAConfiguration(private val configuration: Configuration) {
     }
 
     fun reload() {
+        
+        aeWirelessTransmitterPowerMultiplier = configuration.get("blocks.AEWirelessTransceiver", "PowerMultiplier", 4.0, "How much AE per 10 blocks/t").double
         for (enum in CellDefinition.values()) {
             val entries = mutableMapOf<Int, CellConfig>()
             for (cell in enum.sizes) {

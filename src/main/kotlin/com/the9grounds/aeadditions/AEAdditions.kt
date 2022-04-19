@@ -47,6 +47,7 @@ object AEAdditions {
 
         return field
     }
+    lateinit var configuration: AEAConfiguration
 
     init {
         FluidRegistry.enableUniversalBucket()
@@ -62,7 +63,7 @@ object AEAdditions {
         val config = Configuration(File(configFolder, "aeadditions.cfg"))
         val javaConfigHandler = AEAConfigHandler(config)
         javaConfigHandler.reload()
-        val configuration = AEAConfiguration(config)
+        configuration = AEAConfiguration(config)
         configuration.reload()
         MinecraftForge.EVENT_BUS.register(javaConfigHandler)
         MinecraftForge.EVENT_BUS.register(configuration)
