@@ -81,9 +81,6 @@ public class ItemFluidPattern extends ItemECBase {
 		if (!this.isInCreativeTab(creativeTab))
 			return;
 		super.getSubItems(creativeTab, itemList);
-		for (Fluid fluid : FluidRegistry.getRegisteredFluids().values()) {
-			itemList.add(getPatternForFluid(fluid));
-		}
 	}
 
 	@Override

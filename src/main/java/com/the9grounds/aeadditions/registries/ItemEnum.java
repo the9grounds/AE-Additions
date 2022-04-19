@@ -21,7 +21,7 @@ public enum ItemEnum {
 	FLUIDSTORAGE("storage.fluid", new ItemStorageCellFluid()),
 	PHYSICALSTORAGE("storage.physical", new ItemStorageCellPhysical()),
 	GASSTORAGE("storage.gas", new ItemStorageCellGas(), Integration.Mods.MEKANISMGAS),
-	FLUIDPATTERN("pattern.fluid", new ItemFluidPattern()),
+	FLUIDPATTERN("pattern.fluid", new ItemFluidPattern(), null, null, true),
 	FLUIDWIRELESSTERMINAL("terminal.fluid.wireless", ItemWirelessTerminalFluid.INSTANCE),
 	STORAGECOMPONET("storage.component", new ItemStorageComponent()),
 	STORAGECASING("storage.casing", new ItemStorageCasing()),
