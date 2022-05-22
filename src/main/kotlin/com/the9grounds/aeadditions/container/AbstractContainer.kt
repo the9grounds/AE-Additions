@@ -11,6 +11,7 @@ import com.the9grounds.aeadditions.network.NetworkManager
 import com.the9grounds.aeadditions.network.packets.BasePacket
 import com.the9grounds.aeadditions.network.packets.GuiDataSyncPacket
 import com.the9grounds.aeadditions.sync.gui.DataSync
+import com.the9grounds.aeadditions.util.Utils
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.entity.player.ServerPlayerEntity
@@ -19,6 +20,7 @@ import net.minecraft.inventory.container.Container
 import net.minecraft.inventory.container.ContainerType
 import net.minecraft.inventory.container.IContainerListener
 import net.minecraft.inventory.container.Slot
+import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.items.wrapper.PlayerInvWrapper
 import javax.annotation.OverridingMethodsMustInvokeSuper
@@ -143,6 +145,105 @@ abstract class AbstractContainer<T>(type: ContainerType<*>?, id: Int, protected 
         
         super.detectAndSendChanges()
     }
+
+    override fun transferStackInSlot(playerIn: PlayerEntity, index: Int): ItemStack {
+        if (!isServer) {
+            return ItemStack.EMPTY
+        }
+
+        val clickSlot = inventorySlots[index]
+
+        if (clickSlot is DisabledSlot) {
+            return ItemStack.EMPTY
+        }
+        
+        val isPlayerSideSlot = isPlayerSideSlot(clickSlot)
+        
+        var slots = inventorySlots
+        
+        if (isPlayerSideSlot) {
+            slots = slots.filter { it -> !isPlayerSideSlot(it) }
+        } else {
+            slots = slots.filter { it -> isPlayerSideSlot(it) }
+        }
+
+        if (clickSlot.hasStack) {
+            val tis = clickSlot.stack
+
+            if (tis.isEmpty) {
+                return ItemStack.EMPTY
+            }
+            
+            for (slot in slots.reversed()) {
+                if (!slot.isItemValid(tis)) {
+                    continue
+                }
+                
+                if (!Utils.isItemStackEqual(slot.stack, tis)) {
+                    continue
+                }
+                
+                val stack = slot.stack
+
+                var maxSize = stack.maxStackSize
+
+                if (maxSize > getStackLimitForSlot(slot)) {
+                    maxSize = getStackLimitForSlot(slot)
+                }
+                
+                val tmp = stack.copy()
+
+                var amountCanPut = maxSize - tmp.count
+
+                if (amountCanPut > tis.count) {
+                    amountCanPut = tis.count
+                }
+
+
+                tmp.count = tmp.count + amountCanPut
+
+                slot.putStack(tmp)
+                tis.count -= amountCanPut
+
+                if (tis.count == 0) {
+                    clickSlot.putStack(ItemStack.EMPTY)
+
+                    this.detectAndSendChanges()
+
+                    return ItemStack.EMPTY
+                } else {
+                    this.detectAndSendChanges()
+                }
+            }
+            
+            if (tis.count > 0) {
+                // Find First Empty Slot
+                
+                for (slot in slots.reversed()) {
+                    if (slot.isItemValid(tis) && slot.stack.isEmpty) {
+                        var count = tis.count
+                        
+                        if (count > getStackLimitForSlot(slot)) {
+                            count = getStackLimitForSlot(slot)
+                        }
+                        
+                        val tmp = tis.copy()
+                        
+                        tmp.count = count
+                        
+                        slot.putStack(tmp)
+                        
+                        tis.count -= count
+                        
+                        this.detectAndSendChanges()
+                    }
+                }
+            }
+        }
+        
+        this.detectAndSendChanges()
+        return ItemStack.EMPTY
+    }
     
     @OverridingMethodsMustInvokeSuper
     protected open fun onServerDataSync() {
@@ -155,6 +256,22 @@ abstract class AbstractContainer<T>(type: ContainerType<*>?, id: Int, protected 
                 NetworkManager.sendTo(packet, listener)
             }
         }
+    }
+
+    private fun isPlayerSideSlot(slot: Slot): Boolean {
+        if (slot.inventory === playerInventory) {
+            return true
+        }
+        val slotType: SlotType = typeBySlot.get(slot)!!
+        return slotType == SlotType.PlayerInventory || slotType == SlotType.PlayerHotbar || slotType == SlotType.NetworkTool
+    }
+    
+    private fun getStackLimitForSlot(slot: Slot): Int {
+        if (slot is AEASlot) {
+            return slot.inv.getSlotLimit(slot.slotIndex)
+        }
+        
+        return slot.slotStackLimit
     }
     
     protected fun bindPlayerInventory(posX: Int, posY: Int) {

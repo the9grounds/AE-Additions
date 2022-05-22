@@ -7,10 +7,14 @@ import com.the9grounds.aeadditions.core.inv.AbstractUpgradeInventory
 import com.the9grounds.aeadditions.core.inv.IAEAInventory
 import com.the9grounds.aeadditions.core.inv.Operation
 import com.the9grounds.aeadditions.core.inv.StackUpgradeInventory
+import com.the9grounds.aeadditions.integration.appeng.AppEng
 import com.the9grounds.aeadditions.network.NetworkManager
 import com.the9grounds.aeadditions.network.packets.UpgradesUpdatedPacket
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundNBT
+import net.minecraft.util.Hand
+import net.minecraft.util.math.vector.Vector3d
 import net.minecraftforge.items.IItemHandler
 
 abstract class AbstractUpgradablePart(itemStack: ItemStack) : AbstractBasicStatePart(itemStack), IAEAInventory {
@@ -101,6 +105,27 @@ abstract class AbstractUpgradablePart(itemStack: ItemStack) : AbstractBasicState
     override fun sendUpgradesToClient() {
         NetworkManager.sendToAllAround(UpgradesUpdatedPacket(upgrades.getUpgradeMap()), TargetPoint(location.x.toDouble(),
             location.y.toDouble(), location.z.toDouble(), 32.toDouble(), location.world))
+    }
+
+    override fun onPartShiftActivate(player: PlayerEntity?, hand: Hand?, pos: Vector3d?): Boolean {
+        
+        if (player != null) {
+            val itemStack = player.getHeldItem(hand)
+            
+            if (!itemStack.isEmpty && itemStack.item === AppEng.API!!.definitions().materials().cardSpeed().item()) {
+                val slot = upgrades.fetchFirstEmptySlot()
+                
+                if (slot != -1) {
+                    val returnStack = upgrades.insertItem(slot, itemStack.copy(), false)
+                    
+                    player.setHeldItem(hand, returnStack)
+                    
+                    return true;
+                }
+            }
+        }
+        
+        return super.onPartShiftActivate(player, hand, pos)
     }
 
     open fun onUpgradesChanged() {

@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.entity.item.ItemEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
+import net.minecraft.nbt.CompoundNBT
 import net.minecraft.util.Direction
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.vector.Vector3f
@@ -135,5 +136,28 @@ object Utils {
             )
             matrixStack.pop()
         }
+    }
+    
+    fun isItemStackEqual(left: ItemStack, right: ItemStack): Boolean {
+        return left.isItemEqual(right) && isNbtEqual(left.tag, right.tag)
+    }
+    
+    fun isNbtEqual(left: CompoundNBT?, right: CompoundNBT?): Boolean {
+        if (left == right) {
+            return true;
+        }
+        
+        val isLeftNullOrEmpty = left == null || left.isEmpty
+        val isRightNullOrEmpty = right == null || right.isEmpty
+        
+        if (isLeftNullOrEmpty && isRightNullOrEmpty) {
+            return true
+        }
+        
+        if (isLeftNullOrEmpty != isRightNullOrEmpty) {
+            return false
+        }
+        
+        return left?.equals(right) ?: false
     }
 }

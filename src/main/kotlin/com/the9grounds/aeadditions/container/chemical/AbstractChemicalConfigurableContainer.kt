@@ -57,7 +57,7 @@ abstract class AbstractChemicalConfigurableContainer<T>(
             return ItemStack.EMPTY
         }
 
-        if (clickSlot.getHasStack()) {
+        if (clickSlot.hasStack) {
             val tis = clickSlot.stack
 
             if (tis.isEmpty) {

@@ -35,6 +35,10 @@ object AEAdditions {
         Items.REGISTRY.register(MOD_BUS)
         Parts.init()
         Parts.REGISTRY.register(MOD_BUS)
+        Blocks.init()
+        Blocks.REGISTRY.register(MOD_BUS)
+        Tiles.init()
+        Tiles.REGISTRY.register(MOD_BUS)
         
         MOD_BUS.addListener(::onClientSetup)
         MOD_BUS.addListener(::modelRegistryEvent)
@@ -71,7 +75,7 @@ object AEAdditions {
         }
     }
     
-    fun registerItemColors(event: ColorHandlerEvent.Item) {
+    private fun registerItemColors(event: ColorHandlerEvent.Item) {
         ItemColors.init(event.itemColors)
     }
 

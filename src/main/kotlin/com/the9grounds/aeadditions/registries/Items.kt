@@ -2,6 +2,7 @@ package com.the9grounds.aeadditions.registries
 
 import com.the9grounds.aeadditions.AEAdditions
 import com.the9grounds.aeadditions.core.CreativeTab
+import com.the9grounds.aeadditions.integration.Mods
 import com.the9grounds.aeadditions.item.ChemicalDummyItem
 import com.the9grounds.aeadditions.item.storage.ChemicalStorageCell
 import com.the9grounds.aeadditions.item.storage.FluidStorageCell
@@ -27,7 +28,7 @@ object Items {
     val FLUID_STORAGE_COMPONENT_1024k = createItem(Ids.FLUID_STORAGE_COMPONENT_1024) { properties -> StorageComponentItem(properties.rarity(Rarity.RARE), 1024) }
     val FLUID_STORAGE_COMPONENT_4096k = createItem(Ids.FLUID_STORAGE_COMPONENT_4096) { properties -> StorageComponentItem(properties.rarity(Rarity.EPIC), 4096) }
     
-    val CHEMICAL_STORAGE_COMPONENT_64k = createItem(Ids.CHEMICAL_STORAGE_COMPONENT_64) { properties -> StorageComponentItem(properties, 64) }
+    val CHEMICAL_STORAGE_COMPONENT_64k = createItem(Ids.CHEMICAL_STORAGE_COMPONENT_64, { properties -> StorageComponentItem(properties, 64) }, Mods.MEKANISM)
 
     val ITEM_STORAGE_CELL_256k = createItem(Ids.ITEM_STORAGE_CELL_256) { properties ->  PhysicalStorageCell(properties.maxStackSize(1), ITEM_STORAGE_COMPONENT_256k, 256, 3.0, 1024)}
     val ITEM_STORAGE_CELL_1024k = createItem(Ids.ITEM_STORAGE_CELL_1024) { properties ->  PhysicalStorageCell(properties.maxStackSize(1), ITEM_STORAGE_COMPONENT_1024k, 256, 4.0, 4096)}
@@ -38,7 +39,7 @@ object Items {
     val FLUID_STORAGE_CELL_1024k = createItem(Ids.FLUID_STORAGE_CELL_1024) { properties ->  FluidStorageCell(properties.maxStackSize(1).rarity(Rarity.RARE), FLUID_STORAGE_COMPONENT_1024k, 1024, 4.0, 4096)}
     val FLUID_STORAGE_CELL_4096k = createItem(Ids.FLUID_STORAGE_CELL_4096) { properties ->  FluidStorageCell(properties.maxStackSize(1).rarity(Rarity.EPIC), FLUID_STORAGE_COMPONENT_4096k, 4096, 5.0, 8192)}
     
-    val CHEMICAL_STORAGE_CELL_64k = createItem(Ids.CHEMICAL_STORAGE_CELL_64) { properties ->  ChemicalStorageCell(properties.maxStackSize(1), CHEMICAL_STORAGE_COMPONENT_64k, 64, .5, 512)}
+    val CHEMICAL_STORAGE_CELL_64k = createItem(Ids.CHEMICAL_STORAGE_CELL_64, { properties ->  ChemicalStorageCell(properties.maxStackSize(1), CHEMICAL_STORAGE_COMPONENT_64k, 64, .5, 512)}, Mods.MEKANISM)
     
     val DUMMY_CHEMICAL_ITEM = createItem(Ids.DUMMY_CHEMICAL_ITEM) { properties -> ChemicalDummyItem(properties) }
     
@@ -56,9 +57,19 @@ object Items {
         return item
     }
 
-    private fun <T : Item> constructItem(
+    fun <T: Item> createItem(id: ResourceLocation, factory: (Item.Properties) -> T, requiredMod: Mods): T {
+        val item = constructItem(factory, id, requiredMod)
+
+        REGISTRY.registerObject(id.path) {
+            item
+        }
+
+        return item
+    }
+    
+    private fun <T: Item> constructItem(
         factory: (Item.Properties) -> T,
-        id: ResourceLocation
+        id: ResourceLocation,
     ): T {
         val props = Item.Properties().group(CreativeTab.group)
 
@@ -67,9 +78,31 @@ object Items {
         if (item.registryName != null) {
             item.registryName = id
         }
-        
+
         ITEMS.add(item)
+
+        return item
+    }
+
+    private fun <T : Item> constructItem(
+        factory: (Item.Properties) -> T,
+        id: ResourceLocation,
+        requiredMod: Mods
+    ): T {
+        val props = Item.Properties()
         
+        if (requiredMod.isEnabled) {
+            props.group(CreativeTab.group)
+        }
+
+        val item = factory(props)
+
+        if (item.registryName != null) {
+            item.registryName = id
+        }
+
+        ITEMS.add(item)
+
         return item
     }
 
@@ -80,6 +113,16 @@ object Items {
             item
         }
         
+        return item
+    }
+
+    fun <T: Item> createItem(id: ResourceLocation, factory: (Item.Properties) -> T, registry: KDeferredRegister<Item>, requiredMod: Mods): T {
+        val item = constructItem(factory, id, requiredMod)
+
+        registry.registerObject(id.path) {
+            item
+        }
+
         return item
     }
 }

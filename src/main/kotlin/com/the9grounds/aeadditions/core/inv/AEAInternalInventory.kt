@@ -21,6 +21,18 @@ open class AEAInternalInventory(var host: IAEAInventory?, size: Int, maxStack: I
     
     val isEventsEnabled: Boolean
     get() = host != null && !host!!.isRemote || clientEventsEnabled
+    
+    fun fetchFirstEmptySlot(): Int {
+        for (slot in 0 until slots) {
+            val stack = getStackInSlot(slot)
+            
+            if (stack.isEmpty) {
+                return slot
+            }
+        }
+        
+        return -1
+    }
 
     override fun getSlotLimit(slot: Int): Int = maxStack[slot]
 
