@@ -89,7 +89,7 @@ class GuiFluidFiller(player: EntityPlayer, val tileEntity: TileEntityFluidFiller
     }
 
     init {
-        hasNetworkTool = this.inventorySlots.getInventory().size > 38
+        hasNetworkTool = this.inventorySlots.getInventory().size > 39
         xSize = if (hasNetworkTool) 245 else 211
         ySize = 166
         widgetManager.add(WidgetFluidSlot(widgetManager, tileEntity, 79, 34))
