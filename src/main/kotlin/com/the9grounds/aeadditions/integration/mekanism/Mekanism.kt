@@ -204,6 +204,18 @@ object Mekanism {
             else -> null
         }
     }
+    
+    private fun getCapacity(
+        handler: IChemicalHandler<*, *>,
+    ): Long {
+        return when (handler) {
+            is IGasHandler -> handler.getTankCapacity(0)
+            is IInfusionHandler -> handler.getTankCapacity(0)
+            is IPigmentHandler -> handler.getTankCapacity(0)
+            is ISlurryHandler -> handler.getTankCapacity(0)
+            else -> 0L
+        }
+    }
 
     private fun fillContainer(
         stack: IAEChemicalStack,

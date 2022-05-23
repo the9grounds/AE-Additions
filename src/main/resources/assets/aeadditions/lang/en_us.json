@@ -14,7 +14,7 @@
   "item.aeadditions.fluid_storage_component_256": "ME 256k Fluid Storage Component",
   "item.aeadditions.fluid_storage_component_1024": "ME 1024k Fluid Storage Component",
   "item.aeadditions.fluid_storage_component_4096": "ME 4096k Fluid Storage Component",
-  "item.aeadditions.chemical_storage_component_64": "ME 64k Storage Component",
+  "item.aeadditions.chemical_storage_component_64": "ME 64k Chemical Storage Component",
   "item.aeadditions.chemical_terminal": "ME Chemical Terminal",
   "item.aeadditions.chemical_storage_monitor": "ME Chemical Storage Monitor",
   "item.aeadditions.fluid_storage_monitor": "ME Fluid Storage Monitor",
@@ -26,5 +26,6 @@
   "chat.aeadditions.isNowLocked": "Monitor is now locked",
   "chat.aeadditions.isNowUnlocked": "Monitor is now unlocked",
   "chat.aeadditions.handMustBeEmpty": "Your hand must be empty to perform that action.",
-  "gui.aeadditions.chemicalIO": "ME Chemical Import/Export Bus"
+  "gui.aeadditions.chemicalIO": "ME Chemical Import/Export Bus",
+  "block.aeadditions.chemical_interface": "Chemical Interface"
 }

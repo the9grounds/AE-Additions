@@ -1,7 +1,7 @@
 package com.the9grounds.aeadditions.registries
 
 import com.the9grounds.aeadditions.AEAdditions
-import com.the9grounds.aeadditions.block.GasInterfaceBlock
+import com.the9grounds.aeadditions.block.ChemicalInterfaceBlock
 import com.the9grounds.aeadditions.core.BlockDefinition
 import com.the9grounds.aeadditions.integration.Mods
 import net.minecraft.block.AbstractBlock
@@ -17,7 +17,7 @@ object Blocks {
     
     val BLOCKS = mutableListOf<Block>()
     
-    val GAS_INTERFACE = createBlock(Ids.GAS_INTERFACE, Material.IRON, Mods.MEKANISM) { properties -> GasInterfaceBlock(properties)}
+    val CHEMICAL_INTERFACE = createBlock(Ids.CHEMICAL_INTERFACE, Material.IRON, Mods.MEKANISM) { properties -> ChemicalInterfaceBlock(properties)}
     
     fun init () {
         

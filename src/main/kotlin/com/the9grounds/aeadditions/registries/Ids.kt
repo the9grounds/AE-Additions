@@ -44,7 +44,7 @@ object Ids {
     val FLUID_CONVERSION_MONITOR = id("fluid_conversion_monitor")
     
     //Blocks
-    val GAS_INTERFACE = id("gas_interface")
+    val CHEMICAL_INTERFACE = id("chemical_interface")
 
     private fun id(id: String): ResourceLocation = ResourceLocation(AEAdditions.ID, id)
 }
