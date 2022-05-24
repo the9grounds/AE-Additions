@@ -8,6 +8,8 @@ import mekanism.api.text.TextComponentUtil
 import net.minecraft.client.Minecraft
 import net.minecraft.inventory.container.ClickType
 import net.minecraft.util.text.ITextComponent
+import java.text.NumberFormat
+import java.util.*
 
 class TerminalChemicalWidget(
     guiTerminal: AEABaseScreen<*>,
@@ -27,15 +29,15 @@ class TerminalChemicalWidget(
             return listOf()
         }
 
-        var amountToText = java.lang.Long.toString(chemical.stackSize) + "mB"
-        if (chemical.stackSize > 1000000000L) {
-            amountToText = (java.lang.Long.toString(chemical.stackSize / 1000000000L)
-                    + "MegaB")
-        } else if (chemical.stackSize > 1000000L) {
-            amountToText = java.lang.Long.toString(chemical.stackSize / 1000000L) + "KiloB"
-        } else if (chemical.stackSize > 9999L) {
-            amountToText = java.lang.Long.toString(chemical.stackSize / 1000L) + "B"
-        }
+        var amountToText = NumberFormat.getNumberInstance(Locale.US).format(chemical.stackSize) + "mB"
+//        if (chemical.stackSize > 1000000000L) {
+//            amountToText = (java.lang.Long.toString(chemical.stackSize / 1000000000L)
+//                    + "MegaB")
+//        } else if (chemical.stackSize > 1000000L) {
+//            amountToText = java.lang.Long.toString(chemical.stackSize / 1000000L) + "KiloB"
+//        } else if (chemical.stackSize > 9999L) {
+//            amountToText = java.lang.Long.toString(chemical.stackSize / 1000L) + "B"
+//        }
 
         val toolTips = mutableListOf<ITextComponent>()
 

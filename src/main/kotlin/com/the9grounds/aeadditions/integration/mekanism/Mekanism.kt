@@ -331,4 +331,14 @@ object Mekanism {
     fun <T: IChemicalHandler<*, *>> extractChemicalForCapability(tileEntity: TileEntity, side: Direction, capability: Capability<T>, amount: Long, action: Action): ChemicalStack<*>? {
         return tileEntity.getCapability(capability, side).resolve().get().extractChemical(amount, action)
     }
+    
+    fun getStackFromStack(stack: ChemicalStack<*>, amount: Long): ChemicalStack<*> {
+        return when(stack) {
+            is SlurryStack -> SlurryStack(stack, amount)
+            is GasStack -> GasStack(stack, amount)
+            is InfusionStack -> InfusionStack(stack, amount)
+            is PigmentStack -> PigmentStack(stack, amount)
+            else -> throw RuntimeException("Invalid chemical type")
+        }
+    }
 }

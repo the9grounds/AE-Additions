@@ -11,12 +11,12 @@ class ChemicalInterfaceHolder<CHEMICAL: Chemical<CHEMICAL>, CHEMICALSTACK: Chemi
     override fun getTanks(p0: Direction?): MutableList<TANK> {
 
         val list = mutableListOf<TANK>()
-        if (p0 != null) {
-            val tank = chemicalInterfaceTile.getTankForSide(p0)
-            if (tank != null) {
-                list.add(tank as TANK)
-            }
-        }
+//        if (p0 != null) {
+//            val tank = chemicalInterfaceTile.getTankForSide(p0)
+//            if (tank != null) {
+//                list.add(tank as TANK)
+//            }
+//        }
         
         return list
     }

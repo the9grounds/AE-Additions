@@ -16,7 +16,8 @@ abstract class BasePacketHandler {
         UPDATESLOTINHAND(UpdateSlotInHandPacket::class, { packetBuffer -> UpdateSlotInHandPacket(packetBuffer) }),
         CHEMICALCONFIG(ChemicalConfigPacket::class, { packetBuffer -> ChemicalConfigPacket(packetBuffer) }),
         CHEMICALCONFIGCHANGED(ChemicalConfigChangedPacket::class, { buffer -> ChemicalConfigChangedPacket(buffer) }),
-        UpgradesUpdated(UpgradesUpdatedPacket::class, { buffer -> UpgradesUpdatedPacket(buffer) });
+        UpgradesUpdated(UpgradesUpdatedPacket::class, { buffer -> UpgradesUpdatedPacket(buffer) }),
+        ChemicalInterfaceContentsChanged(ChemicalInterfaceContentsChangedPacket::class, { buffer -> ChemicalInterfaceContentsChangedPacket(buffer) });
         
         init {
             lookup[clazz] = this

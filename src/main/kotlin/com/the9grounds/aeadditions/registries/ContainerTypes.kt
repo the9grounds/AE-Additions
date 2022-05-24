@@ -1,6 +1,7 @@
 package com.the9grounds.aeadditions.registries
 
 import com.the9grounds.aeadditions.container.chemical.ChemicalIOContainer
+import com.the9grounds.aeadditions.container.chemical.ChemicalInterfaceContainer
 import com.the9grounds.aeadditions.container.chemical.ChemicalTerminalContainer
 import net.minecraft.inventory.container.ContainerType
 import net.minecraftforge.registries.IForgeRegistry
@@ -11,7 +12,8 @@ object ContainerTypes {
         registry.registerAll(
             ChemicalTerminalContainer.TYPE,
             ChemicalIOContainer.EXPORT_BUS,
-            ChemicalIOContainer.IMPORT_BUS
+            ChemicalIOContainer.IMPORT_BUS,
+            ChemicalInterfaceContainer.CHEMICAL_INTERFACE
         )
     }
 }

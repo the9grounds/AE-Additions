@@ -39,7 +39,7 @@ class ChemicalWidgetConfig(
 
     override fun drawWidgetBackground(matrixStack: MatrixStack, font: FontRenderer, mouseX: Double, mouseY: Double) {
         
-        val alpha = if ((guiTerminal.container as AbstractUpgradableContainer).isConfigGroupEnabled(group)) {
+        val alpha = if (guiTerminal.getContainer() !is AbstractUpgradableContainer || (guiTerminal.container as AbstractUpgradableContainer).isConfigGroupEnabled(group)) {
             1.0f
         } else {
             .4f
@@ -71,7 +71,7 @@ class ChemicalWidgetConfig(
 
     override fun drawWidgetForeground(matrixStack: MatrixStack, mouseX: Double, mouseY: Double) {
         
-        if ((guiTerminal.container as AbstractUpgradableContainer<*>).isConfigGroupEnabled(group)) {
+        if (guiTerminal.container !is AbstractUpgradableContainer || (guiTerminal.container as AbstractUpgradableContainer<*>).isConfigGroupEnabled(group)) {
             if (isMouseOver(mouseX, mouseY)) {
                 val mouseStack: ItemStack = Minecraft.getInstance().player!!.inventory.itemStack
                 

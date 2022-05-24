@@ -24,7 +24,6 @@ abstract class SharedIOBus(itemStack: ItemStack) : AbstractUpgradablePart(itemSt
         return _chemicalConfig
     }
     
-    
     var lastRedstone = false
 
     override fun readFromNBT(data: CompoundNBT?) {
