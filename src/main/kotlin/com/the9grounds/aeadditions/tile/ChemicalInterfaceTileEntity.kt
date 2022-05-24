@@ -156,8 +156,17 @@ class ChemicalInterfaceTileEntity : AbstractAEATileEntity(Tiles.CHEMICAL_INTERFA
             return TickRateModulation.IDLE
         }
         
+        val shouldEmpty = { handler: MergedChemicalHandler, index: Int ->
+            val chemicalInConfig = _chemicalConfig.getChemicalInSlot(index)
+            
+            val chemicalInHandler = handler.chemical
+            
+            chemicalInConfig !== null && chemicalInHandler != null && !chemicalInConfig.equals(chemicalInHandler)
+        }
+        
+        var i = 0
         for (handler in chemicalHandlers) {
-            if (handler.tank.current !== MergedChemicalTank.Current.EMPTY && !handler.tank.getTankFromCurrent(handler.tank.current).isEmpty()) {
+            if (handler.tank.current !== MergedChemicalTank.Current.EMPTY && !handler.tank.getTankFromCurrent(handler.tank.current).isEmpty() && shouldEmpty(handler, i)) {
                 val currentStack = handler.tank.getTankFromCurrent(handler.tank.current).getStack()
                 
                 val simulated = AppEng.API!!.storage().poweredInsert(powerSource, chemicalStorage, AEChemicalStack(currentStack), MachineSource(this), Actionable.SIMULATE) as AEChemicalStack?
@@ -178,6 +187,40 @@ class ChemicalInterfaceTileEntity : AbstractAEATileEntity(Tiles.CHEMICAL_INTERFA
                 if (amountInserted > 0) {
                     handler.tank.getTankFromCurrent(handler.tank.current).extract(amountInserted, Action.EXECUTE, AutomationType.INTERNAL)
                 }
+            }
+            i++
+        }
+        
+        _chemicalConfig.forEachIndexed { index, chemical ->
+            
+            if (chemical == null) {
+                return@forEachIndexed
+            }
+            
+            val amount = 200000L
+            
+            val toExtract = AppEng.API!!.storage().poweredExtraction(powerSource, chemicalStorage, AEChemicalStack(chemical, amount), MachineSource(this), Actionable.SIMULATE) as AEChemicalStack?
+            
+            if (toExtract == null || toExtract.stackSize == 0L) {
+                return@forEachIndexed
+            }
+            
+            val chemicalHandler = chemicalHandlers[index]
+            
+            if (chemicalHandler.chemical !== null && !chemicalHandler.chemical!!.equals(chemical)) {
+                return@forEachIndexed
+            }
+            
+            val notInserted = chemicalHandler.classToHandlerMap[chemical::class.java]!!.insertChemicalIntoTank(toExtract.getChemicalStack(), Action.SIMULATE, AutomationType.INTERNAL)
+            
+            val newAmount = toExtract.stackSize - notInserted.getAmount()
+            
+            toExtract.stackSize = newAmount
+            
+            val extracted = AppEng.API!!.storage().poweredExtraction(powerSource, chemicalStorage, toExtract, MachineSource(this), Actionable.MODULATE) as AEChemicalStack?
+            
+            if (extracted != null) {
+                chemicalHandler.classToHandlerMap[chemical::class.java]!!.insertChemicalIntoTank(extracted.getChemicalStack(), Action.EXECUTE, AutomationType.INTERNAL)
             }
         }
         
@@ -335,7 +378,7 @@ class ChemicalInterfaceTileEntity : AbstractAEATileEntity(Tiles.CHEMICAL_INTERFA
                 return tank.current === classToCurrentMap.get(clazz) || p1.type === classToTank.get(clazz)!!.type
             }
             
-            private fun insertChemicalIntoTank(stack: ChemicalStack<*>, action: Action, automationType: AutomationType): ChemicalStack<*> {
+            fun insertChemicalIntoTank(stack: ChemicalStack<*>, action: Action, automationType: AutomationType): ChemicalStack<*> {
                 return when(stack) {
                     is SlurryStack -> tank.slurryTank.insert(stack, action, automationType)
                     is GasStack -> tank.gasTank.insert(stack, action, automationType)
