@@ -11,5 +11,5 @@ class ChemicalStorageCell(props: Item.Properties, component: Item, kiloBytes: In
 
     override fun getIdleDrain(): Double = idleDrainProp
 
-    override fun getChannel(): IStorageChannel<IAEChemicalStack> = StorageChannels.CHEMICAL
+    override fun getChannel(): IStorageChannel<IAEChemicalStack> = StorageChannels.CHEMICAL!!
 }

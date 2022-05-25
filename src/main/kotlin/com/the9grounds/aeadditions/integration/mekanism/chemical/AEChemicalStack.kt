@@ -166,7 +166,7 @@ class AEChemicalStack() : IAEChemicalStack {
         return copy
     }
 
-    override fun getChannel(): IStorageChannel<IAEChemicalStack> = StorageChannels.CHEMICAL
+    override fun getChannel(): IStorageChannel<IAEChemicalStack> = StorageChannels.CHEMICAL!!
 
     override fun asItemStackRepresentation(): ItemStack {
         val itemStack = ItemStack(Items.DUMMY_CHEMICAL_ITEM)

@@ -60,7 +60,7 @@ class ChemicalStorageMonitorPart(itemStack: ItemStack) :
         return AEChemicalStack(chemicalStack)
     }
 
-    override fun getStorageChannel(): IStorageChannel<IAEChemicalStack> = StorageChannels.CHEMICAL
+    override fun getStorageChannel(): IStorageChannel<IAEChemicalStack> = StorageChannels.CHEMICAL!!
 
     override fun getWatchedItemName(): String {
         val itemStack = watchedItem!!.asItemStackRepresentation()

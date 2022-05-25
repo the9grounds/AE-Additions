@@ -1,6 +1,5 @@
-import net.minecraftforge.gradle.userdev.UserDevExtension
-import com.matthewprenger.cursegradle.CurseExtension
 import net.minecraftforge.gradle.userdev.DependencyManagementExtension
+import net.minecraftforge.gradle.userdev.UserDevExtension
 import org.gradle.jvm.tasks.Jar
 
 buildscript {
@@ -140,7 +139,7 @@ tasks.withType<Jar> {
     // this will ensure that this task is redone when the versions change.
     inputs.property("version", project.version)
 
-    baseName = modBaseName
+    baseName = "${modBaseName}-${getBetterVersion()}"
 
     // replace stuff in mcmod.info, nothing else
     filesMatching("/mcmod.info") {
@@ -173,6 +172,35 @@ curseforge {
             displayName = "${base.archivesBaseName}-${version}"
         })
     })
+}
+
+fun getBuildNumber(): String? {
+
+    if (System.getenv("CI") == null) {
+        return "LOCAL"
+    }
+
+    if (System.getenv("TAG") != null) {
+        return null
+    }
+
+    if (System.getenv("GITHUB_HEAD_REF") != null) {
+        return "pr-${System.getenv("GITHUB_HEAD_REF")}-${System.getenv("SHORT_SHA")}"
+    }
+
+    return "ci-${System.getenv("BRANCH_NAME")}-${System.getenv("SHORT_SHA")}"
+}
+
+fun getBetterVersion(): String {
+    val buildNumber = getBuildNumber()
+
+    if (buildNumber == null) {
+        val tag = System.getenv("TAG")
+
+        return "${tag}"
+    }
+
+    return buildNumber
 }
 
 fun getReleaseType(): String {

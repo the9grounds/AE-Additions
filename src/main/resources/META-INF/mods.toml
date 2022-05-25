@@ -35,8 +35,8 @@ versionRange="[8.4.0,)"
 ordering="AFTER"
 side="BOTH"
 [[dependencies.aeadditions]]
-modId="kotlinforforge"
+modId="mekanism"
 mandatory=false
-versionRange="[1.14.0,)"
 ordering="AFTER"
+versionRange="[10.0.20.447,)"
 side="BOTH"

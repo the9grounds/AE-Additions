@@ -4,6 +4,7 @@ import appeng.api.util.AEPartLocation
 import com.the9grounds.aeadditions.container.ContainerOpener
 import com.the9grounds.aeadditions.container.Locator
 import com.the9grounds.aeadditions.container.chemical.ChemicalInterfaceContainer
+import com.the9grounds.aeadditions.integration.Mods
 import com.the9grounds.aeadditions.integration.appeng.AppEng
 import com.the9grounds.aeadditions.tile.ChemicalInterfaceTileEntity
 import net.minecraft.block.Block
@@ -23,9 +24,15 @@ import net.minecraftforge.common.ToolType
 
 class ChemicalInterfaceBlock(properties: Properties) : Block(properties) {
 
-    override fun createTileEntity(state: BlockState?, world: IBlockReader?): TileEntity? = ChemicalInterfaceTileEntity()
+    override fun createTileEntity(state: BlockState?, world: IBlockReader?): TileEntity? {
+        if (Mods.MEKANISM.isEnabled) {
+            return ChemicalInterfaceTileEntity()
+        }
+        
+        return null
+    }
 
-    override fun hasTileEntity(state: BlockState?): Boolean = true
+    override fun hasTileEntity(state: BlockState?): Boolean = Mods.MEKANISM.isEnabled
 
     override fun onBlockPlacedBy(
         worldIn: World,

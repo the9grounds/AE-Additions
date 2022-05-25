@@ -108,5 +108,5 @@ class ChemicalConversionMonitorPart(itemStack: ItemStack) : AbstractConversionMo
         return AEChemicalStack(chemicalStack)
     }
 
-    override fun getStorageChannel(): IStorageChannel<IAEChemicalStack> = StorageChannels.CHEMICAL
+    override fun getStorageChannel(): IStorageChannel<IAEChemicalStack> = StorageChannels.CHEMICAL!!
 }

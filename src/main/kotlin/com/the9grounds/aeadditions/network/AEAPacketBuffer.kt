@@ -35,7 +35,7 @@ class AEAPacketBuffer(wrapped: ByteBuf) : PacketBuffer(wrapped) {
     }
     
     fun readIAEChemicalStackList(): IItemList<IAEChemicalStack> {
-        val list = StorageChannels.CHEMICAL.createList()
+        val list = StorageChannels.CHEMICAL!!.createList()
         
         while (readableBytes() > 0) {
             list.add(readIAEChemicalStack())

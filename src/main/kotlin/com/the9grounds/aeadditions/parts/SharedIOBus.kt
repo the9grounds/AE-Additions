@@ -76,7 +76,7 @@ abstract class SharedIOBus(itemStack: ItemStack) : AbstractUpgradablePart(itemSt
     }
     
     protected fun calculateThroughput(): Long {
-        var amount = StorageChannels.CHEMICAL.transferFactor().toDouble()
+        var amount = StorageChannels.CHEMICAL!!.transferFactor().toDouble()
         
         amount =  when(getInstalledUpgrades(Upgrades.SPEED)) {
             4 -> amount * 8 * 4 * 2 * 1.5
