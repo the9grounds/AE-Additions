@@ -169,7 +169,7 @@ curseforge {
             optionalDependency("mekanism")
         })
         mainArtifact(closureOf<com.matthewprenger.cursegradle.CurseArtifact> {
-            displayName = "${base.archivesBaseName}-${version}"
+            displayName = "${modBaseName}-${getBetterVersion()}"
         })
     })
 }
