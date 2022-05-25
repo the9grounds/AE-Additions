@@ -1,28 +1,22 @@
 package com.the9grounds.aeadditions.me.storage
 
 import appeng.api.config.FuzzyMode
-import appeng.api.storage.ICellInventory
-import appeng.api.storage.ISaveProvider
+import appeng.api.storage.cells.CellState
+import appeng.api.storage.cells.ICellInventory
+import appeng.api.storage.cells.ISaveProvider
 import appeng.api.storage.data.IAEStack
 import appeng.api.storage.data.IItemList
-import appeng.util.Platform
 import com.the9grounds.aeadditions.api.IAEAdditionsStorageCell
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NBTTagCompound
+import net.minecraft.nbt.CompoundNBT
 import net.minecraftforge.items.IItemHandler
 
-// TODO: Redo this class to allow for configurable number of items
-abstract class AbstractAEAdditionsInventory<T : IAEStack<T>?>(cellType: IAEAdditionsStorageCell<T>?, o: ItemStack?, container: ISaveProvider?) : ICellInventory<T> {
-    protected var container: ISaveProvider? = null
-    private var maxItemTypes = 500
+abstract class AbstractAEAdditionsInventory<T: IAEStack<T>>(val cellType: IAEAdditionsStorageCell<T>?, val itemStackLocal: ItemStack, val container: ISaveProvider?) : ICellInventory<T> {
+
+    private var tagCompound: CompoundNBT? = null
+    private var maxItemTypes = MAX_ITEM_TYPES
     private var storedItems: Short = 0
     private var storedItemCount = 0L
-    private var i: ItemStack? = null
-    protected var cellType: IAEAdditionsStorageCell<T>? = null
-    protected var itemsPerByte = 0
-    private var isPersisted = true
-    private var tagCompound: NBTTagCompound? = null
-
     protected var cellItems: IItemList<T>? = null
     get() {
         if (field == null) {
@@ -31,9 +25,12 @@ abstract class AbstractAEAdditionsInventory<T : IAEStack<T>?>(cellType: IAEAddit
         }
         return field
     }
+    protected var itemsPerByte = 0
+    private var isPersisted = true
 
     companion object
     {
+        private val MAX_ITEM_TYPES = 63
         private val ITEM_TYPE_TAG = "it"
         private val ITEM_COUNT_TAG = "ic"
         private val ITEM_SLOT = "#"
@@ -42,30 +39,31 @@ abstract class AbstractAEAdditionsInventory<T : IAEStack<T>?>(cellType: IAEAddit
         protected val ITEM_PRE_FORMATTED_SLOT = "PF#"
         protected val ITEM_PRE_FORMATTED_NAME = "PN"
         protected val ITEM_PRE_FORMATTED_FUZZY = "FP"
+        private val ITEM_SLOT_KEYS = arrayOfNulls<String>(MAX_ITEM_TYPES)
+        private val ITEM_SLOT_COUNT_KEYS = arrayOfNulls<String>(MAX_ITEM_TYPES)
+
+        init {
+            for (x in 0 until MAX_ITEM_TYPES) {
+                ITEM_SLOT_KEYS[x] = ITEM_SLOT + x
+                ITEM_SLOT_COUNT_KEYS[x] = ITEM_SLOT_COUNT + x
+            }
+        }
     }
 
     init {
-        i = o
-        this.cellType = cellType
         itemsPerByte = this.cellType!!.getChannel().unitsPerByte
-        maxItemTypes = this.cellType!!.getTotalTypes(i!!)
+        maxItemTypes = this.cellType!!.getTotalTypes(itemStackLocal)
+        if (maxItemTypes > MAX_ITEM_TYPES) {
+            maxItemTypes = MAX_ITEM_TYPES
+        }
         if (maxItemTypes < 1) {
             maxItemTypes = 1
         }
-        this.container = container
-        tagCompound = Platform.openNbtData(o)
+        tagCompound = itemStack.orCreateTag
         storedItems = tagCompound!!.getShort(ITEM_TYPE_TAG)
         storedItemCount = tagCompound!!.getLong(ITEM_COUNT_TAG)
         cellItems = null
     }
-
-//    protected open fun getCellItems(): IItemList<T>? {
-//        if (cellItems == null) {
-//            cellItems = this.channel.createList()
-//            loadCellItems()
-//        }
-//        return cellItems
-//    }
 
     override fun persist() {
         if (isPersisted) {
@@ -75,33 +73,32 @@ abstract class AbstractAEAdditionsInventory<T : IAEStack<T>?>(cellType: IAEAddit
 
         // add new pretty stuff...
         var x = 0
-        cellItems!!.forEachIndexed {index, element ->
-            itemCount += element!!.getStackSize()
-            val g = NBTTagCompound()
-            element.writeToNBT(g)
-            tagCompound!!.setTag(ITEM_SLOT + index, g)
-            tagCompound!!.setLong(ITEM_SLOT_COUNT + index, element.getStackSize())
-            x = index
+        for (v in cellItems!!) {
+            itemCount += v.stackSize
+            val g = CompoundNBT()
+            v.writeToNBT(g)
+            tagCompound!!.put(ITEM_SLOT_KEYS[x], g)
+            tagCompound!!.putLong(ITEM_SLOT_COUNT_KEYS[x], v.stackSize)
+            x++
         }
-        x++
         val oldStoredItems = storedItems
         storedItems = cellItems!!.size().toShort()
         if (cellItems!!.isEmpty) {
-            tagCompound!!.removeTag(ITEM_TYPE_TAG)
+            tagCompound!!.remove(ITEM_TYPE_TAG)
         } else {
-            tagCompound!!.setShort(ITEM_TYPE_TAG, storedItems)
+            tagCompound!!.putShort(ITEM_TYPE_TAG, storedItems)
         }
         storedItemCount = itemCount
         if (itemCount == 0L) {
-            tagCompound!!.removeTag(ITEM_COUNT_TAG)
+            tagCompound!!.remove(ITEM_COUNT_TAG)
         } else {
-            tagCompound!!.setLong(ITEM_COUNT_TAG, itemCount)
+            tagCompound!!.putLong(ITEM_COUNT_TAG, itemCount)
         }
 
         // clean any old crusty stuff...
         while (x < oldStoredItems && x < maxItemTypes) {
-            tagCompound!!.removeTag(ITEM_SLOT + x)
-            tagCompound!!.removeTag(ITEM_SLOT_COUNT + x)
+            tagCompound!!.remove(ITEM_SLOT_KEYS[x])
+            tagCompound!!.remove(ITEM_SLOT_COUNT_KEYS[x])
             x++
         }
         isPersisted = true
@@ -112,7 +109,7 @@ abstract class AbstractAEAdditionsInventory<T : IAEStack<T>?>(cellType: IAEAddit
         storedItems = cellItems!!.size().toShort()
         storedItemCount = 0
         for (v in cellItems!!) {
-            storedItemCount += v!!.getStackSize().toInt()
+            storedItemCount += v.stackSize.toInt()
         }
         isPersisted = false
         if (container != null) {
@@ -123,7 +120,7 @@ abstract class AbstractAEAdditionsInventory<T : IAEStack<T>?>(cellType: IAEAddit
         }
     }
 
-    protected open fun loadCellItems() {
+    open fun loadCellItems() {
         if (cellItems == null) {
             cellItems = this.channel.createList()
         }
@@ -131,8 +128,8 @@ abstract class AbstractAEAdditionsInventory<T : IAEStack<T>?>(cellType: IAEAddit
         val types = this.storedItemTypes.toInt()
         var needsUpdate = false
         for (slot in 0 until types) {
-            val compoundTag = tagCompound!!.getCompoundTag(ITEM_SLOT + slot)
-            val stackSize = tagCompound!!.getLong(ITEM_SLOT_COUNT + slot)
+            val compoundTag = tagCompound!!.getCompound(ITEM_SLOT_KEYS[slot])
+            val stackSize = tagCompound!!.getLong(ITEM_SLOT_COUNT_KEYS[slot])
             needsUpdate = needsUpdate or !loadCellItem(compoundTag, stackSize)
         }
         if (needsUpdate) {
@@ -147,17 +144,17 @@ abstract class AbstractAEAdditionsInventory<T : IAEStack<T>?>(cellType: IAEAddit
      * @param stackSize
      * @return true when successfully loaded
      */
-    protected abstract fun loadCellItem(compoundTag: NBTTagCompound?, stackSize: Long): Boolean
+    protected abstract fun loadCellItem(compoundTag: CompoundNBT?, stackSize: Long): Boolean
 
-    override fun getAvailableItems(out: IItemList<T>): IItemList<T>? {
+    override fun getAvailableItems(out: IItemList<T>): IItemList<T> {
         for (item in cellItems!!) {
             out.add(item)
         }
         return out
     }
 
-    override fun getItemStack(): ItemStack? {
-        return i
+    override fun getItemStack(): ItemStack {
+        return itemStackLocal
     }
 
     override fun getIdleDrain(): Double {
@@ -165,29 +162,30 @@ abstract class AbstractAEAdditionsInventory<T : IAEStack<T>?>(cellType: IAEAddit
     }
 
     override fun getFuzzyMode(): FuzzyMode? {
-        return cellType!!.getFuzzyMode(i)
+        return cellType!!.getFuzzyMode(itemStackLocal)
     }
 
     override fun getConfigInventory(): IItemHandler? {
-        return cellType!!.getConfigInventory(i)
+        return cellType!!.getConfigInventory(itemStackLocal)
     }
 
     override fun getUpgradesInventory(): IItemHandler? {
-        return cellType!!.getUpgradesInventory(i)
+        return cellType!!.getUpgradesInventory(itemStackLocal)
     }
 
     override fun getBytesPerType(): Int {
-        return cellType!!.getBytesPerType(i!!)
+        return cellType!!.getBytesPerType(itemStackLocal)
     }
 
     override fun canHoldNewItem(): Boolean {
         val bytesFree = this.freeBytes
-        return (bytesFree > this.bytesPerType || bytesFree == this.bytesPerType.toLong() && this.unusedItemCount > 0) && this
-            .remainingItemTypes > 0
+        return ((bytesFree > this.bytesPerType
+                || bytesFree == this.bytesPerType.toLong() && this.unusedItemCount > 0)
+                && this.remainingItemTypes > 0)
     }
 
     override fun getTotalBytes(): Long {
-        return cellType!!.getBytes(i!!).toLong()
+        return cellType!!.getBytes(itemStackLocal).toLong()
     }
 
     override fun getFreeBytes(): Long {
@@ -229,12 +227,15 @@ abstract class AbstractAEAdditionsInventory<T : IAEStack<T>?>(cellType: IAEAddit
         } else itemsPerByte - div
     }
 
-    override fun getStatusForCell(): Int {
+    override fun getStatusForCell(): CellState? {
+        if (this.storedItemTypes == 0L) {
+            return CellState.EMPTY
+        }
         if (canHoldNewItem()) {
-            return 1
+            return CellState.NOT_EMPTY
         }
         return if (this.remainingItemCount > 0) {
-            2
-        } else 3
+            CellState.TYPES_FULL
+        } else CellState.FULL
     }
 }

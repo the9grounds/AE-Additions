@@ -7,7 +7,8 @@ on:
   push:
     branches: [ master ]
   pull_request:
-    branches: [ master ]
+    branches:
+      - master
 
 jobs:
   build:
@@ -38,7 +39,7 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
-      run: ./gradlew setupCiWorkspace build
+      run: ./gradlew build
       env:
         SHORT_SHA: ${{ steps.short-sha.outputs.sha }}
         BRANCH_NAME: ${{ steps.extract_branch.outputs.branch }}

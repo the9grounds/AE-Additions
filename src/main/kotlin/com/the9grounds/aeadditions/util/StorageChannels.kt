@@ -1,16 +1,26 @@
 package com.the9grounds.aeadditions.util
 
-import appeng.api.AEApi
+import appeng.api.storage.IStorageChannel
 import appeng.api.storage.channels.IFluidStorageChannel
 import appeng.api.storage.channels.IItemStorageChannel
-import appeng.api.storage.data.IAEItemStack
-import com.the9grounds.aeadditions.api.gas.IGasStorageChannel
-import com.the9grounds.aeadditions.integration.Integration
+import com.the9grounds.aeadditions.api.chemical.IAEChemicalStack
+import com.the9grounds.aeadditions.api.chemical.IChemicalStorageChannel
+import com.the9grounds.aeadditions.integration.Mods
+import com.the9grounds.aeadditions.integration.appeng.AppEng
 
 object StorageChannels {
-    @JvmField val ITEM = AEApi.instance().storage().getStorageChannel(IItemStorageChannel::class.java)
 
-    @JvmField val FLUID = AEApi.instance().storage().getStorageChannel(IFluidStorageChannel::class.java)
+    val ITEM = AppEng.API!!.storage().getStorageChannel(IItemStorageChannel::class.java)
 
-    @JvmField val GAS = if (Integration.Mods.MEKANISMGAS.isEnabled) AEApi.instance().storage().getStorageChannel(IGasStorageChannel::class.java) else null
+    val FLUID = AppEng.API!!.storage().getStorageChannel(IFluidStorageChannel::class.java)
+    
+    val CHEMICAL: IStorageChannel<IAEChemicalStack>?
+    get() {
+        if (Mods.MEKANISM.isEnabled) {
+            return AppEng.API!!.storage().getStorageChannel(IChemicalStorageChannel::class.java)
+        }
+        
+        return null
+    }
+
 }

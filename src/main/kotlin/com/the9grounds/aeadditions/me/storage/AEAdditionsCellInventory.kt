@@ -3,62 +3,99 @@ package com.the9grounds.aeadditions.me.storage
 import appeng.api.config.Actionable
 import appeng.api.exceptions.AppEngException
 import appeng.api.networking.security.IActionSource
-import appeng.api.storage.ICellInventory
-import appeng.api.storage.ISaveProvider
 import appeng.api.storage.IStorageChannel
+import appeng.api.storage.cells.ICellInventory
+import appeng.api.storage.cells.ISaveProvider
+import appeng.api.storage.data.IAEItemStack
 import appeng.api.storage.data.IAEStack
-import appeng.core.AEConfig
 import appeng.core.AELog
+import com.the9grounds.aeadditions.Logger
 import com.the9grounds.aeadditions.api.IAEAdditionsStorageCell
+import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NBTTagCompound
+import net.minecraft.nbt.CompoundNBT
 
-// This is mostly a copy of AE's BasicCellInventory, with changes for the long -> int conversion issue
-class AEAdditionsCellInventory<T: IAEStack<T>?>(cellType: IAEAdditionsStorageCell<T>, itemStack: ItemStack, container: ISaveProvider?) : AbstractAEAdditionsInventory<T>(cellType, itemStack, container) {
+class AEAdditionsCellInventory<T: IAEStack<T>>(val cell: IAEAdditionsStorageCell<T>, itemStack: ItemStack, container: ISaveProvider?) : AbstractAEAdditionsInventory<T>(cell, itemStack, container) {
 
-    private var channel: IStorageChannel<T>? = null
 
-    init {
-        this.channel = cellType.getChannel()
+    override fun loadCellItem(compoundTag: CompoundNBT?, stackSize: Long): Boolean {
+        // Now load the item stack
+
+        // Now load the item stack
+        val t: T?
+        try {
+            t = this.channel.createFromNBT(compoundTag!!)
+            if (t == null) {
+                Logger.warn(
+                    "Removing item " + compoundTag
+                            + " from storage cell because the associated item type couldn't be found."
+                )
+                return false
+            }
+        } catch (ex: Throwable) {
+//            if (AEConfig.instance().isRemoveCrashingItemsOnLoad) {
+//                LOGGER.warn(
+//                    ex,
+//                    "Removing item $compoundTag from storage cell because loading the ItemStack crashed."
+//                )
+//                return false
+//            }
+            throw ex
+        }
+
+        t.stackSize = stackSize
+
+        if (stackSize > 0) {
+            cellItems!!.add(t)
+        }
+
+        return true
     }
 
-    override fun injectItems(input: T, mode: Actionable?, src: IActionSource?): T? {
+    override fun injectItems(input: T, mode: Actionable, src: IActionSource): T? {
         if (input == null) {
             return null
         }
-        if (input.getStackSize() == 0L) {
+        if (input.stackSize == 0L) {
             return null
         }
 
-        if (cellType!!.isBlackListed(this.itemStack!!, input)) {
+        if (cellType!!.isBlackListed(this.itemStack, input)) {
             return input
         }
-        // Don't think I have to worry about this since you can't inject a fluid cell into a fluid cell
-//        if (this.isStorageCell(input)) {
-//            val meInventory: ICellInventory<*> =
-//                BasicCellInventory.createInventory((input as IAEItemStack).createItemStack(), null)
-//            if (!BasicCellInventory.isCellEmpty(meInventory)) {
-//                return input
-//            }
-//        }
+        // This is slightly hacky as it expects a read-only access, but fine for now.
+        // TODO: Guarantee a read-only access. E.g. provide an isEmpty() method and
+        // ensure CellInventory does not write
+        // any NBT data for empty cells instead of relying on an empty IItemContainer
+        // This is slightly hacky as it expects a read-only access, but fine for now.
+        // TODO: Guarantee a read-only access. E.g. provide an isEmpty() method and
+        // ensure CellInventory does not write
+        // any NBT data for empty cells instead of relying on an empty IItemContainer
+        if (this.isStorageCell(input)) {
+            val meInventory: ICellInventory<T> =
+                createInventory((input as IAEItemStack).createItemStack(), null)!!
+            if (!isCellEmpty(meInventory)) {
+                return input
+            }
+        }
 
-        val l = cellItems!!.findPrecise(input)
+        val l: T? = this.cellItems!!.findPrecise(input)
         if (l != null) {
             val remainingItemCount = this.remainingItemCount
             if (remainingItemCount <= 0) {
                 return input
             }
-            return if (input.getStackSize() > remainingItemCount) {
+            return if (input.stackSize > remainingItemCount) {
                 val r = input.copy()
-                r!!.setStackSize(r!!.getStackSize() - remainingItemCount)
+                r.stackSize = r.stackSize - remainingItemCount
                 if (mode == Actionable.MODULATE) {
-                    l.setStackSize(l.getStackSize() + remainingItemCount)
+                    l.stackSize = l.stackSize + remainingItemCount
                     saveChanges()
                 }
                 r
             } else {
                 if (mode == Actionable.MODULATE) {
-                    l.setStackSize(l.getStackSize() + input.getStackSize())
+                    l.stackSize = l.stackSize + input.stackSize
                     saveChanges()
                 }
                 null
@@ -67,22 +104,22 @@ class AEAdditionsCellInventory<T: IAEStack<T>?>(cellType: IAEAdditionsStorageCel
 
         if (canHoldNewItem()) // room for new type, and for at least one item!
         {
-            val remainingItemCount = this.remainingItemCount - this.bytesPerType * itemsPerByte
+            val remainingItemCount = (this.remainingItemCount
+                    - this.bytesPerType * itemsPerByte)
             if (remainingItemCount > 0) {
-                if (input.getStackSize() > remainingItemCount) {
+                if (input.stackSize > remainingItemCount) {
                     val toReturn = input.copy()
-                    toReturn!!.setStackSize(input.getStackSize() - remainingItemCount)
+                    toReturn.stackSize = input.stackSize - remainingItemCount
                     if (mode == Actionable.MODULATE) {
                         val toWrite = input.copy()
-                        toWrite!!.setStackSize(remainingItemCount)
+                        toWrite.stackSize = remainingItemCount.toLong()
                         cellItems!!.add(toWrite)
                         saveChanges()
                     }
                     return toReturn
                 }
                 if (mode == Actionable.MODULATE) {
-                    val copy = input.copy()
-                    cellItems!!.add(copy)
+                    cellItems!!.add(input)
                     saveChanges()
                 }
                 return null
@@ -92,111 +129,87 @@ class AEAdditionsCellInventory<T: IAEStack<T>?>(cellType: IAEAdditionsStorageCel
         return input
     }
 
-    override fun extractItems(request: T?, mode: Actionable?, src: IActionSource?): T? {
+    override fun extractItems(request: T, mode: Actionable, src: IActionSource): T? {
         if (request == null) {
             return null
         }
 
-        val size = Math.min(Int.MAX_VALUE.toLong(), request.getStackSize())
+        val size = Math.min(Int.MAX_VALUE.toLong(), request.stackSize)
 
-        var Results: T? = null
+        var results: T? = null
 
-        val l = cellItems!!.findPrecise(request)
+        val l: T? = this.cellItems!!.findPrecise(request)
         if (l != null) {
-            Results = l.copy()
-            if (l.getStackSize() <= size) {
-                Results!!.setStackSize(l.getStackSize())
+            results = l.copy()
+            if (l.stackSize <= size) {
+                results.stackSize = l.stackSize
                 if (mode == Actionable.MODULATE) {
-                    l.setStackSize(0)
+                    l.stackSize = 0
                     saveChanges()
                 }
             } else {
-                Results!!.setStackSize(size)
+                results.stackSize = size
                 if (mode == Actionable.MODULATE) {
-                    l.setStackSize(l.getStackSize() - size)
+                    l.stackSize = l.stackSize - size
                     saveChanges()
                 }
             }
         }
 
-        return Results
+        return results
     }
 
-    override fun getChannel(): IStorageChannel<T>? = channel
+    override fun getChannel(): IStorageChannel<T> = cell.getChannel()
 
-    override fun loadCellItem(compoundTag: NBTTagCompound?, stackSize: Long): Boolean {
-
-        // Now load the item stack
-        val t: T?
-        try {
-            t = getChannel()!!.createFromNBT(compoundTag!!)
-            if (t == null) {
-                AELog.warn("Removing item $compoundTag from storage cell because the associated item type couldn't be found.")
-                return false
-            }
-        } catch (ex: Throwable) {
-            if (AEConfig.instance().isRemoveCrashingItemsOnLoad) {
-                AELog.warn(ex, "Removing item $compoundTag from storage cell because loading the ItemStack crashed.")
-                return false
-            }
-            throw ex
+    private fun isStorageCell(input: T): Boolean {
+        if (input is IAEItemStack) {
+            val stack = input as IAEItemStack
+            val type = getStorageCell(stack.definition)
+            return type != null && !type.storableInStorageCell()
         }
-
-        t.setStackSize(stackSize)
-
-        if (stackSize > 0) {
-            cellItems!!.add(t)
-        }
-
-        return true
+        return false
     }
 
     companion object {
 
-        fun isCell(itemStack: ItemStack?): Boolean {
-            return getStorageCell(itemStack) != null
+        fun isCell(input: ItemStack?): Boolean {
+            return getStorageCell(input) != null
         }
 
-        private fun getStorageCell(itemStack: ItemStack?): IAEAdditionsStorageCell<*>? {
-            if (itemStack != null) {
-                val type = itemStack.item
-
+        private fun getStorageCell(input: ItemStack?): IAEAdditionsStorageCell<*>? {
+            if (input != null) {
+                val type = input.item
                 if (type is IAEAdditionsStorageCell<*>) {
                     return type
                 }
             }
-
             return null
         }
 
-        @JvmStatic fun <T : IAEStack<T>?> createInventory(itemStack: ItemStack?, container: ISaveProvider?): ICellInventory<T>? {
-            try {
+        private fun <T: IAEStack<T>> isCellEmpty(inv: ICellInventory<T>?): Boolean {
+            return inv?.getAvailableItems(inv.getChannel().createList())?.isEmpty ?: true
+        }
+
+        fun <T: IAEStack<T>> createInventory(itemStack: ItemStack, container: ISaveProvider?): ICellInventory<T>? {
+            return try {
                 if (itemStack == null) {
                     throw AppEngException("ItemStack was used as a cell, but was not a cell!")
                 }
-
-                val type = itemStack.item
+                val type: Item = itemStack.getItem()
                 val cellType: IAEAdditionsStorageCell<T>
-
-                if (type is IAEAdditionsStorageCell<*>) {
-                    cellType = type as IAEAdditionsStorageCell<T>
+                cellType = if (type is IAEAdditionsStorageCell<*>) {
+                    type as IAEAdditionsStorageCell<T>
                 } else {
                     throw AppEngException("ItemStack was used as a cell, but was not a cell!")
                 }
-
                 if (!cellType.isStorageCell(itemStack)) {
-                    throw AppEngException("ItemStack was used as a cell, but was not a cell")
+                    throw AppEngException("ItemStack was used as a cell, but was not a cell!")
                 }
-
-                return AEAdditionsCellInventory(cellType, itemStack, container)
-
+                AEAdditionsCellInventory(cellType, itemStack, container)
             } catch (e: AppEngException) {
                 AELog.error(e)
-
-                return null
+                null
             }
         }
-
-
     }
 }

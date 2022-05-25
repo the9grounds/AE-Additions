@@ -6,7 +6,7 @@
 !/gradlew.bat
 !/README.md
 !/License.txt
-!/build.gradle.old
+!/build.gradle.kts
 !/build.bat
 !/build.sh
 !/build.properties

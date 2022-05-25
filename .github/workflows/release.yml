@@ -42,9 +42,10 @@ jobs:
         pullRequests: true
         issues: true
         issuesWoLabels: true
+        excludeLabels: 1.12.2
         prWoLabels: true
     - name: Build with Gradle
-      run: ./gradlew setupCiWorkspace curseforge493962
+      run: ./gradlew curseforge493962
       env:
         CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
         TAG: ${{ steps.vars.outputs.tag }}

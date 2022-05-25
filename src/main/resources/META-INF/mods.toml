@@ -1,0 +1,42 @@
+# Make sure this is set to "kotlinforforge"
+modLoader="kotlinforforge"
+# Make sure this is set to the appropriate version range
+loaderVersion="[1.14,)" # Require at least 1.14.x
+# License is REQUIRED after 1.16
+license='MIT'
+
+[[mods]]
+modId="aeadditions"
+version="${version}"
+displayName="AE Additions"
+credits="The AEAdditions dev team"
+authors="MasterYodA"
+description='''
+A mod with helpful additions for Applied Energistics 2
+
+Special credit for original mod authors M3gaFr3ak/DrummerMC and Textures by PaleoCrafter and Cyntain
+'''
+[[dependencies.aeadditions]]
+modId="forge"
+mandatory=true
+versionRange="[36,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.aeadditions]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.16.5]"
+ordering="NONE"
+side="BOTH"
+[[dependencies.aeadditions]]
+modId="appliedenergistics2"
+mandatory=true
+versionRange="[8.4.0,)"
+ordering="AFTER"
+side="BOTH"
+[[dependencies.aeadditions]]
+modId="mekanism"
+mandatory=false
+ordering="AFTER"
+versionRange="[10.0.20.447,)"
+side="BOTH"

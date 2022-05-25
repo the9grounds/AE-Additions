@@ -1,0 +1,8 @@
+{
+  "parent": "appliedenergistics2:item/import_bus",
+  "textures": {
+    "sides": "appliedenergistics2:part/import_bus_sides",
+    "back": "appliedenergistics2:part/monitor_back",
+    "front": "aeadditions:part/chemical/import_bus"
+  }
+}

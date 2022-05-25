@@ -1,6 +1,7 @@
+
 {
   "pack": {
-    "pack_format": 3,
-    "description": "Resources used for Extra Cells 2"
+    "description": "AEAdditions resources",
+    "pack_format": 6
   }
 }
