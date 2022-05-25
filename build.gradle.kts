@@ -213,6 +213,14 @@ fun getReleaseType(): String {
     return "release"
 }
 
+sourceSets {
+    main {
+        resources {
+            srcDir("src/generated/resources")
+        }
+    }
+}
+
 tasks.create("copyResourceToClasses", Copy::class) {
     tasks.classes.get().dependsOn(this)
     dependsOn(tasks.processResources.get())

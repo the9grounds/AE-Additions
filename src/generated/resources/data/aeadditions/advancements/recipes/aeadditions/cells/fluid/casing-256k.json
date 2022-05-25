@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "aeadditions:cells/fluid/casing-256k"
+    ]
+  },
+  "criteria": {
+    "has_component": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "aeadditions:fluid_storage_component_256"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "aeadditions:cells/fluid/casing-256k"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_component",
+      "has_the_recipe"
+    ]
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "modid": "mekanism",
+          "type": "forge:mod_loaded"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shapeless",
+        "ingredients": [
+          {
+            "item": "appliedenergistics2:empty_storage_cell"
+          },
+          {
+            "item": "aeadditions:chemical_storage_component_1024"
+          }
+        ],
+        "result": {
+          "item": "aeadditions:chemical_storage_cell_1024"
+        }
+      }
+    }
+  ]
+}

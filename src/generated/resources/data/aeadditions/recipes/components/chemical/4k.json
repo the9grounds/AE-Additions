@@ -1,0 +1,38 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "modid": "mekanism",
+          "type": "forge:mod_loaded"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shaped",
+        "pattern": [
+          "aba",
+          "cdc",
+          "aca"
+        ],
+        "key": {
+          "a": {
+            "tag": "forge:dyes/yellow"
+          },
+          "b": {
+            "item": "appliedenergistics2:calculation_processor"
+          },
+          "c": {
+            "item": "aeadditions:chemical_storage_component_1"
+          },
+          "d": {
+            "item": "appliedenergistics2:quartz_glass"
+          }
+        },
+        "result": {
+          "item": "aeadditions:chemical_storage_component_4"
+        }
+      }
+    }
+  ]
+}

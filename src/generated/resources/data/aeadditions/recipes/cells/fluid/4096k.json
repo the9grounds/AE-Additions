@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "aba",
+    "bcb",
+    "ddd"
+  ],
+  "key": {
+    "a": {
+      "item": "appliedenergistics2:quartz_glass"
+    },
+    "b": {
+      "item": "appliedenergistics2:fluix_dust"
+    },
+    "c": {
+      "item": "aeadditions:fluid_storage_component_4096"
+    },
+    "d": {
+      "tag": "forge:ingots/iron"
+    }
+  },
+  "result": {
+    "item": "aeadditions:fluid_storage_cell_4096"
+  }
+}

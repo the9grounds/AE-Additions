@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "aba",
+    "cdc",
+    "aca"
+  ],
+  "key": {
+    "a": {
+      "tag": "forge:gems/lapis"
+    },
+    "b": {
+      "item": "appliedenergistics2:engineering_processor"
+    },
+    "c": {
+      "item": "appliedenergistics2:64k_cell_component"
+    },
+    "d": {
+      "item": "appliedenergistics2:logic_processor"
+    }
+  },
+  "result": {
+    "item": "aeadditions:item_storage_component_256"
+  }
+}

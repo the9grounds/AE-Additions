@@ -1,0 +1,25 @@
+{
+  "result": {
+    "item": "aeadditions:chemical_storage_cell_4"
+  },
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "aba",
+    "bcb",
+    "ddd"
+  ],
+  "key": {
+    "a": {
+      "item": "appliedenergistics2:quartz_glass"
+    },
+    "b": {
+      "item": "appliedenergistics2:fluix_dust"
+    },
+    "c": {
+      "item": "aeadditions:chemical_storage_component_4"
+    },
+    "d": {
+      "tag": "forge:ingots/gold"
+    }
+  }
+}

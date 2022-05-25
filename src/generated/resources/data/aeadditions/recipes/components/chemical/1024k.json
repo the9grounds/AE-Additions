@@ -1,0 +1,38 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "modid": "mekanism",
+          "type": "forge:mod_loaded"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shaped",
+        "pattern": [
+          "aba",
+          "cdc",
+          "aca"
+        ],
+        "key": {
+          "a": {
+            "tag": "forge:dyes/yellow"
+          },
+          "b": {
+            "item": "appliedenergistics2:engineering_processor"
+          },
+          "c": {
+            "item": "aeadditions:chemical_storage_component_256"
+          },
+          "d": {
+            "item": "appliedenergistics2:logic_processor"
+          }
+        },
+        "result": {
+          "item": "aeadditions:chemical_storage_component_1024"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "aba",
+    "bcb",
+    "ddd"
+  ],
+  "key": {
+    "a": {
+      "item": "appliedenergistics2:quartz_glass"
+    },
+    "b": {
+      "item": "appliedenergistics2:fluix_dust"
+    },
+    "c": {
+      "item": "aeadditions:item_storage_component_16384"
+    },
+    "d": {
+      "tag": "forge:gems/diamond"
+    }
+  },
+  "result": {
+    "item": "aeadditions:item_storage_cell_16384"
+  }
+}
