@@ -16,6 +16,12 @@ object Cells {
         AppEng.API!!.client().cells().registerModel(Items.FLUID_STORAGE_CELL_1024k, ResourceLocation("aeadditions:block/drive/cells/fluid/1024k"))
         AppEng.API!!.client().cells().registerModel(Items.FLUID_STORAGE_CELL_4096k, ResourceLocation("aeadditions:block/drive/cells/fluid/4096k"))
         
+        AppEng.API!!.client().cells().registerModel(Items.CHEMICAL_STORAGE_CELL_1k, ResourceLocation("aeadditions:block/drive/cells/chemical/1k"))
+        AppEng.API!!.client().cells().registerModel(Items.CHEMICAL_STORAGE_CELL_4k, ResourceLocation("aeadditions:block/drive/cells/chemical/4k"))
+        AppEng.API!!.client().cells().registerModel(Items.CHEMICAL_STORAGE_CELL_16k, ResourceLocation("aeadditions:block/drive/cells/chemical/16k"))
         AppEng.API!!.client().cells().registerModel(Items.CHEMICAL_STORAGE_CELL_64k, ResourceLocation("aeadditions:block/drive/cells/chemical/64k"))
+        AppEng.API!!.client().cells().registerModel(Items.CHEMICAL_STORAGE_CELL_256k, ResourceLocation("aeadditions:block/drive/cells/chemical/256k"))
+        AppEng.API!!.client().cells().registerModel(Items.CHEMICAL_STORAGE_CELL_1024k, ResourceLocation("aeadditions:block/drive/cells/chemical/1024k"))
+        AppEng.API!!.client().cells().registerModel(Items.CHEMICAL_STORAGE_CELL_4096k, ResourceLocation("aeadditions:block/drive/cells/chemical/4096k"))
     }
 }

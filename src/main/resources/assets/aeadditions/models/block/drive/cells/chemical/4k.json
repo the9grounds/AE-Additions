@@ -1,0 +1,6 @@
+{
+  "parent": "appliedenergistics2:block/drive/drive_cell",
+  "textures": {
+    "cell": "aeadditions:block/drive/cells/chemical/4k"
+  }
+}

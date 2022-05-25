@@ -23,7 +23,7 @@ class AEAGridBlock(val host: ChemicalInterfaceTileEntity) : IGridBlock {
     override fun getGridColor(): AEColor = AEColor.TRANSPARENT
 
     override fun onGridNotification(notification: GridNotification) {
-        //
+        
     }
 
     override fun getConnectableSides(): EnumSet<Direction> {

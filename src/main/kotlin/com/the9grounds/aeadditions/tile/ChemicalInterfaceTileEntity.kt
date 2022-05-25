@@ -5,9 +5,13 @@ import appeng.api.networking.IGridHost
 import appeng.api.networking.IGridNode
 import appeng.api.networking.energy.IEnergyGrid
 import appeng.api.networking.energy.IEnergySource
+import appeng.api.networking.events.MENetworkChannelsChanged
+import appeng.api.networking.events.MENetworkEventSubscribe
+import appeng.api.networking.events.MENetworkPowerStatusChange
 import appeng.api.networking.security.IActionHost
 import appeng.api.networking.storage.IStorageGrid
 import appeng.api.networking.ticking.IGridTickable
+import appeng.api.networking.ticking.ITickManager
 import appeng.api.networking.ticking.TickRateModulation
 import appeng.api.networking.ticking.TickingRequest
 import appeng.api.storage.IMEMonitor
@@ -76,6 +80,20 @@ class ChemicalInterfaceTileEntity : AbstractAEATileEntity(Tiles.CHEMICAL_INTERFA
             for (i in 0 until 6) {
                 chemicalHandlers.add(i, MergedChemicalHandler(i))
             }
+        }
+    }
+    
+    @MENetworkEventSubscribe
+    fun stateChange(event: MENetworkPowerStatusChange) {
+        if (node != null && node!!.grid !== null && node!!.isActive) {
+            node!!.grid!!.getCache<ITickManager>(ITickManager::class.java).wakeDevice(node!!)
+        }
+    }
+
+    @MENetworkEventSubscribe
+    fun stateChange(event: MENetworkChannelsChanged) {
+        if (node != null && node!!.grid !== null) {
+            node!!.grid!!.getCache<ITickManager>(ITickManager::class.java).wakeDevice(node!!)
         }
     }
 
@@ -156,13 +174,19 @@ class ChemicalInterfaceTileEntity : AbstractAEATileEntity(Tiles.CHEMICAL_INTERFA
             return TickRateModulation.IDLE
         }
         
+        if (!getGridNode(AEPartLocation.INTERNAL)!!.isActive) {
+            return TickRateModulation.SLEEP
+        }
+        
         val shouldEmpty = { handler: MergedChemicalHandler, index: Int ->
             val chemicalInConfig = _chemicalConfig.getChemicalInSlot(index)
             
             val chemicalInHandler = handler.chemical
-            
-            chemicalInConfig !== null && chemicalInHandler != null && !chemicalInConfig.equals(chemicalInHandler)
+
+            chemicalInConfig === null || (chemicalInHandler !== null && !chemicalInConfig.equals(chemicalInHandler))
         }
+        
+        var didSomething = false
         
         var i = 0
         for (handler in chemicalHandlers) {
@@ -197,21 +221,26 @@ class ChemicalInterfaceTileEntity : AbstractAEATileEntity(Tiles.CHEMICAL_INTERFA
                 return@forEachIndexed
             }
             
-            val amount = 200000L
+            val amount = 40000L
             
+            val chemicalHandler = chemicalHandlers[index]
+            
+            if (chemicalHandler.chemical !== null && chemicalHandler.currentTank!!.getNeeded() === 0L) {
+                return@forEachIndexed
+            }
+
             val toExtract = AppEng.API!!.storage().poweredExtraction(powerSource, chemicalStorage, AEChemicalStack(chemical, amount), MachineSource(this), Actionable.SIMULATE) as AEChemicalStack?
-            
+
             if (toExtract == null || toExtract.stackSize == 0L) {
                 return@forEachIndexed
             }
             
-            val chemicalHandler = chemicalHandlers[index]
             
             if (chemicalHandler.chemical !== null && !chemicalHandler.chemical!!.equals(chemical)) {
                 return@forEachIndexed
             }
             
-            val notInserted = chemicalHandler.classToHandlerMap[chemical::class.java]!!.insertChemicalIntoTank(toExtract.getChemicalStack(), Action.SIMULATE, AutomationType.INTERNAL)
+            val notInserted = chemicalHandler.classToHandlerMap[chemical::class.java]!!.insertChemicalIntoTank(toExtract.getChemicalStack(), Action.SIMULATE, AutomationType.EXTERNAL)
             
             val newAmount = toExtract.stackSize - notInserted.getAmount()
             
@@ -220,15 +249,28 @@ class ChemicalInterfaceTileEntity : AbstractAEATileEntity(Tiles.CHEMICAL_INTERFA
             val extracted = AppEng.API!!.storage().poweredExtraction(powerSource, chemicalStorage, toExtract, MachineSource(this), Actionable.MODULATE) as AEChemicalStack?
             
             if (extracted != null) {
-                chemicalHandler.classToHandlerMap[chemical::class.java]!!.insertChemicalIntoTank(extracted.getChemicalStack(), Action.EXECUTE, AutomationType.INTERNAL)
+                didSomething = true
+                chemicalHandler.classToHandlerMap[chemical::class.java]!!.insertChemicalIntoTank(extracted.getChemicalStack(), Action.EXECUTE, AutomationType.EXTERNAL)
             }
         }
         
-        return TickRateModulation.SAME;
+        return if (didSomething) {
+            TickRateModulation.FASTER
+        } else {
+            TickRateModulation.SLOWER
+        }
     }
     
     val powerUsage: Double
     get() = 1.0
+
+    override fun remove() {
+        super.remove()
+        if (node != null) {
+            node!!.destroy()
+            node = null
+        }
+    }
 
     override fun getActionableNode(): IGridNode? {
         if (Thread.currentThread().threadGroup === SidedThreadGroups.CLIENT) {

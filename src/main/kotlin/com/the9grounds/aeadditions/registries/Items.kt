@@ -28,7 +28,13 @@ object Items {
     val FLUID_STORAGE_COMPONENT_1024k = createItem(Ids.FLUID_STORAGE_COMPONENT_1024) { properties -> StorageComponentItem(properties.rarity(Rarity.RARE), 1024) }
     val FLUID_STORAGE_COMPONENT_4096k = createItem(Ids.FLUID_STORAGE_COMPONENT_4096) { properties -> StorageComponentItem(properties.rarity(Rarity.EPIC), 4096) }
     
+    val CHEMICAL_STORAGE_COMPONENT_1k = createItem(Ids.CHEMICAL_STORAGE_COMPONENT_1, { properties -> StorageComponentItem(properties, 1) }, Mods.MEKANISM)
+    val CHEMICAL_STORAGE_COMPONENT_4k = createItem(Ids.CHEMICAL_STORAGE_COMPONENT_4, { properties -> StorageComponentItem(properties, 4) }, Mods.MEKANISM)
+    val CHEMICAL_STORAGE_COMPONENT_16k = createItem(Ids.CHEMICAL_STORAGE_COMPONENT_16, { properties -> StorageComponentItem(properties, 16) }, Mods.MEKANISM)
     val CHEMICAL_STORAGE_COMPONENT_64k = createItem(Ids.CHEMICAL_STORAGE_COMPONENT_64, { properties -> StorageComponentItem(properties, 64) }, Mods.MEKANISM)
+    val CHEMICAL_STORAGE_COMPONENT_256k = createItem(Ids.CHEMICAL_STORAGE_COMPONENT_256, { properties -> StorageComponentItem(properties, 256) }, Mods.MEKANISM)
+    val CHEMICAL_STORAGE_COMPONENT_1024k = createItem(Ids.CHEMICAL_STORAGE_COMPONENT_1024, { properties -> StorageComponentItem(properties.rarity(Rarity.RARE), 1024) }, Mods.MEKANISM)
+    val CHEMICAL_STORAGE_COMPONENT_4096k = createItem(Ids.CHEMICAL_STORAGE_COMPONENT_4096, { properties -> StorageComponentItem(properties.rarity(Rarity.EPIC), 4096) }, Mods.MEKANISM)
 
     val ITEM_STORAGE_CELL_256k = createItem(Ids.ITEM_STORAGE_CELL_256) { properties ->  PhysicalStorageCell(properties.maxStackSize(1), ITEM_STORAGE_COMPONENT_256k, 256, 3.0, 1024)}
     val ITEM_STORAGE_CELL_1024k = createItem(Ids.ITEM_STORAGE_CELL_1024) { properties ->  PhysicalStorageCell(properties.maxStackSize(1), ITEM_STORAGE_COMPONENT_1024k, 256, 4.0, 4096)}
@@ -39,7 +45,13 @@ object Items {
     val FLUID_STORAGE_CELL_1024k = createItem(Ids.FLUID_STORAGE_CELL_1024) { properties ->  FluidStorageCell(properties.maxStackSize(1).rarity(Rarity.RARE), FLUID_STORAGE_COMPONENT_1024k, 1024, 4.0, 4096)}
     val FLUID_STORAGE_CELL_4096k = createItem(Ids.FLUID_STORAGE_CELL_4096) { properties ->  FluidStorageCell(properties.maxStackSize(1).rarity(Rarity.EPIC), FLUID_STORAGE_COMPONENT_4096k, 4096, 5.0, 8192)}
     
-    val CHEMICAL_STORAGE_CELL_64k = createItem(Ids.CHEMICAL_STORAGE_CELL_64, { properties ->  ChemicalStorageCell(properties.maxStackSize(1), CHEMICAL_STORAGE_COMPONENT_64k, 64, .5, 512)}, Mods.MEKANISM)
+    val CHEMICAL_STORAGE_CELL_1k = createItem(Ids.CHEMICAL_STORAGE_CELL_1, { properties ->  ChemicalStorageCell(properties.maxStackSize(1), CHEMICAL_STORAGE_COMPONENT_1k, 1, .5, 8)}, Mods.MEKANISM)
+    val CHEMICAL_STORAGE_CELL_4k = createItem(Ids.CHEMICAL_STORAGE_CELL_4, { properties ->  ChemicalStorageCell(properties.maxStackSize(1), CHEMICAL_STORAGE_COMPONENT_4k, 4, 1.0, 32)}, Mods.MEKANISM)
+    val CHEMICAL_STORAGE_CELL_16k = createItem(Ids.CHEMICAL_STORAGE_CELL_16, { properties ->  ChemicalStorageCell(properties.maxStackSize(1), CHEMICAL_STORAGE_COMPONENT_16k, 16, 1.5, 128)}, Mods.MEKANISM)
+    val CHEMICAL_STORAGE_CELL_64k = createItem(Ids.CHEMICAL_STORAGE_CELL_64, { properties ->  ChemicalStorageCell(properties.maxStackSize(1), CHEMICAL_STORAGE_COMPONENT_64k, 64, 2.0, 512)}, Mods.MEKANISM)
+    val CHEMICAL_STORAGE_CELL_256k = createItem(Ids.CHEMICAL_STORAGE_CELL_256, { properties ->  ChemicalStorageCell(properties.maxStackSize(1), CHEMICAL_STORAGE_COMPONENT_256k, 256, 3.0, 1024)}, Mods.MEKANISM)
+    val CHEMICAL_STORAGE_CELL_1024k = createItem(Ids.CHEMICAL_STORAGE_CELL_1024, { properties ->  ChemicalStorageCell(properties.maxStackSize(1).rarity(Rarity.RARE), CHEMICAL_STORAGE_COMPONENT_1024k, 1024, 4.0, 4096)}, Mods.MEKANISM)
+    val CHEMICAL_STORAGE_CELL_4096k = createItem(Ids.CHEMICAL_STORAGE_CELL_4096, { properties ->  ChemicalStorageCell(properties.maxStackSize(1).rarity(Rarity.EPIC), CHEMICAL_STORAGE_COMPONENT_4096k, 4096, 5.0, 8192)}, Mods.MEKANISM)
     
     val DUMMY_CHEMICAL_ITEM = createItem(Ids.DUMMY_CHEMICAL_ITEM) { properties -> ChemicalDummyItem(properties) }
     
