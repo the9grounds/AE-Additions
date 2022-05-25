@@ -3,8 +3,6 @@ package com.the9grounds.aeadditions.tile
 import appeng.api.config.Actionable
 import appeng.api.networking.IGridHost
 import appeng.api.networking.IGridNode
-import appeng.api.networking.energy.IEnergyGrid
-import appeng.api.networking.energy.IEnergySource
 import appeng.api.networking.events.MENetworkChannelsChanged
 import appeng.api.networking.events.MENetworkEventSubscribe
 import appeng.api.networking.events.MENetworkPowerStatusChange
@@ -18,7 +16,6 @@ import appeng.api.storage.IMEMonitor
 import appeng.api.util.AECableType
 import appeng.api.util.AEPartLocation
 import appeng.core.sync.network.TargetPoint
-import appeng.me.helpers.ChannelPowerSrc
 import appeng.me.helpers.MachineSource
 import com.the9grounds.aeadditions.api.IAEAChemicalConfig
 import com.the9grounds.aeadditions.api.IAEAHasChemicalConfig
@@ -29,7 +26,6 @@ import com.the9grounds.aeadditions.integration.Mods
 import com.the9grounds.aeadditions.integration.appeng.AppEng
 import com.the9grounds.aeadditions.integration.mekanism.Mekanism
 import com.the9grounds.aeadditions.integration.mekanism.chemical.AEChemicalStack
-import com.the9grounds.aeadditions.me.AEAGridBlock
 import com.the9grounds.aeadditions.network.NetworkManager
 import com.the9grounds.aeadditions.network.packets.ChemicalInterfaceContentsChangedPacket
 import com.the9grounds.aeadditions.registries.Tiles
@@ -62,14 +58,8 @@ import net.minecraft.nbt.CompoundNBT
 import net.minecraft.util.Direction
 import net.minecraftforge.common.capabilities.Capability
 import net.minecraftforge.common.util.LazyOptional
-import net.minecraftforge.fml.common.thread.SidedThreadGroups
 
-class ChemicalInterfaceTileEntity : AbstractAEATileEntity(Tiles.CHEMICAL_INTERFACE.get()), IGridTickable, IGridHost, IActionHost, IAEAHasChemicalConfig {
-    
-    val gridBlock = AEAGridBlock(this)
-
-    private var node: IGridNode? = null
-    private var isFirstGetGridNode = true
+class ChemicalInterfaceTileEntity : AbstractNetworkedTile(Tiles.CHEMICAL_INTERFACE.get()), IGridTickable, IGridHost, IActionHost, IAEAHasChemicalConfig {
     var isReady = false
     
     var chemicalHandlers: MutableList<MergedChemicalHandler> = mutableListOf()
@@ -138,19 +128,6 @@ class ChemicalInterfaceTileEntity : AbstractAEATileEntity(Tiles.CHEMICAL_INTERFA
         return compound
     }
 
-    override fun getGridNode(dir: AEPartLocation): IGridNode? {
-        if (Thread.currentThread().threadGroup == SidedThreadGroups.CLIENT) {
-            return null
-        }
-        
-        if (isFirstGetGridNode) {
-            isFirstGetGridNode = false
-            actionableNode?.updateState()
-        }
-        
-        return node
-    }
-
     override fun getCableConnectionType(dir: AEPartLocation): AECableType = AECableType.SMART
 
     override fun securityBreak() {
@@ -170,7 +147,15 @@ class ChemicalInterfaceTileEntity : AbstractAEATileEntity(Tiles.CHEMICAL_INTERFA
             }
         }
         
-        if (areTanksEmpty) {
+        var isChemicalConfigEmpty = true
+        
+        for (config in _chemicalConfig) {
+            if (config !== null) {
+                isChemicalConfigEmpty = false
+            }
+        }
+        
+        if (areTanksEmpty && isChemicalConfigEmpty) {
             return TickRateModulation.IDLE
         }
         
@@ -260,29 +245,6 @@ class ChemicalInterfaceTileEntity : AbstractAEATileEntity(Tiles.CHEMICAL_INTERFA
             TickRateModulation.SLOWER
         }
     }
-    
-    val powerUsage: Double
-    get() = 1.0
-
-    override fun remove() {
-        super.remove()
-        if (node != null) {
-            node!!.destroy()
-            node = null
-        }
-    }
-
-    override fun getActionableNode(): IGridNode? {
-        if (Thread.currentThread().threadGroup === SidedThreadGroups.CLIENT) {
-            return node
-        }
-        
-        if (node == null) {
-            node = AppEng.API!!.grid().createGridNode(gridBlock)
-        }
-        
-        return node
-    }
 
     override fun <T : Any?> getCapability(cap: Capability<T>, side: Direction?): LazyOptional<T> {
         if (side != null) {
@@ -300,15 +262,6 @@ class ChemicalInterfaceTileEntity : AbstractAEATileEntity(Tiles.CHEMICAL_INTERFA
     
     val chemicalStorage: IMEMonitor<IAEChemicalStack>
         get() = getGridNode(AEPartLocation.INTERNAL)!!.grid!!.getCache<IStorageGrid>(IStorageGrid::class.java).getInventory(StorageChannels.CHEMICAL)
-
-    protected val powerSource: IEnergySource?
-        get() {
-            if (node == null || node!!.grid == null) {
-                return null
-            }
-
-            return ChannelPowerSrc(node, node!!.grid.getCache(IEnergyGrid::class.java))
-        }
     
     fun onTankContentsChanged() {
         markDirty()
