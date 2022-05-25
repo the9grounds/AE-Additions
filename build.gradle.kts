@@ -157,7 +157,7 @@ tasks.register<TaskPublishCurseForge>("publishCurseForge") {
     
     val fileName = "${modBaseName}-${getBetterVersion()}"
     
-    val mainFile = upload(curseForgeProjectId, file("${project.buildDir}/libs/${fileName}"))
+    val mainFile = upload(modCurseId, file("${project.buildDir}/libs/${fileName}"))
     mainFile.addGameVersion(minecraftVersion)
     mainFile.changelogType = CFG_Constants.CHANGELOG_MARKDOWN
     mainFile.changelog = file("CHANGELOG.md")
