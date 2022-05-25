@@ -7,7 +7,7 @@ license='MIT'
 
 [[mods]]
 modId="aeadditions"
-version="${file.jarVersion}"
+version="${version}"
 displayName="AE Additions"
 credits="The AEAdditions dev team"
 authors="MasterYodA"

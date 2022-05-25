@@ -137,15 +137,15 @@ val Project.minecraft: UserDevExtension
 
 tasks.withType<Jar> {
     // this will ensure that this task is redone when the versions change.
-    inputs.property("version", project.version)
+    inputs.property("version", getBetterVersion())
 
     baseName = "${modBaseName}-${getBetterVersion()}"
 
     // replace stuff in mcmod.info, nothing else
-    filesMatching("/mcmod.info") {
+    filesMatching("META-INF/mods.toml") {
         expand(mapOf(
-            "version" to project.version,
-            "mcversion" to "1.12.2"
+            "version" to getBetterVersion(),
+            "mcversion" to "1.16.5"
         ))
     }
 }
