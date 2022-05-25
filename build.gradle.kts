@@ -1,6 +1,8 @@
+import net.darkhax.curseforgegradle.TaskPublishCurseForge
 import net.minecraftforge.gradle.userdev.DependencyManagementExtension
 import net.minecraftforge.gradle.userdev.UserDevExtension
 import org.gradle.jvm.tasks.Jar
+import net.darkhax.curseforgegradle.Constants as CFG_Constants
 
 buildscript {
     repositories {
@@ -20,7 +22,7 @@ buildscript {
 
 plugins {
     `java-library`
-    id("com.matthewprenger.cursegradle") version "1.4.0"
+    id("net.darkhax.curseforgegradle") version "1.0.10"
 }
 
 apply {
@@ -150,28 +152,20 @@ tasks.withType<Jar> {
     }
 }
 
-
-curseforge {
-    if (System.getenv("CURSEFORGE_API_KEY") != null) {
-        apiKey = System.getenv("CURSEFORGE_API_KEY")
-    }
-
-    val localReleaseType = getReleaseType()
-
-    project(closureOf<com.matthewprenger.cursegradle.CurseProject> {
-        id = modCurseId
-        releaseType = localReleaseType
-        changelogType = "markdown"
-        changelog = file("CHANGELOG.md")
-        relations(closureOf<com.matthewprenger.cursegradle.CurseRelation> {
-            requiredDependency("applied-energistics-2")
-            requiredDependency("kotlin-for-forge")
-            optionalDependency("mekanism")
-        })
-        mainArtifact(closureOf<com.matthewprenger.cursegradle.CurseArtifact> {
-            displayName = "${modBaseName}-${getBetterVersion()}"
-        })
-    })
+tasks.register<TaskPublishCurseForge>("publishCurseForge") {
+    apiToken = System.getenv("CURSEFORGE_API_KEY")
+    
+    val fileName = "${modBaseName}-${getBetterVersion()}"
+    
+    val mainFile = upload(curseForgeProjectId, file("${project.buildDir}/libs/${fileName}"))
+    mainFile.addGameVersion(minecraftVersion)
+    mainFile.changelogType = CFG_Constants.CHANGELOG_MARKDOWN
+    mainFile.changelog = file("CHANGELOG.md")
+    mainFile.releaseType = getReleaseType()
+    mainFile.addRequirement("applied-energistics-2")
+    mainFile.addRequirement("kotlin-for-forge")
+    mainFile.addOptional("mekanism")
+    mainFile.addModLoader("Forge")
 }
 
 fun getBuildNumber(): String? {

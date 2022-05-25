@@ -45,7 +45,7 @@ jobs:
         excludeLabels: 1.12.2
         prWoLabels: true
     - name: Build with Gradle
-      run: ./gradlew curseforge493962
+      run: ./gradlew clean build publishCurseForge
       env:
         CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
         TAG: ${{ steps.vars.outputs.tag }}
