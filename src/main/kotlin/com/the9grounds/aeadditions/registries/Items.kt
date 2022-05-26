@@ -1,59 +1,68 @@
 package com.the9grounds.aeadditions.registries
 
+import appeng.api.stacks.AEKeyType
+import appeng.core.definitions.AEItems
+import appeng.items.materials.StorageComponentItem
 import com.the9grounds.aeadditions.AEAdditions
 import com.the9grounds.aeadditions.core.CreativeTab
 import com.the9grounds.aeadditions.integration.Mods
-import com.the9grounds.aeadditions.item.ChemicalDummyItem
-import com.the9grounds.aeadditions.item.storage.ChemicalStorageCell
-import com.the9grounds.aeadditions.item.storage.FluidStorageCell
-import com.the9grounds.aeadditions.item.storage.PhysicalStorageCell
-import com.the9grounds.aeadditions.item.storage.StorageComponentItem
-import net.minecraft.item.Item
-import net.minecraft.item.Rarity
-import net.minecraft.util.ResourceLocation
+import com.the9grounds.aeadditions.item.storage.StorageCell
+import me.ramidzkh.mekae2.AMItems
+import me.ramidzkh.mekae2.ae2.MekanismKeyType
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.Rarity
 import net.minecraftforge.registries.ForgeRegistries
 import thedarkcolour.kotlinforforge.forge.KDeferredRegister
+import thedarkcolour.kotlinforforge.forge.registerObject
 
 object Items {
-    val REGISTRY = KDeferredRegister(ForgeRegistries.ITEMS, AEAdditions.ID)
+    val REGISTRY = KDeferredRegister.create(ForgeRegistries.ITEMS, AEAdditions.ID)
     
     val ITEMS = mutableListOf<Item>()
-
-    val ITEM_STORAGE_COMPONENT_256k = createItem(Ids.ITEM_STORAGE_COMPONENT_256) { properties ->  StorageComponentItem(properties, 256)}
-    val ITEM_STORAGE_COMPONENT_1024k = createItem(Ids.ITEM_STORAGE_COMPONENT_1024) { properties ->  StorageComponentItem(properties, 1024)}
-    val ITEM_STORAGE_COMPONENT_4096k = createItem(Ids.ITEM_STORAGE_COMPONENT_4096) { properties ->  StorageComponentItem(properties.rarity(Rarity.RARE), 4096)}
-    val ITEM_STORAGE_COMPONENT_16384k = createItem(Ids.ITEM_STORAGE_COMPONENT_16384) { properties ->  StorageComponentItem(properties.rarity(Rarity.EPIC), 16384)}
-
-    val FLUID_STORAGE_COMPONENT_256k = createItem(Ids.FLUID_STORAGE_COMPONENT_256) { properties -> StorageComponentItem(properties, 256) }
-    val FLUID_STORAGE_COMPONENT_1024k = createItem(Ids.FLUID_STORAGE_COMPONENT_1024) { properties -> StorageComponentItem(properties.rarity(Rarity.RARE), 1024) }
-    val FLUID_STORAGE_COMPONENT_4096k = createItem(Ids.FLUID_STORAGE_COMPONENT_4096) { properties -> StorageComponentItem(properties.rarity(Rarity.EPIC), 4096) }
     
-    val CHEMICAL_STORAGE_COMPONENT_1k = createItem(Ids.CHEMICAL_STORAGE_COMPONENT_1, { properties -> StorageComponentItem(properties, 1) }, Mods.MEKANISM)
-    val CHEMICAL_STORAGE_COMPONENT_4k = createItem(Ids.CHEMICAL_STORAGE_COMPONENT_4, { properties -> StorageComponentItem(properties, 4) }, Mods.MEKANISM)
-    val CHEMICAL_STORAGE_COMPONENT_16k = createItem(Ids.CHEMICAL_STORAGE_COMPONENT_16, { properties -> StorageComponentItem(properties, 16) }, Mods.MEKANISM)
-    val CHEMICAL_STORAGE_COMPONENT_64k = createItem(Ids.CHEMICAL_STORAGE_COMPONENT_64, { properties -> StorageComponentItem(properties, 64) }, Mods.MEKANISM)
-    val CHEMICAL_STORAGE_COMPONENT_256k = createItem(Ids.CHEMICAL_STORAGE_COMPONENT_256, { properties -> StorageComponentItem(properties, 256) }, Mods.MEKANISM)
-    val CHEMICAL_STORAGE_COMPONENT_1024k = createItem(Ids.CHEMICAL_STORAGE_COMPONENT_1024, { properties -> StorageComponentItem(properties.rarity(Rarity.RARE), 1024) }, Mods.MEKANISM)
-    val CHEMICAL_STORAGE_COMPONENT_4096k = createItem(Ids.CHEMICAL_STORAGE_COMPONENT_4096, { properties -> StorageComponentItem(properties.rarity(Rarity.EPIC), 4096) }, Mods.MEKANISM)
-
-    val ITEM_STORAGE_CELL_256k = createItem(Ids.ITEM_STORAGE_CELL_256) { properties ->  PhysicalStorageCell(properties.maxStackSize(1), ITEM_STORAGE_COMPONENT_256k, 256, 3.0, 1024)}
-    val ITEM_STORAGE_CELL_1024k = createItem(Ids.ITEM_STORAGE_CELL_1024) { properties ->  PhysicalStorageCell(properties.maxStackSize(1), ITEM_STORAGE_COMPONENT_1024k, 256, 4.0, 4096)}
-    val ITEM_STORAGE_CELL_4096k = createItem(Ids.ITEM_STORAGE_CELL_4096) { properties ->  PhysicalStorageCell(properties.maxStackSize(1).rarity(Rarity.RARE), ITEM_STORAGE_COMPONENT_4096k, 256, 5.0, 8192)}
-    val ITEM_STORAGE_CELL_16384k = createItem(Ids.ITEM_STORAGE_CELL_16384) { properties ->  PhysicalStorageCell(properties.maxStackSize(1).rarity(Rarity.EPIC), ITEM_STORAGE_COMPONENT_16384k, 256, 6.0, 32768)}
-
-    val FLUID_STORAGE_CELL_256k = createItem(Ids.FLUID_STORAGE_CELL_256) { properties ->  FluidStorageCell(properties.maxStackSize(1), FLUID_STORAGE_COMPONENT_256k, 256, 3.0, 1024)}
-    val FLUID_STORAGE_CELL_1024k = createItem(Ids.FLUID_STORAGE_CELL_1024) { properties ->  FluidStorageCell(properties.maxStackSize(1).rarity(Rarity.RARE), FLUID_STORAGE_COMPONENT_1024k, 1024, 4.0, 4096)}
-    val FLUID_STORAGE_CELL_4096k = createItem(Ids.FLUID_STORAGE_CELL_4096) { properties ->  FluidStorageCell(properties.maxStackSize(1).rarity(Rarity.EPIC), FLUID_STORAGE_COMPONENT_4096k, 4096, 5.0, 8192)}
+    val CELL_COMPONENT_1024k = createItem(Ids.CELL_COMPONENT_1024) { properties ->  StorageComponentItem(properties, 1024)}
+    val CELL_COMPONENT_4096k = createItem(Ids.CELL_COMPONENT_4096) { properties ->  StorageComponentItem(properties.rarity(Rarity.RARE), 4096)}
+    val CELL_COMPONENT_16384k = createItem(Ids.CELL_COMPONENT_16384) { properties ->  StorageComponentItem(properties.rarity(Rarity.EPIC), 16384) }
+    val CELL_COMPONENT_65536k = createItem(Ids.CELL_COMPONENT_65536) { properties ->  StorageComponentItem(properties.rarity(Rarity.EPIC), 65536) }
     
-    val CHEMICAL_STORAGE_CELL_1k = createItem(Ids.CHEMICAL_STORAGE_CELL_1, { properties ->  ChemicalStorageCell(properties.maxStackSize(1), CHEMICAL_STORAGE_COMPONENT_1k, 1, .5, 8)}, Mods.MEKANISM)
-    val CHEMICAL_STORAGE_CELL_4k = createItem(Ids.CHEMICAL_STORAGE_CELL_4, { properties ->  ChemicalStorageCell(properties.maxStackSize(1), CHEMICAL_STORAGE_COMPONENT_4k, 4, 1.0, 32)}, Mods.MEKANISM)
-    val CHEMICAL_STORAGE_CELL_16k = createItem(Ids.CHEMICAL_STORAGE_CELL_16, { properties ->  ChemicalStorageCell(properties.maxStackSize(1), CHEMICAL_STORAGE_COMPONENT_16k, 16, 1.5, 128)}, Mods.MEKANISM)
-    val CHEMICAL_STORAGE_CELL_64k = createItem(Ids.CHEMICAL_STORAGE_CELL_64, { properties ->  ChemicalStorageCell(properties.maxStackSize(1), CHEMICAL_STORAGE_COMPONENT_64k, 64, 2.0, 512)}, Mods.MEKANISM)
-    val CHEMICAL_STORAGE_CELL_256k = createItem(Ids.CHEMICAL_STORAGE_CELL_256, { properties ->  ChemicalStorageCell(properties.maxStackSize(1), CHEMICAL_STORAGE_COMPONENT_256k, 256, 3.0, 1024)}, Mods.MEKANISM)
-    val CHEMICAL_STORAGE_CELL_1024k = createItem(Ids.CHEMICAL_STORAGE_CELL_1024, { properties ->  ChemicalStorageCell(properties.maxStackSize(1).rarity(Rarity.RARE), CHEMICAL_STORAGE_COMPONENT_1024k, 1024, 4.0, 4096)}, Mods.MEKANISM)
-    val CHEMICAL_STORAGE_CELL_4096k = createItem(Ids.CHEMICAL_STORAGE_CELL_4096, { properties ->  ChemicalStorageCell(properties.maxStackSize(1).rarity(Rarity.EPIC), CHEMICAL_STORAGE_COMPONENT_4096k, 4096, 5.0, 8192)}, Mods.MEKANISM)
+    val ITEM_STORAGE_CELL_1024k = createItem(Ids.ITEM_STORAGE_CELL_1024) { properties ->  StorageCell(properties.stacksTo(1), CELL_COMPONENT_1024k, AEItems.ITEM_CELL_HOUSING, 4.0, 4096, 1024, 100, AEKeyType.items())}
+    val ITEM_STORAGE_CELL_4096k = createItem(Ids.ITEM_STORAGE_CELL_4096) { properties ->  StorageCell(properties.stacksTo(1).rarity(Rarity.RARE), CELL_COMPONENT_4096k, AEItems.ITEM_CELL_HOUSING, 5.0, 8192, 8192, 150, AEKeyType.items())}
+    val ITEM_STORAGE_CELL_16384k = createItem(Ids.ITEM_STORAGE_CELL_16384) { properties ->  StorageCell(properties.stacksTo(1).rarity(Rarity.EPIC), CELL_COMPONENT_16384k, AEItems.ITEM_CELL_HOUSING, 6.0, 32768, 16384, 200, AEKeyType.items())}
+    val ITEM_STORAGE_CELL_65536k = createItem(Ids.ITEM_STORAGE_CELL_65536) { properties ->  StorageCell(properties.stacksTo(1).rarity(Rarity.EPIC), CELL_COMPONENT_65536k, AEItems.ITEM_CELL_HOUSING, 10.0, 131072, 65536, 300, AEKeyType.items())}
     
-    val DUMMY_CHEMICAL_ITEM = createItem(Ids.DUMMY_CHEMICAL_ITEM) { properties -> ChemicalDummyItem(properties) }
+    val FLUID_STORAGE_CELL_1024k = createItem(Ids.FLUID_STORAGE_CELL_1024) { properties ->  StorageCell(properties.stacksTo(1).rarity(Rarity.RARE), CELL_COMPONENT_1024k, AEItems.FLUID_CELL_HOUSING, 4.0, 4096, 1024, 10, AEKeyType.fluids()) }
+    val FLUID_STORAGE_CELL_4096k = createItem(Ids.FLUID_STORAGE_CELL_4096) { properties ->  StorageCell(properties.stacksTo(1).rarity(Rarity.EPIC), CELL_COMPONENT_4096k, AEItems.FLUID_CELL_HOUSING, 5.0, 8192, 4096, 15, AEKeyType.fluids()) }
+    val FLUID_STORAGE_CELL_16384k = createItem(Ids.FLUID_STORAGE_CELL_16384) { properties ->  StorageCell(properties.stacksTo(1).rarity(Rarity.EPIC), CELL_COMPONENT_16384k, AEItems.FLUID_CELL_HOUSING, 6.0, 32768, 16384, 20, AEKeyType.fluids()) }
+    
+    
+    val CHEMICAL_STORAGE_CELL_1024k by REGISTRY.registerObject(Ids.CHEMICAL_STORAGE_CELL_1024.path) {
+        constructItem({ properties ->  
+            if (Mods.MEKANISM.isEnabled) {
+                return@constructItem StorageCell(properties.stacksTo(1).rarity(Rarity.RARE), CELL_COMPONENT_1024k, AMItems.CHEMICAL_CELL_HOUSING.get(), 4.0, 4096, 1024, 8, MekanismKeyType.TYPE)
+            }
+            Item(properties)
+        }, Ids.CHEMICAL_STORAGE_CELL_1024, Mods.MEKANISM)
+    } 
+    val CHEMICAL_STORAGE_CELL_4096k by REGISTRY.registerObject(Ids.CHEMICAL_STORAGE_CELL_4096.path) { 
+        constructItem({ properties ->  
+            if (Mods.MEKANISM.isEnabled) {
+                return@constructItem StorageCell(properties.stacksTo(1).rarity(Rarity.EPIC), CELL_COMPONENT_4096k, AMItems.CHEMICAL_CELL_HOUSING.get(), 5.0, 8192, 4096, 12, MekanismKeyType.TYPE)
+            }
+            
+            Item(properties)
+        }, Ids.CHEMICAL_STORAGE_CELL_4096, Mods.MEKANISM) 
+    }
+    
+    val CHEMICAL_STORAGE_CELL_16384k by REGISTRY.registerObject(Ids.CHEMICAL_STORAGE_CELL_16384.path) { 
+        constructItem({ properties -> 
+            if (Mods.MEKANISM.isEnabled) {
+                return@constructItem StorageCell(properties.stacksTo(1).rarity(Rarity.EPIC), CELL_COMPONENT_16384k, AMItems.CHEMICAL_CELL_HOUSING.get(), 6.0, 32768, 16384, 15, MekanismKeyType.TYPE)
+            }
+            
+            Item(properties)
+        }, Ids.CHEMICAL_STORAGE_CELL_16384, Mods.MEKANISM)
+    }
     
     fun init() {
         
@@ -83,7 +92,7 @@ object Items {
         factory: (Item.Properties) -> T,
         id: ResourceLocation,
     ): T {
-        val props = Item.Properties().group(CreativeTab.group)
+        val props = Item.Properties().tab(CreativeTab.group)
 
         val item = factory(props)
 
@@ -104,7 +113,7 @@ object Items {
         val props = Item.Properties()
         
         if (requiredMod.isEnabled) {
-            props.group(CreativeTab.group)
+            props.tab(CreativeTab.group)
         }
 
         val item = factory(props)

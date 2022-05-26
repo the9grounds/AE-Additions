@@ -1,25 +1,14 @@
 package com.the9grounds.aeadditions.integration.appeng
 
-import appeng.api.AEAddon
-import appeng.api.IAEAddon
-import appeng.api.IAppEngApi
-import com.the9grounds.aeadditions.AEAdditions
+import appeng.api.storage.StorageCells
 import com.the9grounds.aeadditions.me.storage.AEAdditionsCellHandler
 
-@AEAddon
-class AppEng : IAEAddon {
+class AppEng {
 
     companion object {
-        var API: IAppEngApi? = null
 
         fun initCellHandler() {
-            API!!.registries().cell().addCellHandler(AEAdditionsCellHandler())
+            StorageCells.addCellHandler(AEAdditionsCellHandler)
         }
-    }
-
-    override fun onAPIAvailable(api: IAppEngApi) {
-        API = api
-
-        AEAdditions.onAppEngReady(api)
     }
 }

@@ -1,9 +1,0 @@
-{
-  "parent": "appliedenergistics2:item/display_base",
-  "textures": {
-    "front": "appliedenergistics2:part/crafting_terminal",
-    "front_bright": "aeadditions:part/chemical/terminal_bright",
-    "front_medium": "aeadditions:part/chemical/terminal_medium",
-    "front_dark": "aeadditions:part/chemical/terminal_dark"
-  }
-}
