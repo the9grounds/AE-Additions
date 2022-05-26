@@ -38,30 +38,30 @@ object Items {
     
     val CHEMICAL_STORAGE_CELL_1024k by REGISTRY.registerObject(Ids.CHEMICAL_STORAGE_CELL_1024.path) {
         constructItem({ properties ->  
-            if (Mods.MEKANISM.isEnabled) {
+            if (Mods.APPMEK.isEnabled) {
                 return@constructItem StorageCell(properties.stacksTo(1).rarity(Rarity.RARE), CELL_COMPONENT_1024k, AMItems.CHEMICAL_CELL_HOUSING.get(), 4.0, 4096, 1024, 8, MekanismKeyType.TYPE)
             }
             Item(properties)
-        }, Ids.CHEMICAL_STORAGE_CELL_1024, Mods.MEKANISM)
+        }, Ids.CHEMICAL_STORAGE_CELL_1024, Mods.APPMEK)
     } 
     val CHEMICAL_STORAGE_CELL_4096k by REGISTRY.registerObject(Ids.CHEMICAL_STORAGE_CELL_4096.path) { 
         constructItem({ properties ->  
-            if (Mods.MEKANISM.isEnabled) {
+            if (Mods.APPMEK.isEnabled) {
                 return@constructItem StorageCell(properties.stacksTo(1).rarity(Rarity.EPIC), CELL_COMPONENT_4096k, AMItems.CHEMICAL_CELL_HOUSING.get(), 5.0, 8192, 4096, 12, MekanismKeyType.TYPE)
             }
             
             Item(properties)
-        }, Ids.CHEMICAL_STORAGE_CELL_4096, Mods.MEKANISM) 
+        }, Ids.CHEMICAL_STORAGE_CELL_4096, Mods.APPMEK) 
     }
     
     val CHEMICAL_STORAGE_CELL_16384k by REGISTRY.registerObject(Ids.CHEMICAL_STORAGE_CELL_16384.path) { 
         constructItem({ properties -> 
-            if (Mods.MEKANISM.isEnabled) {
+            if (Mods.APPMEK.isEnabled) {
                 return@constructItem StorageCell(properties.stacksTo(1).rarity(Rarity.EPIC), CELL_COMPONENT_16384k, AMItems.CHEMICAL_CELL_HOUSING.get(), 6.0, 32768, 16384, 15, MekanismKeyType.TYPE)
             }
             
             Item(properties)
-        }, Ids.CHEMICAL_STORAGE_CELL_16384, Mods.MEKANISM)
+        }, Ids.CHEMICAL_STORAGE_CELL_16384, Mods.APPMEK)
     }
     
     fun init() {

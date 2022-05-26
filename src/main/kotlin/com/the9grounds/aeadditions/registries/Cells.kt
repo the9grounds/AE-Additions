@@ -17,7 +17,7 @@ object Cells {
         StorageCellModels.registerModel(Items.FLUID_STORAGE_CELL_4096k, ResourceLocation("ae2additions:block/drive/cells/fluid/4096k"))
         StorageCellModels.registerModel(Items.FLUID_STORAGE_CELL_16384k, ResourceLocation("ae2additions:block/drive/cells/fluid/16384k"))
         
-        if (Mods.MEKANISM.isEnabled) {
+        if (Mods.APPMEK.isEnabled) {
             StorageCellModels.registerModel(Items.CHEMICAL_STORAGE_CELL_1024k, ResourceLocation("ae2additions:block/drive/cells/chemical/1024k"))
             StorageCellModels.registerModel(Items.CHEMICAL_STORAGE_CELL_4096k, ResourceLocation("ae2additions:block/drive/cells/chemical/4096k"))
             StorageCellModels.registerModel(Items.CHEMICAL_STORAGE_CELL_16384k, ResourceLocation("ae2additions:block/drive/cells/chemical/16384k"))

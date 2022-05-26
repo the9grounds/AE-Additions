@@ -4,7 +4,7 @@
     {
       "conditions": [
         {
-          "modid": "mekanism",
+          "modid": "appmek",
           "type": "forge:mod_loaded"
         }
       ],
@@ -17,20 +17,20 @@
         ],
         "key": {
           "a": {
-            "item": "appliedenergistics2:quartz_glass"
+            "item": "ae2:quartz_glass"
           },
           "b": {
-            "item": "appliedenergistics2:fluix_dust"
+            "item": "ae2:fluix_dust"
           },
           "c": {
-            "item": "aeadditions:chemical_storage_component_1"
+            "item": "ae2additions:cell_component_16384"
           },
           "d": {
-            "tag": "forge:ingots/gold"
+            "tag": "forge:ingots/osmium"
           }
         },
         "result": {
-          "item": "aeadditions:chemical_storage_cell_1"
+          "item": "ae2additions:chemical_storage_cell_16384"
         }
       }
     }
