@@ -1,8 +1,0 @@
-{
-  "parent": "aeadditions:part/display_off_custom_color",
-  "textures": {
-    "lightsBright": "aeadditions:part/storage_monitor_bright",
-    "lightsMedium": "aeadditions:part/fluid/storage_monitor_medium",
-    "lightsDark": "aeadditions:part/fluid/storage_monitor_dark"
-  }
-}

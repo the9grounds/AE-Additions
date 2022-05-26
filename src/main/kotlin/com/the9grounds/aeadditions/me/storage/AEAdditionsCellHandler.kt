@@ -1,27 +1,35 @@
 package com.the9grounds.aeadditions.me.storage
 
-import appeng.api.storage.IStorageChannel
+import appeng.api.config.IncludeExclude
 import appeng.api.storage.cells.ICellHandler
-import appeng.api.storage.cells.ICellInventoryHandler
 import appeng.api.storage.cells.ISaveProvider
-import appeng.api.storage.data.IAEStack
-import appeng.me.storage.BasicCellInventoryHandler
-import net.minecraft.item.ItemStack
+import appeng.core.localization.GuiText
+import appeng.core.localization.Tooltips
+import net.minecraft.network.chat.Component
+import net.minecraft.world.item.ItemStack
 
-class AEAdditionsCellHandler : ICellHandler {
+object AEAdditionsCellHandler : ICellHandler {
     override fun isCell(`is`: ItemStack?): Boolean = AEAdditionsCellInventory.isCell(`is`)
 
-    override fun <T : IAEStack<T>> getCellInventory(
-        `is`: ItemStack,
-        container: ISaveProvider?,
-        channel: IStorageChannel<T>
-    ): ICellInventoryHandler<T>? {
-        val inv = AEAdditionsCellInventory.createInventory<T>(`is`, container)
+    override fun getCellInventory(`is`: ItemStack?, host: ISaveProvider?): AEAdditionsCellInventory? {
+        return AEAdditionsCellInventory.createInventory(`is`!!, host)
+    }
 
-        if (inv == null || inv.channel != channel) {
-            return null
+    fun addCellInformationToTooltip(`is`: ItemStack?, lines: MutableList<Component?>) {
+        val handler = getCellInventory(`is`, null) ?: return
+        lines.add(Tooltips.bytesUsed(handler.getUsedBytes(), handler.getTotalBytes()))
+        lines.add(Tooltips.typesUsed(handler.getStoredItemTypes(), handler.getTotalItemTypes()))
+        if (handler.isPreformatted) {
+            val list =
+                (if (handler.partitionListMode == IncludeExclude.WHITELIST) GuiText.Included else GuiText.Excluded)
+                    .text()
+            if (handler.isFuzzy()) {
+                lines.add(GuiText.Partitioned.withSuffix(" - ").append(list).append(" ").append(GuiText.Fuzzy.text()))
+            } else {
+                lines.add(
+                    GuiText.Partitioned.withSuffix(" - ").append(list).append(" ").append(GuiText.Precise.text())
+                )
+            }
         }
-
-        return BasicCellInventoryHandler(inv, channel)
     }
 }

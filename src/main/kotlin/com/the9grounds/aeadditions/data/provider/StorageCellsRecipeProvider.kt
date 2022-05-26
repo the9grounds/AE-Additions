@@ -1,16 +1,19 @@
 package com.the9grounds.aeadditions.data.provider
 
-import appeng.core.Api
+import appeng.core.AppEng
+import appeng.core.definitions.AEBlocks
+import appeng.core.definitions.AEItems
 import com.the9grounds.aeadditions.AEAdditions
-import com.the9grounds.aeadditions.item.storage.ChemicalStorageCell
-import com.the9grounds.aeadditions.item.storage.FluidStorageCell
-import com.the9grounds.aeadditions.item.storage.PhysicalStorageCell
-import com.the9grounds.aeadditions.registries.Blocks
+import com.the9grounds.aeadditions.item.storage.StorageCell
 import com.the9grounds.aeadditions.registries.Items
-import com.the9grounds.aeadditions.registries.Parts
-import net.minecraft.data.*
+import me.ramidzkh.mekae2.AMItems
+import net.minecraft.data.DataGenerator
+import net.minecraft.data.recipes.FinishedRecipe
+import net.minecraft.data.recipes.RecipeProvider
+import net.minecraft.data.recipes.ShapedRecipeBuilder
+import net.minecraft.data.recipes.ShapelessRecipeBuilder
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.tags.ItemTags
-import net.minecraft.util.ResourceLocation
 import net.minecraftforge.common.Tags
 import net.minecraftforge.common.crafting.ConditionalRecipe
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder
@@ -18,42 +21,33 @@ import java.util.function.Consumer
 
 class StorageCellsRecipeProvider(generatorIn: DataGenerator) : RecipeProvider(generatorIn), IConditionBuilder {
     
-    val certusCrystalTag = ItemTags.createOptional(ResourceLocation(appeng.core.AppEng.MOD_ID, "crystals/certus"))
-    val panelTag = ItemTags.createOptional(ResourceLocation(appeng.core.AppEng.MOD_ID, "illuminated_panel"))
+    val certusCrystalTag = ItemTags.create(ResourceLocation(AppEng.MOD_ID, "crystals/certus"))
+    val panelTag = ItemTags.create(ResourceLocation(AppEng.MOD_ID, "illuminated_panel"))
+    val osmiumTag = ItemTags.create(ResourceLocation("forge", "ingots/osmium"))
     
-    override fun registerRecipes(consumer: Consumer<IFinishedRecipe>) {
-        val itemComponents = mapOf(
-            64 to Api.instance().definitions().materials().cell64kPart().item(),
-            256 to Items.ITEM_STORAGE_COMPONENT_256k,
-            1024 to Items.ITEM_STORAGE_COMPONENT_1024k,
-            4096 to Items.ITEM_STORAGE_COMPONENT_4096k,
-            16384 to Items.ITEM_STORAGE_COMPONENT_16384k
+    override fun buildCraftingRecipes(consumer: Consumer<FinishedRecipe>) {
+        val components = mapOf(
+            256 to AEItems.CELL_COMPONENT_256K,
+            1024 to Items.CELL_COMPONENT_1024k,
+            4096 to Items.CELL_COMPONENT_4096k,
+            16384 to Items.CELL_COMPONENT_16384k,
+            65536 to Items.CELL_COMPONENT_65536k
         )
-        val itemKbs = mapOf<Int, PhysicalStorageCell>(
-            256 to Items.ITEM_STORAGE_CELL_256k, 
+        val itemKbs = mapOf<Int, StorageCell>(
             1024 to Items.ITEM_STORAGE_CELL_1024k,
             4096 to Items.ITEM_STORAGE_CELL_4096k, 
-            16384 to Items.ITEM_STORAGE_CELL_16384k
+            16384 to Items.ITEM_STORAGE_CELL_16384k,
+            65536 to Items.ITEM_STORAGE_CELL_65536k
         )
-        val fluidItems = mapOf(
-            64 to Api.instance().definitions().materials().fluidCell64kPart().item(),
-            256 to Items.FLUID_STORAGE_COMPONENT_256k,
-            1024 to Items.FLUID_STORAGE_COMPONENT_1024k,
-            4096 to Items.FLUID_STORAGE_COMPONENT_4096k
-        )
-        val fluidKbs = mapOf<Int, FluidStorageCell>(
-            256 to Items.FLUID_STORAGE_CELL_256k,
+        val fluidKbs = mapOf<Int, StorageCell>(
             1024 to Items.FLUID_STORAGE_CELL_1024k,
-            4096 to Items.FLUID_STORAGE_CELL_4096k
+            4096 to Items.FLUID_STORAGE_CELL_4096k,
+            16384 to Items.FLUID_STORAGE_CELL_16384k
         )
-        val chemicalKbs = mapOf<Int, ChemicalStorageCell>(
-            1 to Items.CHEMICAL_STORAGE_CELL_1k,
-            4 to Items.CHEMICAL_STORAGE_CELL_4k,
-            16 to Items.CHEMICAL_STORAGE_CELL_16k,
-            64 to Items.CHEMICAL_STORAGE_CELL_64k,
-            256 to Items.CHEMICAL_STORAGE_CELL_256k,
-            1024 to Items.CHEMICAL_STORAGE_CELL_1024k,
-            4096 to Items.CHEMICAL_STORAGE_CELL_4096k
+        val chemicalKbs = mapOf<Int, StorageCell>(
+            1024 to Items.CHEMICAL_STORAGE_CELL_1024k as StorageCell,
+            4096 to Items.CHEMICAL_STORAGE_CELL_4096k as StorageCell,
+            16384 to Items.CHEMICAL_STORAGE_CELL_16384k as StorageCell
         )
         val mapOfRequired = mapOf(
             4 to 1,
@@ -62,240 +56,85 @@ class StorageCellsRecipeProvider(generatorIn: DataGenerator) : RecipeProvider(ge
             256 to 64,
             1024 to 256,
             4096 to 1024,
-            16384 to 4096
+            16384 to 4096,
+            65536 to 16384
         )
         
+        for (component in listOf(1024, 4096, 16384, 65536)) {
+            ShapedRecipeBuilder.shaped(components[component])
+                .pattern("aba")
+                .pattern("cdc")
+                .pattern("aca")
+                .define('a', Tags.Items.GEMS_DIAMOND)
+                .define('b', AEItems.ENGINEERING_PROCESSOR)
+                .define('c', components[mapOfRequired[component]])
+                .define('d', AEBlocks.QUARTZ_GLASS)
+                .unlockedBy("has_item", has(components[mapOfRequired[component]]))
+                .save(consumer, ResourceLocation(AEAdditions.ID, "components/${component}k"))
+        }
+        
         for (kb in itemKbs) {
-            ShapelessRecipeBuilder.shapelessRecipe(kb.value)
-                .addIngredient(Api.instance().definitions().materials().emptyStorageCell())
-                .addIngredient(kb.value.component)
-                .addCriterion("has_component", hasItem(kb.value.component))
-                .build(consumer, ResourceLocation(AEAdditions.ID, "cells/item/casing-${kb.key}k"))
+            ShapelessRecipeBuilder.shapeless(kb.value)
+                .requires(AEItems.ITEM_CELL_HOUSING)
+                .requires(kb.value.component)
+                .unlockedBy("has_item", has(kb.value.component))
+                .save(consumer, ResourceLocation(AEAdditions.ID, "cells/item/casing-${kb.key}k"))
 
-            ShapedRecipeBuilder.shapedRecipe(kb.value)
-                .patternLine("aba")
-                .patternLine("bcb")
-                .patternLine("ddd")
-                .key('a', Api.instance().definitions().blocks().quartzGlass())
-                .key('b', Api.instance().definitions().materials().fluixDust())
-                .key('c', kb.value.component)
-                .key('d', Tags.Items.GEMS_DIAMOND)
-                .addCriterion("has_component", hasItem(kb.value.component))
-                .build(consumer, ResourceLocation(AEAdditions.ID, "cells/item/${kb.key}k"))
-
-            ShapedRecipeBuilder.shapedRecipe(kb.value.component)
-                .patternLine("aba")
-                .patternLine("cdc")
-                .patternLine("aca")
-                .key('a', Tags.Items.GEMS_LAPIS)
-                .key('b', Api.instance().definitions().materials().engProcessor())
-                .key('c', itemComponents[mapOfRequired[kb.key]]!!)
-                .key('d', Api.instance().definitions().materials().logicProcessor())
-                .addCriterion("has_item", hasItem(itemComponents[mapOfRequired[kb.key]]!!))
-                .build(consumer, ResourceLocation(AEAdditions.ID, "components/item/${kb.key}k"))
+            ShapedRecipeBuilder.shaped(kb.value)
+                .pattern("aba")
+                .pattern("bcb")
+                .pattern("ddd")
+                .define('a', AEBlocks.QUARTZ_GLASS)
+                .define('b', AEItems.FLUIX_DUST)
+                .define('c', kb.value.component)
+                .define('d', Tags.Items.GEMS_DIAMOND)
+                .unlockedBy("has_item", has(kb.value.component))
+                .save(consumer, ResourceLocation(AEAdditions.ID, "cells/item/${kb.key}k"))
         }
         for (kb in fluidKbs) {
-            ShapelessRecipeBuilder.shapelessRecipe(kb.value)
-                .addIngredient(Api.instance().definitions().materials().emptyStorageCell())
-                .addIngredient(kb.value.component)
-                .addCriterion("has_component", hasItem(kb.value.component))
-                .build(consumer, ResourceLocation(AEAdditions.ID, "cells/fluid/casing-${kb.key}k"))
+            ShapelessRecipeBuilder.shapeless(kb.value)
+                .requires(AEItems.FLUID_CELL_HOUSING)
+                .requires(kb.value.component)
+                .unlockedBy("has_item", has(kb.value.component))
+                .save(consumer, ResourceLocation(AEAdditions.ID, "cells/fluid/casing-${kb.key}k"))
 
-            ShapedRecipeBuilder.shapedRecipe(kb.value)
-                .patternLine("aba")
-                .patternLine("bcb")
-                .patternLine("ddd")
-                .key('a', Api.instance().definitions().blocks().quartzGlass())
-                .key('b', Api.instance().definitions().materials().fluixDust())
-                .key('c', kb.value.component)
-                .key('d', Tags.Items.INGOTS_IRON)
-                .addCriterion("has_component", hasItem(kb.value.component))
-                .build(consumer, ResourceLocation(AEAdditions.ID, "cells/fluid/${kb.key}k"))
-            
-            ShapedRecipeBuilder.shapedRecipe(kb.value.component)
-                .patternLine("aba")
-                .patternLine("cdc")
-                .patternLine("aca")
-                .key('a', Tags.Items.GEMS_LAPIS)
-                .key('b', Api.instance().definitions().materials().engProcessor())
-                .key('c', fluidItems[mapOfRequired[kb.key]]!!)
-                .key('d', Api.instance().definitions().materials().logicProcessor())
-                .addCriterion("has_item", hasItem(fluidItems[mapOfRequired[kb.key]]!!))
-                .build(consumer, ResourceLocation(AEAdditions.ID, "components/fluid/${kb.key}k"))
+            ShapedRecipeBuilder.shaped(kb.value)
+                .pattern("aba")
+                .pattern("bcb")
+                .pattern("ddd")
+                .define('a', AEBlocks.QUARTZ_GLASS)
+                .define('b', AEItems.FLUIX_DUST)
+                .define('c', kb.value.component)
+                .define('d', Tags.Items.INGOTS_COPPER)
+                .unlockedBy("has_item", has(kb.value.component))
+                .save(consumer, ResourceLocation(AEAdditions.ID, "cells/fluid/${kb.key}k"))
         }
         for (kb in chemicalKbs) {
-            ConditionalRecipe.builder().addCondition(
-                modLoaded("mekanism")
-            ).addRecipe() {
-                ShapelessRecipeBuilder.shapelessRecipe(kb.value)
-                    .addIngredient(Api.instance().definitions().materials().emptyStorageCell())
-                    .addIngredient(kb.value.component)
-                    .addCriterion("has_component", hasItem(kb.value.component))
-                    .build(it)
-            }.build(consumer, ResourceLocation(AEAdditions.ID, "cells/chemical/casing-${kb.key}k"))
-            ConditionalRecipe.builder().addCondition(
-                modLoaded("mekanism")
-            ).addRecipe() {
-                ShapedRecipeBuilder.shapedRecipe(kb.value)
-                    .patternLine("aba")
-                    .patternLine("bcb")
-                    .patternLine("ddd")
-                    .key('a', Api.instance().definitions().blocks().quartzGlass())
-                    .key('b', Api.instance().definitions().materials().fluixDust())
-                    .key('c', kb.value.component)
-                    .key('d', Tags.Items.INGOTS_GOLD)
-                    .addCriterion("has_component", hasItem(kb.value.component))
-                    .build(it)
-            }.build(consumer, ResourceLocation(AEAdditions.ID, "cells/chemical/${kb.key}k"))
+            addConditionalRecipeForMekanism("cells/chemical/casing-${kb.key}k", consumer) {
+                ShapelessRecipeBuilder.shapeless(kb.value)
+                    .requires(AMItems.CHEMICAL_CELL_HOUSING.get())
+                    .requires(kb.value.component)
+                    .unlockedBy("has_item", has(kb.value.component))
+                    .save(it)
+            }
+            addConditionalRecipeForMekanism("cells/chemical/${kb.key}k", consumer) {
+                ShapedRecipeBuilder.shaped(kb.value)
+                    .pattern("aba")
+                    .pattern("bcb")
+                    .pattern("ddd")
+                    .define('a', AEBlocks.QUARTZ_GLASS)
+                    .define('b', AEItems.FLUIX_DUST)
+                    .define('c', kb.value.component)
+                    .define('d', osmiumTag)
+                    .unlockedBy("has_item", has(kb.value.component))
+                    .save(it)
+            }
         }
-
-        ConditionalRecipe.builder().addCondition(
-            modLoaded("mekanism")
-        ).addRecipe() {
-            ShapedRecipeBuilder.shapedRecipe(Items.CHEMICAL_STORAGE_COMPONENT_1k)
-                .patternLine("aba")
-                .patternLine("bcb")
-                .patternLine("aba")
-                .key('a', Tags.Items.DYES_YELLOW)
-                .key('b', certusCrystalTag)
-                .key('c', Api.instance().definitions().materials().logicProcessor())
-                .addCriterion("has_item", hasItem(Api.instance().definitions().materials().logicProcessor()))
-                .build(it)
-        }.build(consumer, ResourceLocation(AEAdditions.ID, "components/chemical/1k"))
-        
-        for (item in listOf<Int>(4, 16, 64)) {
-            ConditionalRecipe.builder().addCondition(
-                modLoaded("mekanism")
-            ).addRecipe() {
-                ShapedRecipeBuilder.shapedRecipe(chemicalKbs[item]!!.component)
-                    .patternLine("aba")
-                    .patternLine("cdc")
-                    .patternLine("aca")
-                    .key('a', Tags.Items.DYES_YELLOW)
-                    .key('b', Api.instance().definitions().materials().calcProcessor())
-                    .key('c', chemicalKbs[mapOfRequired[item]]!!.component)
-                    .key('d', Api.instance().definitions().blocks().quartzGlass())
-                    .addCriterion("has_item", hasItem(chemicalKbs[mapOfRequired[item]]!!.component))
-                    .build(it)
-            }.build(consumer, ResourceLocation(AEAdditions.ID, "components/chemical/${item}k"))
-        }
-        
-        for (item in listOf(256,1024,4096)) {
-            ConditionalRecipe.builder().addCondition(
-                modLoaded("mekanism")
-            ).addRecipe() {
-                ShapedRecipeBuilder.shapedRecipe(chemicalKbs[item]!!.component)
-                    .patternLine("aba")
-                    .patternLine("cdc")
-                    .patternLine("aca")
-                    .key('a', Tags.Items.DYES_YELLOW)
-                    .key('b', Api.instance().definitions().materials().engProcessor())
-                    .key('c', chemicalKbs[mapOfRequired[item]]!!.component)
-                    .key('d', Api.instance().definitions().materials().logicProcessor())
-                    .addCriterion("has_item", hasItem(chemicalKbs[mapOfRequired[item]]!!.component))
-                    .build(it)
-            }.build(consumer, ResourceLocation(AEAdditions.ID, "components/chemical/${item}k"))
-        }
-
-        addConditionalRecipeForMekanism("chemical_interface", consumer) {
-            ShapedRecipeBuilder.shapedRecipe(Blocks.CHEMICAL_INTERFACE.item)
-                .patternLine("aba")
-                .patternLine("c d")
-                .patternLine("aba")
-                .key('a', Tags.Items.INGOTS_IRON)
-                .key('d', Api.instance().definitions().materials().formationCore())
-                .key('c', Api.instance().definitions().materials().annihilationCore())
-                .key('b', Tags.Items.DYES_YELLOW)
-                .addCriterion("has_item", hasItem(Api.instance().definitions().materials().formationCore()))
-                .build(it)
-        }
-
-        addConditionalRecipeForMekanism("parts/chemical/import-bus", consumer) {
-            ShapedRecipeBuilder.shapedRecipe(Parts.CHEMICAL_IMPORT_BUS)
-                .patternLine("   ")
-                .patternLine("aba")
-                .patternLine("cdc")
-                .key('a', Tags.Items.INGOTS_IRON)
-                .key('b', Api.instance().definitions().materials().annihilationCore())
-                .key('c', Tags.Items.DYES_YELLOW)
-                .key('d', net.minecraft.block.Blocks.STICKY_PISTON)
-                .addCriterion("has_item", hasItem(Tags.Items.DYES_YELLOW))
-                .build(it)
-        }
-
-        addConditionalRecipeForMekanism("parts/chemical/import-bus-from-item", consumer) {
-            ShapelessRecipeBuilder.shapelessRecipe(Parts.CHEMICAL_IMPORT_BUS)
-                .addIngredient(Tags.Items.DYES_YELLOW)
-                .addIngredient(Api.instance().definitions().parts().importBus())
-                .addCriterion("has_item", hasItem(Api.instance().definitions().parts().importBus()))
-                .build(it)
-        }
-        
-        addConditionalRecipeForMekanism("parts/chemical/export-bus", consumer) {
-            ShapedRecipeBuilder.shapedRecipe(Parts.CHEMICAL_EXPORT_BUS)
-                .patternLine("   ")
-                .patternLine("aba")
-                .patternLine("cdc")
-                .key('a', Tags.Items.INGOTS_IRON)
-                .key('b', Api.instance().definitions().materials().formationCore())
-                .key('c', Tags.Items.DYES_YELLOW)
-                .key('d', net.minecraft.block.Blocks.PISTON)
-                .addCriterion("has_item", hasItem(Tags.Items.DYES_YELLOW))
-                .build(it)
-        }
-
-        addConditionalRecipeForMekanism("parts/chemical/export-bus-from-item", consumer) {
-            ShapelessRecipeBuilder.shapelessRecipe(Parts.CHEMICAL_EXPORT_BUS)
-                .addIngredient(Tags.Items.DYES_YELLOW)
-                .addIngredient(Api.instance().definitions().parts().exportBus())
-                .addCriterion("has_item", hasItem(Api.instance().definitions().parts().importBus()))
-                .build(it)
-        }
-        
-        addConditionalRecipeForMekanism("parts/chemical/storage-monitor", consumer) {
-            ShapelessRecipeBuilder.shapelessRecipe(Parts.CHEMICAL_STORAGE_MONITOR)
-                .addIngredient(net.minecraft.item.Items.YELLOW_DYE, 2)
-                .addIngredient(Api.instance().definitions().parts().levelEmitter())
-                .addIngredient(panelTag)
-                .addCriterion("has_item", hasItem(Api.instance().definitions().parts().levelEmitter()))
-                .build(it)
-        }
-        addConditionalRecipeForMekanism("parts/chemical/conversion-monitor", consumer) {
-            ShapelessRecipeBuilder.shapelessRecipe(Parts.CHEMICAL_CONVERSION_MONITOR)
-                .addIngredient(Parts.CHEMICAL_STORAGE_MONITOR)
-                .addIngredient(Api.instance().definitions().materials().formationCore())
-                .addIngredient(Api.instance().definitions().materials().annihilationCore())
-                .addCriterion("has_item", hasItem(Parts.CHEMICAL_STORAGE_MONITOR))
-                .build(it)
-        }
-        addConditionalRecipeForMekanism("parts/chemical/terminal", consumer) {
-            ShapelessRecipeBuilder.shapelessRecipe(Parts.CHEMICAL_TERMINAL)
-                .addIngredient(panelTag)
-                .addIngredient(net.minecraft.item.Items.YELLOW_DYE, 2)
-                .addIngredient(Api.instance().definitions().materials().logicProcessor())
-                .addIngredient(Api.instance().definitions().materials().formationCore())
-                .addIngredient(Api.instance().definitions().materials().annihilationCore())
-                .addCriterion("has_item", hasItem(panelTag))
-                .build(it)
-        }
-        
-        ShapelessRecipeBuilder.shapelessRecipe(Parts.FLUID_STORAGE_MONITOR)
-            .addIngredient(net.minecraft.item.Items.LAPIS_LAZULI, 2)
-            .addIngredient(Api.instance().definitions().parts().fluidLevelEmitter())
-            .addIngredient(panelTag)
-            .addCriterion("has_item", hasItem(panelTag))
-            .build(consumer, ResourceLocation(AEAdditions.ID, "parts/fluid/storage-monitor"))
-        ShapelessRecipeBuilder.shapelessRecipe(Parts.FLUID_CONVERSION_MONITOR)
-            .addIngredient(Parts.FLUID_STORAGE_MONITOR)
-            .addIngredient(Api.instance().definitions().materials().formationCore())
-            .addIngredient(Api.instance().definitions().materials().annihilationCore())
-            .addCriterion("has_item", hasItem(Parts.FLUID_STORAGE_MONITOR))
-            .build(consumer, ResourceLocation(AEAdditions.ID, "parts/fluid/conversion-monitor"))
     }
     
-    private fun addConditionalRecipeForMekanism(resourcePath: String, consumer: Consumer<IFinishedRecipe>, factory: (Consumer<IFinishedRecipe>) -> Unit) {
+    private fun addConditionalRecipeForMekanism(resourcePath: String, consumer: Consumer<FinishedRecipe>, factory: (Consumer<FinishedRecipe>) -> Unit) {
         ConditionalRecipe.builder().addCondition(
-            modLoaded("mekanism")
+            modLoaded("appmek")
         ).addRecipe() {
             factory(it)
         }.build(consumer, ResourceLocation(AEAdditions.ID, resourcePath))

@@ -1,7 +1,7 @@
 package com.the9grounds.aeadditions.core.inv
 
-import net.minecraft.item.ItemStack
-import net.minecraft.nbt.CompoundNBT
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.world.item.ItemStack
 import net.minecraftforge.items.ItemStackHandler
 
 open class AEAInternalInventory(var host: IAEAInventory?, size: Int, maxStack: Int, var filter: ItemFilter?) : ItemStackHandler(size), Iterable<ItemStack?> {
@@ -75,7 +75,7 @@ open class AEAInternalInventory(var host: IAEAInventory?, size: Int, maxStack: I
             
             var operation = Operation.SET
             
-            if (newStack.isEmpty || oldStack.isEmpty || ItemStack.areItemStacksEqual(newStack, oldStack)) {
+            if (newStack.isEmpty || oldStack.isEmpty || ItemStack.isSame(newStack, oldStack)) {
                 if (newStack.count > oldStack.count) {
                     newStack.shrink(oldStack.count)
                     oldStack = ItemStack.EMPTY
@@ -112,11 +112,11 @@ open class AEAInternalInventory(var host: IAEAInventory?, size: Int, maxStack: I
         return true
     }
     
-    open fun writeToNBT(data: CompoundNBT, name: String) {
+    open fun writeToNBT(data: CompoundTag, name: String) {
         data.put(name, serializeNBT())
     }
     
-    open fun readFromNBT(data: CompoundNBT, name: String) {
+    open fun readFromNBT(data: CompoundTag, name: String) {
         deserializeNBT(data.getCompound(name))
     }
 

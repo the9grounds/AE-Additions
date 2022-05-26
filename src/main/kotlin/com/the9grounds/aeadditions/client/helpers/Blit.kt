@@ -1,16 +1,13 @@
 package com.the9grounds.aeadditions.client.helpers
 
-import com.mojang.blaze3d.matrix.MatrixStack
 import com.mojang.blaze3d.systems.RenderSystem
+import com.mojang.blaze3d.vertex.*
 import com.the9grounds.aeadditions.AEAdditions
 import com.the9grounds.aeadditions.util.Colors
-import net.minecraft.client.Minecraft
-import net.minecraft.client.renderer.Rectangle2d
-import net.minecraft.client.renderer.Tessellator
-import net.minecraft.client.renderer.WorldVertexBufferUploader
+import net.minecraft.client.renderer.GameRenderer
+import net.minecraft.client.renderer.Rect2i
 import net.minecraft.client.renderer.texture.TextureAtlasSprite
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats
-import net.minecraft.util.ResourceLocation
+import net.minecraft.resources.ResourceLocation
 import org.lwjgl.opengl.GL11
 
 class Blit(val texture: ResourceLocation, val referenceWidth: Int, val referenceHeight: Int) {
@@ -28,12 +25,12 @@ class Blit(val texture: ResourceLocation, val referenceWidth: Int, val reference
     /**
      * The section of the texture we are drawing from
      */
-    var srcRect: Rectangle2d? = null
+    var srcRect: Rect2i? = null
 
     /**
      * The destination on the screen that we are drawing to
      */
-    var destRect = Rectangle2d(0, 0, 0, 0)
+    var destRect = Rect2i(0, 0, 0, 0)
 
     /**
      * Apply blending function?
@@ -42,12 +39,12 @@ class Blit(val texture: ResourceLocation, val referenceWidth: Int, val reference
 
     constructor(texture: ResourceLocation) : this(texture, DEFAULT_WIDTH, DEFAULT_HEIGHT)
 
-    constructor(sprite: TextureAtlasSprite) : this(sprite.atlasTexture.textureLocation, DEFAULT_WIDTH, DEFAULT_HEIGHT) {
+    constructor(sprite: TextureAtlasSprite) : this(sprite.atlas().location(), DEFAULT_WIDTH, DEFAULT_HEIGHT) {
         src(
-            (sprite.minU * DEFAULT_WIDTH).toInt(),
-            (sprite.minV * DEFAULT_HEIGHT).toInt(),
-            ((sprite.maxU - sprite.minU) * DEFAULT_WIDTH).toInt(),
-            ((sprite.maxV - sprite.minV) * DEFAULT_HEIGHT).toInt()
+            (sprite.u0 * DEFAULT_WIDTH).toInt(),
+            (sprite.v0 * DEFAULT_HEIGHT).toInt(),
+            ((sprite.u1 - sprite.u0) * DEFAULT_WIDTH).toInt(),
+            ((sprite.v1 - sprite.v0) * DEFAULT_HEIGHT).toInt()
         )
     }
     
@@ -55,13 +52,13 @@ class Blit(val texture: ResourceLocation, val referenceWidth: Int, val reference
     constructor(resource: String, width: Int, height: Int): this(ResourceLocation(AEAdditions.ID, "textures/${resource}"), width, height)
 
     fun src(x: Int, y: Int, width: Int, height: Int): Blit {
-        srcRect = Rectangle2d(x, y, width, height)
+        srcRect = Rect2i(x, y, width, height)
 
         return this
     }
 
     fun dest(x: Int, y: Int, width: Int, height: Int): Blit {
-        destRect = Rectangle2d(x, y, width, height)
+        destRect = Rect2i(x, y, width, height)
 
         return this
     }
@@ -120,8 +117,9 @@ class Blit(val texture: ResourceLocation, val referenceWidth: Int, val reference
         }
     }
 
-    fun draw(matrixStack: MatrixStack, zIndex: Float) {
-        Minecraft.getInstance().textureManager.bindTexture(texture)
+    fun draw(poseStack: PoseStack, zIndex: Float) {
+        RenderSystem.setShader { GameRenderer.getPositionTexColorShader() }
+        RenderSystem.setShaderTexture(0, texture)
 
         val minU: Float
         val minV: Float
@@ -154,27 +152,27 @@ class Blit(val texture: ResourceLocation, val referenceWidth: Int, val reference
             y2 += srcRect!!.height.toFloat()
         }
         
-        val matrix = matrixStack.last.matrix
+        val matrix = poseStack.last().pose()
 
-        val bufferBuilder = Tessellator.getInstance().buffer
-        bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR_TEX)
-        bufferBuilder.pos(matrix, x1, y2, zIndex)
+        val bufferBuilder = Tesselator.getInstance().builder
+        bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX)
+        bufferBuilder.vertex(matrix, x1, y2, zIndex)
             .color(r, g, b, a)
-            .tex(minU, maxV)
+            .uv(minU, maxV)
             .endVertex()
-        bufferBuilder.pos(matrix, x2, y2, zIndex)
+        bufferBuilder.vertex(matrix, x2, y2, zIndex)
             .color(r, g, b, a)
-            .tex(maxU, maxV)
+            .uv(maxU, maxV)
             .endVertex()
-        bufferBuilder.pos(matrix, x2, y1, zIndex)
+        bufferBuilder.vertex(matrix, x2, y1, zIndex)
             .color(r, g, b, a)
-            .tex(maxU, minV)
+            .uv(maxU, minV)
             .endVertex()
-        bufferBuilder.pos(matrix, x1, y1, zIndex)
+        bufferBuilder.vertex(matrix, x1, y1, zIndex)
             .color(r, g, b, a)
-            .tex(minU, minV)
+            .uv(minU, minV)
             .endVertex()
-        bufferBuilder.finishDrawing()
+        bufferBuilder.end()
 
         if (blending) {
             RenderSystem.enableBlend()
@@ -184,6 +182,6 @@ class Blit(val texture: ResourceLocation, val referenceWidth: Int, val reference
         }
 
         RenderSystem.enableTexture()
-        WorldVertexBufferUploader.draw(bufferBuilder)
+        BufferUploader.end(bufferBuilder)
     }
 }

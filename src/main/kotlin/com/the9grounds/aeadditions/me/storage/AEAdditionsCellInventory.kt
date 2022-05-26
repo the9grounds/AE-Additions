@@ -1,215 +1,439 @@
 package com.the9grounds.aeadditions.me.storage
 
 import appeng.api.config.Actionable
-import appeng.api.exceptions.AppEngException
+import appeng.api.config.FuzzyMode
+import appeng.api.config.IncludeExclude
 import appeng.api.networking.security.IActionSource
-import appeng.api.storage.IStorageChannel
-import appeng.api.storage.cells.ICellInventory
+import appeng.api.stacks.AEItemKey
+import appeng.api.stacks.AEKey
+import appeng.api.stacks.KeyCounter
+import appeng.api.storage.cells.CellState
 import appeng.api.storage.cells.ISaveProvider
-import appeng.api.storage.data.IAEItemStack
-import appeng.api.storage.data.IAEStack
+import appeng.api.storage.cells.StorageCell
+import appeng.api.upgrades.IUpgradeInventory
 import appeng.core.AELog
-import com.the9grounds.aeadditions.Logger
+import appeng.core.definitions.AEItems
+import appeng.util.ConfigInventory
+import appeng.util.prioritylist.FuzzyPriorityList
+import appeng.util.prioritylist.IPartitionList
 import com.the9grounds.aeadditions.api.IAEAdditionsStorageCell
-import net.minecraft.item.Item
-import net.minecraft.item.ItemStack
-import net.minecraft.nbt.CompoundNBT
+import it.unimi.dsi.fastutil.longs.LongArrayList
+import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.ListTag
+import net.minecraft.nbt.Tag
+import net.minecraft.network.chat.Component
+import net.minecraft.world.item.ItemStack
 
-class AEAdditionsCellInventory<T: IAEStack<T>>(val cell: IAEAdditionsStorageCell<T>, itemStack: ItemStack, container: ISaveProvider?) : AbstractAEAdditionsInventory<T>(cell, itemStack, container) {
-
-
-    override fun loadCellItem(compoundTag: CompoundNBT?, stackSize: Long): Boolean {
-        // Now load the item stack
-
-        // Now load the item stack
-        val t: T?
-        try {
-            t = this.channel.createFromNBT(compoundTag!!)
-            if (t == null) {
-                Logger.warn(
-                    "Removing item " + compoundTag
-                            + " from storage cell because the associated item type couldn't be found."
-                )
-                return false
-            }
-        } catch (ex: Throwable) {
-//            if (AEConfig.instance().isRemoveCrashingItemsOnLoad) {
-//                LOGGER.warn(
-//                    ex,
-//                    "Removing item $compoundTag from storage cell because loading the ItemStack crashed."
-//                )
-//                return false
-//            }
-            throw ex
+class AEAdditionsCellInventory(val cellType: IAEAdditionsStorageCell?, val itemStackLocal: ItemStack, val container: ISaveProvider?) : StorageCell {
+    
+    private var tagCompound: CompoundTag? = null
+    private var maxItemTypes = MAX_ITEM_TYPES
+    private var storedItems: Short
+    get() = (cellItems?.size ?: 0).toShort()
+    private var storedItemCount = 0L
+    var partitionList: IPartitionList? = null
+        private set
+    var partitionListMode: IncludeExclude? = null
+    private set
+    private var maxItemsPerType: Long = 0
+    private var hasVoidUpgrade = false
+    val keyType = cellType!!.getKeyType()
+    protected var cellItems: MutableMap<AEKey, Long>? = null
+    get() {
+        if (field == null) {
+            cellItems = Object2LongOpenHashMap()
+            loadCellItems()
         }
-
-        t.stackSize = stackSize
-
-        if (stackSize > 0) {
-            cellItems!!.add(t)
-        }
-
-        return true
+        return field
     }
+    protected var itemsPerByte = 0
+    private var isPersisted = true
 
-    override fun injectItems(input: T, mode: Actionable, src: IActionSource): T? {
-        if (input == null) {
+    companion object
+    {
+        private val MAX_ITEM_TYPES = 300
+        private val ITEM_TYPE_TAG = "it"
+        private val ITEM_COUNT_TAG = "ic"
+        private val ITEM_SLOT = "#"
+        private val ITEM_SLOT_COUNT = "@"
+        private const val STACK_KEYS = "keys"
+        private const val STACK_AMOUNTS = "amts"
+        private val ITEM_SLOT_KEYS = arrayOfNulls<String>(MAX_ITEM_TYPES)
+        private val ITEM_SLOT_COUNT_KEYS = arrayOfNulls<String>(MAX_ITEM_TYPES)
+
+        init {
+            for (x in 0 until MAX_ITEM_TYPES) {
+                ITEM_SLOT_KEYS[x] = ITEM_SLOT + x
+                ITEM_SLOT_COUNT_KEYS[x] = ITEM_SLOT_COUNT + x
+            }
+        }
+        
+        private fun getStorageCell(input: ItemStack?): IAEAdditionsStorageCell? {
+            if (input != null && input.item is com.the9grounds.aeadditions.item.storage.StorageCell) {
+                return input.item as com.the9grounds.aeadditions.item.storage.StorageCell
+            }
+            
             return null
         }
-        if (input.stackSize == 0L) {
+        
+        private fun getStorageCell(itemKey: AEItemKey): IAEAdditionsStorageCell? {
+            if (itemKey.item is com.the9grounds.aeadditions.item.storage.StorageCell) {
+                return itemKey.item as com.the9grounds.aeadditions.item.storage.StorageCell
+            }
+            
             return null
         }
-
-        if (cellType!!.isBlackListed(this.itemStack, input)) {
-            return input
-        }
-        // This is slightly hacky as it expects a read-only access, but fine for now.
-        // TODO: Guarantee a read-only access. E.g. provide an isEmpty() method and
-        // ensure CellInventory does not write
-        // any NBT data for empty cells instead of relying on an empty IItemContainer
-        // This is slightly hacky as it expects a read-only access, but fine for now.
-        // TODO: Guarantee a read-only access. E.g. provide an isEmpty() method and
-        // ensure CellInventory does not write
-        // any NBT data for empty cells instead of relying on an empty IItemContainer
-        if (this.isStorageCell(input)) {
-            val meInventory: ICellInventory<T> =
-                createInventory((input as IAEItemStack).createItemStack(), null)!!
-            if (!isCellEmpty(meInventory)) {
-                return input
+        
+        private fun isCellEmpty(cellInventory: AEAdditionsCellInventory?): Boolean {
+            if (cellInventory == null) {
+                return true
             }
+            return cellInventory.availableStacks.isEmpty
         }
-
-        val l: T? = this.cellItems!!.findPrecise(input)
-        if (l != null) {
-            val remainingItemCount = this.remainingItemCount
-            if (remainingItemCount <= 0) {
-                return input
-            }
-            return if (input.stackSize > remainingItemCount) {
-                val r = input.copy()
-                r.stackSize = r.stackSize - remainingItemCount
-                if (mode == Actionable.MODULATE) {
-                    l.stackSize = l.stackSize + remainingItemCount
-                    saveChanges()
-                }
-                r
-            } else {
-                if (mode == Actionable.MODULATE) {
-                    l.stackSize = l.stackSize + input.stackSize
-                    saveChanges()
-                }
-                null
-            }
+        
+        fun isCell(itemStack: ItemStack?): Boolean {
+            return getStorageCell(itemStack) !== null
         }
-
-        if (canHoldNewItem()) // room for new type, and for at least one item!
-        {
-            val remainingItemCount = (this.remainingItemCount
-                    - this.bytesPerType * itemsPerByte)
-            if (remainingItemCount > 0) {
-                if (input.stackSize > remainingItemCount) {
-                    val toReturn = input.copy()
-                    toReturn.stackSize = input.stackSize - remainingItemCount
-                    if (mode == Actionable.MODULATE) {
-                        val toWrite = input.copy()
-                        toWrite.stackSize = remainingItemCount.toLong()
-                        cellItems!!.add(toWrite)
-                        saveChanges()
-                    }
-                    return toReturn
-                }
-                if (mode == Actionable.MODULATE) {
-                    cellItems!!.add(input)
-                    saveChanges()
-                }
+        
+        fun createInventory(itemStack: ItemStack, container: ISaveProvider?): AEAdditionsCellInventory? {
+            val item = itemStack.item
+            if (!(item is com.the9grounds.aeadditions.item.storage.StorageCell)) {
                 return null
             }
+            
+            if (!item.isStorageCell(itemStack)) {
+                return null
+            }
+            
+            return AEAdditionsCellInventory(item, itemStack, container)
         }
-
-        return input
     }
 
-    override fun extractItems(request: T, mode: Actionable, src: IActionSource): T? {
-        if (request == null) {
-            return null
+    init {
+        itemsPerByte = keyType!!.amountPerByte
+        maxItemTypes = this.cellType!!.getTotalTypes(itemStackLocal)
+        if (maxItemTypes > MAX_ITEM_TYPES) {
+            maxItemTypes = MAX_ITEM_TYPES
+        }
+        if (maxItemTypes < 1) {
+            maxItemTypes = 1
+        }
+        tagCompound = itemStackLocal.orCreateTag
+        storedItems = tagCompound!!.getShort(ITEM_TYPE_TAG)
+        storedItemCount = tagCompound!!.getLong(ITEM_COUNT_TAG)
+        cellItems = null
+
+
+        // Updates the partition list and mode based on installed upgrades and the configured filter.
+        val builder = IPartitionList.builder()
+
+        val upgrades = getUpgradesInventory()
+        val config = getConfigInventory()
+
+        val hasInverter = upgrades!!.isInstalled(AEItems.INVERTER_CARD)
+        val isFuzzy = upgrades.isInstalled(AEItems.FUZZY_CARD)
+        if (isFuzzy) {
+            builder.fuzzyMode(getFuzzyMode())
         }
 
-        val size = Math.min(Int.MAX_VALUE.toLong(), request.stackSize)
+        builder.addAll(config!!.keySet())
 
-        var results: T? = null
+        partitionListMode = if (hasInverter) IncludeExclude.BLACKLIST else IncludeExclude.WHITELIST
+        partitionList = builder.build()
 
-        val l: T? = this.cellItems!!.findPrecise(request)
-        if (l != null) {
-            results = l.copy()
-            if (l.stackSize <= size) {
-                results.stackSize = l.stackSize
-                if (mode == Actionable.MODULATE) {
-                    l.stackSize = 0
-                    saveChanges()
-                }
+
+        // Check for equal distribution card.
+        if (upgrades.isInstalled(AEItems.EQUAL_DISTRIBUTION_CARD)) {
+            // Compute max possible amount of types based on whitelist size, and bound by type limit.
+            var maxTypes = Int.MAX_VALUE.toLong()
+            if (!isFuzzy && partitionListMode == IncludeExclude.WHITELIST && !config.keySet().isEmpty()) {
+                maxTypes = config.keySet().size.toLong()
+            }
+            maxTypes = Math.min(maxTypes, maxItemTypes.toLong())
+            val totalStorage = (getTotalBytes() - getBytesPerType() * maxTypes) * keyType.amountPerByte
+            // Technically not exactly evenly distributed, but close enough!
+            this.maxItemsPerType = Math.max(0, (totalStorage + maxTypes - 1) / maxTypes)
+        } else {
+            this.maxItemsPerType = Long.MAX_VALUE
+        }
+
+        this.hasVoidUpgrade = upgrades.isInstalled(AEItems.VOID_CARD)
+    }
+
+    override fun persist() {
+        if (isPersisted) {
+            return
+        }
+
+        var itemCount: Long = 0
+
+        // add new pretty stuff...
+
+        // add new pretty stuff...
+        val amounts = LongArrayList(cellItems!!.size)
+        val keys = ListTag()
+
+        for (entry in cellItems!!) {
+            val amount = entry.value
+            if (amount > 0) {
+                itemCount += amount
+                keys.add(entry.key.toTagGeneric())
+                amounts.add(amount)
+            }
+        }
+
+        if (keys.isEmpty()) {
+            getTag()!!.remove(STACK_KEYS)
+            getTag()!!.remove(STACK_AMOUNTS)
+        } else {
+            getTag()!!.put(STACK_KEYS, keys)
+            getTag()!!.putLongArray(STACK_AMOUNTS, amounts.toArray(LongArray(0)))
+        }
+
+        storedItems = cellItems!!.size.toShort()
+
+        storedItemCount = itemCount
+        if (itemCount == 0L) {
+            getTag()!!.remove(ITEM_COUNT_TAG)
+        } else {
+            getTag()!!.putLong(ITEM_COUNT_TAG, itemCount)
+        }
+
+        isPersisted = true
+    }
+
+    open fun getTag(): CompoundTag? {
+        // On Fabric, the tag itself may be copied and then replaced later in case a portable cell is being charged.
+        // In that case however, we can rely on the itemstack reference not changing due to the special logic in the
+        // transactional inventory wrappers. So we must always re-query the tag from the stack.
+        return itemStackLocal.getOrCreateTag()
+    }
+
+    protected open fun saveChanges() {
+        // recalculate values
+        storedItems = cellItems!!.size.toShort()
+        storedItemCount = 0
+        for (storedAmount in cellItems!!.values) {
+            storedItemCount += storedAmount!!
+        }
+        isPersisted = false
+        if (container != null) {
+            container.saveChanges()
+        } else {
+            // if there is no ISaveProvider, store to NBT immediately
+            persist()
+        }
+    }
+
+    private fun loadCellItems() {
+        var corruptedTag = false
+        val amounts = getTag()!!.getLongArray(STACK_AMOUNTS)
+        val tags = getTag()!!.getList(STACK_KEYS, Tag.TAG_COMPOUND.toInt())
+        if (amounts.size != tags.size) {
+            AELog.warn(
+                "Loading storage cell with mismatched amounts/tags: %d != %d",
+                amounts.size, tags.size
+            )
+        }
+        for (i in amounts.indices) {
+            val amount = amounts[i]
+            val key = AEKey.fromTagGeneric(tags.getCompound(i))
+            if (amount <= 0 || key == null) {
+                corruptedTag = true
             } else {
-                results.stackSize = size
+                cellItems!!.put(key, amount)
+            }
+        }
+        if (corruptedTag) {
+            saveChanges()
+        }
+    }
+
+    override fun getAvailableStacks(out: KeyCounter) {
+        for (entry in cellItems!!) {
+            out.add(entry.key, entry.value)
+        }
+    }
+
+    override fun getIdleDrain(): Double {
+        return cellType!!.getIdleDrain()
+    }
+
+    open fun getFuzzyMode(): FuzzyMode? {
+        return cellType!!.getFuzzyMode(itemStackLocal)
+    }
+
+    open fun getConfigInventory(): ConfigInventory? {
+        return cellType!!.getConfigInventory(itemStackLocal)
+    }
+
+    open fun getUpgradesInventory(): IUpgradeInventory? {
+        return cellType!!.getUpgrades(itemStackLocal)
+    }
+
+    open fun getBytesPerType(): Int {
+        return cellType!!.getBytesPerType(itemStackLocal)
+    }
+
+    open fun canHoldNewItem(): Boolean {
+        val bytesFree = getFreeBytes()
+        return ((bytesFree > getBytesPerType()
+                || bytesFree == getBytesPerType().toLong() && getUnusedItemCount() > 0)
+                && getRemainingItemTypes() > 0)
+    }
+
+    val isPreformatted: Boolean
+    get() = !partitionList!!.isEmpty
+
+    fun getTotalBytes(): Long {
+        return cellType!!.getBytes(this.itemStackLocal).toLong()
+    }
+
+    open fun getFreeBytes(): Long {
+        return getTotalBytes() - getUsedBytes()
+    }
+
+    open fun getTotalItemTypes(): Long {
+        return maxItemTypes.toLong()
+    }
+
+    open fun getStoredItemCount(): Long {
+        return storedItemCount
+    }
+
+    open fun getStoredItemTypes(): Long {
+        return storedItems.toLong()
+    }
+
+    fun getRemainingItemTypes(): Long {
+        val basedOnStorage = this.getFreeBytes() / this.getBytesPerType()
+        val baseOnTotal = this.getTotalItemTypes() - this.getStoredItemTypes()
+        return if (basedOnStorage > baseOnTotal) baseOnTotal else basedOnStorage
+    }
+
+    fun getUsedBytes(): Long {
+        val bytesForItemCount = (getStoredItemCount() + this.getUnusedItemCount()) / itemsPerByte
+        return this.getStoredItemTypes() * this.getBytesPerType() + bytesForItemCount
+    }
+
+    fun getRemainingItemCount(): Long {
+        val remaining = this.getFreeBytes() * itemsPerByte + this.getUnusedItemCount()
+        return if (remaining > 0) remaining else 0
+    }
+
+    fun getUnusedItemCount(): Int {
+        val div = (getStoredItemCount() % 8).toInt()
+        return if (div == 0) {
+            0
+        } else itemsPerByte - div
+    }
+
+    override fun getStatus(): CellState? {
+        if (getStoredItemTypes() == 0L) {
+            return CellState.EMPTY
+        }
+        if (canHoldNewItem()) {
+            return CellState.NOT_EMPTY
+        }
+        return if (getRemainingItemCount() > 0) {
+            CellState.TYPES_FULL
+        } else CellState.FULL
+    }
+
+    private fun isStorageCell(key: AEItemKey): Boolean {
+        val type = getStorageCell(key)
+        return type != null && !type.storableInStorageCell()
+    }
+
+    override fun insert(what: AEKey?, amount: Long, mode: Actionable?, source: IActionSource?): Long {
+        if (amount == 0L || !keyType!!.contains(what)) {
+            return 0
+        }
+        if (!partitionList!!.matchesFilter(what, partitionListMode)) {
+            return 0
+        }
+        if (cellType!!.isBlackListed(itemStackLocal, what)) {
+            return 0
+        }
+
+        // Run regular insert logic and then apply void upgrade to the returned value.
+        val inserted = innerInsert(what!!, amount, mode!!, source!!)
+        return if (hasVoidUpgrade) amount else inserted
+    }
+
+    private fun innerInsert(what: AEKey, amount: Long, mode: Actionable, source: IActionSource): Long {
+        if (what is AEItemKey && isStorageCell(what)) {
+
+            // TODO: make it work for any cell, and not just BasicCellInventory!
+            val meInventory = createInventory(what.toStack(), null)
+            if (!isCellEmpty(meInventory)) {
+                return 0
+            }
+        }
+        
+        val currentAmount: Long = cellItems!!.get(what)?: 0
+        var remainingItemCount = getRemainingItemCount()
+
+        // Deduct the required storage for a new type if the type is new
+
+        // Deduct the required storage for a new type if the type is new
+        if (currentAmount <= 0) {
+            if (!canHoldNewItem()) {
+                // No space for more types
+                return 0
+            }
+            remainingItemCount -= getBytesPerType().toLong() * keyType!!.amountPerByte
+            if (remainingItemCount <= 0) {
+                return 0
+            }
+        }
+
+        // Apply max items per type
+
+        // Apply max items per type
+        remainingItemCount = Math.max(0, Math.min(maxItemsPerType - currentAmount, remainingItemCount))
+        
+        var _amount = amount
+
+        if (_amount > remainingItemCount) {
+            _amount = remainingItemCount
+        }
+
+        if (mode == Actionable.MODULATE) {
+            cellItems!!.put(what, currentAmount + _amount)
+            saveChanges()
+        }
+
+        return amount
+    }
+
+    override fun extract(what: AEKey?, amount: Long, mode: Actionable, source: IActionSource?): Long {
+        // To avoid long-overflow on the extracting callers side
+        val extractAmount = Math.min(Int.MAX_VALUE.toLong(), amount)
+        val currentAmount: Long? = cellItems!!.get(what)
+        return when {
+            currentAmount == null -> 0
+            currentAmount > 0 -> {
                 if (mode == Actionable.MODULATE) {
-                    l.stackSize = l.stackSize - size
+                    cellItems!!.remove(what, currentAmount)
                     saveChanges()
                 }
+                currentAmount
+            }
+            else -> {
+                if (mode == Actionable.MODULATE) {
+                    cellItems!!.put(what!!, currentAmount - extractAmount)
+                    saveChanges()
+                }
+                extractAmount
             }
         }
-
-        return results
     }
 
-    override fun getChannel(): IStorageChannel<T> = cell.getChannel()
+    override fun getDescription(): Component = itemStackLocal.hoverName
 
-    private fun isStorageCell(input: T): Boolean {
-        if (input is IAEItemStack) {
-            val stack = input as IAEItemStack
-            val type = getStorageCell(stack.definition)
-            return type != null && !type.storableInStorageCell()
-        }
-        return false
-    }
-
-    companion object {
-
-        fun isCell(input: ItemStack?): Boolean {
-            return getStorageCell(input) != null
-        }
-
-        private fun getStorageCell(input: ItemStack?): IAEAdditionsStorageCell<*>? {
-            if (input != null) {
-                val type = input.item
-                if (type is IAEAdditionsStorageCell<*>) {
-                    return type
-                }
-            }
-            return null
-        }
-
-        private fun <T: IAEStack<T>> isCellEmpty(inv: ICellInventory<T>?): Boolean {
-            return inv?.getAvailableItems(inv.getChannel().createList())?.isEmpty ?: true
-        }
-
-        fun <T: IAEStack<T>> createInventory(itemStack: ItemStack, container: ISaveProvider?): ICellInventory<T>? {
-            return try {
-                if (itemStack == null) {
-                    throw AppEngException("ItemStack was used as a cell, but was not a cell!")
-                }
-                val type: Item = itemStack.getItem()
-                val cellType: IAEAdditionsStorageCell<T>
-                cellType = if (type is IAEAdditionsStorageCell<*>) {
-                    type as IAEAdditionsStorageCell<T>
-                } else {
-                    throw AppEngException("ItemStack was used as a cell, but was not a cell!")
-                }
-                if (!cellType.isStorageCell(itemStack)) {
-                    throw AppEngException("ItemStack was used as a cell, but was not a cell!")
-                }
-                AEAdditionsCellInventory(cellType, itemStack, container)
-            } catch (e: AppEngException) {
-                AELog.error(e)
-                null
-            }
-        }
+    fun isFuzzy(): Boolean {
+        return partitionList is FuzzyPriorityList
     }
 }
