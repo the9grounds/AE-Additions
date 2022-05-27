@@ -22,5 +22,12 @@ object Cells {
             StorageCellModels.registerModel(Items.CHEMICAL_STORAGE_CELL_4096k, ResourceLocation("ae2additions:block/drive/cells/chemical/4096k"))
             StorageCellModels.registerModel(Items.CHEMICAL_STORAGE_CELL_16384k, ResourceLocation("ae2additions:block/drive/cells/chemical/16384k"))
         }
+        if (Mods.AE2THINGS.isEnabled) {
+            StorageCellModels.registerModel(Items.DISK_256k, ResourceLocation("ae2additions:block/drive/cells/item/disk_256k"))
+            StorageCellModels.registerModel(Items.DISK_1024k, ResourceLocation("ae2additions:block/drive/cells/item/disk_1024k"))
+            StorageCellModels.registerModel(Items.DISK_4096k, ResourceLocation("ae2additions:block/drive/cells/item/disk_4096k"))
+            StorageCellModels.registerModel(Items.DISK_16384k, ResourceLocation("ae2additions:block/drive/cells/item/disk_16384k"))
+            StorageCellModels.registerModel(Items.DISK_65536k, ResourceLocation("ae2additions:block/drive/cells/item/disk_65536k"))
+        }
     }
 }

@@ -6,12 +6,15 @@ import appeng.items.materials.StorageComponentItem
 import com.the9grounds.aeadditions.AEAdditions
 import com.the9grounds.aeadditions.core.CreativeTab
 import com.the9grounds.aeadditions.integration.Mods
+import com.the9grounds.aeadditions.item.storage.DiskCell
+import com.the9grounds.aeadditions.item.storage.DiskCellWithoutMod
 import com.the9grounds.aeadditions.item.storage.StorageCell
 import me.ramidzkh.mekae2.AMItems
 import me.ramidzkh.mekae2.ae2.MekanismKeyType
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.Rarity
+import net.minecraft.world.level.ItemLike
 import net.minecraftforge.registries.ForgeRegistries
 import thedarkcolour.kotlinforforge.forge.KDeferredRegister
 import thedarkcolour.kotlinforforge.forge.registerObject
@@ -34,6 +37,12 @@ object Items {
     val FLUID_STORAGE_CELL_1024k = createItem(Ids.FLUID_STORAGE_CELL_1024) { properties ->  StorageCell(properties.stacksTo(1).rarity(Rarity.RARE), CELL_COMPONENT_1024k, AEItems.FLUID_CELL_HOUSING, 4.0, 4096, 1024, 10, AEKeyType.fluids()) }
     val FLUID_STORAGE_CELL_4096k = createItem(Ids.FLUID_STORAGE_CELL_4096) { properties ->  StorageCell(properties.stacksTo(1).rarity(Rarity.EPIC), CELL_COMPONENT_4096k, AEItems.FLUID_CELL_HOUSING, 5.0, 8192, 4096, 15, AEKeyType.fluids()) }
     val FLUID_STORAGE_CELL_16384k = createItem(Ids.FLUID_STORAGE_CELL_16384) { properties ->  StorageCell(properties.stacksTo(1).rarity(Rarity.EPIC), CELL_COMPONENT_16384k, AEItems.FLUID_CELL_HOUSING, 6.0, 32768, 16384, 20, AEKeyType.fluids()) }
+    
+    val DISK_256k = createItem(Ids.DISK_256k, { loadDiskCell(it.stacksTo(1), AEItems.CELL_COMPONENT_256K, 256, 3.0) }, Mods.AE2THINGS)
+    val DISK_1024k = createItem(Ids.DISK_1024k, { loadDiskCell(it.stacksTo(1), CELL_COMPONENT_1024k, 1024, 5.0) }, Mods.AE2THINGS)
+    val DISK_4096k = createItem(Ids.DISK_4096k, { loadDiskCell(it.stacksTo(1).rarity(Rarity.UNCOMMON), CELL_COMPONENT_4096k, 4096, 8.0) }, Mods.AE2THINGS)
+    val DISK_16384k = createItem(Ids.DISK_16384k, { loadDiskCell(it.stacksTo(1).rarity(Rarity.RARE), CELL_COMPONENT_16384k, 16384, 10.0) }, Mods.AE2THINGS)
+    val DISK_65536k = createItem(Ids.DISK_65536k, { loadDiskCell(it.stacksTo(1).rarity(Rarity.EPIC), CELL_COMPONENT_65536k, 65536, 15.0) }, Mods.AE2THINGS)
     
     
     val CHEMICAL_STORAGE_CELL_1024k by REGISTRY.registerObject(Ids.CHEMICAL_STORAGE_CELL_1024.path) {
@@ -145,5 +154,13 @@ object Items {
         }
 
         return item
+    }
+    
+    fun loadDiskCell(props: Item.Properties, component: ItemLike, kiloBytes: Int, idleDrain: Double): DiskCellWithoutMod {
+        return if (Mods.AE2THINGS.isEnabled) {
+            DiskCell(props, component, kiloBytes, idleDrain)
+        } else {
+            DiskCellWithoutMod(props)
+        }
     }
 }

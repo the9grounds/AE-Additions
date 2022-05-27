@@ -4,7 +4,8 @@ import net.minecraftforge.fml.ModList
 
 enum class Mods(val modId: String, val modName: String) {
     MEKANISM("mekanism", "Mekanism"),
-    APPMEK("appmek", "Applied Mekanistics");
+    APPMEK("appmek", "Applied Mekanistics"),
+    AE2THINGS("ae2things", "AE2 Things");
 
     val isEnabled: Boolean
     get() {

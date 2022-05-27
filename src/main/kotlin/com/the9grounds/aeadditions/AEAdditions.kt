@@ -1,15 +1,21 @@
 package com.the9grounds.aeadditions
 
 import appeng.block.crafting.AbstractCraftingUnitBlock
+import appeng.items.storage.BasicStorageCell
 import com.the9grounds.aeadditions.data.AEAdditionsDataGenerator
 import com.the9grounds.aeadditions.integration.Integration
+import com.the9grounds.aeadditions.integration.Mods
 import com.the9grounds.aeadditions.integration.appeng.AppEng
+import com.the9grounds.aeadditions.item.storage.DiskCell
+import com.the9grounds.aeadditions.item.storage.StorageCell
 import com.the9grounds.aeadditions.registries.Blocks
 import com.the9grounds.aeadditions.registries.Cells
 import com.the9grounds.aeadditions.registries.Items
 import com.the9grounds.aeadditions.registries.client.Models
+import io.github.projectet.ae2things.item.DISKDrive
 import net.minecraft.client.renderer.ItemBlockRenderTypes
 import net.minecraft.client.renderer.RenderType
+import net.minecraftforge.client.event.ColorHandlerEvent
 import net.minecraftforge.client.event.ModelRegistryEvent
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent
@@ -34,6 +40,7 @@ object AEAdditions {
         
         MOD_BUS.addListener(::commonSetup)
         MOD_BUS.addListener(::modelRegistryEvent)
+        MOD_BUS.addListener(::registerItemColors)
         MOD_BUS.addListener(AEAdditionsDataGenerator::onGatherData)
 
         Integration.init()
@@ -42,6 +49,19 @@ object AEAdditions {
     private fun commonSetup(event: FMLCommonSetupEvent) {
         AppEng.initCellHandler()
         Cells.init()
+    }
+    
+    private fun registerItemColors(event: ColorHandlerEvent.Item) {
+        val itemColors = event.itemColors
+        
+        val storageCells = Items.ITEMS.filter { it is StorageCell }.toTypedArray()
+        
+        itemColors.register(BasicStorageCell::getColor, *storageCells)
+        
+        if (Mods.AE2THINGS.isEnabled) {
+            val diskCells = Items.ITEMS.filter { it is DiskCell }.toTypedArray()
+            itemColors.register(DISKDrive::getColor, *diskCells)
+        }
     }
     
     private fun initCraftingUnitTypes() {

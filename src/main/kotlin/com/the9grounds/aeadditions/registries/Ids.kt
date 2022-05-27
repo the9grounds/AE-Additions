@@ -25,6 +25,13 @@ object Ids {
     val CHEMICAL_STORAGE_CELL_4096 = id("chemical_storage_cell_4096")
     val CHEMICAL_STORAGE_CELL_16384 = id("chemical_storage_cell_16384")
     
+    // Disk
+    val DISK_256k = id("disk_item_256k");
+    val DISK_1024k = id("disk_item_1024k");
+    val DISK_4096k = id("disk_item_4096k");
+    val DISK_16384k = id("disk_item_16384k");
+    val DISK_65536k = id("disk_item_65536k");
+    
     // Blocks
     val CRAFTING_STORAGE_1024k = id("1024k_crafting_storage")
     val CRAFTING_STORAGE_4096k = id("4096k_crafting_storage")

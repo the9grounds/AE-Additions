@@ -142,6 +142,7 @@ dependencies {
 
     implementation(project.the<DependencyManagementExtension>().deobf("mekanism:Mekanism:${mekanismVersion}"))
     implementation(project.the<DependencyManagementExtension>().deobf("curse.maven:applied-mekanistics-574300:3797910"))
+    implementation(project.the<DependencyManagementExtension>().deobf("curse.maven:ae2-things-forge-609977:3795991"))
 
     annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
     compileOnly("org.spongepowered:mixin:0.8.5") { isTransitive = false }

@@ -3,9 +3,11 @@ package com.the9grounds.aeadditions.data.provider
 import appeng.core.definitions.AEBlocks
 import appeng.core.definitions.AEItems
 import com.the9grounds.aeadditions.AEAdditions
+import com.the9grounds.aeadditions.integration.Mods
 import com.the9grounds.aeadditions.item.storage.StorageCell
 import com.the9grounds.aeadditions.registries.Blocks
 import com.the9grounds.aeadditions.registries.Items
+import io.github.projectet.ae2things.item.AETItems
 import me.ramidzkh.mekae2.AMItems
 import net.minecraft.data.DataGenerator
 import net.minecraft.data.recipes.FinishedRecipe
@@ -63,6 +65,41 @@ class AEAdditionsRecipeProvider(generatorIn: DataGenerator) : RecipeProvider(gen
             16384 to Blocks.BLOCK_CRAFTING_STORAGE_16384k,
             65536 to Blocks.BLOCK_CRAFTING_STORAGE_65536k,
         )
+        val diskCells = mapOf(
+            256 to Items.DISK_256k,
+            1024 to Items.DISK_1024k,
+            4096 to Items.DISK_4096k,
+            16384 to Items.DISK_16384k,
+            65536 to Items.DISK_65536k
+        )
+        
+        for (diskCell in diskCells) {
+            ConditionalRecipe.builder().addCondition(
+                modLoaded(Mods.AE2THINGS.modId)
+            ).addRecipe {
+                ShapelessRecipeBuilder.shapeless(diskCell.value)
+                    .requires(AETItems.DISK_HOUSING.get())
+                    .requires(components[diskCell.key])
+                    .unlockedBy("has_item", has(components[diskCell.key]))
+                    .save(it)
+            }.build(consumer, ResourceLocation(AEAdditions.ID, "cells/item/disk-${diskCell.key}-casing"))
+            
+            ConditionalRecipe.builder().addCondition(
+                modLoaded(Mods.AE2THINGS.modId)
+            ).addRecipe {
+                ShapedRecipeBuilder.shaped(diskCell.value)
+                    .pattern("aba")
+                    .pattern("bcb")
+                    .pattern("ded")
+                    .define('a', AEBlocks.QUARTZ_GLASS)
+                    .define('b', Tags.Items.DUSTS_REDSTONE)
+                    .define('c', components[diskCell.key])
+                    .define('d', Tags.Items.INGOTS_NETHERITE)
+                    .define('e', Tags.Items.GEMS_AMETHYST)
+                    .unlockedBy("has_item", has(components[diskCell.key]))
+                    .save(it)
+            }.build(consumer, ResourceLocation(AEAdditions.ID, "cells/item/disk-${diskCell.key}"))
+        }
         
         for (block in craftingStorageBlocks) {
             ShapelessRecipeBuilder.shapeless(block.value.item)
