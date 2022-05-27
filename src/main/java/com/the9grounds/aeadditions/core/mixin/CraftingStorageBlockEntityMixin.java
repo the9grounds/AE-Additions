@@ -20,7 +20,7 @@ public abstract class CraftingStorageBlockEntityMixin extends CraftingBlockEntit
         super(blockEntityType, pos, blockState);
     }
     
-    @Overwrite
+    @Overwrite(remap = false)
     public int getStorageBytes() {
         
         var extraBytes = AE2.getStorageBytes((CraftingStorageBlockEntity) (Object)this);
@@ -32,7 +32,7 @@ public abstract class CraftingStorageBlockEntityMixin extends CraftingBlockEntit
         return super.getStorageBytes();
     };
 
-    @Inject(method = "getItemFromBlockEntity()Lnet/minecraft/world/item/Item", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "getItemFromBlockEntity()Lnet/minecraft/world/item/Item", at = @At("HEAD"), cancellable = true, remap = false)
     private void extraCraftingCpus$getItemFromBlockEntity(CallbackInfoReturnable<Item> callbackInfoReturnable) {
         var storage = getStorageBytes() / 1024;
         

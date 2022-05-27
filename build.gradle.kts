@@ -9,7 +9,7 @@ buildscript {
         mavenCentral()
         maven(url = "https://maven.minecraftforge.net/")
         maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
-        maven(url = "https://repo.spongepowered.org/maven-public")
+        maven(url = "https://repo.spongepowered.org/maven")
     }
 
     dependencies {
@@ -18,7 +18,7 @@ buildscript {
         }
 
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10")
-        classpath("org.spongepowered:mixingradle:0.7.+")
+        classpath("org.spongepowered:mixingradle:0.7-SNAPSHOT")
     }
 }
 
@@ -39,20 +39,6 @@ apply {
     plugin("idea")
     plugin("org.spongepowered.mixin")
 }
-
-tasks.named<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>("compileKotlin") {
-    kotlinOptions.jvmTarget = "17"
-}
-
-//project.properties["kotlin.stdlib.default.dependency"] = false
-
-// Used to manually add non-mc libraries to the runtime classpaths found in build/classpath
-// If you have any module issues, check these files to make sure there are no duplicate dependencies
-//minecraft.runs.all {
-//    lazyToken("minecraft_classpath") {
-//        configurations["java-library"].copyRecursive().resolve().collect { it.absolutePath }.join(File.pathSeparator)
-//    }
-//}
 
 // Properties
 val kotlinVersion: String by project
@@ -143,14 +129,12 @@ repositories {
         url = uri("https://maven.bai.lol")
     }
     maven {
-        url = uri("https://repo.spongepowered.org/maven-public")
+        url = uri("https://repo.spongepowered.org/maven")
     }
 }
 val coroutines_version = "1.6.0"
 dependencies {
     "minecraft"("net.minecraftforge:forge:${minecraftVersion}-${forgeVersion}")
-    implementation("thedarkcolour:kotlinforforge:3.1.0")
-
     val jeiApi = project.dependencies.create(group = "mezz.jei", name = "jei-${minecraftVersion}", version = jeiVersion, classifier = "api")
     val jei = project.dependencies.create(group = "mezz.jei", name = "jei-${minecraftVersion}", version = jeiVersion)
     val ae2 = project.dependencies.create(group = "appeng", name = "appliedenergistics2", version = aeVersion)
@@ -163,8 +147,11 @@ dependencies {
     implementation(project.the<DependencyManagementExtension>().deobf("mekanism:Mekanism:${mekanismVersion}"))
 //    implementation(project.the<DependencyManagementExtension>().deobf("mcp.mobius.waila:wthit:forge-${wthitVersion}"))
 
+    annotationProcessor("org.spongepowered:mixin:0.8.4:processor")
+    compileOnly("org.spongepowered:mixin:0.8.4")
+//    implementation(project.the<DependencyManagementExtension>().deobf("org.spongepowered:mixin:0.8.5"))
+    
     implementation(project.the<DependencyManagementExtension>().deobf("curse.maven:applied-mekanistics-574300:3797910"))
-    implementation(project.the<DependencyManagementExtension>().deobf("org.spongepowered:mixin:0.8.5:processor"))
 }
 
 val Project.minecraft: UserDevExtension
@@ -189,6 +176,9 @@ tasks.withType<Jar> {
             "version" to getBetterVersion(),
             "mcversion" to "1.18.2"
         ))
+        filter { line ->
+            line.replace("version=\"0.0.0.0.1\"", "version=\"${getBetterVersion()}\"")
+        }
     }
 }
 
@@ -212,7 +202,7 @@ tasks.register<TaskPublishCurseForge>("publishCurseForge") {
 fun getBuildNumber(): String? {
 
     if (System.getenv("CI") == null) {
-        return "3.0.0-alpha.1"
+        return "3.0.0-alpha.2"
     }
 
     if (System.getenv("TAG") != null) {
@@ -268,4 +258,11 @@ tasks.create("copyResourceToClasses", Copy::class) {
     onlyIf { gradle.taskGraph.hasTask(tasks.getByName("prepareRuns")) }
     into("$buildDir/classes/kotlin/main")
     from(tasks.processResources.get().destinationDir)
+}
+
+configure<org.spongepowered.asm.gradle.plugins.MixinExtension> {
+    add(sourceSets.main.get(), "ae2additions.refmap.json")
+//    defaultObfuscationEnv = "notch"
+//    disableTargetValidator = true
+//    disableTargetExport = true
 }

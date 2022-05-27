@@ -13,8 +13,7 @@ import java.util.Arrays;
 public abstract class CraftingUnitTypeMixin {
     @Final
     @Mutable
-    @Shadow
-    @SuppressWarnings("target")
+    @Shadow(remap = false)
     private static AbstractCraftingUnitBlock.CraftingUnitType[] $VALUES;
     
     private static final AbstractCraftingUnitBlock.CraftingUnitType STORAGE_1024k = craftingUnitType$addType("STORAGE_1024k");
@@ -22,7 +21,7 @@ public abstract class CraftingUnitTypeMixin {
     private static final AbstractCraftingUnitBlock.CraftingUnitType STORAGE_16384k = craftingUnitType$addType("STORAGE_16384k");
     private static final AbstractCraftingUnitBlock.CraftingUnitType STORAGE_65536k = craftingUnitType$addType("STORAGE_65536k");
     
-    @Invoker("<init>")
+    @Invoker(value = "<init>")
     public static AbstractCraftingUnitBlock.CraftingUnitType craftingUnitType$invokeInit(String internalName, int internalId) {
         throw new AssertionError();
     }
