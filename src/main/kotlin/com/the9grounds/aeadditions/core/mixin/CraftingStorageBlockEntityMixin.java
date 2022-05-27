@@ -9,7 +9,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -20,17 +20,8 @@ public abstract class CraftingStorageBlockEntityMixin extends CraftingBlockEntit
         super(blockEntityType, pos, blockState);
     }
     
-    @Overwrite(remap = false)
-    public int getStorageBytes() {
-        
-        var extraBytes = AE2.getStorageBytes((CraftingStorageBlockEntity) (Object)this);
-        
-        if (null != extraBytes) {
-            return extraBytes;
-        }
-        
-        return super.getStorageBytes();
-    };
+    @Shadow
+    public abstract int getStorageBytes();
 
     @Inject(method = "getItemFromBlockEntity()Lnet/minecraft/world/item/Item;", at = @At("HEAD"), cancellable = true, remap = false)
     private void extraCraftingCpus$getItemFromBlockEntity(CallbackInfoReturnable<Item> callbackInfoReturnable) {
@@ -44,8 +35,12 @@ public abstract class CraftingStorageBlockEntityMixin extends CraftingBlockEntit
         }
     }
     
-//    @Inject(method = "getStorageBytes", at = @At("HEAD"))
-//    private void extraCraftingCpus$getStorageBytes(CallbackInfoReturnable<Integer> callbackInfoReturnable) {
-//        AE2.getStorageBytes((CraftingStorageBlockEntity)(Object) this, callbackInfoReturnable);
-//    }
+    @Inject(method = "getStorageBytes", at = @At("HEAD"), cancellable = true, remap = false)
+    private void extraCraftingCpus$getStorageBytes(CallbackInfoReturnable<Integer> callbackInfoReturnable) {
+        var storageBytes = AE2.getStorageBytes((CraftingStorageBlockEntity)(Object) this);
+        
+        if (storageBytes != null) {
+            callbackInfoReturnable.setReturnValue(storageBytes);
+        }
+    }
 }
