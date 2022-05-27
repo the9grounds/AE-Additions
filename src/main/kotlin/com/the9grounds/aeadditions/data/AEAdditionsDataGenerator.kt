@@ -1,10 +1,13 @@
 package com.the9grounds.aeadditions.data
 
-import com.the9grounds.aeadditions.data.provider.StorageCellsRecipeProvider
+import com.the9grounds.aeadditions.AEAdditions
+import com.the9grounds.aeadditions.data.provider.AEAdditionsRecipeProvider
+import com.the9grounds.aeadditions.data.provider.BlockModelProvider
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent
 
 object AEAdditionsDataGenerator {
     fun onGatherData(event: GatherDataEvent) {
-        event.generator.addProvider(StorageCellsRecipeProvider(event.generator))
+        event.generator.addProvider(AEAdditionsRecipeProvider(event.generator))
+        event.generator.addProvider(BlockModelProvider(event.generator, AEAdditions.ID, event.existingFileHelper))
     }
 }

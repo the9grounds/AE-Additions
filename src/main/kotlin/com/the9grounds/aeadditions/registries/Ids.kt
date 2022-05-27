@@ -25,6 +25,12 @@ object Ids {
     val CHEMICAL_STORAGE_CELL_4096 = id("chemical_storage_cell_4096")
     val CHEMICAL_STORAGE_CELL_16384 = id("chemical_storage_cell_16384")
     
+    // Blocks
+    val CRAFTING_STORAGE_1024k = id("1024k_crafting_storage")
+    val CRAFTING_STORAGE_4096k = id("4096k_crafting_storage")
+    val CRAFTING_STORAGE_16384k = id("16384k_crafting_storage")
+    val CRAFTING_STORAGE_65536k = id("65536k_crafting_storage")
+    
 
     private fun id(id: String): ResourceLocation = ResourceLocation(AEAdditions.ID, id)
 }

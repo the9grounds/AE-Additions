@@ -1,10 +1,10 @@
 package com.the9grounds.aeadditions.data.provider
 
-import appeng.core.AppEng
 import appeng.core.definitions.AEBlocks
 import appeng.core.definitions.AEItems
 import com.the9grounds.aeadditions.AEAdditions
 import com.the9grounds.aeadditions.item.storage.StorageCell
+import com.the9grounds.aeadditions.registries.Blocks
 import com.the9grounds.aeadditions.registries.Items
 import me.ramidzkh.mekae2.AMItems
 import net.minecraft.data.DataGenerator
@@ -19,10 +19,8 @@ import net.minecraftforge.common.crafting.ConditionalRecipe
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder
 import java.util.function.Consumer
 
-class StorageCellsRecipeProvider(generatorIn: DataGenerator) : RecipeProvider(generatorIn), IConditionBuilder {
+class AEAdditionsRecipeProvider(generatorIn: DataGenerator) : RecipeProvider(generatorIn), IConditionBuilder {
     
-    val certusCrystalTag = ItemTags.create(ResourceLocation(AppEng.MOD_ID, "crystals/certus"))
-    val panelTag = ItemTags.create(ResourceLocation(AppEng.MOD_ID, "illuminated_panel"))
     val osmiumTag = ItemTags.create(ResourceLocation("forge", "ingots/osmium"))
     
     override fun buildCraftingRecipes(consumer: Consumer<FinishedRecipe>) {
@@ -59,6 +57,20 @@ class StorageCellsRecipeProvider(generatorIn: DataGenerator) : RecipeProvider(ge
             16384 to 4096,
             65536 to 16384
         )
+        val craftingStorageBlocks = mapOf(
+            1024 to Blocks.BLOCK_CRAFTING_STORAGE_1024k,
+            4096 to Blocks.BLOCK_CRAFTING_STORAGE_4096k,
+            16384 to Blocks.BLOCK_CRAFTING_STORAGE_16384k,
+            65536 to Blocks.BLOCK_CRAFTING_STORAGE_65536k,
+        )
+        
+        for (block in craftingStorageBlocks) {
+            ShapelessRecipeBuilder.shapeless(block.value.item)
+                .requires(AEBlocks.CRAFTING_UNIT)
+                .requires(components[block.key])
+                .unlockedBy("has_item", has(components[block.key]))
+                .save(consumer, ResourceLocation(AEAdditions.ID, "crafting/${block.key}k_storage"))
+        }
         
         for (component in listOf(1024, 4096, 16384, 65536)) {
             ShapedRecipeBuilder.shaped(components[component])

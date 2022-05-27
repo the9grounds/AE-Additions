@@ -9,7 +9,7 @@ buildscript {
         mavenCentral()
         maven(url = "https://maven.minecraftforge.net/")
         maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
-        maven(url = "https://repo.spongepowered.org/maven")
+        maven(url = "https://repo.spongepowered.org/maven-public")
     }
 
     dependencies {
@@ -18,7 +18,7 @@ buildscript {
         }
 
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10")
-//        classpath("org.spongepowered:mixingradle:0.7.+")
+        classpath("org.spongepowered:mixingradle:0.7.+")
     }
 }
 
@@ -37,7 +37,7 @@ apply {
     plugin("net.minecraftforge.gradle")
     plugin("kotlin")
     plugin("idea")
-//    plugin("org.spongepowered.mixin")
+    plugin("org.spongepowered.mixin")
 }
 
 tasks.named<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>("compileKotlin") {
@@ -83,6 +83,7 @@ configure<UserDevExtension> {
     runs {
         create("client") {
             workingDirectory(project.file("run"))
+            args("-mixin.config=ae2additions.mixins.json")
 
             property("forge.logging.markers", "REGISTRIES")
             property("forge.logging.console.level", "debug")
@@ -93,6 +94,7 @@ configure<UserDevExtension> {
         }
         create("server") {
             workingDirectory(project.file("run"))
+            args("-mixin.config=ae2additions.mixins.json")
 
             property("forge.logging.markers", "REGISTRIES")
             property("forge.logging.console.level", "debug")
@@ -107,7 +109,7 @@ configure<UserDevExtension> {
             property("mixin.env.remapRefMap", "true")
             property("mixin.env.refMapRemappingFile", "${projectDir}/build/createSrgToMcp/output.srg")
 
-            args("--mod", "ae2additions", "--all", "--output", file("src/generated/resources/"), "--existing", file("src/main/resources"))
+            args("--mod", "ae2additions", "--all", "--output", file("src/generated/resources/"), "--existing", file("src/main/resources"), "-mixin.config=ae2additions.mixins.json")
         }
     }
 }
@@ -140,6 +142,9 @@ repositories {
     maven {
         url = uri("https://maven.bai.lol")
     }
+    maven {
+        url = uri("https://repo.spongepowered.org/maven-public")
+    }
 }
 val coroutines_version = "1.6.0"
 dependencies {
@@ -159,6 +164,7 @@ dependencies {
 //    implementation(project.the<DependencyManagementExtension>().deobf("mcp.mobius.waila:wthit:forge-${wthitVersion}"))
 
     implementation(project.the<DependencyManagementExtension>().deobf("curse.maven:applied-mekanistics-574300:3797910"))
+    implementation(project.the<DependencyManagementExtension>().deobf("org.spongepowered:mixin:0.8.5:processor"))
 }
 
 val Project.minecraft: UserDevExtension
@@ -170,6 +176,12 @@ tasks.withType<Jar> {
     duplicatesStrategy = org.gradle.api.file.DuplicatesStrategy.EXCLUDE
 
     baseName = "${modBaseName}-${getBetterVersion()}"
+    
+    manifest {
+        attributes(mapOf<String, String>(
+            "MixinConfigs" to "ae2additions.mixins.json"
+        ))
+    }
 
     // replace stuff in mcmod.info, nothing else
     filesMatching("META-INF/mods.toml") {

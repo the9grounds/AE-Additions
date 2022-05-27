@@ -7,7 +7,7 @@ license='GNU GPLv3'
 
 [[mods]]
 modId="ae2additions"
-version="${version}"
+version="0.0.0.0.1"
 displayName="AE Additions"
 credits="The AEAdditions dev team"
 authors="MasterYodA"
