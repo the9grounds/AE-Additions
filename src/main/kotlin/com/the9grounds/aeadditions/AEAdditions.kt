@@ -15,8 +15,10 @@ import com.the9grounds.aeadditions.registries.client.Models
 import io.github.projectet.ae2things.item.DISKDrive
 import net.minecraft.client.renderer.ItemBlockRenderTypes
 import net.minecraft.client.renderer.RenderType
+import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.client.event.ColorHandlerEvent
 import net.minecraftforge.client.event.ModelRegistryEvent
+import net.minecraftforge.fml.DistExecutor
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent
 import thedarkcolour.kotlinforforge.forge.MOD_BUS
@@ -39,11 +41,15 @@ object AEAdditions {
         Blocks.REGISTRY.register(MOD_BUS)
         
         MOD_BUS.addListener(::commonSetup)
-        MOD_BUS.addListener(::modelRegistryEvent)
-        MOD_BUS.addListener(::registerItemColors)
         MOD_BUS.addListener(AEAdditionsDataGenerator::onGatherData)
 
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT) { Runnable { initClient() } }
+
         Integration.init()
+    }
+    
+    fun initClient() {
+        MOD_BUS.addListener(::modelRegistryEvent)
     }
 
     private fun commonSetup(event: FMLCommonSetupEvent) {
