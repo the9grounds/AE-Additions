@@ -23,22 +23,17 @@ buildscript {
 }
 
 plugins {
-    `java-library`
+    kotlin("jvm") version "1.6.10"
+    java
     id("net.darkhax.curseforgegradle") version "1.0.10"
-}
-
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
-    }
 }
 
 apply {
     plugin("net.minecraftforge.gradle")
-    plugin("kotlin")
     plugin("idea")
-    plugin("org.spongepowered.mixin")
 }
+
+apply(plugin = "org.spongepowered.mixin")
 
 // Properties
 val kotlinVersion: String by project
@@ -132,6 +127,7 @@ repositories {
         url = uri("https://repo.spongepowered.org/maven")
     }
 }
+
 val coroutines_version = "1.6.0"
 dependencies {
     "minecraft"("net.minecraftforge:forge:${minecraftVersion}-${forgeVersion}")
@@ -145,13 +141,11 @@ dependencies {
     implementation(project.the<DependencyManagementExtension>().deobf(ae2))
 
     implementation(project.the<DependencyManagementExtension>().deobf("mekanism:Mekanism:${mekanismVersion}"))
-//    implementation(project.the<DependencyManagementExtension>().deobf("mcp.mobius.waila:wthit:forge-${wthitVersion}"))
-
-    annotationProcessor("org.spongepowered:mixin:0.8.4:processor")
-    compileOnly("org.spongepowered:mixin:0.8.4")
-//    implementation(project.the<DependencyManagementExtension>().deobf("org.spongepowered:mixin:0.8.5"))
-    
     implementation(project.the<DependencyManagementExtension>().deobf("curse.maven:applied-mekanistics-574300:3797910"))
+
+    annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
+    compileOnly("org.spongepowered:mixin:0.8.5") { isTransitive = false }
+    
 }
 
 val Project.minecraft: UserDevExtension
@@ -164,11 +158,9 @@ tasks.withType<Jar> {
 
     baseName = "${modBaseName}-${getBetterVersion()}"
     
-    manifest {
-        attributes(mapOf<String, String>(
-            "MixinConfigs" to "ae2additions.mixins.json"
-        ))
-    }
+    manifest.attributes(
+        "MixinConfigs" to "ae2additions.mixins.json",
+    )
 
     // replace stuff in mcmod.info, nothing else
     filesMatching("META-INF/mods.toml") {
@@ -202,7 +194,7 @@ tasks.register<TaskPublishCurseForge>("publishCurseForge") {
 fun getBuildNumber(): String? {
 
     if (System.getenv("CI") == null) {
-        return "3.0.0-alpha.2"
+        return "0.0.0.1"
     }
 
     if (System.getenv("TAG") != null) {
@@ -246,23 +238,25 @@ fun getReleaseType(): String {
 
 sourceSets {
     main {
+        java {
+            srcDir("src")
+        }
         resources {
             srcDir("src/generated/resources")
         }
     }
 }
 
-tasks.create("copyResourceToClasses", Copy::class) {
-    tasks.classes.get().dependsOn(this)
-    dependsOn(tasks.processResources.get())
-    onlyIf { gradle.taskGraph.hasTask(tasks.getByName("prepareRuns")) }
-    into("$buildDir/classes/kotlin/main")
-    from(tasks.processResources.get().destinationDir)
-}
+//tasks.create("copyResourceToClasses", Copy::class) {
+//    tasks.classes.get().dependsOn(this)
+//    dependsOn(tasks.processResources.get())
+//    onlyIf { gradle.taskGraph.hasTask(tasks.getByName("prepareRuns")) }
+//    into("$buildDir/classes/kotlin/main")
+//    from(tasks.processResources.get().destinationDir)
+//}
 
 configure<org.spongepowered.asm.gradle.plugins.MixinExtension> {
     add(sourceSets.main.get(), "ae2additions.refmap.json")
-//    defaultObfuscationEnv = "notch"
-//    disableTargetValidator = true
-//    disableTargetExport = true
+    config("ae2additions.mixins.json")
+    quiet = false
 }

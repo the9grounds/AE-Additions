@@ -1,7 +1,10 @@
 package com.the9grounds.aeadditions.core.mixin;
 
 import appeng.block.crafting.AbstractCraftingUnitBlock;
-import org.spongepowered.asm.mixin.*;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Mutable;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
 import java.util.ArrayList;
@@ -9,11 +12,10 @@ import java.util.Arrays;
 
 // https://github.com/SpongePowered/Mixin/issues/387#issuecomment-888408556
 @Mixin(AbstractCraftingUnitBlock.CraftingUnitType.class)
-@Unique
 public abstract class CraftingUnitTypeMixin {
     @Final
     @Mutable
-    @Shadow(remap = false)
+    @Shadow
     private static AbstractCraftingUnitBlock.CraftingUnitType[] $VALUES;
     
     private static final AbstractCraftingUnitBlock.CraftingUnitType STORAGE_1024k = craftingUnitType$addType("STORAGE_1024k");
