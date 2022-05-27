@@ -31,7 +31,7 @@ jobs:
         key: ${{ runner.os }}-1.18.2-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
         restore-keys: |
           ${{ runner.os }}-1.18.2-gradle
-    - name: Set up JDK 8
+    - name: Set up JDK 17
       uses: actions/setup-java@v2
       with:
         java-version: '17'
@@ -39,7 +39,7 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
-      run: ./gradlew build
+      run: ./gradlew clean build
       env:
         SHORT_SHA: ${{ steps.short-sha.outputs.sha }}
         BRANCH_NAME: ${{ steps.extract_branch.outputs.branch }}
