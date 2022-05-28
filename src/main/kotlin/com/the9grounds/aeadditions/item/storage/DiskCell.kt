@@ -117,11 +117,11 @@ class DiskCell(properties: Item.Properties, private val _keyType: AEKeyType, val
         return false
     }
 
-    override fun onItemUseFirst(stack: ItemStack, context: UseOnContext): InteractionResult? {
+    override fun onItemUseFirst(stack: ItemStack?, context: UseOnContext?): InteractionResult {
         return if (disassembleDrive(
-                stack,
-                context.level,
-                context.player
+                stack!!,
+                context!!.level,
+                context!!.player
             )
         ) InteractionResult.sidedSuccess(context.level.isClientSide()) else InteractionResult.PASS
     }

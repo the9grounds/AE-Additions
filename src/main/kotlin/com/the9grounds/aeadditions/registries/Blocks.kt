@@ -1,6 +1,5 @@
 package com.the9grounds.aeadditions.registries
 
-import com.the9grounds.aeadditions.AEAdditions
 import com.the9grounds.aeadditions.AEAdditions.craftingType1024k
 import com.the9grounds.aeadditions.AEAdditions.craftingType16384k
 import com.the9grounds.aeadditions.AEAdditions.craftingType4096k
@@ -8,18 +7,14 @@ import com.the9grounds.aeadditions.AEAdditions.craftingType65536k
 import com.the9grounds.aeadditions.block.CraftingStorageBlock
 import com.the9grounds.aeadditions.core.BlockDefinition
 import com.the9grounds.aeadditions.integration.Mods
+import net.minecraft.core.Registry
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.state.BlockBehaviour
 import net.minecraft.world.level.material.Material
-import net.minecraftforge.registries.ForgeRegistries
-import thedarkcolour.kotlinforforge.forge.KDeferredRegister
-import thedarkcolour.kotlinforforge.forge.registerObject
 
 object Blocks {
-    val REGISTRY = KDeferredRegister.create(ForgeRegistries.BLOCKS, AEAdditions.ID)
-
     val BLOCKS = mutableListOf<Block>()
     
     
@@ -66,10 +61,9 @@ object Blocks {
         val block = factory(props)
 
         BLOCKS.add(block)
-
-        REGISTRY.registerObject(id.path) {
-            block
-        }
+        
+        Registry.register(Registry.BLOCK, id, block)
+        
         return block
     }
 }

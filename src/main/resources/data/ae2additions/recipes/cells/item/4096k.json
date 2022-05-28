@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "aba",
+    "bcb",
+    "ddd"
+  ],
+  "key": {
+    "a": {
+      "item": "ae2:quartz_glass"
+    },
+    "b": {
+      "item": "ae2:fluix_dust"
+    },
+    "c": {
+      "item": "ae2additions:cell_component_4096"
+    },
+    "d": {
+      "tag": "c:diamonds"
+    }
+  },
+  "result": {
+    "item": "ae2additions:item_storage_cell_4096"
+  }
+}

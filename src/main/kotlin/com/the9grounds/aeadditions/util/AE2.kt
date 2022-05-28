@@ -56,7 +56,7 @@ object AE2 {
     }
     
     fun texture(name: String): Material {
-        return Material(TextureAtlas.LOCATION_BLOCKS, ResourceLocation(AEAdditions.ID, "block/crafting/$name"))
+        return Material(TextureAtlas.LOCATION_BLOCKS, ResourceLocation(AEAdditions.MOD_ID, "block/crafting/$name"))
     }
     
     @JvmStatic fun combineTextures(stream: Stream<Material>): Stream<Material> {

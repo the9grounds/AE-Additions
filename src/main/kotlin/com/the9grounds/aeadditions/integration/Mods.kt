@@ -1,14 +1,12 @@
 package com.the9grounds.aeadditions.integration
 
-import net.minecraftforge.fml.ModList
+import net.fabricmc.loader.api.FabricLoader
 
 enum class Mods(val modId: String, val modName: String) {
-    MEKANISM("mekanism", "Mekanism"),
-    APPMEK("appmek", "Applied Mekanistics"),
     AE2THINGS("ae2things", "AE2 Things");
 
     val isEnabled: Boolean
     get() {
-        return ModList.get().isLoaded(modId)
+        return FabricLoader.getInstance().isModLoaded(modId)
     }
 }

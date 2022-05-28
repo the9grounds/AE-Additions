@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "aba",
+    "bcb",
+    "ddd"
+  ],
+  "key": {
+    "a": {
+      "item": "ae2:quartz_glass"
+    },
+    "b": {
+      "item": "ae2:fluix_dust"
+    },
+    "c": {
+      "item": "ae2additions:cell_component_1024"
+    },
+    "d": {
+      "tag": "c:copper_ingots"
+    }
+  },
+  "result": {
+    "item": "ae2additions:fluid_storage_cell_1024"
+  }
+}

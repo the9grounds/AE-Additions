@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "id": "ae2additions",
+  "version": "${version}",
+  "name": "AEAdditions",
+  "description": "A mod with helpful additions to AE2",
+  "authors": ["MasterYodA"],
+  "contact": {
+    "discord": "MasterYodA#0001",
+    "sources": "https://github.com/the9grounds/AE-Additions"
+  },
+  "license": "LGPL",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      {
+        "adapter": "kotlin",
+        "value": "com.the9grounds.aeadditions.AEAdditionsMain"
+      }
+    ],
+    "ae2": [
+      {
+        "adapter": "kotlin",
+        "value": "com.the9grounds.aeadditions.AEAdditions"
+      }
+    ],
+    "ae2:client": [
+      {
+        "adapter": "kotlin",
+        "value": "com.the9grounds.aeadditions.AEAdditionsClient"
+      }
+    ]
+  },
+  "mixins": ["ae2additions.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.12.5",
+    "fabric": ">=0.42.4",
+    "fabric-language-kotlin": "*",
+    "minecraft": "1.18.x",
+    "ae2": ">=11.0.0"
+  },
+  "conflicts": {
+    
+  },
+  "suggests": {}
+}

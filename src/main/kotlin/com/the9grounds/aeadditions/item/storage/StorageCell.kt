@@ -3,10 +3,13 @@ package com.the9grounds.aeadditions.item.storage
 import appeng.api.config.FuzzyMode
 import appeng.api.stacks.AEKeyType
 import appeng.api.storage.StorageCells
+import appeng.hooks.AEToolItem
 import appeng.items.contents.CellConfig
 import appeng.util.ConfigInventory
 import com.the9grounds.aeadditions.api.IAEAdditionsStorageCell
 import com.the9grounds.aeadditions.me.storage.AEAdditionsCellHandler.addCellInformationToTooltip
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import net.minecraft.network.chat.Component
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
@@ -18,10 +21,9 @@ import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.item.context.UseOnContext
 import net.minecraft.world.level.ItemLike
 import net.minecraft.world.level.Level
-import net.minecraftforge.api.distmarker.Dist
-import net.minecraftforge.api.distmarker.OnlyIn
 
-class StorageCell(properties: Properties, val component: ItemLike, val housingItem: ItemLike, val _idleDrain: Double, val _bytesPerType: Int, val kiloBytes: Int, val numberOfTypes: Int, val _keyType: AEKeyType) : Item(properties), IAEAdditionsStorageCell {
+class StorageCell(properties: Properties, val component: ItemLike, val housingItem: ItemLike, val _idleDrain: Double, val _bytesPerType: Int, val kiloBytes: Int, val numberOfTypes: Int, val _keyType: AEKeyType) : Item(properties),
+    AEToolItem, IAEAdditionsStorageCell {
     override fun getBytes(cellItem: ItemStack): Int = kiloBytes * 1024
 
     override fun getBytesPerType(cellItem: ItemStack): Int  = _bytesPerType
@@ -92,7 +94,7 @@ class StorageCell(properties: Properties, val component: ItemLike, val housingIt
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     override fun appendHoverText(
         stack: ItemStack?,
         level: Level?,

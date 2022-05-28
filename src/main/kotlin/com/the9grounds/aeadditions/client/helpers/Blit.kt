@@ -48,8 +48,8 @@ class Blit(val texture: ResourceLocation, val referenceWidth: Int, val reference
         )
     }
     
-    constructor(resource: String): this(ResourceLocation(AEAdditions.ID, "textures/${resource}"), DEFAULT_WIDTH, DEFAULT_HEIGHT)
-    constructor(resource: String, width: Int, height: Int): this(ResourceLocation(AEAdditions.ID, "textures/${resource}"), width, height)
+    constructor(resource: String): this(ResourceLocation(AEAdditions.MOD_ID, "textures/${resource}"), DEFAULT_WIDTH, DEFAULT_HEIGHT)
+    constructor(resource: String, width: Int, height: Int): this(ResourceLocation(AEAdditions.MOD_ID, "textures/${resource}"), width, height)
 
     fun src(x: Int, y: Int, width: Int, height: Int): Blit {
         srcRect = Rect2i(x, y, width, height)

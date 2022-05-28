@@ -18,10 +18,8 @@ import appeng.util.ConfigInventory
 import appeng.util.prioritylist.FuzzyPriorityList
 import appeng.util.prioritylist.IPartitionList
 import com.the9grounds.aeadditions.api.IAEAdditionsStorageCell
-import com.the9grounds.aeadditions.integration.Mods
 import it.unimi.dsi.fastutil.longs.LongArrayList
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap
-import me.ramidzkh.mekae2.ae2.MekanismKeyType
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.nbt.Tag
@@ -69,9 +67,6 @@ class SuperCellInventory(val cell: IAEAdditionsStorageCell?, val itemStackLocal:
         private val ITEM_SLOT_COUNT_KEYS = arrayOfNulls<String>(MAX_ITEM_TYPES)
 
         init {
-            if (Mods.APPMEK.isEnabled) {
-                cellTypes.add(MekanismKeyType.TYPE)
-            }
             for (x in 0 until MAX_ITEM_TYPES) {
                 ITEM_SLOT_KEYS[x] = ITEM_SLOT + x
                 ITEM_SLOT_COUNT_KEYS[x] = ITEM_SLOT_COUNT + x

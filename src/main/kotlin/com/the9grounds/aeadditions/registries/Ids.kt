@@ -21,10 +21,6 @@ object Ids {
     val FLUID_STORAGE_CELL_4096 = id("fluid_storage_cell_4096")
     val FLUID_STORAGE_CELL_16384 = id("fluid_storage_cell_16384")
     
-    val CHEMICAL_STORAGE_CELL_1024 = id("chemical_storage_cell_1024")
-    val CHEMICAL_STORAGE_CELL_4096 = id("chemical_storage_cell_4096")
-    val CHEMICAL_STORAGE_CELL_16384 = id("chemical_storage_cell_16384")
-    
     // Disk
     val DISK_256k = id("disk_item_256k")
     val DISK_1024k = id("disk_item_1024k")
@@ -43,17 +39,6 @@ object Ids {
     val DISK_FLUID_4096k = id("disk_fluid_4096k")
     val DISK_FLUID_16384k = id("disk_fluid_16384k")
     val DISK_FLUID_65536k = id("disk_fluid_65536k")
-
-    val DISK_CHEMICAL_HOUSING = id("disk_chemical_housing")
-    val DISK_CHEMICAL_1k = id("disk_chemical_1k")
-    val DISK_CHEMICAL_4k = id("disk_chemical_4k")
-    val DISK_CHEMICAL_16k = id("disk_chemical_16k")
-    val DISK_CHEMICAL_64k = id("disk_chemical_64k")
-    val DISK_CHEMICAL_256k = id("disk_chemical_256k")
-    val DISK_CHEMICAL_1024k = id("disk_chemical_1024k")
-    val DISK_CHEMICAL_4096k = id("disk_chemical_4096k")
-    val DISK_CHEMICAL_16384k = id("disk_chemical_16384k")
-    val DISK_CHEMICAL_65536k = id("disk_chemical_65536k")
     
     // Blocks
     val CRAFTING_STORAGE_1024k = id("1024k_crafting_storage")
@@ -62,5 +47,5 @@ object Ids {
     val CRAFTING_STORAGE_65536k = id("65536k_crafting_storage")
     
 
-    private fun id(id: String): ResourceLocation = ResourceLocation(AEAdditions.ID, id)
+    private fun id(id: String): ResourceLocation = ResourceLocation(AEAdditions.MOD_ID, id)
 }

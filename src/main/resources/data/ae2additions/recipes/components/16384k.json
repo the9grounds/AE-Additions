@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "aba",
+    "cdc",
+    "aca"
+  ],
+  "key": {
+    "a": {
+      "tag": "c:diamonds"
+    },
+    "b": {
+      "item": "ae2:engineering_processor"
+    },
+    "c": {
+      "item": "ae2additions:cell_component_4096"
+    },
+    "d": {
+      "item": "ae2:quartz_glass"
+    }
+  },
+  "result": {
+    "item": "ae2additions:cell_component_16384"
+  }
+}

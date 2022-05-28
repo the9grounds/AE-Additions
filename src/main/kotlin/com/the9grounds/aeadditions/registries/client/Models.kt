@@ -3,9 +3,9 @@ package com.the9grounds.aeadditions.registries.client
 import appeng.client.render.SimpleModelLoader
 import appeng.client.render.crafting.CraftingCubeModel
 import com.the9grounds.aeadditions.AEAdditions
+import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry
+import net.minecraft.client.resources.model.UnbakedModel
 import net.minecraft.resources.ResourceLocation
-import net.minecraftforge.client.model.ModelLoaderRegistry
-import net.minecraftforge.client.model.geometry.IModelGeometry
 import java.util.function.Supplier
 
 object Models {
@@ -16,7 +16,9 @@ object Models {
         addBuiltInModel("block/crafting/65536k_storage_formed") { CraftingCubeModel(AEAdditions.craftingType65536k) }
     }
 
-    private fun <T: IModelGeometry<T>> addBuiltInModel(id: String, modelFactory: Supplier<T>) {
-        ModelLoaderRegistry.registerLoader(ResourceLocation(AEAdditions.ID, id), SimpleModelLoader(modelFactory))
+    private fun <T: UnbakedModel> addBuiltInModel(id: String, modelFactory: Supplier<T>) {
+        ModelLoadingRegistry.INSTANCE.registerResourceProvider { resourceManager ->
+            SimpleModelLoader(ResourceLocation(AEAdditions.MOD_ID, id), modelFactory)
+        }
     }
 }
