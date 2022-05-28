@@ -195,7 +195,7 @@ tasks.register<TaskPublishCurseForge>("publishCurseForge") {
 fun getBuildNumber(): String? {
 
     if (System.getenv("CI") == null) {
-        return "3.0.3"
+        return "0.0.0.1"
     }
 
     if (System.getenv("TAG") != null) {
@@ -223,8 +223,6 @@ fun getBetterVersion(): String {
 
 fun getReleaseType(): String {
     val preReleaseEnv = System.getenv("PRERELEASE")
-    
-    return "release"
 
     if (preReleaseEnv == null) {
         return "beta"
