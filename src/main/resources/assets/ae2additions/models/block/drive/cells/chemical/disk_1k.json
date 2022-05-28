@@ -1,0 +1,6 @@
+{
+  "parent": "ae2:block/drive/drive_cell",
+  "textures": {
+    "cell": "ae2things:model/drive/cells/disk_1k"
+  }
+}

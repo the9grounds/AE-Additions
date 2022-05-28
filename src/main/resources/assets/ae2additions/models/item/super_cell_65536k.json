@@ -1,0 +1,6 @@
+{
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "ae2additions:item/super_cell_65536k"
+    }
+}

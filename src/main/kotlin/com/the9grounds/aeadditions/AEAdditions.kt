@@ -3,6 +3,7 @@ package com.the9grounds.aeadditions
 import appeng.api.stacks.AEKeyType
 import appeng.block.crafting.AbstractCraftingUnitBlock
 import appeng.items.storage.BasicStorageCell
+import com.the9grounds.aeadditions.api.AEAApi
 import com.the9grounds.aeadditions.data.AEAdditionsDataGenerator
 import com.the9grounds.aeadditions.integration.Integration
 import com.the9grounds.aeadditions.integration.Mods
@@ -58,6 +59,9 @@ object AEAdditions {
     private fun commonSetup(event: FMLCommonSetupEvent) {
         AppEng.initCellHandler()
         Cells.init()
+        if (Mods.APPMEK.isEnabled) {
+            AEAApi.registerTypeForSuperCell(MekanismKeyType.TYPE)
+        }
     }
     
     private fun registerItemColors(event: ColorHandlerEvent.Item) {
