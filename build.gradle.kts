@@ -11,7 +11,7 @@ base {
     archivesName.set(archivesBaseName)
 }
 val modVersion: String by project
-version = modVersion
+version = getBetterVersion()
 val mavenGroup: String by project
 group = mavenGroup
 repositories {
@@ -88,8 +88,8 @@ tasks {
     }
     jar { from("LICENSE") { rename { "${it}_${base.archivesName}" } } }
     processResources {
-        inputs.property("version", project.version)
-        filesMatching("fabric.mod.json") { expand(mutableMapOf("version" to project.version)) }
+        inputs.property("version", getBetterVersion())
+        filesMatching("fabric.mod.json") { expand(mutableMapOf("version" to getBetterVersion())) }
     }
     java {
         toolchain { languageVersion.set(JavaLanguageVersion.of(javaVersion.toString())) }
@@ -118,7 +118,7 @@ tasks.register<net.darkhax.curseforgegradle.TaskPublishCurseForge>("publishCurse
 fun getBuildNumber(): String? {
 
     if (System.getenv("CI") == null) {
-        return "3.0.3"
+        return "3.0.4"
     }
 
     if (System.getenv("TAG") != null) {
