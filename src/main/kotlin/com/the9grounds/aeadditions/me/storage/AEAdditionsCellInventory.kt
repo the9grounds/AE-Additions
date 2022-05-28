@@ -25,7 +25,7 @@ import net.minecraft.nbt.Tag
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.ItemStack
 
-class AEAdditionsCellInventory(val cellType: IAEAdditionsStorageCell?, val itemStackLocal: ItemStack, val container: ISaveProvider?) : StorageCell {
+class AEAdditionsCellInventory(val cellType: com.the9grounds.aeadditions.item.storage.StorageCell?, val itemStackLocal: ItemStack, val container: ISaveProvider?) : StorageCell {
     
     private var tagCompound: CompoundTag? = null
     private var maxItemTypes = MAX_ITEM_TYPES
@@ -412,23 +412,26 @@ class AEAdditionsCellInventory(val cellType: IAEAdditionsStorageCell?, val itemS
         // To avoid long-overflow on the extracting callers side
         val extractAmount = Math.min(Int.MAX_VALUE.toLong(), amount)
         val currentAmount: Long? = cellItems!!.get(what)
-        return when {
-            currentAmount == null -> 0
-            currentAmount > 0 -> {
+        
+        if (currentAmount != null && currentAmount > 0L) {
+            if (extractAmount > currentAmount) {
                 if (mode == Actionable.MODULATE) {
                     cellItems!!.remove(what, currentAmount)
                     saveChanges()
                 }
-                currentAmount
-            }
-            else -> {
+
+                return currentAmount
+            } else {
                 if (mode == Actionable.MODULATE) {
                     cellItems!!.put(what!!, currentAmount - extractAmount)
                     saveChanges()
                 }
-                extractAmount
+
+                return extractAmount
             }
         }
+        
+        return 0
     }
 
     override fun getDescription(): Component = itemStackLocal.hoverName

@@ -3,6 +3,7 @@ package com.the9grounds.aeadditions.item.storage
 import appeng.api.config.FuzzyMode
 import appeng.api.stacks.AEKeyType
 import appeng.api.storage.StorageCells
+import appeng.api.storage.cells.ICellWorkbenchItem
 import appeng.items.contents.CellConfig
 import appeng.util.ConfigInventory
 import com.the9grounds.aeadditions.api.IAEAdditionsStorageCell
@@ -21,7 +22,8 @@ import net.minecraft.world.level.Level
 import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.api.distmarker.OnlyIn
 
-class StorageCell(properties: Properties, val component: ItemLike, val housingItem: ItemLike, val _idleDrain: Double, val _bytesPerType: Int, val kiloBytes: Int, val numberOfTypes: Int, val _keyType: AEKeyType) : Item(properties), IAEAdditionsStorageCell {
+class StorageCell(properties: Properties, val component: ItemLike, val housingItem: ItemLike, val _idleDrain: Double, val _bytesPerType: Int, val kiloBytes: Int, val numberOfTypes: Int, val _keyType: AEKeyType) : Item(properties), IAEAdditionsStorageCell,
+    ICellWorkbenchItem {
     override fun getBytes(cellItem: ItemStack): Int = kiloBytes * 1024
 
     override fun getBytesPerType(cellItem: ItemStack): Int  = _bytesPerType

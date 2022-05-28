@@ -2,11 +2,10 @@ package com.the9grounds.aeadditions.api
 
 import appeng.api.stacks.AEKey
 import appeng.api.stacks.AEKeyType
-import appeng.api.storage.cells.ICellWorkbenchItem
 import net.minecraft.world.item.ItemStack
 import javax.annotation.Nonnull
 
-interface IAEAdditionsStorageCell : ICellWorkbenchItem {
+interface IAEAdditionsStorageCell {
 
     /**
      * Basic cell items are limited to a single [AEKeyType].
