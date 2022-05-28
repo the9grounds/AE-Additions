@@ -1,5 +1,6 @@
 package com.the9grounds.aeadditions
 
+import appeng.api.stacks.AEKeyType
 import appeng.block.crafting.AbstractCraftingUnitBlock
 import appeng.items.storage.BasicStorageCell
 import com.the9grounds.aeadditions.data.AEAdditionsDataGenerator
@@ -13,6 +14,7 @@ import com.the9grounds.aeadditions.registries.Cells
 import com.the9grounds.aeadditions.registries.Items
 import com.the9grounds.aeadditions.registries.client.Models
 import io.github.projectet.ae2things.item.DISKDrive
+import me.ramidzkh.mekae2.ae2.MekanismKeyType
 import net.minecraft.client.renderer.ItemBlockRenderTypes
 import net.minecraft.client.renderer.RenderType
 import net.minecraftforge.api.distmarker.Dist
@@ -35,10 +37,10 @@ object AEAdditions {
 
     init {
         initCraftingUnitTypes()
-        Items.init()
-        Blocks.init()
         Items.REGISTRY.register(MOD_BUS)
         Blocks.REGISTRY.register(MOD_BUS)
+        Items.init()
+        Blocks.init()
         
         MOD_BUS.addListener(::commonSetup)
         MOD_BUS.addListener(AEAdditionsDataGenerator::onGatherData)
@@ -50,6 +52,7 @@ object AEAdditions {
     
     fun initClient() {
         MOD_BUS.addListener(::modelRegistryEvent)
+        MOD_BUS.addListener(::registerItemColors)
     }
 
     private fun commonSetup(event: FMLCommonSetupEvent) {
@@ -65,8 +68,13 @@ object AEAdditions {
         itemColors.register(BasicStorageCell::getColor, *storageCells)
         
         if (Mods.AE2THINGS.isEnabled) {
-            val diskCells = Items.ITEMS.filter { it is DiskCell }.toTypedArray()
+            val diskCells = Items.ITEMS.filter { it is DiskCell && it.keyType == AEKeyType.fluids() }.toTypedArray()
             itemColors.register(DISKDrive::getColor, *diskCells)
+
+            if (Mods.APPMEK.isEnabled) {
+                val chemicalDiskCells = Items.ITEMS.filter { it is DiskCell && it.keyType == MekanismKeyType.TYPE }.toTypedArray()
+                itemColors.register(DISKDrive::getColor, *chemicalDiskCells)
+            }
         }
     }
     

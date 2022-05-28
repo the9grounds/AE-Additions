@@ -1,0 +1,27 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "modid": "ae2things",
+          "type": "forge:mod_loaded"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shapeless",
+        "ingredients": [
+          {
+            "item": "ae2additions:disk_fluid_housing"
+          },
+          {
+            "item": "ae2:cell_component_64k"
+          }
+        ],
+        "result": {
+          "item": "ae2additions:disk_fluid_64k"
+        }
+      }
+    }
+  ]
+}

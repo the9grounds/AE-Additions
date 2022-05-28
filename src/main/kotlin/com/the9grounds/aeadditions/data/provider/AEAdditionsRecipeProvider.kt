@@ -4,6 +4,7 @@ import appeng.core.definitions.AEBlocks
 import appeng.core.definitions.AEItems
 import com.the9grounds.aeadditions.AEAdditions
 import com.the9grounds.aeadditions.integration.Mods
+import com.the9grounds.aeadditions.item.storage.DiskCellWithoutMod
 import com.the9grounds.aeadditions.item.storage.StorageCell
 import com.the9grounds.aeadditions.registries.Blocks
 import com.the9grounds.aeadditions.registries.Items
@@ -16,6 +17,9 @@ import net.minecraft.data.recipes.ShapedRecipeBuilder
 import net.minecraft.data.recipes.ShapelessRecipeBuilder
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.tags.ItemTags
+import net.minecraft.tags.TagKey
+import net.minecraft.world.item.Item
+import net.minecraft.world.level.ItemLike
 import net.minecraftforge.common.Tags
 import net.minecraftforge.common.crafting.ConditionalRecipe
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder
@@ -24,9 +28,17 @@ import java.util.function.Consumer
 class AEAdditionsRecipeProvider(generatorIn: DataGenerator) : RecipeProvider(generatorIn), IConditionBuilder {
     
     val osmiumTag = ItemTags.create(ResourceLocation("forge", "ingots/osmium"))
+    val infusedAlloy = ItemTags.create(ResourceLocation("mekanism", "alloys/infused"))
+    val reinforcedAlloy = ItemTags.create(ResourceLocation("mekanism", "alloys/reinforced"))
+    val atomicAlloy = ItemTags.create(ResourceLocation("mekanism", "alloys/atomic"))
+    val osmiumDust = ItemTags.create(ResourceLocation("forge", "dusts/osmium"))
     
     override fun buildCraftingRecipes(consumer: Consumer<FinishedRecipe>) {
         val components = mapOf(
+            1 to AEItems.CELL_COMPONENT_1K,
+            4 to AEItems.CELL_COMPONENT_4K,
+            16 to AEItems.CELL_COMPONENT_16K,
+            64 to AEItems.CELL_COMPONENT_64K,
             256 to AEItems.CELL_COMPONENT_256K,
             1024 to Items.CELL_COMPONENT_1024k,
             4096 to Items.CELL_COMPONENT_4096k,
@@ -72,6 +84,96 @@ class AEAdditionsRecipeProvider(generatorIn: DataGenerator) : RecipeProvider(gen
             16384 to Items.DISK_16384k,
             65536 to Items.DISK_65536k
         )
+        val fluidCells = mapOf(
+            1 to Items.DISK_FLUID_1k,
+            4 to Items.DISK_FLUID_4k,
+            16 to Items.DISK_FLUID_16k,
+            64 to Items.DISK_FLUID_64k,
+            256 to Items.DISK_FLUID_256k,
+            1024 to Items.DISK_FLUID_1024k,
+            4096 to Items.DISK_FLUID_4096k,
+            16384 to Items.DISK_FLUID_16384k,
+            65536 to Items.DISK_FLUID_65536k
+        )
+        val chemicalCells = mapOf(
+            1 to Items.DISK_CHEMICAL_1k,
+            4 to Items.DISK_CHEMICAL_4k,
+            16 to Items.DISK_CHEMICAL_16k,
+            64 to Items.DISK_CHEMICAL_64k,
+            256 to Items.DISK_CHEMICAL_256k,
+            1024 to Items.DISK_CHEMICAL_1024k,
+            4096 to Items.DISK_CHEMICAL_4096k,
+            16384 to Items.DISK_CHEMICAL_16384k,
+            65536 to Items.DISK_CHEMICAL_65536k
+        )
+        
+        for (fluidCell in fluidCells) {
+            ConditionalRecipe.builder().addCondition(
+                modLoaded(Mods.AE2THINGS.modId)
+            ).addRecipe {
+                ShapelessRecipeBuilder.shapeless(fluidCell.value)
+                    .requires(Items.DISK_FLUID_HOUSING)
+                    .requires(components[fluidCell.key])
+                    .unlockedBy("has_item", has(components[fluidCell.key]))
+                    .save(it)
+            }.build(consumer, ResourceLocation(AEAdditions.ID, "cells/fluid/disk-${fluidCell.key}-casing"))
+            ConditionalRecipe.builder().addCondition(
+                modLoaded(Mods.AE2THINGS.modId)
+            ).addRecipe {
+                ShapedRecipeBuilder.shaped(fluidCell.value)
+                    .pattern("aba")
+                    .pattern("bcb")
+                    .pattern("ded")
+                    .define('a', AEBlocks.QUARTZ_GLASS)
+                    .define('b', Tags.Items.DUSTS_REDSTONE)
+                    .define('c', components[fluidCell.key])
+                    .define('d', Tags.Items.INGOTS_NETHERITE)
+                    .define('e', Tags.Items.GEMS_LAPIS)
+                    .unlockedBy("has_item", has(components[fluidCell.key]))
+                    .save(it)
+            }.build(consumer, ResourceLocation(AEAdditions.ID, "cells/fluid/disk-${fluidCell.key}"))
+        }
+
+        for (chemicalCell in chemicalCells) {
+            when(chemicalCell.key) {
+                1, 4, 16 -> registerChemicalDiskRecipe(chemicalCell, infusedAlloy, components, consumer)
+                64, 256, 1024 -> registerChemicalDiskRecipe(chemicalCell, reinforcedAlloy, components, consumer)
+                4096, 16384, 65536 -> registerChemicalDiskRecipe(chemicalCell, atomicAlloy, components, consumer)
+            }
+        }
+
+        ConditionalRecipe.builder().addCondition(
+            and(
+                modLoaded(Mods.AE2THINGS.modId),
+                modLoaded(Mods.APPMEK.modId)
+            )
+        ).addRecipe {
+            ShapedRecipeBuilder.shaped(Items.DISK_CHEMICAL_HOUSING)
+                .pattern("aba")
+                .pattern("b b")
+                .pattern("ded")
+                .define('a', AEBlocks.QUARTZ_GLASS)
+                .define('b', Tags.Items.DUSTS_REDSTONE)
+                .define('d', Tags.Items.INGOTS_NETHERITE)
+                .define('e', osmiumDust)
+                .unlockedBy("has_item", has(Tags.Items.INGOTS_NETHERITE))
+                .save(it)
+        }.build(consumer, ResourceLocation(AEAdditions.ID, "cells/chemical/disk-housing"))
+
+        ConditionalRecipe.builder().addCondition(
+            modLoaded(Mods.AE2THINGS.modId)
+        ).addRecipe {
+            ShapedRecipeBuilder.shaped(Items.DISK_FLUID_HOUSING)
+                .pattern("aba")
+                .pattern("b b")
+                .pattern("ded")
+                .define('a', AEBlocks.QUARTZ_GLASS)
+                .define('b', Tags.Items.DUSTS_REDSTONE)
+                .define('d', Tags.Items.INGOTS_NETHERITE)
+                .define('e', Tags.Items.GEMS_LAPIS)
+                .unlockedBy("has_item", has(Tags.Items.INGOTS_NETHERITE))
+                .save(it)
+        }.build(consumer, ResourceLocation(AEAdditions.ID, "cells/fluid/disk-housing"))
         
         for (diskCell in diskCells) {
             ConditionalRecipe.builder().addCondition(
@@ -180,7 +282,43 @@ class AEAdditionsRecipeProvider(generatorIn: DataGenerator) : RecipeProvider(gen
             }
         }
     }
-    
+
+    private fun registerChemicalDiskRecipe(
+        chemicalCell: Map.Entry<Int, DiskCellWithoutMod>,
+        alloy: TagKey<Item>,
+        components: Map<Int, ItemLike>,
+        consumer: Consumer<FinishedRecipe>
+    ) {
+        ConditionalRecipe.builder().addCondition(
+            and(
+                modLoaded(Mods.AE2THINGS.modId),
+                modLoaded(Mods.APPMEK.modId)
+            )
+        ).addRecipe {
+            ShapelessRecipeBuilder.shapeless(chemicalCell.value)
+                .requires(Items.DISK_CHEMICAL_HOUSING)
+                .requires(components[chemicalCell.key])
+                .requires(alloy)
+                .unlockedBy("has_item", has(components[chemicalCell.key]))
+                .save(it)
+        }.build(consumer, ResourceLocation(AEAdditions.ID, "cells/chemical/disk-${chemicalCell.key}-casing"))
+        ConditionalRecipe.builder().addCondition(
+            modLoaded(Mods.AE2THINGS.modId)
+        ).addRecipe {
+            ShapedRecipeBuilder.shaped(chemicalCell.value)
+                .pattern("aba")
+                .pattern("bcb")
+                .pattern("ded")
+                .define('a', AEBlocks.QUARTZ_GLASS)
+                .define('b', Tags.Items.DUSTS_REDSTONE)
+                .define('c', components[chemicalCell.key])
+                .define('d', Tags.Items.INGOTS_NETHERITE)
+                .define('e', alloy)
+                .unlockedBy("has_item", has(components[chemicalCell.key]))
+                .save(it)
+        }.build(consumer, ResourceLocation(AEAdditions.ID, "cells/chemical/disk-${chemicalCell.key}"))
+    }
+
     private fun addConditionalRecipeForMekanism(resourcePath: String, consumer: Consumer<FinishedRecipe>, factory: (Consumer<FinishedRecipe>) -> Unit) {
         ConditionalRecipe.builder().addCondition(
             modLoaded("appmek")

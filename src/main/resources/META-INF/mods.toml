@@ -46,3 +46,9 @@ mandatory=false
 ordering="AFTER"
 versionRange="[1.1.1,)"
 side="BOTH"
+[[dependencies.ae2additions]]
+modId="ae2things"
+mandatory=false
+ordering="AFTER"
+versionRange="[1.0.0,)"
+side="BOTH"

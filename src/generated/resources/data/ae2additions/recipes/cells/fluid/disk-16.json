@@ -1,0 +1,41 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "modid": "ae2things",
+          "type": "forge:mod_loaded"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shaped",
+        "pattern": [
+          "aba",
+          "bcb",
+          "ded"
+        ],
+        "key": {
+          "a": {
+            "item": "ae2:quartz_glass"
+          },
+          "b": {
+            "tag": "forge:dusts/redstone"
+          },
+          "c": {
+            "item": "ae2:cell_component_16k"
+          },
+          "d": {
+            "tag": "forge:ingots/netherite"
+          },
+          "e": {
+            "tag": "forge:gems/lapis"
+          }
+        },
+        "result": {
+          "item": "ae2additions:disk_fluid_16k"
+        }
+      }
+    }
+  ]
+}

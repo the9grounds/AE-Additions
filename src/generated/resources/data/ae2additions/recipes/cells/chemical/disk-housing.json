@@ -1,0 +1,47 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "values": [
+            {
+              "modid": "ae2things",
+              "type": "forge:mod_loaded"
+            },
+            {
+              "modid": "appmek",
+              "type": "forge:mod_loaded"
+            }
+          ],
+          "type": "forge:and"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shaped",
+        "pattern": [
+          "aba",
+          "b b",
+          "ded"
+        ],
+        "key": {
+          "a": {
+            "item": "ae2:quartz_glass"
+          },
+          "b": {
+            "tag": "forge:dusts/redstone"
+          },
+          "d": {
+            "tag": "forge:ingots/netherite"
+          },
+          "e": {
+            "tag": "forge:dusts/osmium"
+          }
+        },
+        "result": {
+          "item": "ae2additions:disk_chemical_housing"
+        }
+      }
+    }
+  ]
+}

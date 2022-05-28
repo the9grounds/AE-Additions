@@ -9,6 +9,7 @@ import com.the9grounds.aeadditions.integration.Mods
 import com.the9grounds.aeadditions.item.storage.DiskCell
 import com.the9grounds.aeadditions.item.storage.DiskCellWithoutMod
 import com.the9grounds.aeadditions.item.storage.StorageCell
+import io.github.projectet.ae2things.item.AETItems
 import me.ramidzkh.mekae2.AMItems
 import me.ramidzkh.mekae2.ae2.MekanismKeyType
 import net.minecraft.resources.ResourceLocation
@@ -18,6 +19,7 @@ import net.minecraft.world.level.ItemLike
 import net.minecraftforge.registries.ForgeRegistries
 import thedarkcolour.kotlinforforge.forge.KDeferredRegister
 import thedarkcolour.kotlinforforge.forge.registerObject
+import kotlin.properties.ReadOnlyProperty
 
 object Items {
     val REGISTRY = KDeferredRegister.create(ForgeRegistries.ITEMS, AEAdditions.ID)
@@ -38,12 +40,34 @@ object Items {
     val FLUID_STORAGE_CELL_4096k = createItem(Ids.FLUID_STORAGE_CELL_4096) { properties ->  StorageCell(properties.stacksTo(1).rarity(Rarity.EPIC), CELL_COMPONENT_4096k, AEItems.FLUID_CELL_HOUSING, 5.0, 8192, 4096, 15, AEKeyType.fluids()) }
     val FLUID_STORAGE_CELL_16384k = createItem(Ids.FLUID_STORAGE_CELL_16384) { properties ->  StorageCell(properties.stacksTo(1).rarity(Rarity.EPIC), CELL_COMPONENT_16384k, AEItems.FLUID_CELL_HOUSING, 6.0, 32768, 16384, 20, AEKeyType.fluids()) }
     
-    val DISK_256k = createItem(Ids.DISK_256k, { loadDiskCell(it.stacksTo(1), AEItems.CELL_COMPONENT_256K, 256, 3.0) }, Mods.AE2THINGS)
-    val DISK_1024k = createItem(Ids.DISK_1024k, { loadDiskCell(it.stacksTo(1), CELL_COMPONENT_1024k, 1024, 5.0) }, Mods.AE2THINGS)
-    val DISK_4096k = createItem(Ids.DISK_4096k, { loadDiskCell(it.stacksTo(1).rarity(Rarity.UNCOMMON), CELL_COMPONENT_4096k, 4096, 8.0) }, Mods.AE2THINGS)
-    val DISK_16384k = createItem(Ids.DISK_16384k, { loadDiskCell(it.stacksTo(1).rarity(Rarity.RARE), CELL_COMPONENT_16384k, 16384, 10.0) }, Mods.AE2THINGS)
-    val DISK_65536k = createItem(Ids.DISK_65536k, { loadDiskCell(it.stacksTo(1).rarity(Rarity.EPIC), CELL_COMPONENT_65536k, 65536, 15.0) }, Mods.AE2THINGS)
+    val DISK_FLUID_HOUSING = createItem(Ids.DISK_FLUID_HOUSING, { Item(it.stacksTo(64))}, Mods.AE2THINGS)
+    val DISK_CHEMICAL_HOUSING = createItem(Ids.DISK_CHEMICAL_HOUSING, { Item(it.stacksTo(64))}, Mods.AE2THINGS, Mods.APPMEK)
     
+    val DISK_256k by createItemForMod(Ids.DISK_256k, { loadDiskCell(it.stacksTo(1), AEKeyType.items(), AEItems.CELL_COMPONENT_256K, getAEThingsHousing(),256, 3.0) }, Mods.AE2THINGS)
+    val DISK_1024k by createItemForMod(Ids.DISK_1024k, { loadDiskCell(it.stacksTo(1), AEKeyType.items(), CELL_COMPONENT_1024k, getAEThingsHousing(), 1024, 5.0) }, Mods.AE2THINGS)
+    val DISK_4096k by createItemForMod(Ids.DISK_4096k, { loadDiskCell(it.stacksTo(1).rarity(Rarity.UNCOMMON), AEKeyType.items(), CELL_COMPONENT_4096k, getAEThingsHousing(), 4096, 8.0) }, Mods.AE2THINGS)
+    val DISK_16384k by createItemForMod(Ids.DISK_16384k, { loadDiskCell(it.stacksTo(1).rarity(Rarity.RARE), AEKeyType.items(), CELL_COMPONENT_16384k, getAEThingsHousing(), 16384, 10.0) }, Mods.AE2THINGS)
+    val DISK_65536k by createItemForMod(Ids.DISK_65536k, { loadDiskCell(it.stacksTo(1).rarity(Rarity.EPIC), AEKeyType.items(), CELL_COMPONENT_65536k, getAEThingsHousing(), 65536, 15.0) }, Mods.AE2THINGS)
+    
+    val DISK_FLUID_1k = createItem(Ids.DISK_FLUID_1k, { loadDiskCell(it.stacksTo(1), AEKeyType.fluids(), AEItems.CELL_COMPONENT_1K, DISK_FLUID_HOUSING, 1, .5)}, Mods.AE2THINGS)
+    val DISK_FLUID_4k = createItem(Ids.DISK_FLUID_4k, { loadDiskCell(it.stacksTo(1), AEKeyType.fluids(), AEItems.CELL_COMPONENT_4K, DISK_FLUID_HOUSING, 4, 1.0)}, Mods.AE2THINGS)
+    val DISK_FLUID_16k = createItem(Ids.DISK_FLUID_16k, { loadDiskCell(it.stacksTo(1), AEKeyType.fluids(), AEItems.CELL_COMPONENT_16K, DISK_FLUID_HOUSING, 16, 1.5)}, Mods.AE2THINGS)
+    val DISK_FLUID_64k = createItem(Ids.DISK_FLUID_64k, { loadDiskCell(it.stacksTo(1), AEKeyType.fluids(), AEItems.CELL_COMPONENT_64K, DISK_FLUID_HOUSING, 64, 2.0)}, Mods.AE2THINGS)
+    val DISK_FLUID_256k = createItem(Ids.DISK_FLUID_256k, { loadDiskCell(it.stacksTo(1), AEKeyType.fluids(), AEItems.CELL_COMPONENT_256K, DISK_FLUID_HOUSING, 256, 4.0)}, Mods.AE2THINGS)
+    val DISK_FLUID_1024k = createItem(Ids.DISK_FLUID_1024k, { loadDiskCell(it.stacksTo(1), AEKeyType.fluids(), CELL_COMPONENT_1024k, DISK_FLUID_HOUSING, 1024, 6.0)}, Mods.AE2THINGS)
+    val DISK_FLUID_4096k = createItem(Ids.DISK_FLUID_4096k, { loadDiskCell(it.stacksTo(1), AEKeyType.fluids(), CELL_COMPONENT_4096k, DISK_FLUID_HOUSING, 4096, 8.0)}, Mods.AE2THINGS)
+    val DISK_FLUID_16384k = createItem(Ids.DISK_FLUID_16384k, { loadDiskCell(it.stacksTo(1), AEKeyType.fluids(), CELL_COMPONENT_16384k, DISK_FLUID_HOUSING, 16384, 10.0)}, Mods.AE2THINGS)
+    val DISK_FLUID_65536k = createItem(Ids.DISK_FLUID_65536k, { loadDiskCell(it.stacksTo(1), AEKeyType.fluids(), CELL_COMPONENT_65536k, DISK_FLUID_HOUSING, 65536, 15.0)}, Mods.AE2THINGS)
+
+    val DISK_CHEMICAL_1k = createItem(Ids.DISK_CHEMICAL_1k, { loadDiskCell(it.stacksTo(1), AEKeyType.fluids(), AEItems.CELL_COMPONENT_1K, DISK_CHEMICAL_HOUSING, 1, .5)}, Mods.AE2THINGS, Mods.APPMEK)
+    val DISK_CHEMICAL_4k = createItem(Ids.DISK_CHEMICAL_4k, { loadDiskCell(it.stacksTo(1), AEKeyType.fluids(), AEItems.CELL_COMPONENT_4K, DISK_CHEMICAL_HOUSING, 4, 1.0)}, Mods.AE2THINGS, Mods.APPMEK)
+    val DISK_CHEMICAL_16k = createItem(Ids.DISK_CHEMICAL_16k, { loadDiskCell(it.stacksTo(1), AEKeyType.fluids(), AEItems.CELL_COMPONENT_16K, DISK_CHEMICAL_HOUSING, 16, 1.5)}, Mods.AE2THINGS, Mods.APPMEK)
+    val DISK_CHEMICAL_64k = createItem(Ids.DISK_CHEMICAL_64k, { loadDiskCell(it.stacksTo(1), AEKeyType.fluids(), AEItems.CELL_COMPONENT_64K, DISK_CHEMICAL_HOUSING, 64, 2.0)}, Mods.AE2THINGS, Mods.APPMEK)
+    val DISK_CHEMICAL_256k = createItem(Ids.DISK_CHEMICAL_256k, { loadDiskCell(it.stacksTo(1), AEKeyType.fluids(), AEItems.CELL_COMPONENT_256K, DISK_CHEMICAL_HOUSING, 256, 4.0)}, Mods.AE2THINGS, Mods.APPMEK)
+    val DISK_CHEMICAL_1024k = createItem(Ids.DISK_CHEMICAL_1024k, { loadDiskCell(it.stacksTo(1), AEKeyType.fluids(), CELL_COMPONENT_1024k, DISK_CHEMICAL_HOUSING, 1024, 6.0)}, Mods.AE2THINGS, Mods.APPMEK)
+    val DISK_CHEMICAL_4096k = createItem(Ids.DISK_CHEMICAL_4096k, { loadDiskCell(it.stacksTo(1), AEKeyType.fluids(), CELL_COMPONENT_4096k, DISK_CHEMICAL_HOUSING, 4096, 8.0)}, Mods.AE2THINGS, Mods.APPMEK)
+    val DISK_CHEMICAL_16384k = createItem(Ids.DISK_CHEMICAL_16384k, { loadDiskCell(it.stacksTo(1), AEKeyType.fluids(), CELL_COMPONENT_16384k, DISK_CHEMICAL_HOUSING, 16384, 10.0)}, Mods.AE2THINGS, Mods.APPMEK)
+    val DISK_CHEMICAL_65536k = createItem(Ids.DISK_CHEMICAL_65536k, { loadDiskCell(it.stacksTo(1), AEKeyType.fluids(), CELL_COMPONENT_65536k, DISK_CHEMICAL_HOUSING, 65536, 15.0)}, Mods.AE2THINGS, Mods.APPMEK)
     
     val CHEMICAL_STORAGE_CELL_1024k by REGISTRY.registerObject(Ids.CHEMICAL_STORAGE_CELL_1024.path) {
         constructItem({ properties ->  
@@ -79,22 +103,26 @@ object Items {
 
     fun <T: Item> createItem(id: ResourceLocation, factory: (Item.Properties) -> T): T {
         val item = constructItem(factory, id)
-
         REGISTRY.registerObject(id.path) {
             item
         }
-
+        
         return item
     }
 
-    fun <T: Item> createItem(id: ResourceLocation, factory: (Item.Properties) -> T, requiredMod: Mods): T {
-        val item = constructItem(factory, id, requiredMod)
-
+    fun <T: Item> createItem(id: ResourceLocation, factory: (Item.Properties) -> T, vararg requiredMod: Mods): T {
+        val item = constructItem(factory, id, *requiredMod)
         REGISTRY.registerObject(id.path) {
             item
         }
-
+        
         return item
+    }
+
+    fun <T: Item> createItemForMod(id: ResourceLocation, factory: (Item.Properties) -> T, vararg requiredMod: Mods): ReadOnlyProperty<Any?, T> {
+        return REGISTRY.registerObject(id.path) {
+            constructItem(factory, id, *requiredMod)
+        }
     }
     
     private fun <T: Item> constructItem(
@@ -117,11 +145,19 @@ object Items {
     private fun <T : Item> constructItem(
         factory: (Item.Properties) -> T,
         id: ResourceLocation,
-        requiredMod: Mods
+        vararg requiredMod: Mods
     ): T {
         val props = Item.Properties()
         
-        if (requiredMod.isEnabled) {
+        var shouldShow = true
+        
+        requiredMod.forEach { 
+            if (!it.isEnabled) {
+                shouldShow = false
+            }
+        }
+        
+        if (shouldShow) {
             props.tab(CreativeTab.group)
         }
 
@@ -136,31 +172,31 @@ object Items {
         return item
     }
 
-    fun <T: Item> createItem(id: ResourceLocation, factory: (Item.Properties) -> T, registry: KDeferredRegister<Item>): T {
-        val item = constructItem(factory, id)
-        
-        registry.registerObject(id.path) {
-            item
+    fun <T: Item> createItem(id: ResourceLocation, factory: (Item.Properties) -> T, registry: KDeferredRegister<Item>): ReadOnlyProperty<Any?, T> {
+        return registry.registerObject(id.path) {
+            constructItem(factory, id)
         }
-        
-        return item
     }
 
-    fun <T: Item> createItem(id: ResourceLocation, factory: (Item.Properties) -> T, registry: KDeferredRegister<Item>, requiredMod: Mods): T {
-        val item = constructItem(factory, id, requiredMod)
-
-        registry.registerObject(id.path) {
-            item
+    fun <T: Item> createItem(id: ResourceLocation, factory: (Item.Properties) -> T, registry: KDeferredRegister<Item>, vararg requiredMod: Mods): ReadOnlyProperty<Any?, T> {
+        return registry.registerObject(id.path) {
+            constructItem(factory, id, *requiredMod)
         }
-
-        return item
     }
     
-    fun loadDiskCell(props: Item.Properties, component: ItemLike, kiloBytes: Int, idleDrain: Double): DiskCellWithoutMod {
+    fun loadDiskCell(props: Item.Properties, keyType: AEKeyType, component: ItemLike, housing: ItemLike, kiloBytes: Int, idleDrain: Double): DiskCellWithoutMod {
         return if (Mods.AE2THINGS.isEnabled) {
-            DiskCell(props, component, kiloBytes, idleDrain)
+            DiskCell(props, keyType, component, housing, kiloBytes, idleDrain)
         } else {
             DiskCellWithoutMod(props)
+        }
+    }
+    
+    private fun getAEThingsHousing(): Item {
+        return if (Mods.AE2THINGS.isEnabled) {
+            AETItems.DISK_HOUSING.get()
+        } else {
+            DISK_FLUID_HOUSING
         }
     }
 }

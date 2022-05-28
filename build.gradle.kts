@@ -195,7 +195,7 @@ tasks.register<TaskPublishCurseForge>("publishCurseForge") {
 fun getBuildNumber(): String? {
 
     if (System.getenv("CI") == null) {
-        return "0.0.0.1"
+        return "3.0.3"
     }
 
     if (System.getenv("TAG") != null) {
@@ -223,6 +223,8 @@ fun getBetterVersion(): String {
 
 fun getReleaseType(): String {
     val preReleaseEnv = System.getenv("PRERELEASE")
+    
+    return "release"
 
     if (preReleaseEnv == null) {
         return "beta"
@@ -248,13 +250,13 @@ sourceSets {
     }
 }
 
-//tasks.create("copyResourceToClasses", Copy::class) {
-//    tasks.classes.get().dependsOn(this)
-//    dependsOn(tasks.processResources.get())
-//    onlyIf { gradle.taskGraph.hasTask(tasks.getByName("prepareRuns")) }
-//    into("$buildDir/classes/kotlin/main")
-//    from(tasks.processResources.get().destinationDir)
-//}
+tasks.create("copyResourceToClasses", Copy::class) {
+    tasks.classes.get().dependsOn(this)
+    dependsOn(tasks.processResources.get())
+    onlyIf { gradle.taskGraph.hasTask(tasks.getByName("prepareRuns")) }
+    into("$buildDir/classes/kotlin/main")
+    from(tasks.processResources.get().destinationDir)
+}
 
 configure<org.spongepowered.asm.gradle.plugins.MixinExtension> {
     add(sourceSets.main.get(), "ae2additions.refmap.json")
