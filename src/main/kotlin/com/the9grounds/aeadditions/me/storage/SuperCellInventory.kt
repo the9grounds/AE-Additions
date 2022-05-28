@@ -1,7 +1,6 @@
 package com.the9grounds.aeadditions.me.storage
 
 import appeng.api.config.Actionable
-import appeng.api.config.FuzzyMode
 import appeng.api.config.IncludeExclude
 import appeng.api.networking.security.IActionSource
 import appeng.api.stacks.AEItemKey
@@ -11,24 +10,20 @@ import appeng.api.stacks.KeyCounter
 import appeng.api.storage.cells.CellState
 import appeng.api.storage.cells.ISaveProvider
 import appeng.api.storage.cells.StorageCell
-import appeng.api.upgrades.IUpgradeInventory
 import appeng.core.AELog
-import appeng.core.definitions.AEItems
-import appeng.util.ConfigInventory
 import appeng.util.prioritylist.FuzzyPriorityList
 import appeng.util.prioritylist.IPartitionList
-import com.the9grounds.aeadditions.api.IAEAdditionsStorageCell
-import com.the9grounds.aeadditions.integration.Mods
+import com.the9grounds.aeadditions.api.AEAApi
+import com.the9grounds.aeadditions.item.storage.SuperStorageCell
 import it.unimi.dsi.fastutil.longs.LongArrayList
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap
-import me.ramidzkh.mekae2.ae2.MekanismKeyType
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.nbt.Tag
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.ItemStack
 
-class SuperCellInventory(val cell: IAEAdditionsStorageCell?, val itemStackLocal: ItemStack, val container: ISaveProvider?) : StorageCell {
+class SuperCellInventory(val cell: SuperStorageCell?, val itemStackLocal: ItemStack, val container: ISaveProvider?) : StorageCell {
     
     private var tagCompound: CompoundTag? = null
     private var maxItemTypes = MAX_ITEM_TYPES
@@ -39,7 +34,7 @@ class SuperCellInventory(val cell: IAEAdditionsStorageCell?, val itemStackLocal:
         private set
     var partitionListMode: IncludeExclude? = null
     private set
-    private var maxItemsPerType: Long = 0
+    private var maxItemsPerType: Long = Long.MAX_VALUE
     private var hasVoidUpgrade = false
     protected var cellItems: MutableMap<AEKey, Long>? = null
     get() {
@@ -51,13 +46,15 @@ class SuperCellInventory(val cell: IAEAdditionsStorageCell?, val itemStackLocal:
     }
     protected var itemsPerByte = 0
     private var isPersisted = true
+    
+    private var computedUsedBytes = 0L
+    
+    var numberOfTypesByKeyType = mutableMapOf<AEKeyType, Int>()
+    var storedItemCountByKeyType = mutableMapOf<AEKeyType, Long>()
+    val cellTypes = AEAApi.superCellTypes
 
     companion object
     {
-        val cellTypes = mutableListOf(
-            AEKeyType.items(),
-            AEKeyType.fluids()
-        )
         private val MAX_ITEM_TYPES = 1000
         private val ITEM_TYPE_TAG = "it"
         private val ITEM_COUNT_TAG = "ic"
@@ -69,26 +66,23 @@ class SuperCellInventory(val cell: IAEAdditionsStorageCell?, val itemStackLocal:
         private val ITEM_SLOT_COUNT_KEYS = arrayOfNulls<String>(MAX_ITEM_TYPES)
 
         init {
-            if (Mods.APPMEK.isEnabled) {
-                cellTypes.add(MekanismKeyType.TYPE)
-            }
             for (x in 0 until MAX_ITEM_TYPES) {
                 ITEM_SLOT_KEYS[x] = ITEM_SLOT + x
                 ITEM_SLOT_COUNT_KEYS[x] = ITEM_SLOT_COUNT + x
             }
         }
         
-        private fun getStorageCell(input: ItemStack?): IAEAdditionsStorageCell? {
-            if (input != null && input.item is com.the9grounds.aeadditions.item.storage.StorageCell) {
-                return input.item as com.the9grounds.aeadditions.item.storage.StorageCell
+        private fun getStorageCell(input: ItemStack?): SuperStorageCell? {
+            if (input != null && input.item is SuperStorageCell) {
+                return input.item as SuperStorageCell
             }
             
             return null
         }
         
-        private fun getStorageCell(itemKey: AEItemKey): IAEAdditionsStorageCell? {
-            if (itemKey.item is com.the9grounds.aeadditions.item.storage.StorageCell) {
-                return itemKey.item as com.the9grounds.aeadditions.item.storage.StorageCell
+        private fun getStorageCell(itemKey: AEItemKey): SuperStorageCell? {
+            if (itemKey.item is SuperStorageCell) {
+                return itemKey.item as SuperStorageCell
             }
             
             return null
@@ -107,7 +101,7 @@ class SuperCellInventory(val cell: IAEAdditionsStorageCell?, val itemStackLocal:
         
         fun createInventory(itemStack: ItemStack, container: ISaveProvider?): SuperCellInventory? {
             val item = itemStack.item
-            if (!(item is com.the9grounds.aeadditions.item.storage.StorageCell)) {
+            if (item !is SuperStorageCell) {
                 return null
             }
             
@@ -120,6 +114,9 @@ class SuperCellInventory(val cell: IAEAdditionsStorageCell?, val itemStackLocal:
     }
 
     init {
+        for (keyType in cellTypes) {
+            numberOfTypesByKeyType[keyType] = 0
+        }
         maxItemTypes = this.cell!!.getTotalTypes(itemStackLocal)
         if (maxItemTypes > MAX_ITEM_TYPES) {
             maxItemTypes = MAX_ITEM_TYPES
@@ -130,27 +127,8 @@ class SuperCellInventory(val cell: IAEAdditionsStorageCell?, val itemStackLocal:
         tagCompound = itemStackLocal.orCreateTag
         storedItems = tagCompound!!.getShort(ITEM_TYPE_TAG)
         storedItemCount = tagCompound!!.getLong(ITEM_COUNT_TAG)
+        computedUsedBytes = tagCompound!!.getLong("usedBytes")
         cellItems = null
-
-
-        // Updates the partition list and mode based on installed upgrades and the configured filter.
-        val builder = IPartitionList.builder()
-
-        val upgrades = getUpgradesInventory()
-        val config = getConfigInventory()
-
-        val hasInverter = upgrades!!.isInstalled(AEItems.INVERTER_CARD)
-        val isFuzzy = upgrades.isInstalled(AEItems.FUZZY_CARD)
-        if (isFuzzy) {
-            builder.fuzzyMode(getFuzzyMode())
-        }
-
-        builder.addAll(config!!.keySet())
-
-        partitionListMode = if (hasInverter) IncludeExclude.BLACKLIST else IncludeExclude.WHITELIST
-        partitionList = builder.build()
-
-        this.hasVoidUpgrade = upgrades.isInstalled(AEItems.VOID_CARD)
     }
 
     override fun persist() {
@@ -159,6 +137,8 @@ class SuperCellInventory(val cell: IAEAdditionsStorageCell?, val itemStackLocal:
         }
 
         var itemCount: Long = 0
+        var localItemCountByKeyType = mutableMapOf<AEKeyType, Long>()
+        var localNumberOfTypesByKeyType = mutableMapOf<AEKeyType, Int>()
 
         // add new pretty stuff...
 
@@ -169,9 +149,14 @@ class SuperCellInventory(val cell: IAEAdditionsStorageCell?, val itemStackLocal:
         for (entry in cellItems!!) {
             val amount = entry.value
             if (amount > 0) {
-                itemCount += amount
+                val currentAmount = localItemCountByKeyType[entry.key.type] ?: 0
+                localItemCountByKeyType[entry.key.type] = currentAmount + amount
                 keys.add(entry.key.toTagGeneric())
                 amounts.add(amount)
+                
+                val currentNumber = localNumberOfTypesByKeyType[entry.key.type] ?: 0
+
+                localNumberOfTypesByKeyType[entry.key.type] = currentNumber + 1
             }
         }
 
@@ -186,10 +171,22 @@ class SuperCellInventory(val cell: IAEAdditionsStorageCell?, val itemStackLocal:
         storedItems = cellItems!!.size.toShort()
 
         storedItemCount = itemCount
-        if (itemCount == 0L) {
+        storedItemCountByKeyType = localItemCountByKeyType
+        numberOfTypesByKeyType = localNumberOfTypesByKeyType
+        
+        var localComputedUsedBytes = 0L
+        
+        for (keyType in cellTypes) {
+            localComputedUsedBytes += getUsedBytesForType(keyType)
+        }
+        
+        computedUsedBytes = localComputedUsedBytes
+        
+        if (computedUsedBytes == 0L) {
             getTag()!!.remove(ITEM_COUNT_TAG)
         } else {
-            getTag()!!.putLong(ITEM_COUNT_TAG, itemCount)
+            getTag()!!.putLong(ITEM_COUNT_TAG, computedUsedBytes)
+            getTag()!!.putLong("usedBytes", computedUsedBytes)
         }
 
         isPersisted = true
@@ -204,11 +201,8 @@ class SuperCellInventory(val cell: IAEAdditionsStorageCell?, val itemStackLocal:
 
     protected open fun saveChanges() {
         // recalculate values
-        storedItems = cellItems!!.size.toShort()
-        storedItemCount = 0
-        for (storedAmount in cellItems!!.values) {
-            storedItemCount += storedAmount!!
-        }
+        recalculateValues()
+
         isPersisted = false
         if (container != null) {
             container.saveChanges()
@@ -216,6 +210,33 @@ class SuperCellInventory(val cell: IAEAdditionsStorageCell?, val itemStackLocal:
             // if there is no ISaveProvider, store to NBT immediately
             persist()
         }
+    }
+
+    private fun recalculateValues() {
+        storedItems = cellItems!!.size.toShort()
+        storedItemCount = 0
+        var localItemCountByKeyType = mutableMapOf<AEKeyType, Long>()
+        var localNumberOfTypesByKeyType = mutableMapOf<AEKeyType, Int>()
+
+        for (entry in cellItems!!) {
+            val currentAmount = localItemCountByKeyType[entry.key.type] ?: 0
+            localItemCountByKeyType[entry.key.type] = currentAmount + entry.value
+            storedItemCount += entry.value!!
+            val currentNumber = localNumberOfTypesByKeyType[entry.key.type] ?: 0
+
+            localNumberOfTypesByKeyType[entry.key.type] = currentNumber + 1
+        }
+
+        storedItemCountByKeyType = localItemCountByKeyType
+        numberOfTypesByKeyType = localNumberOfTypesByKeyType
+
+        var localComputedUsedBytes = 0L
+
+        for (keyType in cellTypes) {
+            localComputedUsedBytes += getUsedBytesForType(keyType)
+        }
+
+        computedUsedBytes = localComputedUsedBytes
     }
 
     private fun loadCellItems() {
@@ -237,6 +258,7 @@ class SuperCellInventory(val cell: IAEAdditionsStorageCell?, val itemStackLocal:
                 cellItems!!.put(key, amount)
             }
         }
+        recalculateValues()
         if (corruptedTag) {
             saveChanges()
         }
@@ -252,37 +274,19 @@ class SuperCellInventory(val cell: IAEAdditionsStorageCell?, val itemStackLocal:
         return cell!!.getIdleDrain()
     }
 
-    open fun getFuzzyMode(): FuzzyMode? {
-        return cell!!.getFuzzyMode(itemStackLocal)
-    }
-
-    open fun getConfigInventory(): ConfigInventory? {
-        return cell!!.getConfigInventory(itemStackLocal)
-    }
-
-    open fun getUpgradesInventory(): IUpgradeInventory? {
-        return cell!!.getUpgrades(itemStackLocal)
-    }
-
     open fun getBytesPerType(): Int {
         return cell!!.getBytesPerType(itemStackLocal)
     }
 
-    open fun canHoldNewItem(): Boolean {
-        val bytesFree = getFreeBytes()
-        return ((bytesFree > getBytesPerType()
-                || bytesFree == getBytesPerType().toLong() && getUnusedItemCount() > 0)
-                && getRemainingItemTypes() > 0)
+    fun canHoldNewItem(): Boolean {
+        return getTotalBytes() > getUsedBytes();
     }
-
-    val isPreformatted: Boolean
-    get() = !partitionList!!.isEmpty
 
     fun getTotalBytes(): Long {
         return cell!!.getBytes(this.itemStackLocal).toLong()
     }
 
-    open fun getFreeBytes(): Long {
+    fun getFreeBytes(): Long {
         return getTotalBytes() - getUsedBytes()
     }
 
@@ -291,7 +295,16 @@ class SuperCellInventory(val cell: IAEAdditionsStorageCell?, val itemStackLocal:
     }
 
     open fun getStoredItemCount(): Long {
+        var storedItemCount = 0L
+        for (keyType in storedItemCountByKeyType) {
+            storedItemCount += keyType.value
+        }
+        
         return storedItemCount
+    }
+
+    fun getStoredItemCountForKeyType(keyType: AEKeyType): Long {
+        return storedItemCountByKeyType[keyType] ?: 0L;
     }
 
     open fun getStoredItemTypes(): Long {
@@ -304,14 +317,22 @@ class SuperCellInventory(val cell: IAEAdditionsStorageCell?, val itemStackLocal:
         return if (basedOnStorage > baseOnTotal) baseOnTotal else basedOnStorage
     }
 
+    fun getUsedBytesForType(keyType: AEKeyType): Long {
+        val bytesForItemCount = (getStoredItemCountForKeyType(keyType) + this.getUnusedItemCountForKeyType(keyType)) / keyType.amountPerByte
+        return (numberOfTypesByKeyType[keyType]?: 0) * this.getBytesPerType() + bytesForItemCount
+    }
+
     fun getUsedBytes(): Long {
-        val bytesForItemCount = (getStoredItemCount() + this.getUnusedItemCount()) / itemsPerByte
-        return this.getStoredItemTypes() * this.getBytesPerType() + bytesForItemCount
+        return computedUsedBytes
     }
 
     fun getRemainingItemCount(): Long {
         val remaining = this.getFreeBytes() * itemsPerByte + this.getUnusedItemCount()
         return if (remaining > 0) remaining else 0
+    }
+    
+    fun getRemainingItemCountForKeyType(keyType: AEKeyType): Long {
+        return this.getFreeBytes() * keyType.amountPerByte + this.getUnusedItemCountForKeyType(keyType) ?: 0L
     }
 
     fun getUnusedItemCount(): Int {
@@ -321,6 +342,13 @@ class SuperCellInventory(val cell: IAEAdditionsStorageCell?, val itemStackLocal:
         } else itemsPerByte - div
     }
 
+    fun getUnusedItemCountForKeyType(keyType: AEKeyType): Int {
+        val div = (getStoredItemCountForKeyType(keyType) % 8).toInt()
+        return if (div == 0) {
+            0
+        } else keyType.amountPerByte - div
+    }
+
     override fun getStatus(): CellState? {
         if (getStoredItemTypes() == 0L) {
             return CellState.EMPTY
@@ -328,9 +356,7 @@ class SuperCellInventory(val cell: IAEAdditionsStorageCell?, val itemStackLocal:
         if (canHoldNewItem()) {
             return CellState.NOT_EMPTY
         }
-        return if (getRemainingItemCount() > 0) {
-            CellState.TYPES_FULL
-        } else CellState.FULL
+        return CellState.FULL
     }
 
     private fun isStorageCell(key: AEItemKey): Boolean {
@@ -339,13 +365,6 @@ class SuperCellInventory(val cell: IAEAdditionsStorageCell?, val itemStackLocal:
     }
 
     override fun insert(what: AEKey?, amount: Long, mode: Actionable?, source: IActionSource?): Long {
-        if (!partitionList!!.matchesFilter(what, partitionListMode)) {
-            return 0
-        }
-        if (cell!!.isBlackListed(itemStackLocal, what)) {
-            return 0
-        }
-
         // Run regular insert logic and then apply void upgrade to the returned value.
         val inserted = innerInsert(what!!, amount, mode!!, source!!)
         return if (hasVoidUpgrade) amount else inserted
@@ -362,21 +381,21 @@ class SuperCellInventory(val cell: IAEAdditionsStorageCell?, val itemStackLocal:
         }
         
         val currentAmount: Long = cellItems!!.get(what)?: 0
-        var remainingItemCount = getRemainingItemCount()
+        var remainingItemCount = getRemainingItemCountForKeyType(what.type)
 
         // Deduct the required storage for a new type if the type is new
 
         // Deduct the required storage for a new type if the type is new
-//        if (currentAmount <= 0) {
-//            if (!canHoldNewItem()) {
-//                // No space for more types
-//                return 0
-//            }
-//            remainingItemCount -= getBytesPerType().toLong() * keyType!!.amountPerByte
-//            if (remainingItemCount <= 0) {
-//                return 0
-//            }
-//        }
+        if (currentAmount <= 0) {
+            if (!canHoldNewItem()) {
+                // No space for more types
+                return 0
+            }
+            remainingItemCount -= getBytesPerType().toLong() * what.type!!.amountPerByte
+            if (remainingItemCount <= 0) {
+                return 0
+            }
+        }
 
         // Apply max items per type
 
@@ -401,23 +420,25 @@ class SuperCellInventory(val cell: IAEAdditionsStorageCell?, val itemStackLocal:
         // To avoid long-overflow on the extracting callers side
         val extractAmount = Math.min(Int.MAX_VALUE.toLong(), amount)
         val currentAmount: Long? = cellItems!!.get(what)
-        return when {
-            currentAmount == null -> 0
-            currentAmount > 0 -> {
+        if (currentAmount != null && currentAmount > 0L) {
+            if (extractAmount > currentAmount) {
                 if (mode == Actionable.MODULATE) {
                     cellItems!!.remove(what, currentAmount)
                     saveChanges()
                 }
-                currentAmount
-            }
-            else -> {
+
+                return currentAmount
+            } else {
                 if (mode == Actionable.MODULATE) {
                     cellItems!!.put(what!!, currentAmount - extractAmount)
                     saveChanges()
                 }
-                extractAmount
+
+                return extractAmount
             }
         }
+
+        return 0
     }
 
     override fun getDescription(): Component = itemStackLocal.hoverName
