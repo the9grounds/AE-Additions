@@ -23,6 +23,7 @@ import net.minecraft.world.level.ItemLike
 import net.minecraftforge.common.Tags
 import net.minecraftforge.common.crafting.ConditionalRecipe
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder
+import ninety.megacells.item.MEGAItems
 import java.util.function.Consumer
 
 class AEAdditionsRecipeProvider(generatorIn: DataGenerator) : RecipeProvider(generatorIn), IConditionBuilder {
@@ -32,19 +33,56 @@ class AEAdditionsRecipeProvider(generatorIn: DataGenerator) : RecipeProvider(gen
     val reinforcedAlloy = ItemTags.create(ResourceLocation("mekanism", "alloys/reinforced"))
     val atomicAlloy = ItemTags.create(ResourceLocation("mekanism", "alloys/atomic"))
     val osmiumDust = ItemTags.create(ResourceLocation("forge", "dusts/osmium"))
+
+    val components = mapOf(
+        1 to AEItems.CELL_COMPONENT_1K,
+        4 to AEItems.CELL_COMPONENT_4K,
+        16 to AEItems.CELL_COMPONENT_16K,
+        64 to AEItems.CELL_COMPONENT_64K,
+        256 to AEItems.CELL_COMPONENT_256K,
+        1024 to Items.CELL_COMPONENT_1024k,
+        4096 to Items.CELL_COMPONENT_4096k,
+        16384 to Items.CELL_COMPONENT_16384k,
+        65536 to Items.CELL_COMPONENT_65536k
+    )
+    
+    val megaComponents = mapOf(
+        1 to AEItems.CELL_COMPONENT_1K,
+        4 to AEItems.CELL_COMPONENT_4K,
+        16 to AEItems.CELL_COMPONENT_16K,
+        64 to AEItems.CELL_COMPONENT_64K,
+        256 to AEItems.CELL_COMPONENT_256K,
+        1024 to MEGAItems.CELL_COMPONENT_1M,
+        4096 to MEGAItems.CELL_COMPONENT_4M,
+        16384 to MEGAItems.CELL_COMPONENT_16M,
+        65536 to MEGAItems.CELL_COMPONENT_64M
+    )
+    
+    val superMap = mapOf(
+        "1k" to 1,
+        "4k" to 4,
+        "16k" to 16,
+        "64k" to 64,
+        "256k" to 256,
+        "1024k" to 1024,
+        "4096k" to 4096,
+        "16M" to 16384,
+        "65M" to 65536,
+    )
+
+    val superMapReversed = mapOf(
+        1 to "1k",
+        4 to "4k",
+        16 to "16k",
+        64 to "64k",
+        256 to "256k",
+        1024 to "1024k",
+        4096 to "4096k",
+        16384 to "16m",
+        65536 to "65m",
+    )
     
     override fun buildCraftingRecipes(consumer: Consumer<FinishedRecipe>) {
-        val components = mapOf(
-            1 to AEItems.CELL_COMPONENT_1K,
-            4 to AEItems.CELL_COMPONENT_4K,
-            16 to AEItems.CELL_COMPONENT_16K,
-            64 to AEItems.CELL_COMPONENT_64K,
-            256 to AEItems.CELL_COMPONENT_256K,
-            1024 to Items.CELL_COMPONENT_1024k,
-            4096 to Items.CELL_COMPONENT_4096k,
-            16384 to Items.CELL_COMPONENT_16384k,
-            65536 to Items.CELL_COMPONENT_65536k
-        )
         val itemKbs = mapOf<Int, StorageCell>(
             1024 to Items.ITEM_STORAGE_CELL_1024k,
             4096 to Items.ITEM_STORAGE_CELL_4096k, 
@@ -107,9 +145,94 @@ class AEAdditionsRecipeProvider(generatorIn: DataGenerator) : RecipeProvider(gen
             65536 to Items.DISK_CHEMICAL_65536k
         )
         
+        val superCellComponents = mapOf(
+            1 to Items.SUPER_CELL_COMPONENT_1k,
+            4 to Items.SUPER_CELL_COMPONENT_4k,
+            16 to Items.SUPER_CELL_COMPONENT_16k,
+            64 to Items.SUPER_CELL_COMPONENT_64k,
+            256 to Items.SUPER_CELL_COMPONENT_256k,
+            1024 to Items.SUPER_CELL_COMPONENT_1024k,
+            4096 to Items.SUPER_CELL_COMPONENT_4096k,
+            16384 to Items.SUPER_CELL_COMPONENT_16M,
+            65536 to Items.SUPER_CELL_COMPONENT_65M,
+        )
+
+        val superStorageCells = mapOf(
+            1 to Items.SUPER_CELL_1k,
+            4 to Items.SUPER_CELL_4k,
+            16 to Items.SUPER_CELL_16k,
+            64 to Items.SUPER_CELL_64k,
+            256 to Items.SUPER_CELL_256k,
+            1024 to Items.SUPER_CELL_1024k,
+            4096 to Items.SUPER_CELL_4096k,
+            16384 to Items.SUPER_CELL_16M,
+            65536 to Items.SUPER_CELL_65M,
+        )
+        
+        for (superCellComponent in superCellComponents) {
+            ConditionalRecipe.builder().addCondition(
+                not(
+                    modLoaded(Mods.MEGAAE2.modId)
+                )
+            ).addRecipe {
+                ShapedRecipeBuilder.shaped(superCellComponent.value)
+                    .pattern("aba")
+                    .pattern("aaa")
+                    .pattern("aba")
+                    .define('a', components[superCellComponent.key])
+                    .define('b', Tags.Items.GEMS_DIAMOND)
+                    .unlockedBy("has_item", has(components[superCellComponent.key]))
+                    .save(it)
+            }.build(consumer, ResourceLocation(AEAdditions.ID, "components/super/${superMapReversed[superCellComponent.key]}"))
+            ConditionalRecipe.builder().addCondition(
+                modLoaded(Mods.MEGAAE2.modId)
+            ).addRecipe {
+                ShapedRecipeBuilder.shaped(superCellComponent.value)
+                    .pattern("aba")
+                    .pattern("aaa")
+                    .pattern("aba")
+                    .define('a', megaComponents[superCellComponent.key])
+                    .define('b', Tags.Items.GEMS_DIAMOND)
+                    .unlockedBy("has_item", has(megaComponents[superCellComponent.key]))
+                    .save(it)
+            }.build(consumer, ResourceLocation(AEAdditions.ID, "components/super/${superMapReversed[superCellComponent.key]}-mega"))
+        }
+        
+        ShapedRecipeBuilder.shaped(Items.SUPER_CELL_HOUSING)
+            .pattern("aba")
+            .pattern("b b")
+            .pattern("ccc")
+            .define('a', AEBlocks.QUARTZ_GLASS)
+            .define('b', Tags.Items.DUSTS_REDSTONE)
+            .define('c', Tags.Items.GEMS_DIAMOND)
+            .unlockedBy("has_item", has(Tags.Items.GEMS_DIAMOND))
+            .save(consumer, ResourceLocation(AEAdditions.ID, "super_cell_housing"))
+        
+        for (superStorageCell in superStorageCells) {
+            ShapelessRecipeBuilder.shapeless(superStorageCell.value)
+                .requires(Items.SUPER_CELL_HOUSING)
+                .requires(superCellComponents[superStorageCell.key])
+                .unlockedBy("has_item", has(superCellComponents[superStorageCell.key]))
+                .save(consumer, ResourceLocation(AEAdditions.ID, "cells/super/${superMapReversed[superStorageCell.key]}-housing"))
+
+            ShapedRecipeBuilder.shaped(superStorageCell.value)
+                .pattern("aba")
+                .pattern("bdb")
+                .pattern("ccc")
+                .define('a', AEBlocks.QUARTZ_GLASS)
+                .define('b', Tags.Items.DUSTS_REDSTONE)
+                .define('c', Tags.Items.GEMS_DIAMOND)
+                .define('d', superCellComponents[superStorageCell.key])
+                .unlockedBy("has_item", has(superCellComponents[superStorageCell.key]))
+                .save(consumer, ResourceLocation(AEAdditions.ID, "cells/super/${superMapReversed[superStorageCell.key]}"))
+        }
+        
         for (fluidCell in fluidCells) {
             ConditionalRecipe.builder().addCondition(
-                modLoaded(Mods.AE2THINGS.modId)
+                and(
+                    modLoaded(Mods.AE2THINGS.modId),
+                    not(modLoaded(Mods.MEGAAE2.modId))
+                )
             ).addRecipe {
                 ShapelessRecipeBuilder.shapeless(fluidCell.value)
                     .requires(Items.DISK_FLUID_HOUSING)
@@ -118,7 +241,10 @@ class AEAdditionsRecipeProvider(generatorIn: DataGenerator) : RecipeProvider(gen
                     .save(it)
             }.build(consumer, ResourceLocation(AEAdditions.ID, "cells/fluid/disk-${fluidCell.key}-casing"))
             ConditionalRecipe.builder().addCondition(
-                modLoaded(Mods.AE2THINGS.modId)
+                and(
+                    modLoaded(Mods.AE2THINGS.modId),
+                    not(modLoaded(Mods.MEGAAE2.modId))
+                )
             ).addRecipe {
                 ShapedRecipeBuilder.shaped(fluidCell.value)
                     .pattern("aba")
@@ -132,6 +258,37 @@ class AEAdditionsRecipeProvider(generatorIn: DataGenerator) : RecipeProvider(gen
                     .unlockedBy("has_item", has(components[fluidCell.key]))
                     .save(it)
             }.build(consumer, ResourceLocation(AEAdditions.ID, "cells/fluid/disk-${fluidCell.key}"))
+
+            ConditionalRecipe.builder().addCondition(
+                and(
+                    modLoaded(Mods.AE2THINGS.modId),
+                    modLoaded(Mods.MEGAAE2.modId)
+                )
+            ).addRecipe {
+                ShapelessRecipeBuilder.shapeless(fluidCell.value)
+                    .requires(Items.DISK_FLUID_HOUSING)
+                    .requires(megaComponents[fluidCell.key])
+                    .unlockedBy("has_item", has(megaComponents[fluidCell.key]))
+                    .save(it)
+            }.build(consumer, ResourceLocation(AEAdditions.ID, "cells/fluid/disk-${fluidCell.key}-casing-mega"))
+            ConditionalRecipe.builder().addCondition(
+                and(
+                    modLoaded(Mods.AE2THINGS.modId),
+                    modLoaded(Mods.MEGAAE2.modId)
+                )
+            ).addRecipe {
+                ShapedRecipeBuilder.shaped(fluidCell.value)
+                    .pattern("aba")
+                    .pattern("bcb")
+                    .pattern("ded")
+                    .define('a', AEBlocks.QUARTZ_GLASS)
+                    .define('b', Tags.Items.DUSTS_REDSTONE)
+                    .define('c', megaComponents[fluidCell.key])
+                    .define('d', Tags.Items.INGOTS_NETHERITE)
+                    .define('e', Tags.Items.GEMS_LAPIS)
+                    .unlockedBy("has_item", has(megaComponents[fluidCell.key]))
+                    .save(it)
+            }.build(consumer, ResourceLocation(AEAdditions.ID, "cells/fluid/disk-${fluidCell.key}-mega"))
         }
 
         for (chemicalCell in chemicalCells) {
@@ -177,7 +334,10 @@ class AEAdditionsRecipeProvider(generatorIn: DataGenerator) : RecipeProvider(gen
         
         for (diskCell in diskCells) {
             ConditionalRecipe.builder().addCondition(
-                modLoaded(Mods.AE2THINGS.modId)
+                and(
+                    modLoaded(Mods.AE2THINGS.modId),
+                    not(modLoaded(Mods.MEGAAE2.modId))
+                )
             ).addRecipe {
                 ShapelessRecipeBuilder.shapeless(diskCell.value)
                     .requires(AETItems.DISK_HOUSING.get())
@@ -187,7 +347,10 @@ class AEAdditionsRecipeProvider(generatorIn: DataGenerator) : RecipeProvider(gen
             }.build(consumer, ResourceLocation(AEAdditions.ID, "cells/item/disk-${diskCell.key}-casing"))
             
             ConditionalRecipe.builder().addCondition(
-                modLoaded(Mods.AE2THINGS.modId)
+                and(
+                    modLoaded(Mods.AE2THINGS.modId),
+                    not(modLoaded(Mods.MEGAAE2.modId))
+                )
             ).addRecipe {
                 ShapedRecipeBuilder.shaped(diskCell.value)
                     .pattern("aba")
@@ -201,71 +364,145 @@ class AEAdditionsRecipeProvider(generatorIn: DataGenerator) : RecipeProvider(gen
                     .unlockedBy("has_item", has(components[diskCell.key]))
                     .save(it)
             }.build(consumer, ResourceLocation(AEAdditions.ID, "cells/item/disk-${diskCell.key}"))
+
+            ConditionalRecipe.builder().addCondition(
+                and(
+                    modLoaded(Mods.AE2THINGS.modId),
+                    modLoaded(Mods.MEGAAE2.modId)
+                )
+            ).addRecipe {
+                ShapelessRecipeBuilder.shapeless(diskCell.value)
+                    .requires(AETItems.DISK_HOUSING.get())
+                    .requires(megaComponents[diskCell.key])
+                    .unlockedBy("has_item", has(megaComponents[diskCell.key]))
+                    .save(it)
+            }.build(consumer, ResourceLocation(AEAdditions.ID, "cells/item/disk-${diskCell.key}-casing-mega"))
+
+            ConditionalRecipe.builder().addCondition(
+                and(
+                    modLoaded(Mods.AE2THINGS.modId),
+                    modLoaded(Mods.MEGAAE2.modId)
+                )
+            ).addRecipe {
+                ShapedRecipeBuilder.shaped(diskCell.value)
+                    .pattern("aba")
+                    .pattern("bcb")
+                    .pattern("ded")
+                    .define('a', AEBlocks.QUARTZ_GLASS)
+                    .define('b', Tags.Items.DUSTS_REDSTONE)
+                    .define('c', megaComponents[diskCell.key])
+                    .define('d', Tags.Items.INGOTS_NETHERITE)
+                    .define('e', Tags.Items.GEMS_AMETHYST)
+                    .unlockedBy("has_item", has(megaComponents[diskCell.key]))
+                    .save(it)
+            }.build(consumer, ResourceLocation(AEAdditions.ID, "cells/item/disk-${diskCell.key}-mega"))
         }
         
         for (block in craftingStorageBlocks) {
-            ShapelessRecipeBuilder.shapeless(block.value.item)
-                .requires(AEBlocks.CRAFTING_UNIT)
-                .requires(components[block.key])
-                .unlockedBy("has_item", has(components[block.key]))
-                .save(consumer, ResourceLocation(AEAdditions.ID, "crafting/${block.key}k_storage"))
+            ConditionalRecipe.builder()
+                .addCondition(
+                    not(modLoaded(Mods.MEGAAE2.modId))
+                ).addRecipe {
+                    ShapelessRecipeBuilder.shapeless(block.value.item)
+                        .requires(AEBlocks.CRAFTING_UNIT)
+                        .requires(components[block.key])
+                        .unlockedBy("has_item", has(components[block.key]))
+                        .save(it)
+                }.build(consumer, ResourceLocation(AEAdditions.ID, "crafting/${block.key}k_storage"))
+
+            ConditionalRecipe.builder()
+                .addCondition(
+                    modLoaded(Mods.MEGAAE2.modId)
+                ).addRecipe {
+                    ShapelessRecipeBuilder.shapeless(block.value.item)
+                        .requires(AEBlocks.CRAFTING_UNIT)
+                        .requires(megaComponents[block.key])
+                        .unlockedBy("has_item", has(megaComponents[block.key]))
+                        .save(it)
+                }.build(consumer, ResourceLocation(AEAdditions.ID, "crafting/${block.key}k_storage-mega"))
         }
         
         for (component in listOf(1024, 4096, 16384, 65536)) {
-            ShapedRecipeBuilder.shaped(components[component])
-                .pattern("aba")
-                .pattern("cdc")
-                .pattern("aca")
-                .define('a', Tags.Items.GEMS_DIAMOND)
-                .define('b', AEItems.ENGINEERING_PROCESSOR)
-                .define('c', components[mapOfRequired[component]])
-                .define('d', AEBlocks.QUARTZ_GLASS)
-                .unlockedBy("has_item", has(components[mapOfRequired[component]]))
-                .save(consumer, ResourceLocation(AEAdditions.ID, "components/${component}k"))
+            ConditionalRecipe.builder()
+                .addCondition(
+                    not(modLoaded(Mods.MEGAAE2.modId))
+                ).addRecipe {
+                    ShapedRecipeBuilder.shaped(components[component])
+                        .pattern("aba")
+                        .pattern("cdc")
+                        .pattern("aca")
+                        .define('a', Tags.Items.GEMS_DIAMOND)
+                        .define('b', AEItems.ENGINEERING_PROCESSOR)
+                        .define('c', components[mapOfRequired[component]])
+                        .define('d', AEBlocks.QUARTZ_GLASS)
+                        .unlockedBy("has_item", has(components[mapOfRequired[component]]))
+                        .save(it)
+                }.build(consumer, ResourceLocation(AEAdditions.ID, "components/${component}k"))
         }
         
         for (kb in itemKbs) {
-            ShapelessRecipeBuilder.shapeless(kb.value)
-                .requires(AEItems.ITEM_CELL_HOUSING)
-                .requires(kb.value.component)
-                .unlockedBy("has_item", has(kb.value.component))
-                .save(consumer, ResourceLocation(AEAdditions.ID, "cells/item/casing-${kb.key}k"))
+            ConditionalRecipe.builder()
+                .addCondition(
+                    not(modLoaded(Mods.MEGAAE2.modId))
+                )
+                .addRecipe {
+                    ShapelessRecipeBuilder.shapeless(kb.value)
+                        .requires(AEItems.ITEM_CELL_HOUSING)
+                        .requires(kb.value.component)
+                        .unlockedBy("has_item", has(kb.value.component))
+                        .save(it)
+                }.build(consumer, ResourceLocation(AEAdditions.ID, "cells/item/casing-${kb.key}k"))
 
-            ShapedRecipeBuilder.shaped(kb.value)
-                .pattern("aba")
-                .pattern("bcb")
-                .pattern("ddd")
-                .define('a', AEBlocks.QUARTZ_GLASS)
-                .define('b', AEItems.FLUIX_DUST)
-                .define('c', kb.value.component)
-                .define('d', Tags.Items.GEMS_DIAMOND)
-                .unlockedBy("has_item", has(kb.value.component))
-                .save(consumer, ResourceLocation(AEAdditions.ID, "cells/item/${kb.key}k"))
+            ConditionalRecipe.builder()
+                .addCondition(
+                    not(modLoaded(Mods.MEGAAE2.modId))
+                ).addRecipe {
+                    ShapedRecipeBuilder.shaped(kb.value)
+                        .pattern("aba")
+                        .pattern("bcb")
+                        .pattern("ddd")
+                        .define('a', AEBlocks.QUARTZ_GLASS)
+                        .define('b', AEItems.FLUIX_DUST)
+                        .define('c', kb.value.component)
+                        .define('d', Tags.Items.GEMS_DIAMOND)
+                        .unlockedBy("has_item", has(kb.value.component))
+                        .save(it)
+                }.build(consumer, ResourceLocation(AEAdditions.ID, "cells/item/${kb.key}k"))
         }
         for (kb in fluidKbs) {
-            ShapelessRecipeBuilder.shapeless(kb.value)
-                .requires(AEItems.FLUID_CELL_HOUSING)
-                .requires(kb.value.component)
-                .unlockedBy("has_item", has(kb.value.component))
-                .save(consumer, ResourceLocation(AEAdditions.ID, "cells/fluid/casing-${kb.key}k"))
+            ConditionalRecipe.builder()
+                .addCondition(
+                    not(modLoaded(Mods.MEGAAE2.modId))
+                ).addRecipe {
+                    ShapelessRecipeBuilder.shapeless(kb.value)
+                        .requires(AEItems.FLUID_CELL_HOUSING)
+                        .requires(kb.value.component)
+                        .unlockedBy("has_item", has(kb.value.component))
+                        .save(it)
+                }.build(consumer, ResourceLocation(AEAdditions.ID, "cells/fluid/casing-${kb.key}k"))
 
-            ShapedRecipeBuilder.shaped(kb.value)
-                .pattern("aba")
-                .pattern("bcb")
-                .pattern("ddd")
-                .define('a', AEBlocks.QUARTZ_GLASS)
-                .define('b', AEItems.FLUIX_DUST)
-                .define('c', kb.value.component)
-                .define('d', Tags.Items.INGOTS_COPPER)
-                .unlockedBy("has_item", has(kb.value.component))
-                .save(consumer, ResourceLocation(AEAdditions.ID, "cells/fluid/${kb.key}k"))
+            ConditionalRecipe.builder()
+                .addCondition(
+                    not(modLoaded(Mods.MEGAAE2.modId))
+                ).addRecipe {
+                    ShapedRecipeBuilder.shaped(kb.value)
+                        .pattern("aba")
+                        .pattern("bcb")
+                        .pattern("ddd")
+                        .define('a', AEBlocks.QUARTZ_GLASS)
+                        .define('b', AEItems.FLUIX_DUST)
+                        .define('c', kb.value.component)
+                        .define('d', Tags.Items.INGOTS_COPPER)
+                        .unlockedBy("has_item", has(kb.value.component))
+                        .save(it)
+                }.build(consumer, ResourceLocation(AEAdditions.ID, "cells/fluid/${kb.key}k"))
         }
         for (kb in chemicalKbs) {
             addConditionalRecipeForMekanism("cells/chemical/casing-${kb.key}k", consumer) {
                 ShapelessRecipeBuilder.shapeless(kb.value)
                     .requires(AMItems.CHEMICAL_CELL_HOUSING.get())
-                    .requires(kb.value.component)
-                    .unlockedBy("has_item", has(kb.value.component))
+                    .requires(components[kb.key])
+                    .unlockedBy("has_item", has(components[kb.key]))
                     .save(it)
             }
             addConditionalRecipeForMekanism("cells/chemical/${kb.key}k", consumer) {
@@ -275,9 +512,9 @@ class AEAdditionsRecipeProvider(generatorIn: DataGenerator) : RecipeProvider(gen
                     .pattern("ddd")
                     .define('a', AEBlocks.QUARTZ_GLASS)
                     .define('b', AEItems.FLUIX_DUST)
-                    .define('c', kb.value.component)
+                    .define('c', components[kb.key])
                     .define('d', osmiumTag)
-                    .unlockedBy("has_item", has(kb.value.component))
+                    .unlockedBy("has_item", has(components[kb.key]))
                     .save(it)
             }
         }
@@ -292,7 +529,8 @@ class AEAdditionsRecipeProvider(generatorIn: DataGenerator) : RecipeProvider(gen
         ConditionalRecipe.builder().addCondition(
             and(
                 modLoaded(Mods.AE2THINGS.modId),
-                modLoaded(Mods.APPMEK.modId)
+                modLoaded(Mods.APPMEK.modId),
+                not(modLoaded(Mods.MEGAAE2.modId))
             )
         ).addRecipe {
             ShapelessRecipeBuilder.shapeless(chemicalCell.value)
@@ -303,7 +541,11 @@ class AEAdditionsRecipeProvider(generatorIn: DataGenerator) : RecipeProvider(gen
                 .save(it)
         }.build(consumer, ResourceLocation(AEAdditions.ID, "cells/chemical/disk-${chemicalCell.key}-casing"))
         ConditionalRecipe.builder().addCondition(
-            modLoaded(Mods.AE2THINGS.modId)
+            and(
+                modLoaded(Mods.AE2THINGS.modId),
+                modLoaded(Mods.APPMEK.modId),
+                not(modLoaded(Mods.MEGAAE2.modId))
+            )
         ).addRecipe {
             ShapedRecipeBuilder.shaped(chemicalCell.value)
                 .pattern("aba")
@@ -321,7 +563,10 @@ class AEAdditionsRecipeProvider(generatorIn: DataGenerator) : RecipeProvider(gen
 
     private fun addConditionalRecipeForMekanism(resourcePath: String, consumer: Consumer<FinishedRecipe>, factory: (Consumer<FinishedRecipe>) -> Unit) {
         ConditionalRecipe.builder().addCondition(
-            modLoaded("appmek")
+            and(
+                modLoaded("appmek"),
+                not(modLoaded(Mods.MEGAAE2.modId))
+            )
         ).addRecipe() {
             factory(it)
         }.build(consumer, ResourceLocation(AEAdditions.ID, resourcePath))

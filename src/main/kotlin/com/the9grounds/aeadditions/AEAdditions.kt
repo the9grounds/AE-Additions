@@ -3,7 +3,6 @@ package com.the9grounds.aeadditions
 import appeng.api.stacks.AEKeyType
 import appeng.block.crafting.AbstractCraftingUnitBlock
 import appeng.items.storage.BasicStorageCell
-import com.the9grounds.aeadditions.api.AEAApi
 import com.the9grounds.aeadditions.data.AEAdditionsDataGenerator
 import com.the9grounds.aeadditions.integration.Integration
 import com.the9grounds.aeadditions.integration.Mods
@@ -59,8 +58,26 @@ object AEAdditions {
     private fun commonSetup(event: FMLCommonSetupEvent) {
         AppEng.initCellHandler()
         Cells.init()
-        if (Mods.APPMEK.isEnabled) {
-            AEAApi.registerTypeForSuperCell(MekanismKeyType.TYPE)
+        
+        if (Mods.MEGAAE2.isEnabled) {
+            for (item in listOf(
+                Items.CELL_COMPONENT_1024k,
+                Items.CELL_COMPONENT_4096k,
+                Items.CELL_COMPONENT_16384k,
+                Items.CELL_COMPONENT_65536k,
+                Items.ITEM_STORAGE_CELL_1024k,
+                Items.ITEM_STORAGE_CELL_4096k,
+                Items.ITEM_STORAGE_CELL_16384k,
+                Items.ITEM_STORAGE_CELL_65536k,
+                Items.FLUID_STORAGE_CELL_1024k,
+                Items.FLUID_STORAGE_CELL_4096k,
+                Items.FLUID_STORAGE_CELL_16384k,
+                Items.CHEMICAL_STORAGE_CELL_1024k,
+                Items.CHEMICAL_STORAGE_CELL_4096k,
+                Items.CHEMICAL_STORAGE_CELL_16384k,
+            )) {
+                item.category = null;
+            }
         }
     }
     

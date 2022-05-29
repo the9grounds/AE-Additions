@@ -1,25 +1,41 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "aba",
-    "cdc",
-    "aca"
-  ],
-  "key": {
-    "a": {
-      "tag": "forge:gems/diamond"
-    },
-    "b": {
-      "item": "ae2:engineering_processor"
-    },
-    "c": {
-      "item": "ae2additions:cell_component_1024"
-    },
-    "d": {
-      "item": "ae2:quartz_glass"
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "value": {
+            "modid": "megacells",
+            "type": "forge:mod_loaded"
+          },
+          "type": "forge:not"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shaped",
+        "pattern": [
+          "aba",
+          "cdc",
+          "aca"
+        ],
+        "key": {
+          "a": {
+            "tag": "forge:gems/diamond"
+          },
+          "b": {
+            "item": "ae2:engineering_processor"
+          },
+          "c": {
+            "item": "ae2additions:cell_component_1024"
+          },
+          "d": {
+            "item": "ae2:quartz_glass"
+          }
+        },
+        "result": {
+          "item": "ae2additions:cell_component_4096"
+        }
+      }
     }
-  },
-  "result": {
-    "item": "ae2additions:cell_component_4096"
-  }
+  ]
 }

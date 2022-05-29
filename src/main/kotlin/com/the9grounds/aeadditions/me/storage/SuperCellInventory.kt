@@ -3,17 +3,13 @@ package com.the9grounds.aeadditions.me.storage
 import appeng.api.config.Actionable
 import appeng.api.config.IncludeExclude
 import appeng.api.networking.security.IActionSource
-import appeng.api.stacks.AEItemKey
-import appeng.api.stacks.AEKey
-import appeng.api.stacks.AEKeyType
-import appeng.api.stacks.KeyCounter
+import appeng.api.stacks.*
 import appeng.api.storage.cells.CellState
 import appeng.api.storage.cells.ISaveProvider
 import appeng.api.storage.cells.StorageCell
 import appeng.core.AELog
 import appeng.util.prioritylist.FuzzyPriorityList
 import appeng.util.prioritylist.IPartitionList
-import com.the9grounds.aeadditions.api.AEAApi
 import com.the9grounds.aeadditions.item.storage.SuperStorageCell
 import it.unimi.dsi.fastutil.longs.LongArrayList
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap
@@ -51,7 +47,7 @@ class SuperCellInventory(val cell: SuperStorageCell?, val itemStackLocal: ItemSt
     
     var numberOfTypesByKeyType = mutableMapOf<AEKeyType, Int>()
     var storedItemCountByKeyType = mutableMapOf<AEKeyType, Long>()
-    val cellTypes = AEAApi.superCellTypes
+    val cellTypes = AEKeyTypes.getAll()
 
     companion object
     {

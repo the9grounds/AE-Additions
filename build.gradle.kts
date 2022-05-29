@@ -149,9 +149,9 @@ dependencies {
     implementation(project.the<DependencyManagementExtension>().deobf("mekanism:Mekanism:${mekanismVersion}"))
     implementation(project.the<DependencyManagementExtension>().deobf("curse.maven:applied-mekanistics-574300:3797910"))
     implementation(project.the<DependencyManagementExtension>().deobf("curse.maven:ae2-things-forge-609977:3795991"))
-    val cctVersion: String by project
-    implementation(project.the<DependencyManagementExtension>().deobf("org.squiddev:cc-tweaked-${minecraftVersion}:${cctVersion}"))
     compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:mega-cells-622112:3795694"))
+    runtimeOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:mega-cells-622112:3795694"))
+    compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:applied-botanics-610632:3770580"))
 
     annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
     compileOnly("org.spongepowered:mixin:0.8.5") { isTransitive = false }

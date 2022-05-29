@@ -1,6 +1,0 @@
-{
-  "parent": "ae2:block/drive/drive_cell",
-  "textures": {
-    "cell": "ae2additions:block/drive/cells/item/1024k"
-  }
-}

@@ -12,6 +12,13 @@
             {
               "modid": "appmek",
               "type": "forge:mod_loaded"
+            },
+            {
+              "value": {
+                "modid": "megacells",
+                "type": "forge:mod_loaded"
+              },
+              "type": "forge:not"
             }
           ],
           "type": "forge:and"

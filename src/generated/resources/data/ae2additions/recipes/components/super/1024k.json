@@ -1,0 +1,35 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "value": {
+            "modid": "megacells",
+            "type": "forge:mod_loaded"
+          },
+          "type": "forge:not"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shaped",
+        "pattern": [
+          "aba",
+          "aaa",
+          "aba"
+        ],
+        "key": {
+          "a": {
+            "item": "ae2additions:cell_component_1024"
+          },
+          "b": {
+            "tag": "forge:gems/diamond"
+          }
+        },
+        "result": {
+          "item": "ae2additions:super_cell_component_1024k"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "ae2additions:item/super_storage_cell_1024k"
+  }
+}

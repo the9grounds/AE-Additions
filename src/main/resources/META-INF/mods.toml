@@ -52,3 +52,9 @@ mandatory=false
 ordering="AFTER"
 versionRange="[1.0.0,)"
 side="BOTH"
+[[dependencies.ae2additions]]
+modId="megacells"
+mandatory=false
+ordering="AFTER"
+versionRange="[1.1.1,)"
+side="BOTH"

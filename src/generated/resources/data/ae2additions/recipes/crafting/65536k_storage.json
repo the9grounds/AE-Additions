@@ -1,14 +1,30 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "ingredients": [
+  "type": "forge:conditional",
+  "recipes": [
     {
-      "item": "ae2:crafting_unit"
-    },
-    {
-      "item": "ae2additions:cell_component_65536"
+      "conditions": [
+        {
+          "value": {
+            "modid": "megacells",
+            "type": "forge:mod_loaded"
+          },
+          "type": "forge:not"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shapeless",
+        "ingredients": [
+          {
+            "item": "ae2:crafting_unit"
+          },
+          {
+            "item": "ae2additions:cell_component_65536"
+          }
+        ],
+        "result": {
+          "item": "ae2additions:65536k_crafting_storage"
+        }
+      }
     }
-  ],
-  "result": {
-    "item": "ae2additions:65536k_crafting_storage"
-  }
+  ]
 }

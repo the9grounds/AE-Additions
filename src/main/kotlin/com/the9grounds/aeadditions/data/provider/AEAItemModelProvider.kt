@@ -34,6 +34,53 @@ class AEAItemModelProvider(generator: DataGenerator?, modid: String?, existingFi
             16384 to Ids.DISK_CHEMICAL_16384k,
             65536 to Ids.DISK_CHEMICAL_65536k
         )
+        val superCellComponents = mapOf(
+            "1k" to Ids.SUPER_CELL_COMPONENT_1k,
+            "4k" to Ids.SUPER_CELL_COMPONENT_4k,
+            "16k" to Ids.SUPER_CELL_COMPONENT_16k,
+            "64k" to Ids.SUPER_CELL_COMPONENT_64k,
+            "256k" to Ids.SUPER_CELL_COMPONENT_256k,
+            "1024k" to Ids.SUPER_CELL_COMPONENT_1024k,
+            "4096k" to Ids.SUPER_CELL_COMPONENT_4096k,
+            "16m" to Ids.SUPER_CELL_COMPONENT_16M,
+            "65m" to Ids.SUPER_CELL_COMPONENT_65M,
+        )
+        val superStorageCells = mapOf(
+            "1k" to Ids.SUPER_CELL_1k,
+            "4k" to Ids.SUPER_CELL_4k,
+            "16k" to Ids.SUPER_CELL_16k,
+            "64k" to Ids.SUPER_CELL_64k,
+            "256k" to Ids.SUPER_CELL_256k,
+            "1024k" to Ids.SUPER_CELL_1024k,
+            "4096k" to Ids.SUPER_CELL_4096k,
+            "16m" to Ids.SUPER_CELL_16M,
+            "65m" to Ids.SUPER_CELL_65M,
+        )
+        
+        for (cellComponent in superCellComponents) {
+            this.singleTexture(
+                cellComponent.value.path,
+                mcLoc("item/generated"),
+                "layer0",
+                ResourceLocation(AEAdditions.ID, "item/super_cell_component_${cellComponent.key}")
+            )
+        }
+
+        for (storageCell in superStorageCells) {
+            this.singleTexture(
+                storageCell.value.path,
+                mcLoc("item/generated"),
+                "layer0",
+                ResourceLocation(AEAdditions.ID, "item/super_storage_cell_${storageCell.key}")
+            )
+        }
+        
+        this.singleTexture(
+            Ids.SUPER_CELL_HOUSING.path,
+            mcLoc("item/generated"),
+            "layer0",
+            ResourceLocation(AEAdditions.ID, "item/super_cell_housing")
+        )
         
         for (fluidDisk in fluidDisks) {
             this.singleTexture(

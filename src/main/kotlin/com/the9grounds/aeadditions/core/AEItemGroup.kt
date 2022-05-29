@@ -6,5 +6,5 @@ import net.minecraft.world.item.ItemStack
 
 class AEItemGroup(label: String) : CreativeModeTab(label) {
 
-    override fun makeIcon(): ItemStack = ItemStack(Items.ITEM_STORAGE_CELL_16384k, 1)
+    override fun makeIcon(): ItemStack = ItemStack(Items.SUPER_CELL_COMPONENT_65M, 1)
 }

@@ -7,7 +7,7 @@ enum class Mods(val modId: String, val modName: String) {
     APPMEK("appmek", "Applied Mekanistics"),
     AE2THINGS("ae2things", "AE2 Things"),
     MEGAAE2("megacells", "MEGA Cells"),
-    COMPUTERCRAFT("computercraft", "CC: Tweaked");
+    APPLIEDBOTANICS("appbot", "Applied Botanics");
 
     val isEnabled: Boolean
     get() {

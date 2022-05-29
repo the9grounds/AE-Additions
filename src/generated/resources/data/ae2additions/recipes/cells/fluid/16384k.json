@@ -1,25 +1,41 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "aba",
-    "bcb",
-    "ddd"
-  ],
-  "key": {
-    "a": {
-      "item": "ae2:quartz_glass"
-    },
-    "b": {
-      "item": "ae2:fluix_dust"
-    },
-    "c": {
-      "item": "ae2additions:cell_component_16384"
-    },
-    "d": {
-      "tag": "forge:ingots/copper"
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "value": {
+            "modid": "megacells",
+            "type": "forge:mod_loaded"
+          },
+          "type": "forge:not"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shaped",
+        "pattern": [
+          "aba",
+          "bcb",
+          "ddd"
+        ],
+        "key": {
+          "a": {
+            "item": "ae2:quartz_glass"
+          },
+          "b": {
+            "item": "ae2:fluix_dust"
+          },
+          "c": {
+            "item": "ae2additions:cell_component_16384"
+          },
+          "d": {
+            "tag": "forge:ingots/copper"
+          }
+        },
+        "result": {
+          "item": "ae2additions:fluid_storage_cell_16384"
+        }
+      }
     }
-  },
-  "result": {
-    "item": "ae2additions:fluid_storage_cell_16384"
-  }
+  ]
 }

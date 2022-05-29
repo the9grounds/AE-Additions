@@ -1,0 +1,27 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "modid": "megacells",
+          "type": "forge:mod_loaded"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shapeless",
+        "ingredients": [
+          {
+            "item": "ae2:crafting_unit"
+          },
+          {
+            "item": "megacells:cell_component_4m"
+          }
+        ],
+        "result": {
+          "item": "ae2additions:4096k_crafting_storage"
+        }
+      }
+    }
+  ]
+}
