@@ -37,7 +37,7 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
-      run: ./gradlew build --max-workers 1
+      run: ./gradlew build --no-daemon --max-workers 1
       env:
         SHORT_SHA: ${{ steps.short-sha.outputs.sha }}
         BRANCH_NAME: ${{ steps.extract_branch.outputs.branch }}
