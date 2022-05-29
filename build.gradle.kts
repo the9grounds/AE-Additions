@@ -212,10 +212,10 @@ fun getBuildNumber(): String? {
     }
 
     if (System.getenv("GITHUB_HEAD_REF") != null) {
-        return "pr-${System.getenv("GITHUB_HEAD_REF")}-${System.getenv("SHORT_SHA")}"
+        return "0.0.1-pr-${System.getenv("GITHUB_HEAD_REF")}-${System.getenv("SHORT_SHA")}"
     }
 
-    return "ci-${System.getenv("BRANCH_NAME")}-${System.getenv("SHORT_SHA")}"
+    return "0.0.1-ci-${System.getenv("BRANCH_NAME")}-${System.getenv("SHORT_SHA")}"
 }
 
 fun getBetterVersion(): String {

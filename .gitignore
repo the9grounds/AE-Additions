@@ -14,3 +14,4 @@
 !/gradle.properties
 !/.gitlab-ci.yml
 !libs/*
+!/.github
