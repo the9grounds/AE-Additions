@@ -21,7 +21,14 @@ object SuperCellHandler : ICellHandler {
         lines.add(Tooltips.typesUsed(handler.getStoredItemTypes(), handler.getTotalItemTypes()))
         
         for (keyType in AEKeyTypes.getAll()) {
-            lines.add(TextComponent("${handler.numberOfTypesByKeyType[keyType] ?: 0} ${keyType.description.contents} Types"))
+            var description = keyType.description.getString()
+            
+            if (description.endsWith('s')) {
+                description = description.substring(0, description.length - 1)
+            }
+            
+            val number = handler.numberOfTypesByKeyType[keyType] ?: 0
+            lines.add(TextComponent("${number} ${description} Type${if (number != 1) "s" else ""}"))
         }
     }
 }
