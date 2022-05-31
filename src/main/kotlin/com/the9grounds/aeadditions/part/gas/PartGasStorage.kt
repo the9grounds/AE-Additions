@@ -277,7 +277,9 @@ class PartGasStorage : PartECBase(), ICellContainer, IInventoryListener, IFluidS
     @Optional.Method(modid = "MekanismAPI|gas")
     private fun updateNeighborGases() {
         var changed = false
-        var oldList = gasList.toMap()
+        var oldList = gasList.toMap().mapKeys { 
+            it.key.gas 
+        }
         gasList.clear()
 
         if ((access == AccessRestriction.READ) || (access == AccessRestriction.READ_WRITE)) {
@@ -286,7 +288,7 @@ class PartGasStorage : PartECBase(), ICellContainer, IInventoryListener, IFluidS
 
                 gasList[gasStack] = gasStack.amount
                 
-                if (oldList[gasStack] != gasStack.amount) {
+                if (oldList[gasStack.gas] != gasStack.amount) {
                     changed = true
                 }
             }

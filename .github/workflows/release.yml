@@ -42,6 +42,7 @@ jobs:
         pullRequests: true
         issues: true
         issuesWoLabels: true
+        includeLabels: 1.12.2
         prWoLabels: true
     - name: Build with Gradle
       run: ./gradlew setupCiWorkspace curseforge493962
