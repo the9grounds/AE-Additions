@@ -1,0 +1,6 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "ae2additions:block/me_wireless_transceiver"
+  }
+}

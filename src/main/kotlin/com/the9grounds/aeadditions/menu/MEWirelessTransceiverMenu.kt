@@ -1,0 +1,92 @@
+package com.the9grounds.aeadditions.menu
+
+import appeng.api.config.SecurityPermissions
+import appeng.util.Platform
+import com.the9grounds.aeadditions.blockentity.MEWirelessTransceiverBlockEntity
+import com.the9grounds.aeadditions.core.network.NetworkManager
+import com.the9grounds.aeadditions.core.network.packet.ChannelsPacket
+import com.the9grounds.aeadditions.core.network.packet.RequestChannelsPacket
+import com.the9grounds.aeadditions.registries.Capability
+import com.the9grounds.aeadditions.util.Channel
+import com.the9grounds.aeadditions.util.ChannelInfo
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.entity.player.Inventory
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.inventory.AbstractContainerMenu
+import net.minecraft.world.inventory.Slot
+import net.minecraftforge.fml.util.thread.SidedThreadGroups
+
+class MEWirelessTransceiverMenu(id: Int, val inventory: Inventory) : AbstractContainerMenu(MenuHolder.menuMEWirelessTransceiver, id) {
+    companion object {
+        val PERMISSION = SecurityPermissions.BUILD
+    }
+    
+    var blockEntity: MEWirelessTransceiverBlockEntity? = null
+    var isPrivate = false
+    var isSubscriber = true
+    
+    constructor(id: Int, inventory: Inventory, blockEntity: MEWirelessTransceiverBlockEntity) : this(id, inventory) {
+        this.blockEntity = blockEntity
+    }
+    
+    init {
+        val posX = 7
+        val posY = 144
+        var slotX = posX
+        var slotY = posY + (18 * 2) + 18 + 4
+        var isHotBar = true
+        inventory.items.forEachIndexed { index, itemStack -> 
+            addSlot(Slot(inventory, index, slotX + 1, slotY + 1))
+
+            slotX += 18
+
+            if ((index + 1).rem(9) == 0) {
+                if (isHotBar) {
+                    slotY -= 4
+                    isHotBar = false
+                }
+
+                slotY -= 18
+                slotX = posX
+            }
+        }
+        
+        if (Thread.currentThread().threadGroup != SidedThreadGroups.SERVER) {
+            NetworkManager.sendToServer(RequestChannelsPacket())
+        }
+    }
+    
+    private fun sendChannelStuffToClient() {
+        val level = inventory.player.level as ServerLevel
+
+        val channelHolder = level.getCapability(Capability.CHANNEL_HOLDER).resolve().get()
+
+        val filteredChannels = channelHolder.channels.filter {
+            it.value.hasAccessTo(inventory.player as ServerPlayer)
+        }
+        val filteredChannelInfos = channelHolder.channelInfos.filter {
+            it.hasAccessTo(inventory.player as ServerPlayer)
+        }
+
+        val packet = ChannelsPacket(filteredChannels.values.toList(), filteredChannelInfos)
+
+        NetworkManager.sendTo(packet, inventory.player as ServerPlayer)
+    }
+    
+    var channelInfos = listOf<ChannelInfo>()
+    var channels = listOf<Channel>()
+
+    override fun stillValid(player: Player): Boolean {
+        if (!Platform.checkPermissions(player, blockEntity, PERMISSION, false, true)) {
+            return false
+        }
+        
+        return true
+    }
+    
+    fun receiveChannelData(channelInfos: List<ChannelInfo>, channels: List<Channel>) {
+        this.channelInfos = channelInfos
+        this.channels = channels
+    }
+}

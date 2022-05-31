@@ -98,6 +98,10 @@ configure<UserDevExtension> {
 repositories {
     jcenter()
     mavenCentral()
+    maven { // TOP
+        url = uri("https://maven.k-4u.nl")
+    }
+
     maven {
         name = "Progwml6 maven"
         url = uri("https://dvs1.progwml6.com/files/maven/")
@@ -149,9 +153,12 @@ dependencies {
     implementation(project.the<DependencyManagementExtension>().deobf("mekanism:Mekanism:${mekanismVersion}"))
     implementation(project.the<DependencyManagementExtension>().deobf("curse.maven:applied-mekanistics-574300:3797910"))
     implementation(project.the<DependencyManagementExtension>().deobf("curse.maven:ae2-things-forge-609977:3795991"))
+    implementation(project.the<DependencyManagementExtension>().deobf("curse.maven:the-one-probe-245211:3671753"))
     compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:mega-cells-622112:3795694"))
     runtimeOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:mega-cells-622112:3795694"))
+    compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:ftb-teams-404468:3725501"))
     compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:applied-botanics-610632:3770580"))
+    
 
     annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
     compileOnly("org.spongepowered:mixin:0.8.5") { isTransitive = false }
@@ -198,6 +205,7 @@ tasks.register<TaskPublishCurseForge>("publishCurseForge") {
     mainFile.addRequirement("kotlin-for-forge")
     mainFile.addOptional("mekanism")
     mainFile.addOptional("applied-mekanistics")
+    mainFile.addIncompatibility("ae2-additions")
     mainFile.addModLoader("Forge")
 }
 

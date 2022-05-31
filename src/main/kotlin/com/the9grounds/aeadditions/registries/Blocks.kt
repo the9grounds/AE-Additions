@@ -6,6 +6,7 @@ import com.the9grounds.aeadditions.AEAdditions.craftingType16384k
 import com.the9grounds.aeadditions.AEAdditions.craftingType4096k
 import com.the9grounds.aeadditions.AEAdditions.craftingType65536k
 import com.the9grounds.aeadditions.block.CraftingStorageBlock
+import com.the9grounds.aeadditions.block.MEWirelessTransceiverBlock
 import com.the9grounds.aeadditions.core.BlockDefinition
 import com.the9grounds.aeadditions.integration.Mods
 import net.minecraft.resources.ResourceLocation
@@ -34,6 +35,10 @@ object Blocks {
     }
     @JvmField val BLOCK_CRAFTING_STORAGE_65536k = createBlock(Ids.CRAFTING_STORAGE_65536k, Material.METAL) {
         CraftingStorageBlock(it, craftingType65536k!!)
+    }
+    
+    val BLOCK_ME_WIRELESS_TRANSCEIVER = createBlock(Ids.ME_WIRELESS_TRANSCEIVER, Material.METAL) {
+        MEWirelessTransceiverBlock(it)
     }
     
     fun init() {
