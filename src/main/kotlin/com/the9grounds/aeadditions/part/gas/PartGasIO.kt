@@ -258,7 +258,7 @@ abstract class PartGasIO : PartECBase(), IGridTickable, IInventoryListener, IFlu
         )
     }
 
-    override fun setFluid(index: Int, fluid: Fluid, player: EntityPlayer) {
+    override fun setFluid(index: Int, fluid: Fluid?, player: EntityPlayer) {
         filterFluids[index] = fluid
         NetworkUtil.sendToPlayer(PacketFluidSlotUpdate(Arrays.asList(*filterFluids)), player)
         saveData()
