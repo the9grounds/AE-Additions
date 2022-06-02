@@ -1,6 +1,7 @@
 package com.the9grounds.aeadditions.block
 
 import appeng.api.config.SecurityPermissions
+import com.the9grounds.aeadditions.integration.Integration
 import com.the9grounds.aeadditions.network.GuiHandler
 import com.the9grounds.aeadditions.tileentity.TileEntityGasInterface
 import com.the9grounds.aeadditions.util.PermissionUtil
@@ -20,7 +21,13 @@ import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 
 class BlockGasInterface : BlockAE(Material.IRON, 2.0f, 10.0f) {
-    override fun createNewTileEntity(worldIn: World, meta: Int): TileEntity = TileEntityGasInterface()
+    override fun createNewTileEntity(worldIn: World, meta: Int): TileEntity? {
+        return if (Integration.Mods.MEKANISMGAS.isEnabled) {
+            TileEntityGasInterface()
+        } else {
+            null
+        }
+    }
 
     override fun breakBlock(world: World, pos: BlockPos, state: IBlockState) {
         if (!world.isRemote) TileUtil.destroy(world, pos)
@@ -38,7 +45,7 @@ class BlockGasInterface : BlockAE(Material.IRON, 2.0f, 10.0f) {
         hitY: Float,
         hitZ: Float
     ): Boolean {
-        if (world.isRemote) {
+        if (world.isRemote || !Integration.Mods.MEKANISMGAS.isEnabled) {
             return true
         }
         val current = player.getHeldItem(hand)
