@@ -45,7 +45,7 @@ jobs:
         excludeLabels: 1.12.2,1.16.5
         prWoLabels: true
     - name: Build with Gradle
-      run: ./gradlew clean build publishCurseForge --no-daemon --max-workers 1
+      run: ./gradlew build publishCurseForge --no-daemon --max-workers 1
       env:
         CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
         TAG: ${{ steps.vars.outputs.tag }}
