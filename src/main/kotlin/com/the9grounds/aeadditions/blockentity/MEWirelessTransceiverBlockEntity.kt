@@ -65,19 +65,29 @@ class MEWirelessTransceiverBlockEntity(pos: BlockPos, blockState: BlockState) : 
     override fun saveChanges() {
         
     }
+    
+    fun removedFromChannel(channelInfo: ChannelInfo) {
+        this.destroyConnections()
+        this.currentChannel = null
+    }
 
     fun broadcastToChannel(channelInfo: ChannelInfo) {
+
+        channelHolder.findChannelForBlockEntity(this)?.removeBlockEntity(this)
+
         val channel = channelHolder.getOrCreateChannel(channelInfo)
-        
+
         channel.broadcaster = this
-        
+
         currentChannel = channel
-        
+
         setupLinks()
         setChanged()
     }
     
     fun subscribeToChannel(channelInfo: ChannelInfo) {
+        channelHolder.findChannelForBlockEntity(this)?.removeBlockEntity(this)
+        
         val channel = channelHolder.getOrCreateChannel(channelInfo)
         
         val alreadyExists = channel.subscribers.find { it == this } != null

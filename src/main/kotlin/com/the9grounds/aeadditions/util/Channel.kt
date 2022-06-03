@@ -7,6 +7,22 @@ import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.level.Level
 
 data class Channel(val channelInfo: ChannelInfo, var broadcaster: MEWirelessTransceiverBlockEntity?, val subscribers: MutableList<MEWirelessTransceiverBlockEntity>) {
+    fun removeBlockEntity(blockEntity: MEWirelessTransceiverBlockEntity) {
+        if (broadcaster === blockEntity) {
+            blockEntity.removedFromChannel(channelInfo)
+            
+            broadcaster = null
+        }
+        
+        val subscriber = subscribers.find { it === blockEntity }
+        
+        if (subscriber != null) {
+            subscriber.removedFromChannel(channelInfo)
+            
+            subscribers.remove(blockEntity)
+        }
+    }
+    
     fun saveToNbt(): CompoundTag {
         val tag = CompoundTag()
         tag.putString("channelInfoId", channelInfo.id.toString())

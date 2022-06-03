@@ -1,5 +1,6 @@
 package com.the9grounds.aeadditions.util
 
+import com.the9grounds.aeadditions.blockentity.MEWirelessTransceiverBlockEntity
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.TextComponent
 import net.minecraft.server.level.ServerLevel
@@ -12,7 +13,21 @@ class ChannelHolder(val level: Level) {
     
     val channels: MutableMap<ChannelInfo, Channel> = mutableMapOf()
     
-    
+    fun findChannelForBlockEntity(blockEntity: MEWirelessTransceiverBlockEntity): Channel? {
+        for (channel in channels) {
+            if (channel.value.broadcaster === blockEntity) {
+                return channel.value
+            }
+            
+            val subscriber = channel.value.subscribers.find { it === blockEntity }
+            
+            if (subscriber != null) {
+                return channel.value
+            }
+        }
+        
+        return null
+    }
     
     fun setupTestChannels(player: ServerPlayer, name: String) {
 //        ServerLifecycleHooks.getCurrentServer().allLevels
