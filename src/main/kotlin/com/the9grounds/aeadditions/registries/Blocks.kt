@@ -1,11 +1,8 @@
 package com.the9grounds.aeadditions.registries
 
 import com.the9grounds.aeadditions.AEAdditions
-import com.the9grounds.aeadditions.AEAdditions.craftingType1024k
-import com.the9grounds.aeadditions.AEAdditions.craftingType16384k
-import com.the9grounds.aeadditions.AEAdditions.craftingType4096k
-import com.the9grounds.aeadditions.AEAdditions.craftingType65536k
 import com.the9grounds.aeadditions.block.CraftingStorageBlock
+import com.the9grounds.aeadditions.block.crafting.ExtendedCraftingUnitType
 import com.the9grounds.aeadditions.core.BlockDefinition
 import com.the9grounds.aeadditions.integration.Mods
 import net.minecraft.resources.ResourceLocation
@@ -24,16 +21,16 @@ object Blocks {
     
     
     @JvmField val BLOCK_CRAFTING_STORAGE_1024k = createBlock(Ids.CRAFTING_STORAGE_1024k, Material.METAL) {
-        CraftingStorageBlock(it, craftingType1024k!!)
+        CraftingStorageBlock(it, ExtendedCraftingUnitType.STORAGE_1024)
     }
     @JvmField val BLOCK_CRAFTING_STORAGE_4096k = createBlock(Ids.CRAFTING_STORAGE_4096k, Material.METAL) {
-        CraftingStorageBlock(it, craftingType4096k!!)
+        CraftingStorageBlock(it, ExtendedCraftingUnitType.STORAGE_4096)
     }
     @JvmField val BLOCK_CRAFTING_STORAGE_16384k = createBlock(Ids.CRAFTING_STORAGE_16384k, Material.METAL) {
-        CraftingStorageBlock(it, craftingType16384k!!)
+        CraftingStorageBlock(it, ExtendedCraftingUnitType.STORAGE_16384)
     }
     @JvmField val BLOCK_CRAFTING_STORAGE_65536k = createBlock(Ids.CRAFTING_STORAGE_65536k, Material.METAL) {
-        CraftingStorageBlock(it, craftingType65536k!!)
+        CraftingStorageBlock(it, ExtendedCraftingUnitType.STORAGE_65536)
     }
     
     fun init() {
