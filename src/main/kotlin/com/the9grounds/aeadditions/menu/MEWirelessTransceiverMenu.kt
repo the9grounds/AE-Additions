@@ -26,6 +26,8 @@ class MEWirelessTransceiverMenu(id: Int, val inventory: Inventory) : AbstractCon
     var isPrivate = false
     var isSubscriber = true
     
+    var isOnChannel: Boolean = false
+    
     constructor(id: Int, inventory: Inventory, blockEntity: MEWirelessTransceiverBlockEntity) : this(id, inventory) {
         this.blockEntity = blockEntity
     }
@@ -88,5 +90,22 @@ class MEWirelessTransceiverMenu(id: Int, val inventory: Inventory) : AbstractCon
     fun receiveChannelData(channelInfos: List<ChannelInfo>, channels: List<Channel>) {
         this.channelInfos = channelInfos
         this.channels = channels
+
+        this.isOnChannel = false
+
+        for (channel in channels) {
+            if (channel.broadcaster === blockEntity) {
+                this.isOnChannel = true
+                break
+            }
+            
+            for (subscriber in channel.subscribers) {
+                if (subscriber === blockEntity) {
+                    this.isOnChannel = true
+                    
+                    break
+                }
+            }
+        }
     }
 }

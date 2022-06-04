@@ -8,7 +8,7 @@ import net.minecraft.client.gui.components.Button
 import net.minecraft.network.chat.TextComponent
 import net.minecraft.resources.ResourceLocation
 
-class TransceiverTypeButton(screen: MEWirelessTransceiverScreen, var isSubscriber: Boolean = true) : Button(0, 0, 16, 16, TextComponent.EMPTY, screen::transceiverTypeButtonPressed) {
+class TransceiverTypeButton(screen: MEWirelessTransceiverScreen, var isSubscriber: Boolean = true) : Button(0, 0, 16, 16, TextComponent.EMPTY, screen::transceiverTypeButtonPressed, screen::transceiverTypeButtonTooltip) {
     override fun renderButton(poseStack: PoseStack, p_93747_: Int, p_93748_: Int, p_93749_: Float) {
         poseStack.pushPose()
         poseStack.translate(x.toDouble(), y.toDouble(), 0.0)
