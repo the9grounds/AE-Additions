@@ -5,10 +5,10 @@ name: Build
 
 on:
   push:
-    branches: [ master ]
+    branches: [ 1.16.5 ]
   pull_request:
     branches:
-      - master
+      - 1.16.5
 
 jobs:
   build:
