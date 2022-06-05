@@ -56,7 +56,7 @@ configure<UserDevExtension> {
 
     runs {
         create("client") {
-            workingDirectory(project.file("run"))
+            workingDirectory(project.file("run1.16"))
 
             property("forge.logging.markers", "REGISTRIES")
             property("forge.logging.console.level", "debug")
@@ -66,7 +66,7 @@ configure<UserDevExtension> {
 
         }
         create("server") {
-            workingDirectory(project.file("run"))
+            workingDirectory(project.file("run1.16"))
 
             property("forge.logging.markers", "REGISTRIES")
             property("forge.logging.console.level", "debug")
@@ -74,7 +74,7 @@ configure<UserDevExtension> {
             property("mixin.env.refMapRemappingFile", "${projectDir}/build/createSrgToMcp/output.srg")
         }
         create("data") {
-            workingDirectory(project.file("run"))
+            workingDirectory(project.file("run1.16"))
 
             property("forge.logging.markers", "REGISTRIES")
             property("forge.logging.console.level", "debug")
@@ -171,7 +171,7 @@ tasks.register<TaskPublishCurseForge>("publishCurseForge") {
 fun getBuildNumber(): String? {
 
     if (System.getenv("CI") == null) {
-        return "LOCAL"
+        return "0.0.0.1"
     }
 
     if (System.getenv("TAG") != null) {
@@ -179,10 +179,10 @@ fun getBuildNumber(): String? {
     }
 
     if (System.getenv("GITHUB_HEAD_REF") != null) {
-        return "pr-${System.getenv("GITHUB_HEAD_REF")}-${System.getenv("SHORT_SHA")}"
+        return "0.0.1-pr-${System.getenv("GITHUB_HEAD_REF")}-${System.getenv("SHORT_SHA")}"
     }
 
-    return "ci-${System.getenv("BRANCH_NAME")}-${System.getenv("SHORT_SHA")}"
+    return "0.0.1-ci-${System.getenv("BRANCH_NAME")}-${System.getenv("SHORT_SHA")}"
 }
 
 fun getBetterVersion(): String {

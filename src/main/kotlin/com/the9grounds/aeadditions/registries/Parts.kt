@@ -12,6 +12,7 @@ import com.the9grounds.aeadditions.parts.fluid.FluidStorageMonitorPart
 import net.minecraft.item.ItemStack
 import net.minecraft.util.ResourceLocation
 import net.minecraftforge.registries.ForgeRegistries
+import thedarkcolour.kotlinforforge.forge.DIST
 import thedarkcolour.kotlinforforge.forge.KDeferredRegister
 import kotlin.reflect.KClass
 
@@ -33,12 +34,16 @@ object Parts {
     }
     
     private fun <T: AEABasePart> createPart(id: ResourceLocation, partClass: KClass<T>, factory: (ItemStack) -> T) : AEAPartItem<T> {
-        Api.instance().registries().partModels().registerModels(PartModelsHelper.createModels(partClass.java))
+        
+        if (DIST.isClient) {
+            Api.instance().registries().partModels().registerModels(PartModelsHelper.createModels(partClass.java))
+        }
+        
         return Items.createItem(id, { properties -> AEAPartItem(properties, factory) }, REGISTRY)
     }
 
     private fun <T: AEABasePart> createPart(id: ResourceLocation, partClass: KClass<T>, requiredMod: Mods, factory: (ItemStack) -> T) : AEAPartItem<T> {
-        if (requiredMod.isEnabled) {
+        if (requiredMod.isEnabled && DIST.isClient) {
             Api.instance().registries().partModels().registerModels(PartModelsHelper.createModels(partClass.java))
         }
         return Items.createItem(id, { properties -> AEAPartItem(properties, factory) }, REGISTRY, requiredMod)
