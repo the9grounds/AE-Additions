@@ -10,10 +10,10 @@
       "item": "ae2:quartz_glass"
     },
     "b": {
-      "tag": "forge:dusts/redstone"
+      "tag": "c:redstone_dusts"
     },
     "c": {
-      "tag": "forge:gems/diamond"
+      "tag": "c:diamonds"
     },
     "d": {
       "item": "ae2additions:super_cell_component_64k"

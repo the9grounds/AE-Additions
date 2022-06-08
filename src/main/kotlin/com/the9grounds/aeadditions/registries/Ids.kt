@@ -39,6 +39,28 @@ object Ids {
     val DISK_FLUID_4096k = id("disk_fluid_4096k")
     val DISK_FLUID_16384k = id("disk_fluid_16384k")
     val DISK_FLUID_65536k = id("disk_fluid_65536k")
+
+    val SUPER_CELL_COMPONENT_1k = id("super_cell_component_1k")
+    val SUPER_CELL_COMPONENT_4k = id("super_cell_component_4k")
+    val SUPER_CELL_COMPONENT_16k = id("super_cell_component_16k")
+    val SUPER_CELL_COMPONENT_64k = id("super_cell_component_64k")
+    val SUPER_CELL_COMPONENT_256k = id("super_cell_component_256k")
+    val SUPER_CELL_COMPONENT_1024k = id("super_cell_component_1024k")
+    val SUPER_CELL_COMPONENT_4096k = id("super_cell_component_4096k")
+    val SUPER_CELL_COMPONENT_16M = id("super_cell_component_16m")
+    val SUPER_CELL_COMPONENT_65M = id("super_cell_component_65m")
+
+    val SUPER_CELL_HOUSING = id("super_cell_housing")
+
+    val SUPER_CELL_1k = id("super_cell_1k")
+    val SUPER_CELL_4k = id("super_cell_4k")
+    val SUPER_CELL_16k = id("super_cell_16k")
+    val SUPER_CELL_64k = id("super_cell_64k")
+    val SUPER_CELL_256k = id("super_cell_256k")
+    val SUPER_CELL_1024k = id("super_cell_1024k")
+    val SUPER_CELL_4096k = id("super_cell_4096k")
+    val SUPER_CELL_16M = id("super_cell_16m")
+    val SUPER_CELL_65M = id("super_cell_65m")
     
     // Blocks
     val CRAFTING_STORAGE_1024k = id("1024k_crafting_storage")

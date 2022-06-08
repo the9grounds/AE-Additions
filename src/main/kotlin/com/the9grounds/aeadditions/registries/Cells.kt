@@ -16,6 +16,16 @@ object Cells {
         StorageCellModels.registerModel(Items.FLUID_STORAGE_CELL_1024k, ResourceLocation("ae2additions:block/drive/cells/fluid/1024k"))
         StorageCellModels.registerModel(Items.FLUID_STORAGE_CELL_4096k, ResourceLocation("ae2additions:block/drive/cells/fluid/4096k"))
         StorageCellModels.registerModel(Items.FLUID_STORAGE_CELL_16384k, ResourceLocation("ae2additions:block/drive/cells/fluid/16384k"))
+
+        StorageCellModels.registerModel(Items.SUPER_CELL_1k, ResourceLocation("ae2additions:block/drive/cells/super/1k"))
+        StorageCellModels.registerModel(Items.SUPER_CELL_4k, ResourceLocation("ae2additions:block/drive/cells/super/4k"))
+        StorageCellModels.registerModel(Items.SUPER_CELL_16k, ResourceLocation("ae2additions:block/drive/cells/super/16k"))
+        StorageCellModels.registerModel(Items.SUPER_CELL_64k, ResourceLocation("ae2additions:block/drive/cells/super/64k"))
+        StorageCellModels.registerModel(Items.SUPER_CELL_256k, ResourceLocation("ae2additions:block/drive/cells/super/256k"))
+        StorageCellModels.registerModel(Items.SUPER_CELL_1024k, ResourceLocation("ae2additions:block/drive/cells/super/1024k"))
+        StorageCellModels.registerModel(Items.SUPER_CELL_4096k, ResourceLocation("ae2additions:block/drive/cells/super/4096k"))
+        StorageCellModels.registerModel(Items.SUPER_CELL_16M, ResourceLocation("ae2additions:block/drive/cells/super/16m"))
+        StorageCellModels.registerModel(Items.SUPER_CELL_65M, ResourceLocation("ae2additions:block/drive/cells/super/65m"))
         
         if (Mods.AE2THINGS.isEnabled) {
             StorageCellModels.registerModel(Items.DISK_256k, ResourceLocation("ae2additions:block/drive/cells/item/disk_256k"))
