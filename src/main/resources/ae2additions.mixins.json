@@ -5,11 +5,8 @@
   "refmap": "AEAdditions-1.18.2-refmap.json",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "CraftingStorageBlockEntityMixin",
-    "CraftingUnitTypeMixin"
   ],
   "client": [
-    "CraftingCubeModelMixin"
   ],
   "injectors": {
     "defaultRequire": 1

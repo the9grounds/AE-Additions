@@ -5,10 +5,10 @@ name: Build
 
 on:
   push:
-    branches: [ master ]
+    branches: [ fabric ]
   pull_request:
     branches:
-      - master
+      - fabric
 
 jobs:
   build:
