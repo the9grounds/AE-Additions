@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "ae2additions:super_cell_housing"
+    },
+    {
+      "item": "ae2additions:super_cell_component_4k"
+    }
+  ],
+  "result": {
+    "item": "ae2additions:super_cell_4k"
+  }
+}

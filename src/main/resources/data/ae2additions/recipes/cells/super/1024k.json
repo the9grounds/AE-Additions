@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "aba",
+    "bdb",
+    "ccc"
+  ],
+  "key": {
+    "a": {
+      "item": "ae2:quartz_glass"
+    },
+    "b": {
+      "tag": "forge:dusts/redstone"
+    },
+    "c": {
+      "tag": "forge:gems/diamond"
+    },
+    "d": {
+      "item": "ae2additions:super_cell_component_1024k"
+    }
+  },
+  "result": {
+    "item": "ae2additions:super_cell_1024k"
+  }
+}

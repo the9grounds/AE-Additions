@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "aba",
+    "aaa",
+    "aba"
+  ],
+  "key": {
+    "a": {
+      "item": "ae2:cell_component_16k"
+    },
+    "b": {
+      "tag": "forge:gems/diamond"
+    }
+  },
+  "result": {
+    "item": "ae2additions:super_cell_component_16k"
+  }
+}
