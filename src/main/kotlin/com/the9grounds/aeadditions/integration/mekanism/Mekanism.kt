@@ -329,6 +329,10 @@ object Mekanism {
     }
     
     fun <T: IChemicalHandler<*, *>> extractChemicalForCapability(tileEntity: TileEntity, side: Direction, capability: Capability<T>, amount: Long, action: Action): ChemicalStack<*>? {
+        if (!tileEntity.getCapability(capability, side).resolve().isPresent) {
+            return null
+        }
+        
         return tileEntity.getCapability(capability, side).resolve().get().extractChemical(amount, action)
     }
     
