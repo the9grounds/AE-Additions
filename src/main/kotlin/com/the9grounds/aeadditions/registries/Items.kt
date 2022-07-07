@@ -37,9 +37,9 @@ object Items {
     val CHEMICAL_STORAGE_COMPONENT_4096k = createItem(Ids.CHEMICAL_STORAGE_COMPONENT_4096, { properties -> StorageComponentItem(properties.rarity(Rarity.EPIC), 4096) }, Mods.MEKANISM)
 
     val ITEM_STORAGE_CELL_256k = createItem(Ids.ITEM_STORAGE_CELL_256) { properties ->  PhysicalStorageCell(properties.maxStackSize(1), ITEM_STORAGE_COMPONENT_256k, 256, 3.0, 1024)}
-    val ITEM_STORAGE_CELL_1024k = createItem(Ids.ITEM_STORAGE_CELL_1024) { properties ->  PhysicalStorageCell(properties.maxStackSize(1), ITEM_STORAGE_COMPONENT_1024k, 256, 4.0, 4096)}
-    val ITEM_STORAGE_CELL_4096k = createItem(Ids.ITEM_STORAGE_CELL_4096) { properties ->  PhysicalStorageCell(properties.maxStackSize(1).rarity(Rarity.RARE), ITEM_STORAGE_COMPONENT_4096k, 256, 5.0, 8192)}
-    val ITEM_STORAGE_CELL_16384k = createItem(Ids.ITEM_STORAGE_CELL_16384) { properties ->  PhysicalStorageCell(properties.maxStackSize(1).rarity(Rarity.EPIC), ITEM_STORAGE_COMPONENT_16384k, 256, 6.0, 32768)}
+    val ITEM_STORAGE_CELL_1024k = createItem(Ids.ITEM_STORAGE_CELL_1024) { properties ->  PhysicalStorageCell(properties.maxStackSize(1), ITEM_STORAGE_COMPONENT_1024k, 1024, 4.0, 4096)}
+    val ITEM_STORAGE_CELL_4096k = createItem(Ids.ITEM_STORAGE_CELL_4096) { properties ->  PhysicalStorageCell(properties.maxStackSize(1).rarity(Rarity.RARE), ITEM_STORAGE_COMPONENT_4096k, 4096, 5.0, 8192)}
+    val ITEM_STORAGE_CELL_16384k = createItem(Ids.ITEM_STORAGE_CELL_16384) { properties ->  PhysicalStorageCell(properties.maxStackSize(1).rarity(Rarity.EPIC), ITEM_STORAGE_COMPONENT_16384k, 16384, 6.0, 32768)}
 
     val FLUID_STORAGE_CELL_256k = createItem(Ids.FLUID_STORAGE_CELL_256) { properties ->  FluidStorageCell(properties.maxStackSize(1), FLUID_STORAGE_COMPONENT_256k, 256, 3.0, 1024)}
     val FLUID_STORAGE_CELL_1024k = createItem(Ids.FLUID_STORAGE_CELL_1024) { properties ->  FluidStorageCell(properties.maxStackSize(1).rarity(Rarity.RARE), FLUID_STORAGE_COMPONENT_1024k, 1024, 4.0, 4096)}
