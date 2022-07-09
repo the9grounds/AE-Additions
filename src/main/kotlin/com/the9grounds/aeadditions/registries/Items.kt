@@ -55,13 +55,13 @@ object Items {
     val SUPER_CELL_HOUSING = createItem(Ids.SUPER_CELL_HOUSING) { properties -> Item(properties.stacksTo(64)) }
     
     val SUPER_CELL_1k = createItem(Ids.SUPER_CELL_1k) { properties -> SuperStorageCell(properties.stacksTo(1), SUPER_CELL_COMPONENT_1k, SUPER_CELL_HOUSING, 3.0, 16, 1, 63) }
-    val SUPER_CELL_4k = createItem(Ids.SUPER_CELL_4k) { properties -> SuperStorageCell(properties.stacksTo(1), SUPER_CELL_COMPONENT_4k, SUPER_CELL_HOUSING, 3.0, 16, 4, 63) }
-    val SUPER_CELL_16k = createItem(Ids.SUPER_CELL_16k) { properties -> SuperStorageCell(properties.stacksTo(1), SUPER_CELL_COMPONENT_16k, SUPER_CELL_HOUSING, 3.0, 16, 16, 63) }
-    val SUPER_CELL_64k = createItem(Ids.SUPER_CELL_64k) { properties -> SuperStorageCell(properties.stacksTo(1), SUPER_CELL_COMPONENT_64k, SUPER_CELL_HOUSING, 3.0, 16, 64, 63) }
-    val SUPER_CELL_256k = createItem(Ids.SUPER_CELL_256k) { properties -> SuperStorageCell(properties.stacksTo(1), SUPER_CELL_COMPONENT_256k, SUPER_CELL_HOUSING, 3.0, 16, 256, 100) }
-    val SUPER_CELL_1024k = createItem(Ids.SUPER_CELL_1024k) { properties -> SuperStorageCell(properties.stacksTo(1), SUPER_CELL_COMPONENT_1024k, SUPER_CELL_HOUSING, 3.0, 16, 1024, 150) }
-    val SUPER_CELL_4096k = createItem(Ids.SUPER_CELL_4096k) { properties -> SuperStorageCell(properties.stacksTo(1).rarity(Rarity.UNCOMMON), SUPER_CELL_COMPONENT_4096k, SUPER_CELL_HOUSING, 3.0, 16, 4096, 200) }
-    val SUPER_CELL_16M = createItem(Ids.SUPER_CELL_16M) { properties -> SuperStorageCell(properties.stacksTo(1).rarity(Rarity.RARE), SUPER_CELL_COMPONENT_16M, SUPER_CELL_HOUSING, 3.0, 16, 16384, 250) }
+    val SUPER_CELL_4k = createItem(Ids.SUPER_CELL_4k) { properties -> SuperStorageCell(properties.stacksTo(1), SUPER_CELL_COMPONENT_4k, SUPER_CELL_HOUSING, 3.0, 32, 4, 63) }
+    val SUPER_CELL_16k = createItem(Ids.SUPER_CELL_16k) { properties -> SuperStorageCell(properties.stacksTo(1), SUPER_CELL_COMPONENT_16k, SUPER_CELL_HOUSING, 3.0, 64, 16, 63) }
+    val SUPER_CELL_64k = createItem(Ids.SUPER_CELL_64k) { properties -> SuperStorageCell(properties.stacksTo(1), SUPER_CELL_COMPONENT_64k, SUPER_CELL_HOUSING, 3.0, 256, 64, 63) }
+    val SUPER_CELL_256k = createItem(Ids.SUPER_CELL_256k) { properties -> SuperStorageCell(properties.stacksTo(1), SUPER_CELL_COMPONENT_256k, SUPER_CELL_HOUSING, 3.0, 1024, 256, 100) }
+    val SUPER_CELL_1024k = createItem(Ids.SUPER_CELL_1024k) { properties -> SuperStorageCell(properties.stacksTo(1), SUPER_CELL_COMPONENT_1024k, SUPER_CELL_HOUSING, 3.0, 4096, 1024, 150) }
+    val SUPER_CELL_4096k = createItem(Ids.SUPER_CELL_4096k) { properties -> SuperStorageCell(properties.stacksTo(1).rarity(Rarity.UNCOMMON), SUPER_CELL_COMPONENT_4096k, SUPER_CELL_HOUSING, 3.0, 8192, 4096, 200) }
+    val SUPER_CELL_16M = createItem(Ids.SUPER_CELL_16M) { properties -> SuperStorageCell(properties.stacksTo(1).rarity(Rarity.RARE), SUPER_CELL_COMPONENT_16M, SUPER_CELL_HOUSING, 3.0, 32768, 16384, 250) }
     val SUPER_CELL_65M = createItem(Ids.SUPER_CELL_65M) { properties -> SuperStorageCell(properties.stacksTo(1).rarity(Rarity.EPIC), SUPER_CELL_COMPONENT_65M, SUPER_CELL_HOUSING, 30.0, 131072, 65536, 300) }
     
     val DISK_FLUID_HOUSING = createItem(Ids.DISK_FLUID_HOUSING, { Item(it.stacksTo(64))}, Mods.AE2THINGS)
