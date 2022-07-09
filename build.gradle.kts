@@ -144,8 +144,8 @@ dependencies {
     implementation(project.the<DependencyManagementExtension>().deobf("mekanism:Mekanism:${mekanismVersion}"))
     implementation(project.the<DependencyManagementExtension>().deobf("curse.maven:applied-mekanistics-574300:3797910"))
     implementation(project.the<DependencyManagementExtension>().deobf("curse.maven:ae2-things-forge-609977:3795991"))
-    compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:mega-cells-622112:3795694"))
-    runtimeOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:mega-cells-622112:3795694"))
+    compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:mega-cells-622112:3859532"))
+    runtimeOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:mega-cells-622112:3859532"))
     compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:applied-botanics-610632:3770580"))
     
 }
