@@ -8,6 +8,7 @@ import com.the9grounds.aeadditions.integration.Mods
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.SoundType
 import net.minecraft.world.level.block.state.BlockBehaviour
 import net.minecraft.world.level.material.Material
 import net.minecraftforge.registries.ForgeRegistries
@@ -21,16 +22,16 @@ object Blocks {
     
     
     @JvmField val BLOCK_CRAFTING_STORAGE_1024k = createBlock(Ids.CRAFTING_STORAGE_1024k, Material.METAL) {
-        CraftingStorageBlock(it, ExtendedCraftingUnitType.STORAGE_1024)
+        CraftingStorageBlock(it.strength(.75f, 11f).sound(SoundType.METAL), ExtendedCraftingUnitType.STORAGE_1024)
     }
     @JvmField val BLOCK_CRAFTING_STORAGE_4096k = createBlock(Ids.CRAFTING_STORAGE_4096k, Material.METAL) {
-        CraftingStorageBlock(it, ExtendedCraftingUnitType.STORAGE_4096)
+        CraftingStorageBlock(it.strength(.75f, 11f).sound(SoundType.METAL), ExtendedCraftingUnitType.STORAGE_4096)
     }
     @JvmField val BLOCK_CRAFTING_STORAGE_16384k = createBlock(Ids.CRAFTING_STORAGE_16384k, Material.METAL) {
-        CraftingStorageBlock(it, ExtendedCraftingUnitType.STORAGE_16384)
+        CraftingStorageBlock(it.strength(.75f, 11f).sound(SoundType.METAL), ExtendedCraftingUnitType.STORAGE_16384)
     }
     @JvmField val BLOCK_CRAFTING_STORAGE_65536k = createBlock(Ids.CRAFTING_STORAGE_65536k, Material.METAL) {
-        CraftingStorageBlock(it, ExtendedCraftingUnitType.STORAGE_65536)
+        CraftingStorageBlock(it.strength(.75f, 11f).sound(SoundType.METAL), ExtendedCraftingUnitType.STORAGE_65536)
     }
     
     fun init() {
