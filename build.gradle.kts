@@ -18,7 +18,6 @@ buildscript {
         }
 
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10")
-        classpath("org.spongepowered:mixingradle:0.7-SNAPSHOT")
     }
 }
 
@@ -32,8 +31,6 @@ apply {
     plugin("net.minecraftforge.gradle")
     plugin("idea")
 }
-
-apply(plugin = "org.spongepowered.mixin")
 
 // Properties
 val kotlinVersion: String by project
@@ -64,7 +61,6 @@ configure<UserDevExtension> {
     runs {
         create("client") {
             workingDirectory(project.file("run"))
-            args("-mixin.config=ae2additions.mixins.json")
 
             property("forge.logging.markers", "REGISTRIES")
             property("forge.logging.console.level", "debug")
@@ -75,7 +71,6 @@ configure<UserDevExtension> {
         }
         create("server") {
             workingDirectory(project.file("run"))
-            args("-mixin.config=ae2additions.mixins.json")
 
             property("forge.logging.markers", "REGISTRIES")
             property("forge.logging.console.level", "debug")
@@ -90,7 +85,7 @@ configure<UserDevExtension> {
             property("mixin.env.remapRefMap", "true")
             property("mixin.env.refMapRemappingFile", "${projectDir}/build/createSrgToMcp/output.srg")
 
-            args("--mod", "ae2additions", "--all", "--output", file("src/generated/resources/"), "--existing", file("src/main/resources"), "-mixin.config=ae2additions.mixins.json")
+            args("--mod", "ae2additions", "--all", "--output", file("src/generated/resources/"), "--existing", file("src/main/resources"))
         }
     }
 }
@@ -154,14 +149,11 @@ dependencies {
     implementation(project.the<DependencyManagementExtension>().deobf("curse.maven:applied-mekanistics-574300:3797910"))
     implementation(project.the<DependencyManagementExtension>().deobf("curse.maven:ae2-things-forge-609977:3795991"))
     implementation(project.the<DependencyManagementExtension>().deobf("curse.maven:the-one-probe-245211:3671753"))
-    compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:mega-cells-622112:3795694"))
-    runtimeOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:mega-cells-622112:3795694"))
     compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:ftb-teams-404468:3725501"))
     compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:applied-botanics-610632:3770580"))
-    
-
-    annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
-    compileOnly("org.spongepowered:mixin:0.8.5") { isTransitive = false }
+    compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:mega-cells-622112:3859532"))
+    runtimeOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:mega-cells-622112:3859532"))
+    compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:applied-botanics-610632:3770580"))
     
 }
 
@@ -174,10 +166,6 @@ tasks.withType<Jar> {
     duplicatesStrategy = org.gradle.api.file.DuplicatesStrategy.EXCLUDE
 
     baseName = "${modBaseName}-${getBetterVersion()}"
-    
-    manifest.attributes(
-        "MixinConfigs" to "ae2additions.mixins.json",
-    )
 
     // replace stuff in mcmod.info, nothing else
     filesMatching("META-INF/mods.toml") {
@@ -271,10 +259,4 @@ tasks.create("copyResourceToClasses", Copy::class) {
     onlyIf { gradle.taskGraph.hasTask(tasks.getByName("prepareRuns")) }
     into("$buildDir/classes/kotlin/main")
     from(tasks.processResources.get().destinationDir)
-}
-
-configure<org.spongepowered.asm.gradle.plugins.MixinExtension> {
-    add(sourceSets.main.get(), "ae2additions.refmap.json")
-    config("ae2additions.mixins.json")
-    quiet = false
 }

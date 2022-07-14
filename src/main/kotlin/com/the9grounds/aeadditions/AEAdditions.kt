@@ -1,7 +1,6 @@
 package com.the9grounds.aeadditions
 
 import appeng.api.stacks.AEKeyType
-import appeng.block.crafting.AbstractCraftingUnitBlock
 import appeng.items.storage.BasicStorageCell
 import com.the9grounds.aeadditions.core.AEAConfig
 import com.the9grounds.aeadditions.core.network.NetworkManager
@@ -40,13 +39,7 @@ object AEAdditions {
 
     const val ID = "ae2additions"
 
-    var craftingType1024k: AbstractCraftingUnitBlock.CraftingUnitType? = null
-    var craftingType4096k: AbstractCraftingUnitBlock.CraftingUnitType? = null
-    var craftingType16384k: AbstractCraftingUnitBlock.CraftingUnitType? = null
-    var craftingType65536k: AbstractCraftingUnitBlock.CraftingUnitType? = null
-
     init {
-        initCraftingUnitTypes()
         Items.REGISTRY.register(MOD_BUS)
         Blocks.REGISTRY.register(MOD_BUS)
         BlockEntities.REGISTRY.register(MOD_BUS)
@@ -131,17 +124,6 @@ object AEAdditions {
             if (Mods.APPMEK.isEnabled) {
                 val chemicalDiskCells = Items.ITEMS.filter { it is DiskCell && it.keyType == MekanismKeyType.TYPE }.toTypedArray()
                 itemColors.register(DISKDrive::getColor, *chemicalDiskCells)
-            }
-        }
-    }
-    
-    private fun initCraftingUnitTypes() {
-        for (value in AbstractCraftingUnitBlock.CraftingUnitType.values()) {
-            when (value.name) {
-                "STORAGE_1024k" -> craftingType1024k = value
-                "STORAGE_4096k" -> craftingType4096k = value
-                "STORAGE_16384k" -> craftingType16384k = value
-                "STORAGE_65536k" -> craftingType65536k = value
             }
         }
     }
