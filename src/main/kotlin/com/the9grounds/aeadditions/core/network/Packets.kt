@@ -1,8 +1,6 @@
 package com.the9grounds.aeadditions.core.network
 
-import com.the9grounds.aeadditions.core.network.packet.BasePacket
-import com.the9grounds.aeadditions.core.network.packet.ChannelsPacket
-import com.the9grounds.aeadditions.core.network.packet.RequestChannelsPacket
+import com.the9grounds.aeadditions.core.network.packet.*
 import net.minecraft.network.FriendlyByteBuf
 import kotlin.reflect.KClass
 
@@ -11,7 +9,10 @@ object Packets {
     
     enum class Packet(val clazz: KClass<*>, val factory: (FriendlyByteBuf) -> BasePacket) {
         REQUESTCHANNELS(RequestChannelsPacket::class, ::RequestChannelsPacket),
-        CHANNELS(ChannelsPacket::class, ::ChannelsPacket);
+        CHANNELS(ChannelsPacket::class, ::ChannelsPacket),
+        CREATECHANNEL(CreateChannelPacket::class, ::CreateChannelPacket),
+        TRANSCEIVERDATACHANGE(TransceiverDataChange::class, ::TransceiverDataChange),
+        DELETECHANNEL(DeleteChannelPacket::class, ::DeleteChannelPacket);
 
         companion object {
 

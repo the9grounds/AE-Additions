@@ -30,7 +30,6 @@ class ChannelHolder(val level: Level) {
     }
     
     fun setupTestChannels(player: ServerPlayer, name: String) {
-//        ServerLifecycleHooks.getCurrentServer().allLevels
         
         val level = player.level as ServerLevel
         
@@ -88,5 +87,20 @@ class ChannelHolder(val level: Level) {
                 channelInfos.add(i, ChannelInfo.readFromNbt(channelInfoTag, level))
             }
         }
+    }
+    
+    fun removeChannel(channelInfo: ChannelInfo) {
+        val channel = getOrCreateChannel(channelInfo)
+        
+        val blockEntity = channel.broadcaster
+        val subscribers = channel.subscribers
+        
+        channel.broadcaster?.destroyConnections()
+        
+        channelInfos.removeIf { it.id == channelInfo.id }
+        channels.remove(channelInfo)
+
+        blockEntity?.setChanged()
+        subscribers.forEach { it.setChanged() }
     }
 }

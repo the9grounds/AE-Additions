@@ -1,6 +1,7 @@
 package com.the9grounds.aeadditions.core.network.packet
 
 import com.the9grounds.aeadditions.core.network.NetworkManager
+import com.the9grounds.aeadditions.menu.MEWirelessTransceiverMenu
 import com.the9grounds.aeadditions.registries.Capability
 import io.netty.buffer.Unpooled
 import net.minecraft.network.FriendlyByteBuf
@@ -20,6 +21,13 @@ class RequestChannelsPacket : BasePacket {
     }
 
     override fun serverPacketData(player: Player) {
+        
+        var containerMenu = player.containerMenu
+        
+        if (containerMenu !is MEWirelessTransceiverMenu) {
+            return
+        }
+        
         val level = player.level as ServerLevel
         
         val channelHolder = level.getCapability(Capability.CHANNEL_HOLDER).resolve().get()
@@ -34,5 +42,9 @@ class RequestChannelsPacket : BasePacket {
         val packet = ChannelsPacket(filteredChannels.values.toList(), filteredChannelInfos)
         
         NetworkManager.sendTo(packet, player as ServerPlayer)
+        
+        val isASubscriber = containerMenu.blockEntity?.currentChannel?.broadcaster != containerMenu.blockEntity
+        
+        NetworkManager.sendTo(TransceiverDataChange(isASubscriber, player.level, containerMenu.blockEntity!!.currentChannel!!.channelInfo), player)
     }
 }

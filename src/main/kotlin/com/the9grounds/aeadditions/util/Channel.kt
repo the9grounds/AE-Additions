@@ -68,10 +68,10 @@ data class Channel(val channelInfo: ChannelInfo, var broadcaster: MEWirelessTran
                 val intArray = tag.getIntArray("subscriber#$i")
                 
                 if (!intArray.isEmpty()) {
-                    val blockEntity = level.getBlockEntity(BlockPos(broadcasterPos[0], broadcasterPos[1], broadcasterPos[2]))
+                    val blockEntity = level.getBlockEntity(BlockPos(intArray[0], intArray[1], intArray[2]))
 
                     if (blockEntity is MEWirelessTransceiverBlockEntity) {
-                        subscriberList.add(i, blockEntity)
+                        subscriberList.add(blockEntity)
                     }
                 }
             }

@@ -41,7 +41,7 @@ class MEWirelessTransceiverBlockEntity(pos: BlockPos, blockState: BlockState) : 
         mainNode.setIdlePowerUsage(value)
     }
     
-    val _mainGridNode: IManagedGridNode = GridHelper.createManagedNode(this, BlockEntityNodeListener.INSTANCE).setInWorldNode(true).setVisualRepresentation(item).setTagName("idk")
+    val _mainGridNode: IManagedGridNode = GridHelper.createManagedNode(this, BlockEntityNodeListener.INSTANCE).setInWorldNode(true).setFlags(GridFlags.DENSE_CAPACITY).setVisualRepresentation(item).setTagName("wirelesstransceiver")
 
     override fun getMainNode(): IManagedGridNode = _mainGridNode
 
@@ -109,11 +109,13 @@ class MEWirelessTransceiverBlockEntity(pos: BlockPos, blockState: BlockState) : 
         if (currentChannel != null && currentChannel!!.broadcaster == this) {
             var localIdleDraw = AEAConfig.meWirelessTransceiverBasePower.toDouble()
             for (subscriber in currentChannel!!.subscribers) {
-                if (subscriber.connection == null) {
-                    val connection = GridHelper.createGridConnection(getGridNode(null), subscriber.getGridNode(null))
-                    subscriber.connection = connection
-                    connections.add(connection)
+                if (subscriber.connection != null) {
+                    subscriber.connection?.destroy()
+                    subscriber.connection = null
                 }
+                val connection = GridHelper.createGridConnection(getGridNode(null), subscriber.getGridNode(null))
+                subscriber.connection = connection
+                connections.add(connection)
                 localIdleDraw += AEAConfig.meWirelessTransceiverDistanceMultiplier * blockPos.distSqr(subscriber.blockPos)
             }
             idleDraw = localIdleDraw
@@ -126,10 +128,10 @@ class MEWirelessTransceiverBlockEntity(pos: BlockPos, blockState: BlockState) : 
                 currentChannel!!.subscribers.forEach {
                     if (it.connection != null) {
                         it.connection!!.destroy()
-                        it.connection = null
                     }
                 }
-                channelHolder.channels.remove(currentChannel!!.channelInfo)
+                
+                currentChannel!!.broadcaster = null
             } else {
                 if (connection != null) {
                     connection!!.destroy()

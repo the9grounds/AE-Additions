@@ -3,6 +3,7 @@ package com.the9grounds.aeadditions.menu
 import appeng.api.config.SecurityPermissions
 import appeng.util.Platform
 import com.the9grounds.aeadditions.blockentity.MEWirelessTransceiverBlockEntity
+import com.the9grounds.aeadditions.client.gui.MEWirelessTransceiverScreen
 import com.the9grounds.aeadditions.core.network.NetworkManager
 import com.the9grounds.aeadditions.core.network.packet.ChannelsPacket
 import com.the9grounds.aeadditions.core.network.packet.RequestChannelsPacket
@@ -25,8 +26,14 @@ class MEWirelessTransceiverMenu(id: Int, val inventory: Inventory) : AbstractCon
     var blockEntity: MEWirelessTransceiverBlockEntity? = null
     var isPrivate = false
     var isSubscriber = true
-    
+    var isCurrentlySubscribing = false
+    var currentChannel: ChannelInfo? = null
     var isOnChannel: Boolean = false
+    
+    var ae2ChannelUsage = 0
+    var ae2MaxChannels = 0
+    
+    var screen: MEWirelessTransceiverScreen? = null
     
     constructor(id: Int, inventory: Inventory, blockEntity: MEWirelessTransceiverBlockEntity) : this(id, inventory) {
         this.blockEntity = blockEntity
@@ -59,7 +66,7 @@ class MEWirelessTransceiverMenu(id: Int, val inventory: Inventory) : AbstractCon
         }
     }
     
-    private fun sendChannelStuffToClient() {
+    public fun sendChannelStuffToClient() {
         val level = inventory.player.level as ServerLevel
 
         val channelHolder = level.getCapability(Capability.CHANNEL_HOLDER).resolve().get()
@@ -90,22 +97,7 @@ class MEWirelessTransceiverMenu(id: Int, val inventory: Inventory) : AbstractCon
     fun receiveChannelData(channelInfos: List<ChannelInfo>, channels: List<Channel>) {
         this.channelInfos = channelInfos
         this.channels = channels
-
-        this.isOnChannel = false
-
-        for (channel in channels) {
-            if (channel.broadcaster === blockEntity) {
-                this.isOnChannel = true
-                break
-            }
-            
-            for (subscriber in channel.subscribers) {
-                if (subscriber === blockEntity) {
-                    this.isOnChannel = true
-                    
-                    break
-                }
-            }
-        }
+        
+        screen?.onChannelListChanged()
     }
 }

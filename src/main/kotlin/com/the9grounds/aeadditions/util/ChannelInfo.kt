@@ -22,11 +22,8 @@ data class ChannelInfo(val id: UUID, val level: Level, val name: String, val isP
         channelInfoTag.putBoolean("isPrivate", isPrivate)
         channelInfoTag.putString("name", name)
         channelInfoTag.putString("id", id.toString())
-
-        if (isPrivate) {
-            channelInfoTag.putString("playerUUID", creator.toString())
-            channelInfoTag.putString("playerName", creatorName)
-        }
+        channelInfoTag.putString("playerUUID", creator.toString())
+        channelInfoTag.putString("playerName", creatorName)
         
         return channelInfoTag
     }
@@ -49,12 +46,8 @@ data class ChannelInfo(val id: UUID, val level: Level, val name: String, val isP
             val isPrivate = nbt.getBoolean("isPrivate")
             var creatorName: String? = null
 
-            val creator = if (isPrivate) {
-                creatorName = nbt.getString("playerName")
-                UUID.fromString(nbt.getString("playerUUID"))
-            } else {
-                null
-            }
+            creatorName = nbt.getString("playerName")
+            val creator = UUID.fromString(nbt.getString("playerUUID"))
 
             return ChannelInfo(UUID.fromString(nbt.getString("id")), level, nbt.getString("name"), isPrivate, creator, creatorName)
         }
