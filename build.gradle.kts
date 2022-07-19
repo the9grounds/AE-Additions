@@ -193,6 +193,7 @@ tasks.register<TaskPublishCurseForge>("publishCurseForge") {
     mainFile.addRequirement("kotlin-for-forge")
     mainFile.addOptional("mekanism")
     mainFile.addOptional("applied-mekanistics")
+    // Only temporary until the mod id conflict is fixed
     mainFile.addIncompatibility("ae2-additions")
     mainFile.addModLoader("Forge")
 }
