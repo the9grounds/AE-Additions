@@ -117,6 +117,12 @@ class TransceiverDataChange: BasePacket {
             containerMenu.isOnChannel = currentChannel != null
             containerMenu.ae2ChannelUsage = channelUsage
             containerMenu.ae2MaxChannels = maxChannels
+            
+            if (this.currentChannel?.isPrivate == true) {
+                containerMenu.isPrivate = true
+                containerMenu.screen?.accessBtn?.isPrivate = true
+                containerMenu.screen?.onChannelListChanged()
+            }
         }
     }
 }

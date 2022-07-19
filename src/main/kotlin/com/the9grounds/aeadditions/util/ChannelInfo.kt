@@ -38,6 +38,15 @@ data class ChannelInfo(val id: UUID, val level: Level, val name: String, val isP
             return FTBTeamsAPI.arePlayersInSameTeam(creator, player.uuid)
         }
         
+        return creator == player.uuid
+    }
+
+    fun hasAccessToDelete(player: ServerPlayer): Boolean {
+
+        if (Mods.FTBTEAMS.isEnabled) {
+            return FTBTeamsAPI.arePlayersInSameTeam(creator, player.uuid)
+        }
+
         return creator === player.uuid
     }
     

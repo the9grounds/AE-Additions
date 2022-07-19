@@ -24,7 +24,7 @@ class MEWirelessTransceiverScreen(menu: MEWirelessTransceiverMenu, inventory: In
 ) {
     val texture = Blitter.texture(ResourceLocation(AEAdditions.ID, "textures/gui/me_wireless_transceiver.png"))
     val channelListBackground = Blitter.texture(ResourceLocation(AEAdditions.ID, "textures/gui/channel-list-background.png"))
-    private val accessBtn = AccessButton(this, false)
+    val accessBtn = AccessButton(this, false)
     val typeButton = TransceiverTypeButton(this)
     private val createButton = CreateButton(this)
     private var extraDataPane: ExtraDataPane? = null

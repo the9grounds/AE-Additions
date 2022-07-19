@@ -35,7 +35,7 @@ class DeleteChannelPacket : BasePacket {
         
         val channelInfo = channelHolder.getChannelById(UUID.fromString(id))
         
-        if (channelInfo == null || !channelInfo.hasAccessTo(player as ServerPlayer)) {
+        if (channelInfo == null || !channelInfo.hasAccessToDelete(player as ServerPlayer)) {
             return
         }
         
