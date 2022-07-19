@@ -3,6 +3,7 @@ package com.the9grounds.aeadditions
 import appeng.api.stacks.AEKeyType
 import appeng.items.storage.BasicStorageCell
 import com.the9grounds.aeadditions.core.AEAConfig
+import com.the9grounds.aeadditions.core.EventHandler
 import com.the9grounds.aeadditions.core.network.NetworkManager
 import com.the9grounds.aeadditions.data.AEAdditionsDataGenerator
 import com.the9grounds.aeadditions.debug.CommandRegistry
@@ -58,6 +59,7 @@ object AEAdditions {
         
         MinecraftForge.EVENT_BUS.addListener(::serverStarting)
         MinecraftForge.EVENT_BUS.addGenericListener(Level::class.java, Capability::registerLevelCapability)
+        MinecraftForge.EVENT_BUS.register(EventHandler)
 
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT) { Runnable { initClient() } }
 

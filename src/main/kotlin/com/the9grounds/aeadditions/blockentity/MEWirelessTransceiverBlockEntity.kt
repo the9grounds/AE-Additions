@@ -122,7 +122,7 @@ class MEWirelessTransceiverBlockEntity(pos: BlockPos, blockState: BlockState) : 
         }
     }
     
-    fun destroyConnections() {
+    fun destroyConnections(remove: Boolean = true) {
         if (currentChannel != null) {
             if (currentChannel!!.broadcaster == this) {
                 currentChannel!!.subscribers.forEach {
@@ -131,13 +131,17 @@ class MEWirelessTransceiverBlockEntity(pos: BlockPos, blockState: BlockState) : 
                     }
                 }
                 
-                currentChannel!!.broadcaster = null
+                if (remove) {
+                    currentChannel!!.broadcaster = null
+                }
             } else {
                 if (connection != null) {
                     connection!!.destroy()
                     connection = null
                 }
-                currentChannel!!.subscribers.remove(this)
+                if (remove) {
+                    currentChannel!!.subscribers.remove(this)
+                }
             }
             
             currentChannel = null
@@ -162,7 +166,11 @@ class MEWirelessTransceiverBlockEntity(pos: BlockPos, blockState: BlockState) : 
     override fun onChunkUnloaded() {
         super.onChunkUnloaded()
         mainNode.destroy()
-        this.destroyConnections()
+        val cachedChannel = this.currentChannel
+        this.destroyConnections(false)
+        if (cachedChannel != null && cachedChannel.broadcaster != this) {
+            cachedChannel.broadcaster?.setupLinks()
+        }
     }
 
     override fun setRemoved() {
