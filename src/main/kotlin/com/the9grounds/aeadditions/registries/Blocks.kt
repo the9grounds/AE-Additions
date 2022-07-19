@@ -36,7 +36,7 @@ object Blocks {
     }
     
     val BLOCK_ME_WIRELESS_TRANSCEIVER = createBlock(Ids.ME_WIRELESS_TRANSCEIVER, Material.METAL) {
-        MEWirelessTransceiverBlock(it)
+        MEWirelessTransceiverBlock(it.strength(.75f, 11f).sound(SoundType.METAL))
     }
     
     fun init() {

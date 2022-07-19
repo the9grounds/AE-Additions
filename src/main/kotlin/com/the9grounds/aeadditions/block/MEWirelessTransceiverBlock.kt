@@ -45,7 +45,7 @@ class MEWirelessTransceiverBlock(properties: Properties) : Block(properties), En
         
         val blockEntity = level.getBlockEntity(pos, BlockEntities.ME_WIRELESS_TRANSCEIVER)
         
-        if (blockEntity.isPresent && hand == InteractionHand.OFF_HAND) {
+        if (blockEntity.isPresent && !player.isShiftKeyDown) {
             if (!level.isClientSide) {
                 player.openMenu(blockEntity.get())
 
