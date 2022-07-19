@@ -2,6 +2,7 @@ package com.the9grounds.aeadditions.registries
 
 import com.the9grounds.aeadditions.AEAdditions
 import com.the9grounds.aeadditions.block.CraftingStorageBlock
+import com.the9grounds.aeadditions.block.MEWirelessTransceiverBlock
 import com.the9grounds.aeadditions.block.crafting.ExtendedCraftingUnitType
 import com.the9grounds.aeadditions.core.BlockDefinition
 import com.the9grounds.aeadditions.integration.Mods
@@ -32,6 +33,10 @@ object Blocks {
     }
     @JvmField val BLOCK_CRAFTING_STORAGE_65536k = createBlock(Ids.CRAFTING_STORAGE_65536k, Material.METAL) {
         CraftingStorageBlock(it.strength(.75f, 11f).sound(SoundType.METAL), ExtendedCraftingUnitType.STORAGE_65536)
+    }
+    
+    val BLOCK_ME_WIRELESS_TRANSCEIVER = createBlock(Ids.ME_WIRELESS_TRANSCEIVER, Material.METAL) {
+        MEWirelessTransceiverBlock(it.strength(.75f, 11f).sound(SoundType.METAL))
     }
     
     fun init() {

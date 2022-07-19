@@ -518,6 +518,18 @@ class AEAdditionsRecipeProvider(generatorIn: DataGenerator) : RecipeProvider(gen
                     .save(it)
             }
         }
+        
+        ShapedRecipeBuilder.shaped(Blocks.BLOCK_ME_WIRELESS_TRANSCEIVER.block)
+            .pattern("aba")
+            .pattern("cdc")
+            .pattern("aba")
+            .define('a', AEItems.FLUIX_CRYSTAL)
+            .define('b', AEItems.ENGINEERING_PROCESSOR)
+            .define('c', AEItems.WIRELESS_RECEIVER)
+            .define('d', Tags.Items.GEMS_DIAMOND)
+            .unlockedBy("has_item", has(AEItems.WIRELESS_RECEIVER))
+            .unlockedBy("has_diamond", has(Tags.Items.GEMS_DIAMOND))
+            .save(consumer, ResourceLocation(AEAdditions.ID, "blocks/wireless_transceiver"))
     }
 
     private fun registerChemicalDiskRecipe(

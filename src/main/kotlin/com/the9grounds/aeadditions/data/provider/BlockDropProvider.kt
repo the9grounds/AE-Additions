@@ -11,6 +11,7 @@ class BlockDropProvider : BlockLoot() {
         this.dropSelf(Blocks.BLOCK_CRAFTING_STORAGE_4096k.block)
         this.dropSelf(Blocks.BLOCK_CRAFTING_STORAGE_16384k.block)
         this.dropSelf(Blocks.BLOCK_CRAFTING_STORAGE_65536k.block)
+        this.dropSelf(Blocks.BLOCK_ME_WIRELESS_TRANSCEIVER.block)
     }
 
     override fun getKnownBlocks(): MutableIterable<Block> {

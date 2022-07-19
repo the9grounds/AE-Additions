@@ -83,6 +83,8 @@ object Ids {
     val CRAFTING_STORAGE_16384k = id("16384k_crafting_storage")
     val CRAFTING_STORAGE_65536k = id("65536k_crafting_storage")
     
+    val ME_WIRELESS_TRANSCEIVER = id("me_wireless_transceiver")
+    
 
     private fun id(id: String): ResourceLocation = ResourceLocation(AEAdditions.ID, id)
 }
