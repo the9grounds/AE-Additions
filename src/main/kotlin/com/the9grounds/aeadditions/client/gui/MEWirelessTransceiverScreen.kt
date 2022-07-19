@@ -206,7 +206,10 @@ class MEWirelessTransceiverScreen(menu: MEWirelessTransceiverMenu, inventory: In
     }
     
     fun accessBtnTooltip(button: Button, posStack: PoseStack, mouseX: Int, mouseY: Int) {
-        this.renderTooltip(posStack, TextComponent(if (accessBtn.isPrivate) "Private" else "Public"), mouseX, mouseY)
+        val tooltips = mutableListOf<Component>()
+        tooltips.add(TextComponent("Access Mode"))
+        tooltips.add(TextComponent(if (accessBtn.isPrivate) "Private" else "Public"))
+        this.renderComponentTooltip(posStack, tooltips, mouseX, mouseY)
     }
     
     fun transceiverTypeButtonTooltip(button: Button, posStack: PoseStack, mouseX: Int, mouseY: Int) {
@@ -215,7 +218,10 @@ class MEWirelessTransceiverScreen(menu: MEWirelessTransceiverMenu, inventory: In
         } else {
             "Broadcaster"
         }
-        this.renderTooltip(posStack, TextComponent(label), mouseX, mouseY)
+        val tooltips = mutableListOf<Component>()
+        tooltips.add(TextComponent("Transceiver Mode"))
+        tooltips.add(TextComponent(label))
+        this.renderComponentTooltip(posStack, tooltips, mouseX, mouseY)
     }
     
     fun accessButtonPressed(button: Button) {
