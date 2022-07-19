@@ -58,3 +58,9 @@ mandatory=false
 ordering="AFTER"
 versionRange="[1.1.1,)"
 side="BOTH"
+[[dependencies.ae2additions]]
+modId="ftbteams"
+mandatory=false
+ordering="AFTER"
+versionRange="[1802.2.6-build.51,)"
+side="BOTH"
