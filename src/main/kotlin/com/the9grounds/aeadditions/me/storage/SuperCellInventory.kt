@@ -125,6 +125,8 @@ class SuperCellInventory(val cell: SuperStorageCell?, val itemStackLocal: ItemSt
         storedItemCount = tagCompound!!.getLong(ITEM_COUNT_TAG)
         computedUsedBytes = tagCompound!!.getLong("usedBytes")
         cellItems = null
+        
+        recalculateValues()
     }
 
     override fun persist() {
@@ -275,7 +277,7 @@ class SuperCellInventory(val cell: SuperStorageCell?, val itemStackLocal: ItemSt
     }
 
     fun canHoldNewItem(): Boolean {
-        return getTotalBytes() > getUsedBytes();
+        return getTotalBytes() > getUsedBytes() && getRemainingItemTypes() > 0
     }
 
     fun getTotalBytes(): Long {
@@ -409,7 +411,7 @@ class SuperCellInventory(val cell: SuperStorageCell?, val itemStackLocal: ItemSt
             saveChanges()
         }
 
-        return amount
+        return _amount
     }
 
     override fun extract(what: AEKey?, amount: Long, mode: Actionable, source: IActionSource?): Long {
