@@ -15,6 +15,6 @@ class SaveChangesButton(parent: MEWirelessTransceiverScreen, val font: Font) : B
         val texture = Blitter.texture(ResourceLocation(AEAdditions.ID, "textures/gui/buttons/background.png"), 16, 16)
         
         texture.dest(this.x, this.y, 40, 16).src(0, 0, 16, 16).blit(poseStack, 1)
-        font.draw(poseStack, "Save", this.x + 10f, this.y + 4f, Color(0, 0, 0, 1).toARGB())
+        font.draw(poseStack, "Save", this.x + 10f, this.y + 4f, Color(0, 0, 0, 255).toARGB())
     }
 }

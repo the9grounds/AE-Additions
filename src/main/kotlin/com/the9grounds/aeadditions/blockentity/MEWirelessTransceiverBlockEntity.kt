@@ -1,6 +1,7 @@
 package com.the9grounds.aeadditions.blockentity
 
 import appeng.api.networking.*
+import appeng.api.util.AECableType
 import appeng.me.helpers.BlockEntityNodeListener
 import appeng.me.helpers.IGridConnectedBlockEntity
 import com.the9grounds.aeadditions.core.AEAConfig
@@ -51,6 +52,8 @@ class MEWirelessTransceiverBlockEntity(pos: BlockPos, blockState: BlockState) : 
     override fun securityBreak() {
         
     }
+
+    override fun getCableConnectionType(dir: Direction?): AECableType = AECableType.SMART
 
     override fun load(tag: CompoundTag) {
         super.load(tag)
@@ -172,10 +175,10 @@ class MEWirelessTransceiverBlockEntity(pos: BlockPos, blockState: BlockState) : 
 
     override fun onChunkUnloaded() {
         super.onChunkUnloaded()
+        mainNode.destroy()
         if (Thread.currentThread().threadGroup != SidedThreadGroups.SERVER) {
             return
         }
-        mainNode.destroy()
         val cachedChannel = this.currentChannel
         this.destroyConnections()
         if (cachedChannel != null && cachedChannel.broadcaster != this) {
@@ -185,9 +188,8 @@ class MEWirelessTransceiverBlockEntity(pos: BlockPos, blockState: BlockState) : 
 
     override fun setRemoved() {
         super.setRemoved()
-        if (level!!.hasChunkAt(blockPos)) {
-        level!!.updateNeighborsAt(blockPos, blockState.block)
-        }
+        mainNode.destroy()
+        requestModelDataUpdate()
     }
 
     fun addProbeInfo(
@@ -232,7 +234,6 @@ class MEWirelessTransceiverBlockEntity(pos: BlockPos, blockState: BlockState) : 
         
         if (_mainGridNode.node == null) {
             _mainGridNode.create(level, blockPos)
-            level!!.updateNeighborsAt(blockPos, blockState.block)
         }
         
         return _mainGridNode.node

@@ -23,7 +23,7 @@ class ChannelField(val font: Font, val channelInfo: ChannelInfo, val guiLeft: In
             backgroundTexture.opacity(.5f).dest(x, y, 171, 10).blit(poseStack, 2)
         }
 
-        this.font.draw(poseStack, text, x.toFloat(), y.toFloat(), Color(58, 201, 178, 1).toARGB())
+        this.font.draw(poseStack, text, x.toFloat(), y.toFloat(), Color(58, 201, 178, 255).toARGB())
     }
 
     override fun updateNarration(p_169152_: NarrationElementOutput) {

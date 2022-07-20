@@ -22,7 +22,7 @@ class ExtraDataPane(x: Int, y: Int, val screen: MEWirelessTransceiverScreen, val
         val usedChannels = screen.menu.ae2ChannelUsage
         val maxChannels = screen.menu.ae2MaxChannels
         
-        font.draw(poseStack, TextComponent("AE2 Channels: $usedChannels/$maxChannels"), 6.toFloat(), 2.toFloat(), Color(0, 0, 0, 1).toARGB())
+        font.draw(poseStack, TextComponent("AE2 Channels: $usedChannels/$maxChannels"), 6.toFloat(), 2.toFloat(), Color(0, 0, 0, 255).toARGB())
         
         poseStack.popPose()
     }

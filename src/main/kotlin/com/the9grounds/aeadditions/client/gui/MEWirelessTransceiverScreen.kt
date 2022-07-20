@@ -75,7 +75,7 @@ class MEWirelessTransceiverScreen(menu: MEWirelessTransceiverMenu, inventory: In
         typeButton.x = guiLeft + imageWidth + 2
         typeButton.y = guiTop + 16 + 12
         typeButton.render(posStack, mouseX, mouseY, p_97798_)
-        font.draw(posStack, TextComponent("Channel Name"), (guiLeft + 16).toFloat(), (guiTop + 22).toFloat(), Color(0, 0, 0, 1).toARGB())
+        font.draw(posStack, TextComponent("Channel Name"), (guiLeft + 16).toFloat(), (guiTop + 22).toFloat(), Color(0, 0, 0, 255).toARGB())
         textField?.render(posStack, mouseX, mouseY, p_97798_)
         createButton.x = guiLeft + 16 + textField!!.width + 2
         createButton.y = guiTop + 22 + 10
@@ -95,8 +95,8 @@ class MEWirelessTransceiverScreen(menu: MEWirelessTransceiverMenu, inventory: In
             "None"
         }
         
-        font.draw(posStack, TextComponent("Current Channel:"), (guiLeft + 16).toFloat(), (guiTop + 50).toFloat(), Color(0, 0, 0, 1).toARGB())
-        font.draw(posStack, TextComponent(channelName), (guiLeft + 104).toFloat(), (guiTop + 50).toFloat(), Color(0, 88, 12, 1).toARGB())
+        font.draw(posStack, TextComponent("Current Channel:"), (guiLeft + 16).toFloat(), (guiTop + 50).toFloat(), Color(0, 0, 0, 255).toARGB())
+        font.draw(posStack, TextComponent(channelName), (guiLeft + 104).toFloat(), (guiTop + 50).toFloat(), Color(0, 88, 12, 255).toARGB())
         
         var mode = "None"
         
@@ -108,8 +108,8 @@ class MEWirelessTransceiverScreen(menu: MEWirelessTransceiverMenu, inventory: In
             }
         }
         
-        font.draw(posStack, TextComponent("Current Mode:"), (guiLeft + 16).toFloat(), (guiTop + 60).toFloat(), Color(0, 0, 0, 1).toARGB())
-        font.draw(posStack, TextComponent(mode), (guiLeft + 90).toFloat(), (guiTop + 60).toFloat(), Color(0, 88, 12, 1).toARGB())
+        font.draw(posStack, TextComponent("Current Mode:"), (guiLeft + 16).toFloat(), (guiTop + 60).toFloat(), Color(0, 0, 0, 255).toARGB())
+        font.draw(posStack, TextComponent(mode), (guiLeft + 90).toFloat(), (guiTop + 60).toFloat(), Color(0, 88, 12, 255).toARGB())
         
         posStack.pushPose()
         posStack.translate(guiLeft.toDouble(), guiTop.toDouble(), 0.0)
