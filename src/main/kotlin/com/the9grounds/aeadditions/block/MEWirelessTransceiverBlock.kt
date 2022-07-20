@@ -48,9 +48,8 @@ class MEWirelessTransceiverBlock(properties: Properties) : Block(properties), En
         if (blockEntity.isPresent && !player.isShiftKeyDown) {
             if (!level.isClientSide) {
                 player.openMenu(blockEntity.get())
-
-                return InteractionResult.sidedSuccess(level.isClientSide)
             }
+            return InteractionResult.sidedSuccess(level.isClientSide)
         }
         
         return super.use(blockState, level, pos, player, hand, hit)

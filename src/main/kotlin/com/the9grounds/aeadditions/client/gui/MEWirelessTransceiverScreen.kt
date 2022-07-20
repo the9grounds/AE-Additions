@@ -58,7 +58,7 @@ class MEWirelessTransceiverScreen(menu: MEWirelessTransceiverMenu, inventory: In
         setChannelButton = SaveChangesButton(this, font)
         deleteChannelButton = DeleteChannelButton(this, font)
         extraDataPane = ExtraDataPane(guiLeft - 128, guiTop, this, font)
-        scrollBar = ScrollBar(guiLeft + 16 + 138, guiTop + 70 + 1, this)
+        scrollBar = ScrollBar(guiLeft + 16 + 138, guiTop + 70, this)
     }
     
     override fun renderBg(posStack: PoseStack, ticks: Float, p_97789_: Int, p_97790_: Int) {

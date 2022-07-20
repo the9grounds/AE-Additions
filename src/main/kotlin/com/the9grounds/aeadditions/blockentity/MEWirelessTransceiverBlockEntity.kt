@@ -26,6 +26,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
+import net.minecraftforge.fml.util.thread.SidedThreadGroups
 import java.util.*
 
 class MEWirelessTransceiverBlockEntity(pos: BlockPos, blockState: BlockState) : BlockEntity(BlockEntities.ME_WIRELESS_TRANSCEIVER, pos, blockState), IGridConnectedBlockEntity, IInWorldGridNodeHost, MenuProvider {
@@ -38,7 +39,9 @@ class MEWirelessTransceiverBlockEntity(pos: BlockPos, blockState: BlockState) : 
     var idleDraw = 0.0
     set(value) {
         field = value
-        mainNode.setIdlePowerUsage(value)
+        if (mainNode.isReady) {
+            mainNode.setIdlePowerUsage(value)
+        }
     }
     
     val _mainGridNode: IManagedGridNode = GridHelper.createManagedNode(this, BlockEntityNodeListener.INSTANCE).setInWorldNode(true).setFlags(GridFlags.DENSE_CAPACITY).setVisualRepresentation(item).setTagName("wirelesstransceiver")
@@ -169,9 +172,12 @@ class MEWirelessTransceiverBlockEntity(pos: BlockPos, blockState: BlockState) : 
 
     override fun onChunkUnloaded() {
         super.onChunkUnloaded()
+        if (Thread.currentThread().threadGroup != SidedThreadGroups.SERVER) {
+            return
+        }
         mainNode.destroy()
         val cachedChannel = this.currentChannel
-        this.destroyConnections(false)
+        this.destroyConnections()
         if (cachedChannel != null && cachedChannel.broadcaster != this) {
             cachedChannel.broadcaster?.setupLinks()
         }
@@ -179,8 +185,6 @@ class MEWirelessTransceiverBlockEntity(pos: BlockPos, blockState: BlockState) : 
 
     override fun setRemoved() {
         super.setRemoved()
-        mainNode.destroy()
-        this.destroyConnections()
         if (level!!.hasChunkAt(blockPos)) {
         level!!.updateNeighborsAt(blockPos, blockState.block)
         }
@@ -236,7 +240,7 @@ class MEWirelessTransceiverBlockEntity(pos: BlockPos, blockState: BlockState) : 
 
     override fun onLoad() {
         super.onLoad()
-        if (channelId != null) {
+        if (channelId != null && Thread.currentThread().threadGroup == SidedThreadGroups.SERVER) {
             val channelInfo = channelHolder.getChannelById(channelId!!) ?: return
 
             if (channelConnectionType == "broadcast") {
