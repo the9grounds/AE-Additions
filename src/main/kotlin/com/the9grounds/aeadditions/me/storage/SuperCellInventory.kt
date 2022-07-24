@@ -20,31 +20,31 @@ import net.minecraft.network.chat.Component
 import net.minecraft.world.item.ItemStack
 
 class SuperCellInventory(val cell: SuperStorageCell?, val itemStackLocal: ItemStack, val container: ISaveProvider?) : StorageCell {
-    
+
     private var tagCompound: CompoundTag? = null
     private var maxItemTypes = MAX_ITEM_TYPES
     private var storedItems: Short
-    get() = (cellItems?.size ?: 0).toShort()
+        get() = (cellItems?.size ?: 0).toShort()
     private var storedItemCount = 0L
     var partitionList: IPartitionList? = null
         private set
     var partitionListMode: IncludeExclude? = null
-    private set
+        private set
     private var maxItemsPerType: Long = Long.MAX_VALUE
     private var hasVoidUpgrade = false
     protected var cellItems: MutableMap<AEKey, Long>? = null
-    get() {
-        if (field == null) {
-            cellItems = Object2LongOpenHashMap()
-            loadCellItems()
+        get() {
+            if (field == null) {
+                cellItems = Object2LongOpenHashMap()
+                loadCellItems()
+            }
+            return field
         }
-        return field
-    }
     protected var itemsPerByte = 0
     private var isPersisted = true
-    
+
     private var computedUsedBytes = 0L
-    
+
     var numberOfTypesByKeyType = mutableMapOf<AEKeyType, Int>()
     var storedItemCountByKeyType = mutableMapOf<AEKeyType, Long>()
     val cellTypes = AEKeyTypes.getAll()
@@ -67,44 +67,44 @@ class SuperCellInventory(val cell: SuperStorageCell?, val itemStackLocal: ItemSt
                 ITEM_SLOT_COUNT_KEYS[x] = ITEM_SLOT_COUNT + x
             }
         }
-        
+
         private fun getStorageCell(input: ItemStack?): SuperStorageCell? {
             if (input != null && input.item is SuperStorageCell) {
                 return input.item as SuperStorageCell
             }
-            
+
             return null
         }
-        
+
         private fun getStorageCell(itemKey: AEItemKey): SuperStorageCell? {
             if (itemKey.item is SuperStorageCell) {
                 return itemKey.item as SuperStorageCell
             }
-            
+
             return null
         }
-        
+
         private fun isCellEmpty(cellInventory: SuperCellInventory?): Boolean {
             if (cellInventory == null) {
                 return true
             }
             return cellInventory.availableStacks.isEmpty
         }
-        
+
         fun isCell(itemStack: ItemStack?): Boolean {
             return getStorageCell(itemStack) !== null
         }
-        
+
         fun createInventory(itemStack: ItemStack, container: ISaveProvider?): SuperCellInventory? {
             val item = itemStack.item
             if (item !is SuperStorageCell) {
                 return null
             }
-            
+
             if (!item.isStorageCell(itemStack)) {
                 return null
             }
-            
+
             return SuperCellInventory(item, itemStack, container)
         }
     }
@@ -125,6 +125,8 @@ class SuperCellInventory(val cell: SuperStorageCell?, val itemStackLocal: ItemSt
         storedItemCount = tagCompound!!.getLong(ITEM_COUNT_TAG)
         computedUsedBytes = tagCompound!!.getLong("usedBytes")
         cellItems = null
+
+        recalculateValues()
     }
 
     override fun persist() {
@@ -149,7 +151,7 @@ class SuperCellInventory(val cell: SuperStorageCell?, val itemStackLocal: ItemSt
                 localItemCountByKeyType[entry.key.type] = currentAmount + amount
                 keys.add(entry.key.toTagGeneric())
                 amounts.add(amount)
-                
+
                 val currentNumber = localNumberOfTypesByKeyType[entry.key.type] ?: 0
 
                 localNumberOfTypesByKeyType[entry.key.type] = currentNumber + 1
@@ -169,15 +171,15 @@ class SuperCellInventory(val cell: SuperStorageCell?, val itemStackLocal: ItemSt
         storedItemCount = itemCount
         storedItemCountByKeyType = localItemCountByKeyType
         numberOfTypesByKeyType = localNumberOfTypesByKeyType
-        
+
         var localComputedUsedBytes = 0L
-        
+
         for (keyType in cellTypes) {
             localComputedUsedBytes += getUsedBytesForType(keyType)
         }
-        
+
         computedUsedBytes = localComputedUsedBytes
-        
+
         if (computedUsedBytes == 0L) {
             getTag()!!.remove(ITEM_COUNT_TAG)
         } else {
@@ -275,7 +277,7 @@ class SuperCellInventory(val cell: SuperStorageCell?, val itemStackLocal: ItemSt
     }
 
     fun canHoldNewItem(): Boolean {
-        return getTotalBytes() > getUsedBytes();
+        return getTotalBytes() > getUsedBytes() && getRemainingItemTypes() > 0
     }
 
     fun getTotalBytes(): Long {
@@ -295,7 +297,7 @@ class SuperCellInventory(val cell: SuperStorageCell?, val itemStackLocal: ItemSt
         for (keyType in storedItemCountByKeyType) {
             storedItemCount += keyType.value
         }
-        
+
         return storedItemCount
     }
 
@@ -326,7 +328,7 @@ class SuperCellInventory(val cell: SuperStorageCell?, val itemStackLocal: ItemSt
         val remaining = this.getFreeBytes() * itemsPerByte + this.getUnusedItemCount()
         return if (remaining > 0) remaining else 0
     }
-    
+
     fun getRemainingItemCountForKeyType(keyType: AEKeyType): Long {
         return this.getFreeBytes() * keyType.amountPerByte + this.getUnusedItemCountForKeyType(keyType) ?: 0L
     }
@@ -375,7 +377,7 @@ class SuperCellInventory(val cell: SuperStorageCell?, val itemStackLocal: ItemSt
                 return 0
             }
         }
-        
+
         val currentAmount: Long = cellItems!!.get(what)?: 0
         var remainingItemCount = getRemainingItemCountForKeyType(what.type)
 
@@ -397,7 +399,7 @@ class SuperCellInventory(val cell: SuperStorageCell?, val itemStackLocal: ItemSt
 
         // Apply max items per type
         remainingItemCount = Math.max(0, Math.min(maxItemsPerType - currentAmount, remainingItemCount))
-        
+
         var _amount = amount
 
         if (_amount > remainingItemCount) {
@@ -409,7 +411,7 @@ class SuperCellInventory(val cell: SuperStorageCell?, val itemStackLocal: ItemSt
             saveChanges()
         }
 
-        return amount
+        return _amount
     }
 
     override fun extract(what: AEKey?, amount: Long, mode: Actionable, source: IActionSource?): Long {
