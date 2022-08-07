@@ -3,8 +3,8 @@ package com.the9grounds.aeadditions.container.chemical
 import appeng.api.config.SecurityPermissions
 import com.the9grounds.aeadditions.api.IAEAChemicalConfig
 import com.the9grounds.aeadditions.api.IAEAHasChemicalConfig
+import com.the9grounds.aeadditions.api.ICombinedChemicalContainer
 import com.the9grounds.aeadditions.api.container.IChemicalSyncContainer
-import com.the9grounds.aeadditions.client.gui.me.chemical.ChemicalInterfaceScreen
 import com.the9grounds.aeadditions.container.AbstractContainer
 import com.the9grounds.aeadditions.container.ContainerTypeBuilder
 import com.the9grounds.aeadditions.container.slot.DisabledSlot
@@ -44,14 +44,14 @@ class ChemicalInterfaceContainer(
     
     var chemicalList = arrayOf<Chemical<*>?>()
 
-    var gui: ChemicalInterfaceScreen? = null
+    var gui: ICombinedChemicalContainer? = null
 
     fun getChemicalConfig(): IAEAChemicalConfig = (tileEntity as IAEAHasChemicalConfig).getChemicalConfig()
     
     fun onChemicalTankListChanged(chemicalTankList: ChemicalTankList) {
         this.chemicalTankList = chemicalTankList
         
-        gui!!.onChemicalListChanged()
+        gui!!.onChemicalListChange()
     }
 
     override fun receiveChemicals(chemicals: Array<Chemical<*>?>) {

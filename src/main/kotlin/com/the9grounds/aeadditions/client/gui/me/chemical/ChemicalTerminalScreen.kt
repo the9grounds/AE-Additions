@@ -3,6 +3,7 @@ package com.the9grounds.aeadditions.client.gui.me.chemical
 import appeng.helpers.InventoryAction
 import com.mojang.blaze3d.matrix.MatrixStack
 import com.the9grounds.aeadditions.AEAdditions
+import com.the9grounds.aeadditions.api.IChemicalListContainer
 import com.the9grounds.aeadditions.api.chemical.IAEChemicalStack
 import com.the9grounds.aeadditions.client.gui.AEABaseScreen
 import com.the9grounds.aeadditions.client.gui.widget.IWidget
@@ -24,7 +25,8 @@ class ChemicalTerminalScreen(
     container: ChemicalTerminalContainer,
     playerInventory: PlayerInventory,
     title: ITextComponent
-) : AEABaseScreen<ChemicalTerminalContainer>(container, playerInventory, StringTextComponent("Chemical Terminal")) {
+) : AEABaseScreen<ChemicalTerminalContainer>(container, playerInventory, StringTextComponent("Chemical Terminal")),
+    IChemicalListContainer {
     
     private val texture = ResourceLocation(AEAdditions.ID, "textures/gui/chemical/terminal.png")
     var searchBox: TextFieldWidget? = null
@@ -95,7 +97,7 @@ class ChemicalTerminalScreen(
         super.drawGuiContainerBackgroundLayer(matrixStack, partialTicks, x, y)
     }
     
-    fun onChemicalListChange() {
+    override fun onChemicalListChange() {
         val chemicalList = container.chemicalList as? ChemicalList ?: return
 
         widgetContainer.reset(SlotType.Storage)

@@ -2,8 +2,8 @@ package com.the9grounds.aeadditions.container.chemical
 
 import appeng.api.config.Upgrades
 import com.the9grounds.aeadditions.api.IAEAChemicalConfig
+import com.the9grounds.aeadditions.api.IChemicalConfigContainer
 import com.the9grounds.aeadditions.api.IUpgradeableHost
-import com.the9grounds.aeadditions.api.client.IChemicalConfigListener
 import com.the9grounds.aeadditions.api.container.IChemicalSyncContainer
 import com.the9grounds.aeadditions.container.AbstractUpgradableContainer
 import com.the9grounds.aeadditions.container.slot.DisabledSlot
@@ -27,7 +27,7 @@ abstract class AbstractChemicalConfigurableContainer<T>(
     
     var chemicalList = arrayOf<Chemical<*>?>()
 
-    var gui: IChemicalConfigListener? = null
+    var gui: IChemicalConfigContainer? = null
     
     abstract fun getChemicalConfig(): IAEAChemicalConfig
     

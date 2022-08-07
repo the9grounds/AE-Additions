@@ -17,8 +17,8 @@ import appeng.api.storage.data.IItemList
 import appeng.api.util.AEPartLocation
 import appeng.helpers.InventoryAction
 import appeng.me.helpers.ChannelPowerSrc
+import com.the9grounds.aeadditions.api.IChemicalListContainer
 import com.the9grounds.aeadditions.api.chemical.IAEChemicalStack
-import com.the9grounds.aeadditions.client.gui.me.chemical.ChemicalTerminalScreen
 import com.the9grounds.aeadditions.container.AbstractContainer
 import com.the9grounds.aeadditions.container.ContainerTypeBuilder
 import com.the9grounds.aeadditions.integration.mekanism.Mekanism
@@ -44,7 +44,7 @@ class ChemicalTerminalContainer(
 //    val updateHelper = IncrementalUpdateHelper<IAEChemicalStack>()
     var chemicalList: IItemList<IAEChemicalStack>? = null
 
-    var gui: ChemicalTerminalScreen? = null
+    var gui: IChemicalListContainer? = null
     var networkNode: IGridNode? = null
     var powerSource: IEnergySource? = null
 

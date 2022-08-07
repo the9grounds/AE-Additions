@@ -1,8 +1,8 @@
 package com.the9grounds.aeadditions.client.gui.me.chemical
 
 import com.mojang.blaze3d.matrix.MatrixStack
+import com.the9grounds.aeadditions.api.ICombinedChemicalContainer
 import com.the9grounds.aeadditions.api.chemical.IAEChemicalStack
-import com.the9grounds.aeadditions.api.client.IChemicalConfigListener
 import com.the9grounds.aeadditions.client.gui.AEABaseScreen
 import com.the9grounds.aeadditions.client.gui.widget.ChemicalWidgetConfig
 import com.the9grounds.aeadditions.client.gui.widget.WidgetChemicalTank
@@ -19,7 +19,7 @@ class ChemicalInterfaceScreen(
     screenContainer: ChemicalInterfaceContainer,
     inv: PlayerInventory,
     titleIn: ITextComponent
-) : AEABaseScreen<ChemicalInterfaceContainer>(screenContainer, inv, titleIn), IChemicalConfigListener {
+) : AEABaseScreen<ChemicalInterfaceContainer>(screenContainer, inv, titleIn), ICombinedChemicalContainer {
     
     val texture = Blit("gui/chemical/interface.png")
     
@@ -65,7 +65,7 @@ class ChemicalInterfaceScreen(
         widgetContainer.addAll(widgets, SlotType.Config)
     }
     
-    fun onChemicalListChanged() {
+    override fun onChemicalListChange() {
         val chemicalTankList = container.chemicalTankList
         
         widgetContainer.reset(SlotType.Storage)

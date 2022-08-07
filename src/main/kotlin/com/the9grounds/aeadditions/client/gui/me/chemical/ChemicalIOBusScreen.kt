@@ -1,8 +1,8 @@
 package com.the9grounds.aeadditions.client.gui.me.chemical
 
 import com.mojang.blaze3d.matrix.MatrixStack
+import com.the9grounds.aeadditions.api.IChemicalConfigContainer
 import com.the9grounds.aeadditions.api.chemical.IAEChemicalStack
-import com.the9grounds.aeadditions.api.client.IChemicalConfigListener
 import com.the9grounds.aeadditions.client.gui.AbstractUpgradableScreen
 import com.the9grounds.aeadditions.client.gui.widget.ChemicalWidgetConfig
 import com.the9grounds.aeadditions.client.helpers.Blit
@@ -22,7 +22,7 @@ class ChemicalIOBusScreen(
     screenContainer,
     inv,
     titleIn
-), IChemicalConfigListener {
+), IChemicalConfigContainer {
     val texture = Blit("gui/chemical/bus.png")
     init {
         ySize = 184
