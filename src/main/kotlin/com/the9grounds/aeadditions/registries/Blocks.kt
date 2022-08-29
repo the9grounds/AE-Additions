@@ -6,6 +6,7 @@ import com.the9grounds.aeadditions.core.BlockDefinition
 import com.the9grounds.aeadditions.integration.Mods
 import net.minecraft.block.AbstractBlock
 import net.minecraft.block.Block
+import net.minecraft.block.SoundType
 import net.minecraft.block.material.Material
 import net.minecraft.item.BlockItem
 import net.minecraft.util.ResourceLocation
@@ -14,24 +15,35 @@ import thedarkcolour.kotlinforforge.forge.KDeferredRegister
 
 object Blocks {
     val REGISTRY = KDeferredRegister(ForgeRegistries.BLOCKS, AEAdditions.ID)
-    
+
     val BLOCKS = mutableListOf<Block>()
-    
-    val CHEMICAL_INTERFACE = createBlock(Ids.CHEMICAL_INTERFACE, Material.IRON, Mods.MEKANISM) { properties -> ChemicalInterfaceBlock(properties)}
-    
-    fun init () {
-        
+
+    val CHEMICAL_INTERFACE = createBlock(Ids.CHEMICAL_INTERFACE, Material.IRON, Mods.MEKANISM) { properties ->
+        ChemicalInterfaceBlock(properties.hardnessAndResistance(.75f, 11f).sound(SoundType.METAL))
     }
-    
-    fun <T: Block> createBlock(id: ResourceLocation, material: Material, factory: (AbstractBlock.Properties) -> T): BlockDefinition<T> {
+
+    fun init() {
+
+    }
+
+    fun <T : Block> createBlock(
+        id: ResourceLocation,
+        material: Material,
+        factory: (AbstractBlock.Properties) -> T
+    ): BlockDefinition<T> {
         val block = constructBlock(material, factory, id)
-        
+
         val item = Items.createItem(id) { properties -> BlockItem(block, properties) }
 
         return BlockDefinition(block, item)
     }
 
-    fun <T: Block> createBlock(id: ResourceLocation, material: Material, requiredMod: Mods, factory: (AbstractBlock.Properties) -> T): BlockDefinition<T> {
+    fun <T : Block> createBlock(
+        id: ResourceLocation,
+        material: Material,
+        requiredMod: Mods,
+        factory: (AbstractBlock.Properties) -> T
+    ): BlockDefinition<T> {
         val block = constructBlock(material, factory, id)
 
         val item = Items.createItem(id, { properties -> BlockItem(block, properties) }, requiredMod)
