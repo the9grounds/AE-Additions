@@ -22,6 +22,9 @@ object AEAConfig {
     val meWirelessTransceiverDistanceMultiplier: Double
     get() = COMMON_CONFIG.meWirelessTransceiverDistanceMultiplier.get()
     
+    val superCellBlackListedTypes: List<String>
+    get() = COMMON_CONFIG.superCellBlackListedTypes.get()
+    
     fun save() {
         if (COMMON_SPEC.isLoaded) {
             COMMON_SPEC.save()
@@ -31,11 +34,15 @@ object AEAConfig {
     class CommonConfig(builder: ForgeConfigSpec.Builder) {
         val meWirelessTransceiverBasePower: ForgeConfigSpec.ConfigValue<Int>;
         val meWirelessTransceiverDistanceMultiplier: ForgeConfigSpec.ConfigValue<Double>
+        val superCellBlackListedTypes: ForgeConfigSpec.ConfigValue<List<String>>
         
         init {
             builder.push("meWirelessTransceiver")
             meWirelessTransceiverBasePower = builder.define("basePower", 10)
             meWirelessTransceiverDistanceMultiplier = builder.define("distanceMultiplier", 1.0)
+            builder.pop()
+            builder.push("superStorageCell")
+            superCellBlackListedTypes = builder.define("blacklistedTypes", listOf("mekanism:nuclear_waste"))
         }
     }
 }
