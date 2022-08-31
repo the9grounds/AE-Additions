@@ -171,7 +171,7 @@ tasks.withType<Jar> {
     filesMatching("META-INF/mods.toml") {
         expand(mapOf(
             "version" to getBetterVersion(),
-            "mcversion" to "1.18.2"
+            "mcversion" to "1.19.2"
         ))
         filter { line ->
             line.replace("version=\"0.0.0.0.1\"", "version=\"${getBetterVersion()}\"")
