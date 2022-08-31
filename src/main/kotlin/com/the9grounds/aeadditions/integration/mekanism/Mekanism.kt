@@ -300,10 +300,18 @@ object Mekanism {
     }
     
     fun <T: IChemicalHandler<CHEMICAL, STACK>, CHEMICAL: Chemical<CHEMICAL>, STACK: ChemicalStack<CHEMICAL>> insertChemicalForCapability(tileEntity: TileEntity, capability: Capability<T>, chemicalStack: STACK, action: Action): ChemicalStack<*>? {
+        if (!tileEntity.getCapability(capability).isPresent) {
+            return chemicalStack
+        }
+        
         return tileEntity.getCapability(capability).resolve().get().insertChemical(chemicalStack, action)
     }
 
     fun <T: IChemicalHandler<CHEMICAL, STACK>, CHEMICAL: Chemical<CHEMICAL>, STACK: ChemicalStack<CHEMICAL>> insertChemicalForCapability(tileEntity: TileEntity, side: Direction, capability: Capability<T>, chemicalStack: STACK, action: Action): ChemicalStack<*>? {
+        if (!tileEntity.getCapability(capability, side).isPresent) {
+            return this.insertChemicalForCapability(tileEntity, capability, chemicalStack, action)
+        }
+        
         return tileEntity.getCapability(capability, side).resolve().get().insertChemical(chemicalStack, action)
     }
     
