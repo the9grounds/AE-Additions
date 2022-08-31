@@ -19,7 +19,6 @@ import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
-import net.minecraft.network.chat.TextComponent
 import net.minecraft.world.MenuProvider
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.entity.player.Player
@@ -208,7 +207,7 @@ class MEWirelessTransceiverBlockEntity(pos: BlockPos, blockState: BlockState) : 
                 "Subscriber"
             }
             
-            probeInfo!!.text(TextComponent("Connected to ${currentChannel!!.channelInfo.name} as $type"))
+            probeInfo!!.text(Component.literal("Connected to ${currentChannel!!.channelInfo.name} as $type"))
             when(type) {
                 "Broadcaster" -> probeInfo!!.text("Current Power Usage: ${idleDraw} AE/t")
                 "Subscriber" -> {
@@ -219,7 +218,7 @@ class MEWirelessTransceiverBlockEntity(pos: BlockPos, blockState: BlockState) : 
                 }
             }
         } else {
-            probeInfo!!.text(TextComponent("Not Connected"))
+            probeInfo!!.text(Component.literal("Not Connected"))
         }
     }
     
@@ -254,7 +253,7 @@ class MEWirelessTransceiverBlockEntity(pos: BlockPos, blockState: BlockState) : 
 
     override fun createMenu(id: Int, inventory: Inventory, player: Player): AbstractContainerMenu = MEWirelessTransceiverMenu(id, inventory, this)
 
-    override fun getDisplayName(): Component = TextComponent("ME Wireless Transceiver")
+    override fun getDisplayName(): Component = Component.literal("ME Wireless Transceiver")
 
     val channelHolder: ChannelHolder 
     get () = level!!.getCapability(Capability.CHANNEL_HOLDER).resolve().get()

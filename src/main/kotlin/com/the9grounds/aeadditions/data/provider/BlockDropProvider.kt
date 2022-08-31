@@ -4,6 +4,7 @@ import com.the9grounds.aeadditions.AEAdditions
 import com.the9grounds.aeadditions.registries.Blocks
 import net.minecraft.data.loot.BlockLoot
 import net.minecraft.world.level.block.Block
+import net.minecraftforge.registries.ForgeRegistries
 
 class BlockDropProvider : BlockLoot() {
     override fun addTables() {
@@ -15,6 +16,6 @@ class BlockDropProvider : BlockLoot() {
     }
 
     override fun getKnownBlocks(): MutableIterable<Block> {
-        return super.getKnownBlocks().filter { it.registryName!!.namespace == AEAdditions.ID }.toMutableList()
+        return super.getKnownBlocks().filter { ForgeRegistries.BLOCKS.getKey(it)!!.namespace == AEAdditions.ID }.toMutableList()
     }
 }

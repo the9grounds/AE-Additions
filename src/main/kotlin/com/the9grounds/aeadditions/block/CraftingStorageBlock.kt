@@ -14,7 +14,7 @@ import net.minecraftforge.registries.ForgeRegistries
 class CraftingStorageBlock(props: BlockBehaviour.Properties, type: ExtendedCraftingUnitType?) : AbstractCraftingUnitBlock<CraftingBlockEntity>(props, type) {
     init {
         val supplier = { blockPos: BlockPos, blockState: BlockState ->
-            CraftingBlockEntity(ForgeRegistries.BLOCK_ENTITIES.getValue(ResourceLocation("ae2", "crafting_storage")), blockPos, blockState)
+            CraftingBlockEntity(ForgeRegistries.BLOCK_ENTITY_TYPES.getValue(ResourceLocation("ae2", "crafting_storage")), blockPos, blockState)
         }
         val type = Builder.of(supplier, this).build(null)
         setBlockEntity(CraftingBlockEntity::class.java, type, null, null)

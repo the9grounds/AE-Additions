@@ -8,7 +8,7 @@ import thedarkcolour.kotlinforforge.forge.KDeferredRegister
 import thedarkcolour.kotlinforforge.forge.registerObject
 
 object BlockEntities {
-    val REGISTRY = KDeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, AEAdditions.ID)
+    val REGISTRY = KDeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, AEAdditions.ID)
     
     val ME_WIRELESS_TRANSCEIVER by REGISTRY.registerObject("me_wireless_transceiver") { BlockEntityType.Builder.of(::MEWirelessTransceiverBlockEntity, Blocks.BLOCK_ME_WIRELESS_TRANSCEIVER.block).build(null) }
 

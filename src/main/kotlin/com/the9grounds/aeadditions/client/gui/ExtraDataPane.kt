@@ -7,10 +7,10 @@ import com.the9grounds.aeadditions.AEAdditions
 import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.narration.NarrationElementOutput
-import net.minecraft.network.chat.TextComponent
+import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 
-class ExtraDataPane(x: Int, y: Int, val screen: MEWirelessTransceiverScreen, val font: Font) : AbstractWidget(x, y, 128, 24, TextComponent.EMPTY) {
+class ExtraDataPane(x: Int, y: Int, val screen: MEWirelessTransceiverScreen, val font: Font) : AbstractWidget(x, y, 128, 24, Component.empty()) {
     
     val texture = Blitter.texture(ResourceLocation(AEAdditions.ID, "textures/gui/extra-data-panel.png"))
 
@@ -22,7 +22,7 @@ class ExtraDataPane(x: Int, y: Int, val screen: MEWirelessTransceiverScreen, val
         val usedChannels = screen.menu.ae2ChannelUsage
         val maxChannels = screen.menu.ae2MaxChannels
         
-        font.draw(poseStack, TextComponent("AE2 Channels: $usedChannels/$maxChannels"), 6.toFloat(), 2.toFloat(), Color(0, 0, 0, 255).toARGB())
+        font.draw(poseStack, Component.literal("AE2 Channels: $usedChannels/$maxChannels"), 6.toFloat(), 2.toFloat(), Color(0, 0, 0, 255).toARGB())
         
         poseStack.popPose()
     }

@@ -1,6 +1,5 @@
 package com.the9grounds.aeadditions
 
-import appeng.api.stacks.AEKeyType
 import appeng.items.storage.BasicStorageCell
 import com.the9grounds.aeadditions.core.AEAConfig
 import com.the9grounds.aeadditions.core.network.NetworkManager
@@ -10,20 +9,17 @@ import com.the9grounds.aeadditions.integration.Integration
 import com.the9grounds.aeadditions.integration.Mods
 import com.the9grounds.aeadditions.integration.appeng.AppEng
 import com.the9grounds.aeadditions.integration.theoneprobe.TheOneProbe
-import com.the9grounds.aeadditions.item.storage.DiskCell
 import com.the9grounds.aeadditions.item.storage.StorageCell
 import com.the9grounds.aeadditions.menu.MenuHolder
 import com.the9grounds.aeadditions.registries.*
 import com.the9grounds.aeadditions.registries.client.Models
 import com.the9grounds.aeadditions.registries.client.Screens
-import io.github.projectet.ae2things.item.DISKDrive
-import me.ramidzkh.mekae2.ae2.MekanismKeyType
 import net.minecraft.client.renderer.ItemBlockRenderTypes
 import net.minecraft.client.renderer.RenderType
 import net.minecraft.world.level.Level
 import net.minecraftforge.api.distmarker.Dist
-import net.minecraftforge.client.event.ColorHandlerEvent
-import net.minecraftforge.client.event.ModelRegistryEvent
+import net.minecraftforge.client.event.ModelEvent
+import net.minecraftforge.client.event.RegisterColorHandlersEvent
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.server.ServerStartingEvent
 import net.minecraftforge.fml.DistExecutor
@@ -101,35 +97,35 @@ object AEAdditions {
                 Items.FLUID_STORAGE_CELL_1024k,
                 Items.FLUID_STORAGE_CELL_4096k,
                 Items.FLUID_STORAGE_CELL_16384k,
-                Items.CHEMICAL_STORAGE_CELL_1024k,
-                Items.CHEMICAL_STORAGE_CELL_4096k,
-                Items.CHEMICAL_STORAGE_CELL_16384k,
+//                Items.CHEMICAL_STORAGE_CELL_1024k,
+//                Items.CHEMICAL_STORAGE_CELL_4096k,
+//                Items.CHEMICAL_STORAGE_CELL_16384k,
             )) {
                 item.category = null;
             }
         }
     }
     
-    private fun registerItemColors(event: ColorHandlerEvent.Item) {
+    private fun registerItemColors(event: RegisterColorHandlersEvent.Item) {
         val itemColors = event.itemColors
         
         val storageCells = Items.ITEMS.filter { it is StorageCell }.toTypedArray()
         
         itemColors.register(BasicStorageCell::getColor, *storageCells)
         
-        if (Mods.AE2THINGS.isEnabled) {
-            val diskCells = Items.ITEMS.filter { it is DiskCell && it.keyType == AEKeyType.fluids() }.toTypedArray()
-            itemColors.register(DISKDrive::getColor, *diskCells)
-
-            if (Mods.APPMEK.isEnabled) {
-                val chemicalDiskCells = Items.ITEMS.filter { it is DiskCell && it.keyType == MekanismKeyType.TYPE }.toTypedArray()
-                itemColors.register(DISKDrive::getColor, *chemicalDiskCells)
-            }
-        }
+//        if (Mods.AE2THINGS.isEnabled) {
+//            val diskCells = Items.ITEMS.filter { it is DiskCell && it.keyType == AEKeyType.fluids() }.toTypedArray()
+//            itemColors.register(DISKDrive::getColor, *diskCells)
+//
+//            if (Mods.APPMEK.isEnabled) {
+//                val chemicalDiskCells = Items.ITEMS.filter { it is DiskCell && it.keyType == MekanismKeyType.TYPE }.toTypedArray()
+//                itemColors.register(DISKDrive::getColor, *chemicalDiskCells)
+//            }
+//        }
     }
 
-    private fun modelRegistryEvent(event: ModelRegistryEvent) {
-        Models.init()
+    private fun modelRegistryEvent(event: ModelEvent.RegisterGeometryLoaders) {
+        Models.init(event::register)
         ItemBlockRenderTypes.setRenderLayer(Blocks.BLOCK_CRAFTING_STORAGE_1024k.block, RenderType.cutout())
         ItemBlockRenderTypes.setRenderLayer(Blocks.BLOCK_CRAFTING_STORAGE_4096k.block, RenderType.cutout())
         ItemBlockRenderTypes.setRenderLayer(Blocks.BLOCK_CRAFTING_STORAGE_16384k.block, RenderType.cutout())

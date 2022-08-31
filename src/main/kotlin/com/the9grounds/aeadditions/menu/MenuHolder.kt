@@ -8,7 +8,7 @@ import thedarkcolour.kotlinforforge.forge.registerObject
 
 object MenuHolder {
     
-    val REGISTRY = KDeferredRegister.create(ForgeRegistries.CONTAINERS, AEAdditions.ID)
+    val REGISTRY = KDeferredRegister.create(ForgeRegistries.MENU_TYPES, AEAdditions.ID)
     
     val menuMEWirelessTransceiver by REGISTRY.registerObject("me_wireless_transceiver") { MenuType(::MEWirelessTransceiverMenu) }
     

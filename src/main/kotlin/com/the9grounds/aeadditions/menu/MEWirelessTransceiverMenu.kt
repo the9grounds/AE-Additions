@@ -16,6 +16,7 @@ import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.inventory.Slot
+import net.minecraft.world.item.ItemStack
 import net.minecraftforge.fml.util.thread.SidedThreadGroups
 
 class MEWirelessTransceiverMenu(id: Int, val inventory: Inventory) : AbstractContainerMenu(MenuHolder.menuMEWirelessTransceiver, id) {
@@ -65,7 +66,11 @@ class MEWirelessTransceiverMenu(id: Int, val inventory: Inventory) : AbstractCon
             NetworkManager.sendToServer(RequestChannelsPacket())
         }
     }
-    
+
+    override fun quickMoveStack(p_38941_: Player, p_38942_: Int): ItemStack {
+        return ItemStack.EMPTY; 
+    }
+
     public fun sendChannelStuffToClient() {
         val level = inventory.player.level as ServerLevel
 

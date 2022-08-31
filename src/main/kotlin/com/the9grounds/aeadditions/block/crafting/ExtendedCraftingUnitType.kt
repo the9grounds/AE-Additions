@@ -10,7 +10,7 @@ enum class ExtendedCraftingUnitType(val kiloBytes: Int) : ICraftingUnitType {
     STORAGE_16384(16384),
     STORAGE_65536(65536);
 
-    override fun getStorageBytes(): Int = 1024 * kiloBytes
+    override fun getStorageBytes(): Long = 1024L * kiloBytes
 
     override fun getAcceleratorThreads(): Int = 0
 

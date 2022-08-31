@@ -19,13 +19,13 @@ Special credit for original mod authors M3gaFr3ak/DrummerMC and Textures by Pale
 [[dependencies.ae2additions]]
 modId="forge"
 mandatory=true
-versionRange="[40.0.0,41.0.0)"
+versionRange="[42.0.1,)"
 ordering="NONE"
 side="BOTH"
 [[dependencies.ae2additions]]
 modId="minecraft"
 mandatory=true
-versionRange="[1.18.2]"
+versionRange="[1.19.2]"
 ordering="NONE"
 side="BOTH"
 [[dependencies.ae2additions]]
