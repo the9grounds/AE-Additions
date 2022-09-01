@@ -165,7 +165,7 @@ tasks.withType<Jar> {
     inputs.property("version", getBetterVersion())
     duplicatesStrategy = org.gradle.api.file.DuplicatesStrategy.EXCLUDE
 
-    baseName = "${modBaseName}-${getBetterVersion()}"
+    baseName = "${modBaseName}-${minecraftVersion}-${getBetterVersion()}"
 
     // replace stuff in mcmod.info, nothing else
     filesMatching("META-INF/mods.toml") {
@@ -182,7 +182,7 @@ tasks.withType<Jar> {
 tasks.register<TaskPublishCurseForge>("publishCurseForge") {
     apiToken = System.getenv("CURSEFORGE_API_KEY")
     
-    val fileName = "${modBaseName}-${getBetterVersion()}"
+    val fileName = "${modBaseName}-${minecraftVersion}-${getBetterVersion()}"
     
     val mainFile = upload(modCurseId, file("${project.buildDir}/libs/${fileName}.jar"))
     mainFile.addGameVersion(minecraftVersion)
