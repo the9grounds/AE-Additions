@@ -31,7 +31,7 @@ side="BOTH"
 [[dependencies.ae2additions]]
 modId="ae2"
 mandatory=true
-versionRange="[12.1.2-beta,)"
+versionRange="[12.2.0-beta,)"
 ordering="AFTER"
 side="BOTH"
 #[[dependencies.ae2additions]]
