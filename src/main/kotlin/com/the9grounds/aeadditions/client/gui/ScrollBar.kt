@@ -5,11 +5,11 @@ import com.mojang.blaze3d.vertex.PoseStack
 import com.the9grounds.aeadditions.AEAdditions
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.narration.NarrationElementOutput
-import net.minecraft.network.chat.TextComponent
+import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import kotlin.math.floor
 
-class ScrollBar(x: Int, y: Int, val screen: MEWirelessTransceiverScreen) : AbstractWidget(x, y, 6, 4, TextComponent.EMPTY) {
+class ScrollBar(x: Int, y: Int, val screen: MEWirelessTransceiverScreen) : AbstractWidget(x, y, 6, 4, Component.empty()) {
     val originalY: Int = this.y
     val maxY = (originalY + 12 * 4) - 2
     val texture = Blitter.texture(ResourceLocation(AEAdditions.ID, "textures/gui/scrollbar.png"))

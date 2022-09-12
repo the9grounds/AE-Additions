@@ -17,12 +17,12 @@ buildscript {
             isChanging = true
         }
 
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.10")
     }
 }
 
 plugins {
-    kotlin("jvm") version "1.6.10"
+    kotlin("jvm") version "1.7.10"
     java
     id("net.darkhax.curseforgegradle") version "1.0.10"
 }
@@ -48,7 +48,7 @@ val curseForgeProjectId: String by project
 val modBaseName: String by project
 val modCurseId: String by project
 
-apply(from= "https://raw.githubusercontent.com/thedarkcolour/KotlinForForge/site/thedarkcolour/kotlinforforge/gradle/kff-3.1.0.gradle")
+apply(from= "https://raw.githubusercontent.com/thedarkcolour/KotlinForForge/site/thedarkcolour/kotlinforforge/gradle/kff-3.7.1.gradle")
 
 project.group = "com.the9grounds.aeadditions"
 base.archivesBaseName = "AEAdditions-${minecraftVersion}"
@@ -133,27 +133,27 @@ repositories {
     }
 }
 
-val coroutines_version = "1.6.0"
+val coroutines_version = "1.7.10"
 dependencies {
     "minecraft"("net.minecraftforge:forge:${minecraftVersion}-${forgeVersion}")
-    val jeiApi = project.dependencies.create(group = "mezz.jei", name = "jei-${minecraftVersion}", version = jeiVersion, classifier = "api")
-    val jei = project.dependencies.create(group = "mezz.jei", name = "jei-${minecraftVersion}", version = jeiVersion)
+    val jeiApi = project.dependencies.create(group = "mezz.jei", name = "jei-${minecraftVersion}-forge", version = jeiVersion, classifier = "api")
+    val jei = project.dependencies.create(group = "mezz.jei", name = "jei-${minecraftVersion}-forge", version = jeiVersion)
     val ae2 = project.dependencies.create(group = "appeng", name = "appliedenergistics2", version = aeVersion)
 
-    compileOnly(project.the<DependencyManagementExtension>().deobf(jeiApi))
-    runtimeOnly(project.the<DependencyManagementExtension>().deobf(jei))
+//    compileOnly(project.the<DependencyManagementExtension>().deobf(jeiApi))
+    implementation(project.the<DependencyManagementExtension>().deobf(jei))
 
     implementation(project.the<DependencyManagementExtension>().deobf(ae2))
 
-    implementation(project.the<DependencyManagementExtension>().deobf("mekanism:Mekanism:${mekanismVersion}"))
-    implementation(project.the<DependencyManagementExtension>().deobf("curse.maven:applied-mekanistics-574300:3797910"))
-    implementation(project.the<DependencyManagementExtension>().deobf("curse.maven:ae2-things-forge-609977:3795991"))
-    implementation(project.the<DependencyManagementExtension>().deobf("curse.maven:the-one-probe-245211:3671753"))
-    compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:ftb-teams-404468:3725501"))
-    compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:applied-botanics-610632:3770580"))
-    compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:mega-cells-622112:3859532"))
-    runtimeOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:mega-cells-622112:3859532"))
-    compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:applied-botanics-610632:3770580"))
+//    implementation(project.the<DependencyManagementExtension>().deobf("mekanism:Mekanism:${mekanismVersion}"))
+//    implementation(project.the<DependencyManagementExtension>().deobf("curse.maven:applied-mekanistics-574300:3797910"))
+//    implementation(project.the<DependencyManagementExtension>().deobf("curse.maven:ae2-things-forge-609977:3795991"))
+    implementation(project.the<DependencyManagementExtension>().deobf("curse.maven:the-one-probe-245211:3927520"))
+    compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:ftb-teams-404468:3890141"))
+//    compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:applied-botanics-610632:3770580"))
+//    compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:mega-cells-622112:3859532"))
+//    runtimeOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:mega-cells-622112:3859532"))
+//    compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:applied-botanics-610632:3770580"))
     
 }
 
@@ -165,13 +165,13 @@ tasks.withType<Jar> {
     inputs.property("version", getBetterVersion())
     duplicatesStrategy = org.gradle.api.file.DuplicatesStrategy.EXCLUDE
 
-    baseName = "${modBaseName}-${getBetterVersion()}"
+    baseName = "${modBaseName}-${minecraftVersion}-${getBetterVersion()}"
 
     // replace stuff in mcmod.info, nothing else
     filesMatching("META-INF/mods.toml") {
         expand(mapOf(
             "version" to getBetterVersion(),
-            "mcversion" to "1.18.2"
+            "mcversion" to "1.19.2"
         ))
         filter { line ->
             line.replace("version=\"0.0.0.0.1\"", "version=\"${getBetterVersion()}\"")
@@ -182,7 +182,7 @@ tasks.withType<Jar> {
 tasks.register<TaskPublishCurseForge>("publishCurseForge") {
     apiToken = System.getenv("CURSEFORGE_API_KEY")
     
-    val fileName = "${modBaseName}-${getBetterVersion()}"
+    val fileName = "${modBaseName}-${minecraftVersion}-${getBetterVersion()}"
     
     val mainFile = upload(modCurseId, file("${project.buildDir}/libs/${fileName}.jar"))
     mainFile.addGameVersion(minecraftVersion)
@@ -191,10 +191,10 @@ tasks.register<TaskPublishCurseForge>("publishCurseForge") {
     mainFile.releaseType = getReleaseType()
     mainFile.addRequirement("applied-energistics-2")
     mainFile.addRequirement("kotlin-for-forge")
-    mainFile.addOptional("mekanism")
-    mainFile.addOptional("applied-mekanistics")
+//    mainFile.addOptional("mekanism")
+//    mainFile.addOptional("applied-mekanistics")
     // Only temporary until the mod id conflict is fixed
-    mainFile.addIncompatibility("ae2-additions")
+//    mainFile.addIncompatibility("ae2-additions")
     mainFile.addModLoader("Forge")
 }
 

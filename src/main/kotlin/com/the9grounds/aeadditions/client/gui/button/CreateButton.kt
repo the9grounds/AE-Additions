@@ -5,10 +5,10 @@ import com.mojang.blaze3d.vertex.PoseStack
 import com.the9grounds.aeadditions.AEAdditions
 import com.the9grounds.aeadditions.client.gui.MEWirelessTransceiverScreen
 import net.minecraft.client.gui.components.Button
-import net.minecraft.network.chat.TextComponent
+import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 
-class CreateButton(parent: MEWirelessTransceiverScreen) : Button(0, 0, 14, 14, TextComponent.EMPTY, parent::createButtonPressed) {
+class CreateButton(parent: MEWirelessTransceiverScreen) : Button(0, 0, 14, 14, Component.empty(), parent::createButtonPressed) {
     override fun renderButton(poseStack: PoseStack, p_93747_: Int, p_93748_: Int, p_93749_: Float) {
         poseStack.pushPose()
         poseStack.translate(x.toDouble(), y.toDouble(), 0.0)

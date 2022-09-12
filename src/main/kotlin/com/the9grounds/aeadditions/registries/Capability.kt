@@ -28,7 +28,7 @@ object Capability {
         event.addCapability(ResourceLocation(AEAdditions.ID), object : ICapabilitySerializable<CompoundTag> {
             val channelHolder = ChannelHolder(eventObject)
             
-            override fun <T : Any?> getCapability(cap: Capability<T>, side: Direction?): LazyOptional<T> {
+            override fun <T : Any> getCapability(cap: Capability<T>, side: Direction?): LazyOptional<T> {
                 if (cap == CHANNEL_HOLDER && eventObject is ServerLevel) {
                     return LazyOptional.of({ channelHolder as T })
                 }

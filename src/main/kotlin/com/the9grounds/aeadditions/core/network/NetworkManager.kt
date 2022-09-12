@@ -7,7 +7,7 @@ import net.minecraft.client.Minecraft
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.RunningOnDifferentThreadException
 import net.minecraft.server.level.ServerPlayer
-import net.minecraft.server.network.ServerGamePacketListenerImpl
+import net.minecraft.world.entity.player.Player
 import net.minecraftforge.eventbus.api.SubscribeEvent
 import net.minecraftforge.fml.DistExecutor
 import net.minecraftforge.network.NetworkDirection
@@ -47,10 +47,12 @@ object NetworkManager {
         if (serverHandler != null) {
             try {
                 val ctx = event.source.get()
-                val networkHandler = ctx.networkManager.packetListener as ServerGamePacketListenerImpl
                 ctx.packetHandled = true
+                val packet = event.payload
+                val packetType = packet.readInt()
+                val aePacket = Packets.Packet.values()[packetType].parsePacket(packet)
                 ctx.enqueueWork {
-                    serverHandler!!.onPacketData(networkHandler, event.payload, networkHandler.player)
+                    aePacket.serverPacketData(ctx.sender!!)
                 }
             } catch(idk: RunningOnDifferentThreadException) {
                 
@@ -66,10 +68,12 @@ object NetworkManager {
         if (clientHandler != null) {
             try {
                 val ctx = event.source.get()
-                val networkHandler = ctx.networkManager.packetListener
                 ctx.packetHandled = true
+                val packet = event.payload
+                val packetType = packet.readInt()
+                val aePacket = Packets.Packet.values()[packetType].parsePacket(packet)
                 ctx.enqueueWork {
-                    clientHandler!!.onPacketData(networkHandler, event.payload, null)
+                    aePacket.clientPacketData(Minecraft.getInstance().player as Player)
                 }
             } catch(idk: RunningOnDifferentThreadException) {
 
