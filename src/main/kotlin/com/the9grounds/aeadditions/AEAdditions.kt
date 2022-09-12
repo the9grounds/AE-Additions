@@ -9,6 +9,7 @@ import com.the9grounds.aeadditions.debug.CommandRegistry
 import com.the9grounds.aeadditions.integration.Integration
 import com.the9grounds.aeadditions.integration.Mods
 import com.the9grounds.aeadditions.integration.appeng.AppEng
+import com.the9grounds.aeadditions.integration.appeng.InitUpgrades
 import com.the9grounds.aeadditions.integration.theoneprobe.TheOneProbe
 import com.the9grounds.aeadditions.item.storage.DiskCell
 import com.the9grounds.aeadditions.item.storage.StorageCell
@@ -82,6 +83,7 @@ object AEAdditions {
     private fun commonSetup(event: FMLCommonSetupEvent) {
         AppEng.initCellHandler()
         Cells.init()
+        InitUpgrades.init()
 
         event.enqueueWork {
             AEAConfig.save()
