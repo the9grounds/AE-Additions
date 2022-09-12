@@ -2,11 +2,11 @@ package com.the9grounds.aeadditions
 
 import appeng.api.IAEAddonEntrypoint
 import appeng.api.stacks.AEKeyType
-import appeng.block.crafting.AbstractCraftingUnitBlock
 import appeng.items.storage.BasicStorageCell
 import com.the9grounds.aeadditions.integration.Integration
 import com.the9grounds.aeadditions.integration.Mods
 import com.the9grounds.aeadditions.integration.appeng.AppEng
+import com.the9grounds.aeadditions.integration.appeng.InitUpgrades
 import com.the9grounds.aeadditions.item.storage.DiskCell
 import com.the9grounds.aeadditions.item.storage.StorageCell
 import com.the9grounds.aeadditions.registries.Blocks
@@ -30,6 +30,7 @@ object AEAdditions : IAEAddonEntrypoint {
         Integration.init()
         AppEng.initCellHandler()
         Cells.init()
+        InitUpgrades.init()
     }
     
     fun registerItemColors() {

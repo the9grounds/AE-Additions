@@ -55,5 +55,6 @@
   "itemGroup.ae2additions.item_group": "AE Additions",
   "chat.ae2additions.isNowLocked": "Monitor is now locked",
   "chat.ae2additions.isNowUnlocked": "Monitor is now unlocked",
-  "chat.ae2additions.handMustBeEmpty": "Your hand must be empty to perform that action."
+  "chat.ae2additions.handMustBeEmpty": "Your hand must be empty to perform that action.",
+  "gui.ae.StorageCells": "AE Additions Storage Cells"
 }

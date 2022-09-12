@@ -3,6 +3,8 @@ package com.the9grounds.aeadditions.item.storage
 import appeng.api.config.FuzzyMode
 import appeng.api.stacks.AEKeyType
 import appeng.api.storage.StorageCells
+import appeng.api.upgrades.IUpgradeInventory
+import appeng.api.upgrades.UpgradeInventories
 import appeng.hooks.AEToolItem
 import appeng.items.contents.CellConfig
 import appeng.util.ConfigInventory
@@ -37,6 +39,8 @@ class StorageCell(properties: Properties, val component: ItemLike, val housingIt
     override fun getKeyType(): AEKeyType = _keyType
 
     override fun getConfigInventory(`is`: ItemStack?): ConfigInventory = CellConfig.create(_keyType.filter(), `is`)
+
+    override fun getUpgrades(stack: ItemStack?): IUpgradeInventory = UpgradeInventories.forItem(stack, 4)
 
     override fun getFuzzyMode(`is`: ItemStack?): FuzzyMode {
         val fz = `is`!!.orCreateTag.getString("FuzzyMode")
