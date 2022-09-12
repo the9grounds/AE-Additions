@@ -7,7 +7,6 @@ import com.the9grounds.aeadditions.me.storage.SuperCellHandler
 class AppEng {
 
     companion object {
-
         fun initCellHandler() {
             StorageCells.addCellHandler(AEAdditionsCellHandler)
             StorageCells.addCellHandler(SuperCellHandler)
