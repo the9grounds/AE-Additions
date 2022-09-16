@@ -8,10 +8,11 @@ import com.the9grounds.aeadditions.core.CreativeTab
 import com.the9grounds.aeadditions.integration.Mods
 import com.the9grounds.aeadditions.item.storage.StorageCell
 import com.the9grounds.aeadditions.item.storage.SuperStorageCell
+import me.ramidzkh.mekae2.AMItems
+import me.ramidzkh.mekae2.ae2.MekanismKeyType
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.Rarity
-import net.minecraft.world.level.ItemLike
 import net.minecraftforge.registries.ForgeRegistries
 import thedarkcolour.kotlinforforge.forge.KDeferredRegister
 import thedarkcolour.kotlinforforge.forge.registerObject
@@ -87,33 +88,33 @@ object Items {
 //    val DISK_CHEMICAL_16384k = createItem(Ids.DISK_CHEMICAL_16384k, { loadDiskCell(it.stacksTo(1), AEKeyType.fluids(), getCorrectComponent(16384), DISK_CHEMICAL_HOUSING, 16384, 10.0)}, Mods.AE2THINGS, Mods.APPMEK)
 //    val DISK_CHEMICAL_65536k = createItem(Ids.DISK_CHEMICAL_65536k, { loadDiskCell(it.stacksTo(1), AEKeyType.fluids(), getCorrectComponent(65536), DISK_CHEMICAL_HOUSING, 65536, 15.0)}, Mods.AE2THINGS, Mods.APPMEK)
     
-//    val CHEMICAL_STORAGE_CELL_1024k by REGISTRY.registerObject(Ids.CHEMICAL_STORAGE_CELL_1024.path) {
-//        constructItem({ properties ->  
-//            if (Mods.APPMEK.isEnabled) {
-//                return@constructItem StorageCell(properties.stacksTo(1).rarity(Rarity.RARE), CELL_COMPONENT_1024k, AMItems.CHEMICAL_CELL_HOUSING.get(), 4.0, 4096, 1024, 8, MekanismKeyType.TYPE)
-//            }
-//            Item(properties)
-//        }, Ids.CHEMICAL_STORAGE_CELL_1024, Mods.APPMEK)
-//    } 
-//    val CHEMICAL_STORAGE_CELL_4096k by REGISTRY.registerObject(Ids.CHEMICAL_STORAGE_CELL_4096.path) { 
-//        constructItem({ properties ->  
-//            if (Mods.APPMEK.isEnabled) {
-//                return@constructItem StorageCell(properties.stacksTo(1).rarity(Rarity.EPIC), CELL_COMPONENT_4096k, AMItems.CHEMICAL_CELL_HOUSING.get(), 5.0, 8192, 4096, 12, MekanismKeyType.TYPE)
-//            }
-//            
-//            Item(properties)
-//        }, Ids.CHEMICAL_STORAGE_CELL_4096, Mods.APPMEK) 
-//    }
-//    
-//    val CHEMICAL_STORAGE_CELL_16384k by REGISTRY.registerObject(Ids.CHEMICAL_STORAGE_CELL_16384.path) { 
-//        constructItem({ properties -> 
-//            if (Mods.APPMEK.isEnabled) {
-//                return@constructItem StorageCell(properties.stacksTo(1).rarity(Rarity.EPIC), CELL_COMPONENT_16384k, AMItems.CHEMICAL_CELL_HOUSING.get(), 6.0, 32768, 16384, 15, MekanismKeyType.TYPE)
-//            }
-//            
-//            Item(properties)
-//        }, Ids.CHEMICAL_STORAGE_CELL_16384, Mods.APPMEK)
-//    }
+    val CHEMICAL_STORAGE_CELL_1024k by REGISTRY.registerObject(Ids.CHEMICAL_STORAGE_CELL_1024.path) {
+        constructItem({ properties ->  
+            if (Mods.APPMEK.isEnabled) {
+                return@constructItem StorageCell(properties.stacksTo(1).rarity(Rarity.RARE), CELL_COMPONENT_1024k, AMItems.CHEMICAL_CELL_HOUSING.get(), 4.0, 4096, 1024, 8, MekanismKeyType.TYPE)
+            }
+            Item(properties)
+        }, Ids.CHEMICAL_STORAGE_CELL_1024, Mods.APPMEK)
+    } 
+    val CHEMICAL_STORAGE_CELL_4096k by REGISTRY.registerObject(Ids.CHEMICAL_STORAGE_CELL_4096.path) { 
+        constructItem({ properties ->  
+            if (Mods.APPMEK.isEnabled) {
+                return@constructItem StorageCell(properties.stacksTo(1).rarity(Rarity.EPIC), CELL_COMPONENT_4096k, AMItems.CHEMICAL_CELL_HOUSING.get(), 5.0, 8192, 4096, 12, MekanismKeyType.TYPE)
+            }
+
+            Item(properties)
+        }, Ids.CHEMICAL_STORAGE_CELL_4096, Mods.APPMEK) 
+    }
+
+    val CHEMICAL_STORAGE_CELL_16384k by REGISTRY.registerObject(Ids.CHEMICAL_STORAGE_CELL_16384.path) { 
+        constructItem({ properties -> 
+            if (Mods.APPMEK.isEnabled) {
+                return@constructItem StorageCell(properties.stacksTo(1).rarity(Rarity.EPIC), CELL_COMPONENT_16384k, AMItems.CHEMICAL_CELL_HOUSING.get(), 6.0, 32768, 16384, 15, MekanismKeyType.TYPE)
+            }
+
+            Item(properties)
+        }, Ids.CHEMICAL_STORAGE_CELL_16384, Mods.APPMEK)
+    }
     
     fun init() {
         
@@ -209,35 +210,4 @@ object Items {
 //            DISK_FLUID_HOUSING
 //        }
 //    }
-    
-    private fun getCorrectComponent(kb: Int): ItemLike {
-        val componentMap = mapOf(
-            1 to AEItems.CELL_COMPONENT_1K,
-            4 to AEItems.CELL_COMPONENT_4K,
-            16 to AEItems.CELL_COMPONENT_16K,
-            64 to AEItems.CELL_COMPONENT_64K,
-            256 to AEItems.CELL_COMPONENT_256K,
-            1024 to CELL_COMPONENT_1024k,
-            4096 to CELL_COMPONENT_4096k,
-            16384 to CELL_COMPONENT_16384k,
-            65536 to CELL_COMPONENT_65536k
-        )
-        
-        return if (Mods.MEGAAE2.isEnabled) {
-            val megaComponents = mapOf(
-                1 to AEItems.CELL_COMPONENT_1K,
-                4 to AEItems.CELL_COMPONENT_4K,
-                16 to AEItems.CELL_COMPONENT_16K,
-                64 to AEItems.CELL_COMPONENT_64K,
-                256 to AEItems.CELL_COMPONENT_256K,
-//                1024 to MEGAItems.CELL_COMPONENT_1M,
-//                4096 to MEGAItems.CELL_COMPONENT_4M,
-//                16384 to MEGAItems.CELL_COMPONENT_16M,
-//                65536 to MEGAItems.CELL_COMPONENT_64M
-            )
-            megaComponents[kb]!!
-        } else {
-            componentMap[kb]!!
-        }
-    }
 }

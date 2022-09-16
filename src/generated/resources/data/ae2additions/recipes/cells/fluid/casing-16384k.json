@@ -1,30 +1,14 @@
 {
-  "type": "forge:conditional",
-  "recipes": [
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
     {
-      "conditions": [
-        {
-          "value": {
-            "modid": "megacells",
-            "type": "forge:mod_loaded"
-          },
-          "type": "forge:not"
-        }
-      ],
-      "recipe": {
-        "type": "minecraft:crafting_shapeless",
-        "ingredients": [
-          {
-            "item": "ae2:fluid_cell_housing"
-          },
-          {
-            "item": "ae2additions:cell_component_16384"
-          }
-        ],
-        "result": {
-          "item": "ae2additions:fluid_storage_cell_16384"
-        }
-      }
+      "item": "ae2:fluid_cell_housing"
+    },
+    {
+      "item": "ae2additions:cell_component_16384"
     }
-  ]
+  ],
+  "result": {
+    "item": "ae2additions:fluid_storage_cell_16384"
+  }
 }

@@ -1,10 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "aba",
-    "b b",
-    "ccc"
-  ],
   "key": {
     "a": {
       "item": "ae2:quartz_glass"
@@ -16,6 +11,11 @@
       "tag": "forge:gems/diamond"
     }
   },
+  "pattern": [
+    "aba",
+    "b b",
+    "ccc"
+  ],
   "result": {
     "item": "ae2additions:super_cell_housing"
   }

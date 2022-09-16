@@ -145,14 +145,12 @@ dependencies {
 
     implementation(project.the<DependencyManagementExtension>().deobf(ae2))
 
-//    implementation(project.the<DependencyManagementExtension>().deobf("mekanism:Mekanism:${mekanismVersion}"))
-//    implementation(project.the<DependencyManagementExtension>().deobf("curse.maven:applied-mekanistics-574300:3797910"))
+    implementation(project.the<DependencyManagementExtension>().deobf("mekanism:Mekanism:${mekanismVersion}"))
+    implementation(project.the<DependencyManagementExtension>().deobf("curse.maven:applied-mekanistics-574300:3969710"))
 //    implementation(project.the<DependencyManagementExtension>().deobf("curse.maven:ae2-things-forge-609977:3795991"))
     implementation(project.the<DependencyManagementExtension>().deobf("curse.maven:the-one-probe-245211:3927520"))
     compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:ftb-teams-404468:3890141"))
 //    compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:applied-botanics-610632:3770580"))
-//    compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:mega-cells-622112:3859532"))
-//    runtimeOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:mega-cells-622112:3859532"))
 //    compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:applied-botanics-610632:3770580"))
     
 }

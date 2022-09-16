@@ -6,7 +6,6 @@ import com.the9grounds.aeadditions.core.network.NetworkManager
 import com.the9grounds.aeadditions.data.AEAdditionsDataGenerator
 import com.the9grounds.aeadditions.debug.CommandRegistry
 import com.the9grounds.aeadditions.integration.Integration
-import com.the9grounds.aeadditions.integration.Mods
 import com.the9grounds.aeadditions.integration.appeng.AppEng
 import com.the9grounds.aeadditions.integration.appeng.InitUpgrades
 import com.the9grounds.aeadditions.integration.theoneprobe.TheOneProbe
@@ -88,27 +87,6 @@ object AEAdditions {
         event.enqueueWork {
             AEAConfig.save()
             NetworkManager.init()
-        }
-        
-        if (Mods.MEGAAE2.isEnabled) {
-            for (item in listOf(
-                Items.CELL_COMPONENT_1024k,
-                Items.CELL_COMPONENT_4096k,
-                Items.CELL_COMPONENT_16384k,
-                Items.CELL_COMPONENT_65536k,
-                Items.ITEM_STORAGE_CELL_1024k,
-                Items.ITEM_STORAGE_CELL_4096k,
-                Items.ITEM_STORAGE_CELL_16384k,
-                Items.ITEM_STORAGE_CELL_65536k,
-                Items.FLUID_STORAGE_CELL_1024k,
-                Items.FLUID_STORAGE_CELL_4096k,
-                Items.FLUID_STORAGE_CELL_16384k,
-//                Items.CHEMICAL_STORAGE_CELL_1024k,
-//                Items.CHEMICAL_STORAGE_CELL_4096k,
-//                Items.CHEMICAL_STORAGE_CELL_16384k,
-            )) {
-                item.category = null;
-            }
         }
     }
     

@@ -4,29 +4,17 @@
     {
       "conditions": [
         {
+          "type": "forge:and",
           "values": [
             {
-              "modid": "appmek",
-              "type": "forge:mod_loaded"
-            },
-            {
-              "value": {
-                "modid": "megacells",
-                "type": "forge:mod_loaded"
-              },
-              "type": "forge:not"
+              "type": "forge:mod_loaded",
+              "modid": "appmek"
             }
-          ],
-          "type": "forge:and"
+          ]
         }
       ],
       "recipe": {
         "type": "minecraft:crafting_shaped",
-        "pattern": [
-          "aba",
-          "bcb",
-          "ddd"
-        ],
         "key": {
           "a": {
             "item": "ae2:quartz_glass"
@@ -41,6 +29,11 @@
             "tag": "forge:ingots/osmium"
           }
         },
+        "pattern": [
+          "aba",
+          "bcb",
+          "ddd"
+        ],
         "result": {
           "item": "ae2additions:chemical_storage_cell_16384"
         }

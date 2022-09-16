@@ -4,20 +4,13 @@
     {
       "conditions": [
         {
+          "type": "forge:and",
           "values": [
             {
-              "modid": "appmek",
-              "type": "forge:mod_loaded"
-            },
-            {
-              "value": {
-                "modid": "megacells",
-                "type": "forge:mod_loaded"
-              },
-              "type": "forge:not"
+              "type": "forge:mod_loaded",
+              "modid": "appmek"
             }
-          ],
-          "type": "forge:and"
+          ]
         }
       ],
       "recipe": {

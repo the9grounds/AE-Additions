@@ -1,0 +1,6 @@
+// 1.19.2	2022-09-16T18:02:23.4528927	LootTables
+b1466f6d080ce3465c07727ed3c920467fb3d88e data/ae2additions/loot_tables/blocks/1024k_crafting_storage.json
+c40e23088d674f771dfa6fe05b39dee8b5a7a9f8 data/ae2additions/loot_tables/blocks/16384k_crafting_storage.json
+dc931691ff2973e70f2b2936853ce99287376f5c data/ae2additions/loot_tables/blocks/4096k_crafting_storage.json
+126895f036116e06fb2a6a82a84c79346583ab98 data/ae2additions/loot_tables/blocks/65536k_crafting_storage.json
+605e5becd782b6260982a1a7344240d3a98bb33c data/ae2additions/loot_tables/blocks/me_wireless_transceiver.json
