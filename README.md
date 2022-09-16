@@ -21,10 +21,11 @@ Please be sure to include the minecraft version and modloader you are running on
 ### Build
 
 1. Clone the repo
-2. Build with `./gradlew build`
-3. For Intellij, make sure you run `genIntellijRuns` in order to auto create the run configurations.
+2. Build with `./gradlew runData build`
 
 ### Contributing
 
 1. Do the above
-2. Make a PR! If you are making a big change, please make an issue first so a discussion can be had
+2. Ensure you run `./gradlew runData` first, to ensure you have the generated resources
+3. For Intellij, make sure you run `genIntellijRuns` in order to auto create the run configurations.
+4. Make a PR! If you are making a big change, please make an issue first so a discussion can be had
