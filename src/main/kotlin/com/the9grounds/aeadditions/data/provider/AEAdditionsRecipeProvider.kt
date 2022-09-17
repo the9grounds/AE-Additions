@@ -364,6 +364,17 @@ class AEAdditionsRecipeProvider(generatorIn: DataGenerator) : RecipeProvider(gen
                 .requires(kb.value.component)
                 .unlockedBy("has_item", has(kb.value.component))
                 .save(consumer, ResourceLocation(AEAdditions.ID, "cells/item/casing-${kb.key}k"))
+
+            ShapedRecipeBuilder.shaped(kb.value)
+                .pattern("aba")
+                .pattern("bcb")
+                .pattern("ddd")
+                .define('a', AEBlocks.QUARTZ_GLASS)
+                .define('b', AEItems.FLUIX_DUST)
+                .define('c', kb.value.component)
+                .define('d', Tags.Items.GEMS_DIAMOND)
+                .unlockedBy("has_item", has(kb.value.component))
+                .save(consumer, ResourceLocation(AEAdditions.ID, "cells/item/${kb.key}k"))
         }
         for (kb in fluidKbs) {
             ShapelessRecipeBuilder.shapeless(kb.value)
@@ -371,6 +382,17 @@ class AEAdditionsRecipeProvider(generatorIn: DataGenerator) : RecipeProvider(gen
                 .requires(kb.value.component)
                 .unlockedBy("has_item", has(kb.value.component))
                 .save(consumer, ResourceLocation(AEAdditions.ID, "cells/fluid/casing-${kb.key}k"))
+
+            ShapedRecipeBuilder.shaped(kb.value)
+                .pattern("aba")
+                .pattern("bcb")
+                .pattern("ddd")
+                .define('a', AEBlocks.QUARTZ_GLASS)
+                .define('b', AEItems.FLUIX_DUST)
+                .define('c', kb.value.component)
+                .define('d', Tags.Items.INGOTS_COPPER)
+                .unlockedBy("has_item", has(kb.value.component))
+                .save(consumer, ResourceLocation(AEAdditions.ID, "cells/fluid/${kb.key}k"))
         }
         for (kb in chemicalKbs) {
             addConditionalRecipeForMekanism("cells/chemical/casing-${kb.key}k", consumer) {
