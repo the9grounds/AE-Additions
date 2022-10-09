@@ -571,6 +571,41 @@ class AEAdditionsRecipeProvider(generatorIn: DataGenerator) : RecipeProvider(gen
                 .unlockedBy("has_item", has(components[chemicalCell.key]))
                 .save(it)
         }.build(consumer, ResourceLocation(AEAdditions.ID, "cells/chemical/disk-${chemicalCell.key}"))
+
+        // MEGA
+        ConditionalRecipe.builder().addCondition(
+            and(
+                modLoaded(Mods.AE2THINGS.modId),
+                modLoaded(Mods.APPMEK.modId),
+                modLoaded(Mods.MEGAAE2.modId)
+            )
+        ).addRecipe {
+            ShapelessRecipeBuilder.shapeless(chemicalCell.value)
+                .requires(Items.DISK_CHEMICAL_HOUSING)
+                .requires(megaComponents[chemicalCell.key])
+                .requires(alloy)
+                .unlockedBy("has_item", has(megaComponents[chemicalCell.key]))
+                .save(it)
+        }.build(consumer, ResourceLocation(AEAdditions.ID, "cells/chemical/disk-${chemicalCell.key}-casing-mega"))
+        ConditionalRecipe.builder().addCondition(
+            and(
+                modLoaded(Mods.AE2THINGS.modId),
+                modLoaded(Mods.APPMEK.modId),
+                modLoaded(Mods.MEGAAE2.modId)
+            )
+        ).addRecipe {
+            ShapedRecipeBuilder.shaped(chemicalCell.value)
+                .pattern("aba")
+                .pattern("bcb")
+                .pattern("ded")
+                .define('a', AEBlocks.QUARTZ_GLASS)
+                .define('b', Tags.Items.DUSTS_REDSTONE)
+                .define('c', megaComponents[chemicalCell.key])
+                .define('d', Tags.Items.INGOTS_NETHERITE)
+                .define('e', alloy)
+                .unlockedBy("has_item", has(megaComponents[chemicalCell.key]))
+                .save(it)
+        }.build(consumer, ResourceLocation(AEAdditions.ID, "cells/chemical/disk-${chemicalCell.key}-mega"))
     }
 
     private fun addConditionalRecipeForMekanism(resourcePath: String, consumer: Consumer<FinishedRecipe>, factory: (Consumer<FinishedRecipe>) -> Unit) {
