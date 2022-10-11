@@ -10,6 +10,7 @@ import com.the9grounds.aeadditions.item.storage.DiskCell
 import com.the9grounds.aeadditions.item.storage.DiskCellWithoutMod
 import com.the9grounds.aeadditions.item.storage.StorageCell
 import com.the9grounds.aeadditions.item.storage.SuperStorageCell
+import gripe._90.megacells.item.MEGAItems
 import io.github.projectet.ae2things.item.AETItems
 import me.ramidzkh.mekae2.AMItems
 import me.ramidzkh.mekae2.ae2.MekanismKeyType
@@ -18,7 +19,6 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.Rarity
 import net.minecraft.world.level.ItemLike
 import net.minecraftforge.registries.ForgeRegistries
-import ninety.megacells.item.MEGAItems
 import thedarkcolour.kotlinforforge.forge.KDeferredRegister
 import thedarkcolour.kotlinforforge.forge.registerObject
 import kotlin.properties.ReadOnlyProperty

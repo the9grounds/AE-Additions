@@ -138,7 +138,7 @@ dependencies {
     "minecraft"("net.minecraftforge:forge:${minecraftVersion}-${forgeVersion}")
     val jeiApi = project.dependencies.create(group = "mezz.jei", name = "jei-${minecraftVersion}", version = jeiVersion, classifier = "api")
     val jei = project.dependencies.create(group = "mezz.jei", name = "jei-${minecraftVersion}", version = jeiVersion)
-    val ae2 = project.dependencies.create(group = "appeng", name = "appliedenergistics2", version = aeVersion)
+    val ae2 = project.dependencies.create(group = "appeng", name = "appliedenergistics2-forge", version = aeVersion)
 
     compileOnly(project.the<DependencyManagementExtension>().deobf(jeiApi))
     runtimeOnly(project.the<DependencyManagementExtension>().deobf(jei))
@@ -151,8 +151,8 @@ dependencies {
     implementation(project.the<DependencyManagementExtension>().deobf("curse.maven:the-one-probe-245211:3965688"))
     compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:ftb-teams-404468:3725501"))
     compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:applied-botanics-610632:3770580"))
-    compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:mega-cells-622112:3859532"))
-    runtimeOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:mega-cells-622112:3859532"))
+    compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:mega-cells-622112:4024490"))
+    runtimeOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:mega-cells-622112:4024490"))
     compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:applied-botanics-610632:3770580"))
     
 }

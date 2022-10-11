@@ -31,7 +31,7 @@ side="BOTH"
 [[dependencies.ae2additions]]
 modId="ae2"
 mandatory=true
-versionRange="[11.5.0,)"
+versionRange="[11.6.1-beta,)"
 ordering="AFTER"
 side="BOTH"
 [[dependencies.ae2additions]]
@@ -56,7 +56,7 @@ side="BOTH"
 modId="megacells"
 mandatory=false
 ordering="AFTER"
-versionRange="[1.1.1,)"
+versionRange="[1.4.0,)"
 side="BOTH"
 [[dependencies.ae2additions]]
 modId="ftbteams"

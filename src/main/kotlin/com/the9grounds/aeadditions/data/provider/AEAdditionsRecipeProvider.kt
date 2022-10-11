@@ -8,6 +8,7 @@ import com.the9grounds.aeadditions.item.storage.DiskCellWithoutMod
 import com.the9grounds.aeadditions.item.storage.StorageCell
 import com.the9grounds.aeadditions.registries.Blocks
 import com.the9grounds.aeadditions.registries.Items
+import gripe._90.megacells.item.MEGAItems
 import io.github.projectet.ae2things.item.AETItems
 import me.ramidzkh.mekae2.AMItems
 import net.minecraft.data.DataGenerator
@@ -23,7 +24,6 @@ import net.minecraft.world.level.ItemLike
 import net.minecraftforge.common.Tags
 import net.minecraftforge.common.crafting.ConditionalRecipe
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder
-import ninety.megacells.item.MEGAItems
 import java.util.function.Consumer
 
 class AEAdditionsRecipeProvider(generatorIn: DataGenerator) : RecipeProvider(generatorIn), IConditionBuilder {
