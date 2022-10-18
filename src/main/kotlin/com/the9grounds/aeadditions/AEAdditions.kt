@@ -1,19 +1,15 @@
 package com.the9grounds.aeadditions
 
 import appeng.api.IAEAddonEntrypoint
-import appeng.api.stacks.AEKeyType
 import appeng.items.storage.BasicStorageCell
 import com.the9grounds.aeadditions.integration.Integration
-import com.the9grounds.aeadditions.integration.Mods
 import com.the9grounds.aeadditions.integration.appeng.AppEng
 import com.the9grounds.aeadditions.integration.appeng.InitUpgrades
-import com.the9grounds.aeadditions.item.storage.DiskCell
 import com.the9grounds.aeadditions.item.storage.StorageCell
 import com.the9grounds.aeadditions.registries.Blocks
 import com.the9grounds.aeadditions.registries.Cells
 import com.the9grounds.aeadditions.registries.Items
 import com.the9grounds.aeadditions.registries.client.Models
-import io.github.projectet.ae2things.item.DISKDrive
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap
@@ -40,10 +36,10 @@ object AEAdditions : IAEAddonEntrypoint {
 
         itemColorsRegister(BasicStorageCell::getColor, storageCells)
 
-        if (Mods.AE2THINGS.isEnabled) {
-            val diskCells = Items.ITEMS.filter { it is DiskCell && it.keyType == AEKeyType.fluids() }.toTypedArray()
-            itemColorsRegister(DISKDrive::getColor, diskCells)
-        }
+//        if (Mods.AE2THINGS.isEnabled) {
+//            val diskCells = Items.ITEMS.filter { it is DiskCell && it.keyType == AEKeyType.fluids() }.toTypedArray()
+//            itemColorsRegister(DISKDrive::getColor, diskCells)
+//        }
     }
 
     @Environment(EnvType.CLIENT)
