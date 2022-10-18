@@ -10,6 +10,7 @@ import com.the9grounds.aeadditions.item.storage.DiskCell
 import com.the9grounds.aeadditions.item.storage.DiskCellWithoutMod
 import com.the9grounds.aeadditions.item.storage.StorageCell
 import com.the9grounds.aeadditions.item.storage.SuperStorageCell
+import gripe._90.megacells.MEGACells
 import gripe._90.megacells.item.MEGAItems
 import io.github.projectet.ae2things.item.AETItems
 import me.ramidzkh.mekae2.AMItems
@@ -238,16 +239,22 @@ object Items {
         )
         
         return if (Mods.MEGAAE2.isEnabled) {
+            
+            val mega1M = ForgeRegistries.ITEMS.getValue(ResourceLocation(MEGACells.MODID, "cell_component_1m"))
+            val mega4M = ForgeRegistries.ITEMS.getValue(ResourceLocation(MEGACells.MODID, "cell_component_4m"))
+            val mega16M = ForgeRegistries.ITEMS.getValue(ResourceLocation(MEGACells.MODID, "cell_component_16m"))
+            val mega64M = ForgeRegistries.ITEMS.getValue(ResourceLocation(MEGACells.MODID, "cell_component_64m"))
+            
             val megaComponents = mapOf(
                 1 to AEItems.CELL_COMPONENT_1K,
                 4 to AEItems.CELL_COMPONENT_4K,
                 16 to AEItems.CELL_COMPONENT_16K,
                 64 to AEItems.CELL_COMPONENT_64K,
                 256 to AEItems.CELL_COMPONENT_256K,
-                1024 to MEGAItems.CELL_COMPONENT_1M,
-                4096 to MEGAItems.CELL_COMPONENT_4M,
-                16384 to MEGAItems.CELL_COMPONENT_16M,
-                65536 to MEGAItems.CELL_COMPONENT_64M
+                1024 to mega1M,
+                4096 to mega4M,
+                16384 to mega16M,
+                65536 to mega64M
             )
             megaComponents[kb]!!
         } else {

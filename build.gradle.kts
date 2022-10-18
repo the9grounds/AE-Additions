@@ -151,8 +151,8 @@ dependencies {
     implementation(project.the<DependencyManagementExtension>().deobf("curse.maven:the-one-probe-245211:3965688"))
     compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:ftb-teams-404468:3725501"))
     compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:applied-botanics-610632:3770580"))
-    compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:mega-cells-622112:4024490"))
-    runtimeOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:mega-cells-622112:4024490"))
+    compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:mega-cells-622112:4027408"))
+    runtimeOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:mega-cells-622112:4027408"))
     compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:applied-botanics-610632:3770580"))
     
 }
