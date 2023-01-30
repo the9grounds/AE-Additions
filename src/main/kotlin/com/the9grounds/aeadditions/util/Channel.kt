@@ -41,6 +41,11 @@ data class Channel(val channelInfo: ChannelInfo, var broadcaster: MEWirelessTran
         return tag
     }
     
+    // Check if subscribers are removed and remove them from the array
+    fun checkSubscribers() {
+        subscribers.removeAll { it.isRemoved }
+    }
+    
     fun hasAccessTo(player: ServerPlayer): Boolean {
         return channelInfo.hasAccessTo(player)
     }
