@@ -70,7 +70,7 @@ configure<UserDevExtension> {
 
         }
         create("server") {
-            workingDirectory(project.file("run"))
+            workingDirectory(project.file("run-server"))
 
             property("forge.logging.markers", "REGISTRIES")
             property("forge.logging.console.level", "debug")

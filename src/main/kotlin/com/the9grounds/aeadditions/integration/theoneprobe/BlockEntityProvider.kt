@@ -22,9 +22,7 @@ object BlockEntityProvider : IProbeInfoProvider {
         blockState: BlockState?,
         hitdata: IProbeHitData?
     ) {
-        val blockEntity = level!!.getBlockEntity(hitdata!!.pos)
-        
-        when(blockEntity) {
+        when(val blockEntity = level!!.getBlockEntity(hitdata!!.pos)) {
             is MEWirelessTransceiverBlockEntity -> blockEntity.addProbeInfo(blockEntity, mode, info, player, level, blockState, hitdata)
         }
     }

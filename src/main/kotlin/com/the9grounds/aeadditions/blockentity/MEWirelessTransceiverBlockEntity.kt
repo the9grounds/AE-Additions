@@ -4,6 +4,7 @@ import appeng.api.networking.*
 import appeng.api.util.AECableType
 import appeng.me.helpers.BlockEntityNodeListener
 import appeng.me.helpers.IGridConnectedBlockEntity
+import com.the9grounds.aeadditions.Logger
 import com.the9grounds.aeadditions.core.AEAConfig
 import com.the9grounds.aeadditions.menu.MEWirelessTransceiverMenu
 import com.the9grounds.aeadditions.registries.BlockEntities
@@ -87,6 +88,8 @@ class MEWirelessTransceiverBlockEntity(pos: BlockPos, blockState: BlockState) : 
 
         currentChannel = channel
 
+        channel.checkSubscribers()
+
         setupLinks()
         setChanged()
     }
@@ -99,6 +102,7 @@ class MEWirelessTransceiverBlockEntity(pos: BlockPos, blockState: BlockState) : 
         val alreadyExists = channel.subscribers.find { it == this } != null
         
         if (!alreadyExists) {
+            channel.checkSubscribers()
             channel.subscribers.add(this)
 
             currentChannel = channel
@@ -120,10 +124,14 @@ class MEWirelessTransceiverBlockEntity(pos: BlockPos, blockState: BlockState) : 
                         subscriber.connection?.destroy()
                         subscriber.connection = null
                     }
-                    val connection = GridHelper.createGridConnection(getGridNode(null), subscriber.getGridNode(null))
-                    subscriber.connection = connection
-                    connections.add(connection)
-                    localIdleDraw += AEAConfig.meWirelessTransceiverDistanceMultiplier * blockPos.distSqr(subscriber.blockPos)
+                    try {
+                        val connection = GridHelper.createGridConnection(getGridNode(null), subscriber.getGridNode(null))
+                        subscriber.connection = connection
+                        connections.add(connection)
+                        localIdleDraw += AEAConfig.meWirelessTransceiverDistanceMultiplier * blockPos.distSqr(subscriber.blockPos)
+                    } catch (e: Exception) {
+                        Logger.info(e)
+                    }
                 }
             }
             idleDraw = localIdleDraw
@@ -232,7 +240,7 @@ class MEWirelessTransceiverBlockEntity(pos: BlockPos, blockState: BlockState) : 
             return null
         }
         
-        if (_mainGridNode.node == null) {
+        if (!_mainGridNode.isReady) {
             _mainGridNode.create(level, blockPos)
         }
         
