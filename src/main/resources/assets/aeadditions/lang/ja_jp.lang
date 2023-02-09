@@ -86,7 +86,7 @@ com.the9grounds.aeadditions.part.gas.monitor.name=ME気体モニター
 //Blocks
 com.the9grounds.aeadditions.block.certustank=ケルタクォーツタンク
 com.the9grounds.aeadditions.block.walrus.name=セイウチ
-tile.com.the9grounds.aeadditions.block.fluidcrafter.name=ME液体アセンブラー
+tile.com.the9grounds.aeadditions.block.fluidcrafter.name=ME液体組立機
 tile.com.the9grounds.aeadditions.block.fluidinterface.name=ME液体インターフェース
 tile.com.the9grounds.aeadditions.block.fluidfiller.name=ME液体自動振り分け装置
 tile.com.the9grounds.aeadditions.block.vibrantchamberfluid.name=ME液体振動チャンバー
