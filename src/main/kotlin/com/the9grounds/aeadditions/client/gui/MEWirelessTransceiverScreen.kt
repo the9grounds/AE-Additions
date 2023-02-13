@@ -264,7 +264,15 @@ class MEWirelessTransceiverScreen(menu: MEWirelessTransceiverMenu, inventory: In
     }
     
     fun saveChangesButtonPressed(button: Button) {
-        NetworkManager.sendToServer(TransceiverDataChange(menu.isSubscriber, Minecraft.getInstance().level!!, selectedChannel?: menu.currentChannel!!))
+        if (selectedChannel !== null || menu.currentChannel !== null) {
+            NetworkManager.sendToServer(
+                TransceiverDataChange(
+                    menu.isSubscriber,
+                    Minecraft.getInstance().level!!,
+                    selectedChannel ?: menu.currentChannel!!
+                )
+            )
+        }
     }
     
     fun shouldShowChannel(index: Int): Boolean {
