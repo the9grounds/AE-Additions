@@ -2,6 +2,7 @@ package com.the9grounds.aeadditions.integration.opencomputers
 
 import appeng.api.features.IWirelessTermHandler
 import appeng.api.util.IConfigManager
+import appeng.core.sync.GuiBridge
 import com.the9grounds.aeadditions.registries.ItemEnum
 import li.cil.oc.common.item.data.DroneData
 import li.cil.oc.common.item.data.MicrocontrollerData
@@ -9,6 +10,7 @@ import li.cil.oc.common.item.data.RobotData
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
+import net.minecraftforge.fml.common.network.IGuiHandler
 
 object WirelessHandlerUpgradeAE : IWirelessTermHandler {
     override fun getEncryptionKey(itemStack: ItemStack?): String {
@@ -111,4 +113,6 @@ object WirelessHandlerUpgradeAE : IWirelessTermHandler {
     override fun hasPower(entityPlayer: EntityPlayer?, v: Double, itemStack: ItemStack?): Boolean = true
 
     override fun getConfigManager(itemStack: ItemStack?): IConfigManager? = null
+
+    fun getGuiHandler(itemStack: ItemStack):IGuiHandler = GuiBridge.GUI_WIRELESS_TERM
 }

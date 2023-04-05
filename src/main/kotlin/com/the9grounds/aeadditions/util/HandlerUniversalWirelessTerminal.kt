@@ -8,6 +8,7 @@ import com.the9grounds.aeadditions.item.ItemWirelessTerminalUniversal
 import com.the9grounds.aeadditions.registries.ItemEnum
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
+import net.minecraftforge.fml.common.network.IGuiHandler
 
 object HandlerUniversalWirelessTerminal : IWirelessTermHandler, IWirelessFluidTermHandler, IWirelessGasTermHandler {
     private val terminal
@@ -22,6 +23,8 @@ object HandlerUniversalWirelessTerminal : IWirelessTermHandler, IWirelessFluidTe
     override fun hasPower(player: EntityPlayer, amount: Double, itemStack: ItemStack): Boolean = terminal.hasPower(player, amount, itemStack)
 
     override fun getConfigManager(itemStack: ItemStack?): IConfigManager = terminal.getConfigManager(itemStack)
+
+    fun getGuiHandler(itemStack: ItemStack):IGuiHandler = terminal.getGuiHandler(itemStack)
 
     override fun isItemNormalWirelessTermToo(itemStack: ItemStack?): Boolean = terminal.isItemNormalWirelessTermToo(itemStack)
 

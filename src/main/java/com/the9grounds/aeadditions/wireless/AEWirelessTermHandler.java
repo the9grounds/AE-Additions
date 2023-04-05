@@ -1,11 +1,13 @@
 package com.the9grounds.aeadditions.wireless;
 
+import appeng.core.sync.GuiBridge;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
 import appeng.api.features.IWirelessTermHandler;
 import appeng.api.util.IConfigManager;
 import com.the9grounds.aeadditions.api.IWirelessGasFluidTermHandler;
+import net.minecraftforge.fml.common.network.IGuiHandler;
 
 public class AEWirelessTermHandler implements IWirelessTermHandler {
 
@@ -22,6 +24,9 @@ public class AEWirelessTermHandler implements IWirelessTermHandler {
 	@Override
 	public IConfigManager getConfigManager(ItemStack is) {
 		return new ConfigManager();
+	}
+
+	public IGuiHandler getGuiHandler(ItemStack itemStack){ return GuiBridge.GUI_WIRELESS_TERM;
 	}
 
 	@Override

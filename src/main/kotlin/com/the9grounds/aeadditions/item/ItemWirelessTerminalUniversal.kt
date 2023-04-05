@@ -4,6 +4,7 @@ import appeng.api.AEApi
 import appeng.api.config.Actionable
 import appeng.api.features.IWirelessTermHandler
 import appeng.api.util.IConfigManager
+import appeng.core.sync.GuiBridge
 import baubles.api.BaubleType
 import com.the9grounds.aeadditions.Constants
 import com.the9grounds.aeadditions.api.AEAApi
@@ -25,6 +26,7 @@ import net.minecraft.util.*
 import net.minecraft.util.text.translation.I18n
 import net.minecraft.world.World
 import net.minecraftforge.fml.common.Optional
+import net.minecraftforge.fml.common.network.IGuiHandler
 import net.minecraftforge.fml.relauncher.Side
 import net.minecraftforge.fml.relauncher.SideOnly
 import p455w0rd.ae2wtlib.api.client.IBaubleRender
@@ -59,6 +61,10 @@ class ItemWirelessTerminalUniversal : WirelessTermBase(), IWirelessFluidTermHand
         }
 
         return ConfigManager(nbt.getCompoundTag("settings"))
+    }
+
+    fun getGuiHandler(item: ItemStack): IGuiHandler {
+        return GuiBridge.GUI_WIRELESS_TERM
     }
 
     override fun getTranslationKey(stack: ItemStack): String {
