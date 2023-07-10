@@ -45,6 +45,8 @@ class RequestChannelsPacket : BasePacket {
         
         val isASubscriber = containerMenu.blockEntity?.currentChannel?.broadcaster != containerMenu.blockEntity
         
-        NetworkManager.sendTo(TransceiverDataChange(isASubscriber, player.level, containerMenu.blockEntity!!.currentChannel!!.channelInfo), player)
+        val channelInfo = containerMenu.blockEntity?.currentChannel?.channelInfo ?: return
+        
+        NetworkManager.sendTo(TransceiverDataChange(isASubscriber, player.level, channelInfo), player)
     }
 }

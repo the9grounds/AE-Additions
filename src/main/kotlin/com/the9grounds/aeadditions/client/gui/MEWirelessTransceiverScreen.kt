@@ -261,6 +261,8 @@ class MEWirelessTransceiverScreen(menu: MEWirelessTransceiverMenu, inventory: In
     fun deleteChannelButtonPressed(button: Button) {
         if (selectedChannel != null) {
             NetworkManager.sendToServer(DeleteChannelPacket(selectedChannel!!))
+            selectedChannel = null
+            menu.currentChannel = null
         }
     }
     

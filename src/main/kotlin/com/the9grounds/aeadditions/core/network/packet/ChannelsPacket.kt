@@ -35,7 +35,9 @@ class ChannelsPacket : BasePacket {
         val channelsSize = channelsTag.getInt("size")
         for (i in 0 until channelsSize) {
             val channel = Channel.loadFromNbt(channelsTag.getCompound("$i"), channelInfos, Minecraft.getInstance().level as Level)
-            channels.add(i, channel)
+            if (channel != null) {
+                channels.add(i, channel)
+            }
         }
     }
     

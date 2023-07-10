@@ -51,7 +51,7 @@ data class Channel(val channelInfo: ChannelInfo, var broadcaster: MEWirelessTran
     }
     
     companion object {
-        fun loadFromNbt(tag: CompoundTag, channelInfos: List<ChannelInfo>, level: Level): Channel {
+        fun loadFromNbt(tag: CompoundTag, channelInfos: List<ChannelInfo>, level: Level): Channel? {
             val channelInfo = channelInfos.find { it.id.toString() == tag.getString("channelInfoId") }
             
             val broadcasterPos = tag.getIntArray("broadcaster")
@@ -81,7 +81,11 @@ data class Channel(val channelInfo: ChannelInfo, var broadcaster: MEWirelessTran
                 }
             }
             
-            return Channel(channelInfo!!, broadcaster, subscriberList)
+            if (channelInfo === null) {
+                return null
+            }
+            
+            return Channel(channelInfo, broadcaster, subscriberList)
         }
     }
 }
