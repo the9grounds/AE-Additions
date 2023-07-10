@@ -47,7 +47,7 @@ data class ChannelInfo(val id: UUID, val level: Level, val name: String, val isP
             return FTBTeamsAPI.arePlayersInSameTeam(creator, player.uuid)
         }
 
-        return creator === player.uuid
+        return creator == player.uuid
     }
     
     companion object {

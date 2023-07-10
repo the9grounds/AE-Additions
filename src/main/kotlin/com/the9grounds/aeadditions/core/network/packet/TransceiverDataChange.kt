@@ -78,6 +78,12 @@ class TransceiverDataChange: BasePacket {
         }
         
         val blockEntity = containerMenu.blockEntity!!
+
+        var channelHolder = player.level.getCapability(Capability.CHANNEL_HOLDER).resolve().get()
+
+        if (!channelHolder.channelInfos.contains(currentChannel!!)) {
+            return
+        }
         
         // Verify has access to channel
         
