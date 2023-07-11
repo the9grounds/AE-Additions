@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "a": {
       "tag": "forge:gems/diamond"
@@ -21,5 +22,6 @@
   ],
   "result": {
     "item": "ae2additions:cell_component_4096"
-  }
+  },
+  "show_notification": true
 }

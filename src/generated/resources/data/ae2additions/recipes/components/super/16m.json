@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "a": {
       "item": "ae2additions:cell_component_16384"
@@ -15,5 +16,6 @@
   ],
   "result": {
     "item": "ae2additions:super_cell_component_16m"
-  }
+  },
+  "show_notification": true
 }

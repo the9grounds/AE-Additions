@@ -3,7 +3,7 @@ package com.the9grounds.aeadditions.data.provider
 import appeng.block.crafting.AbstractCraftingUnitBlock
 import com.the9grounds.aeadditions.AEAdditions
 import com.the9grounds.aeadditions.registries.Blocks
-import net.minecraft.data.DataGenerator
+import net.minecraft.data.PackOutput
 import net.minecraft.resources.ResourceLocation
 import net.minecraftforge.client.model.generators.BlockModelBuilder
 import net.minecraftforge.client.model.generators.BlockStateProvider
@@ -11,7 +11,7 @@ import net.minecraftforge.client.model.generators.ConfiguredModel
 import net.minecraftforge.client.model.generators.CustomLoaderBuilder
 import net.minecraftforge.common.data.ExistingFileHelper
 
-class BlockModelProvider(gen: DataGenerator?, modid: String?, exFileHelper: ExistingFileHelper?) : BlockStateProvider(gen, modid,
+class BlockModelProvider(gen: PackOutput?, modid: String?, exFileHelper: ExistingFileHelper?) : BlockStateProvider(gen, modid,
     exFileHelper
 ) {
 

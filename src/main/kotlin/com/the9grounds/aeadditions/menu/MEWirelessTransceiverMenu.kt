@@ -1,7 +1,5 @@
 package com.the9grounds.aeadditions.menu
 
-import appeng.api.config.SecurityPermissions
-import appeng.util.Platform
 import com.the9grounds.aeadditions.blockentity.MEWirelessTransceiverBlockEntity
 import com.the9grounds.aeadditions.client.gui.MEWirelessTransceiverScreen
 import com.the9grounds.aeadditions.core.network.NetworkManager
@@ -20,9 +18,6 @@ import net.minecraft.world.item.ItemStack
 import net.minecraftforge.fml.util.thread.SidedThreadGroups
 
 class MEWirelessTransceiverMenu(id: Int, val inventory: Inventory) : AbstractContainerMenu(MenuHolder.menuMEWirelessTransceiver, id) {
-    companion object {
-        val PERMISSION = SecurityPermissions.BUILD
-    }
     
     var blockEntity: MEWirelessTransceiverBlockEntity? = null
     var isPrivate = false
@@ -72,7 +67,7 @@ class MEWirelessTransceiverMenu(id: Int, val inventory: Inventory) : AbstractCon
     }
 
     public fun sendChannelStuffToClient() {
-        val level = inventory.player.level as ServerLevel
+        val level = inventory.player.level() as ServerLevel
 
         val channelHolder = level.getCapability(Capability.CHANNEL_HOLDER).resolve().get()
 
@@ -92,10 +87,6 @@ class MEWirelessTransceiverMenu(id: Int, val inventory: Inventory) : AbstractCon
     var channels = listOf<Channel>()
 
     override fun stillValid(player: Player): Boolean {
-        if (!Platform.checkPermissions(player, blockEntity, PERMISSION, false, true)) {
-            return false
-        }
-        
         return true
     }
     

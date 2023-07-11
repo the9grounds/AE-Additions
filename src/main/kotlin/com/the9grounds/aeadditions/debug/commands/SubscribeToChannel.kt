@@ -12,10 +12,10 @@ object SubscribeToChannel : ICommand {
         val entity = sender!!.entity
         
         if (entity is ServerPlayer) {
-            for (blockEntity in entity.level.getChunkAt(entity.onPos).blockEntities) {
+            for (blockEntity in entity.level().getChunkAt(entity.onPos).blockEntities) {
                 val value = blockEntity.value
                 if (value is MEWirelessTransceiverBlockEntity) {
-                    val currentLevel = entity.level
+                    val currentLevel = entity.level()
                     val channel = currentLevel.getCapability(Capability.CHANNEL_HOLDER).resolve().get().getChannelByName("test")
                     if (channel != null) {
                         value.subscribeToChannel(channel)

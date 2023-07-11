@@ -5,7 +5,7 @@ import com.the9grounds.aeadditions.menu.MEWirelessTransceiverMenu
 import com.the9grounds.aeadditions.registries.Capability
 import com.the9grounds.aeadditions.util.ChannelInfo
 import net.minecraft.client.Minecraft
-import net.minecraft.core.Registry
+import net.minecraft.core.registries.Registries
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerPlayer
@@ -31,7 +31,7 @@ class TransceiverDataChange: BasePacket {
         val level = if (FMLEnvironment.dist.isClient) {
             Minecraft.getInstance().level
         } else{
-            ServerLifecycleHooks.getCurrentServer()?.getLevel(ResourceKey.create(Registry.DIMENSION_REGISTRY, resourceLocation))
+            ServerLifecycleHooks.getCurrentServer()?.getLevel(ResourceKey.create(Registries.DIMENSION, resourceLocation))
         }
         currentChannel = ChannelInfo.readFromNbt(nbt!!, level!!)
     }
@@ -79,7 +79,7 @@ class TransceiverDataChange: BasePacket {
         
         val blockEntity = containerMenu.blockEntity!!
 
-        var channelHolder = player.level.getCapability(Capability.CHANNEL_HOLDER).resolve().get()
+        var channelHolder = player.level().getCapability(Capability.CHANNEL_HOLDER).resolve().get()
 
         if (!channelHolder.channelInfos.contains(currentChannel!!)) {
             return
@@ -97,7 +97,7 @@ class TransceiverDataChange: BasePacket {
             blockEntity.broadcastToChannel(currentChannel!!)
         }
         
-        val packet = TransceiverDataChange(subscribe, player.level, currentChannel!!)
+        val packet = TransceiverDataChange(subscribe, player.level(), currentChannel!!)
 
         val server = ServerLifecycleHooks.getCurrentServer()
 

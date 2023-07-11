@@ -28,7 +28,7 @@ class RequestChannelsPacket : BasePacket {
             return
         }
         
-        val level = player.level as ServerLevel
+        val level = player.level() as ServerLevel
         
         val channelHolder = level.getCapability(Capability.CHANNEL_HOLDER).resolve().get()
         
@@ -47,6 +47,6 @@ class RequestChannelsPacket : BasePacket {
         
         val channelInfo = containerMenu.blockEntity?.currentChannel?.channelInfo ?: return
         
-        NetworkManager.sendTo(TransceiverDataChange(isASubscriber, player.level, channelInfo), player)
+        NetworkManager.sendTo(TransceiverDataChange(isASubscriber, player.level(), channelInfo), player)
     }
 }

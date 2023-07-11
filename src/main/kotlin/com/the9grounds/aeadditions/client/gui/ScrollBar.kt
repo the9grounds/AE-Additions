@@ -1,8 +1,8 @@
 package com.the9grounds.aeadditions.client.gui
 
 import appeng.client.gui.style.Blitter
-import com.mojang.blaze3d.vertex.PoseStack
 import com.the9grounds.aeadditions.AEAdditions
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.network.chat.Component
@@ -16,11 +16,12 @@ class ScrollBar(x: Int, y: Int, val screen: MEWirelessTransceiverScreen) : Abstr
     
     var dragging = false
 
-    override fun render(poseStack: PoseStack, p_93658_: Int, p_93659_: Int, p_93660_: Float) {
-        texture.dest(this.x, this.y, 6, 4).blit(poseStack, 2)
+    override fun renderWidget(guiGraphics: GuiGraphics, p_93658_: Int, p_93659_: Int, p_93660_: Float) {
+        texture.dest(this.x, this.y, 6, 4).blit(guiGraphics)
     }
-    override fun updateNarration(p_169152_: NarrationElementOutput) {
-        
+
+    override fun updateWidgetNarration(p_259858_: NarrationElementOutput) {
+
     }
 
     override fun mouseScrolled(mouseX: Double, mouseY: Double, wheelDelta: Double): Boolean {

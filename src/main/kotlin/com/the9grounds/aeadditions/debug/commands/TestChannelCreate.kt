@@ -20,7 +20,7 @@ object TestChannelCreate : ICommand {
             val name = StringArgumentType.getString(it, "name")
             
             if (source.entity is ServerPlayer) {
-                val currentLevel = source!!.entity!!.getLevel()
+                val currentLevel = source!!.entity!!.level()
                 val channelHolder = currentLevel.getCapability(Capability.CHANNEL_HOLDER).resolve().get()
                 channelHolder.setupTestChannels(source.entity as ServerPlayer, name)
             }

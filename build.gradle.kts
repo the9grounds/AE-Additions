@@ -13,16 +13,17 @@ buildscript {
     }
 
     dependencies {
-        classpath(group = "net.minecraftforge.gradle", name = "ForgeGradle", version = "5.1.+") {
+        classpath(group = "net.minecraftforge.gradle", name = "ForgeGradle", version = "6.0.+") {
             isChanging = true
         }
 
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.10")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.22")
+        classpath("org.spongepowered:mixingradle:0.7-SNAPSHOT")
     }
 }
 
 plugins {
-    kotlin("jvm") version "1.7.10"
+    kotlin("jvm") version "1.8.22"
     java
     id("net.darkhax.curseforgegradle") version "1.0.10"
 }
@@ -30,6 +31,7 @@ plugins {
 apply {
     plugin("net.minecraftforge.gradle")
     plugin("idea")
+    plugin("org.spongepowered.mixin")
 }
 
 // Properties
@@ -48,7 +50,7 @@ val curseForgeProjectId: String by project
 val modBaseName: String by project
 val modCurseId: String by project
 
-apply(from= "https://raw.githubusercontent.com/thedarkcolour/KotlinForForge/site/thedarkcolour/kotlinforforge/gradle/kff-3.7.1.gradle")
+//apply(from= "https://raw.githubusercontent.com/thedarkcolour/KotlinForForge/site/thedarkcolour/kotlinforforge/gradle/kff-3.7.1.gradle")
 
 project.group = "com.the9grounds.aeadditions"
 base.archivesBaseName = "AEAdditions-${minecraftVersion}"
@@ -61,6 +63,7 @@ configure<UserDevExtension> {
     runs {
         create("client") {
             workingDirectory(project.file("run"))
+            args("-mixin.config=ae2additions.mixins.json")
 
             property("forge.logging.markers", "REGISTRIES")
             property("forge.logging.console.level", "debug")
@@ -71,6 +74,7 @@ configure<UserDevExtension> {
         }
         create("server") {
             workingDirectory(project.file("run-server"))
+            args("-mixin.config=ae2additions.mixins.json")
 
             property("forge.logging.markers", "REGISTRIES")
             property("forge.logging.console.level", "debug")
@@ -85,7 +89,7 @@ configure<UserDevExtension> {
             property("mixin.env.remapRefMap", "true")
             property("mixin.env.refMapRemappingFile", "${projectDir}/build/createSrgToMcp/output.srg")
 
-            args("--mod", "ae2additions", "--all", "--output", file("src/generated/resources/"), "--existing", file("src/main/resources"))
+            args("--mod", "ae2additions", "--all", "--output", file("src/generated/resources/"), "--existing", file("src/main/resources"), "-mixin.config=ae2additions.mixins.json")
         }
     }
 }
@@ -97,10 +101,10 @@ repositories {
         url = uri("https://maven.k-4u.nl")
     }
 
-    maven {
-        name = "Progwml6 maven"
-        url = uri("https://dvs1.progwml6.com/files/maven/")
-    }
+//    maven {
+//        name = "Progwml6 maven"
+//        url = uri("https://dvs1.progwml6.com/files/maven/")
+//    }
 
     maven {
         name = "Modmaven"
@@ -133,25 +137,30 @@ repositories {
     }
 }
 
-val coroutines_version = "1.7.10"
+val coroutines_version = "1.8.22"
 dependencies {
     "minecraft"("net.minecraftforge:forge:${minecraftVersion}-${forgeVersion}")
     val jeiApi = project.dependencies.create(group = "mezz.jei", name = "jei-${minecraftVersion}-forge", version = jeiVersion, classifier = "api")
-    val jei = project.dependencies.create(group = "mezz.jei", name = "jei-${minecraftVersion}-forge", version = jeiVersion)
-    val ae2 = project.dependencies.create(group = "appeng", name = "appliedenergistics2", version = aeVersion)
+    val jei = project.dependencies.create(group = "mezz.jei", name = "jei-1.20.1-forge", version = jeiVersion)
+    val ae2 = project.dependencies.create(group = "appeng", name = "appliedenergistics2-forge", version = aeVersion)
 
 //    compileOnly(project.the<DependencyManagementExtension>().deobf(jeiApi))
     implementation(project.the<DependencyManagementExtension>().deobf(jei))
 
     implementation(project.the<DependencyManagementExtension>().deobf(ae2))
 
-    implementation(project.the<DependencyManagementExtension>().deobf("mekanism:Mekanism:${mekanismVersion}"))
-    implementation(project.the<DependencyManagementExtension>().deobf("curse.maven:applied-mekanistics-574300:3969710"))
+    implementation("thedarkcolour:kotlinforforge:4.4.0")
+
+//    implementation(project.the<DependencyManagementExtension>().deobf("mekanism:Mekanism:${mekanismVersion}"))
+//    implementation(project.the<DependencyManagementExtension>().deobf("curse.maven:applied-mekanistics-574300:3969710"))
 //    implementation(project.the<DependencyManagementExtension>().deobf("curse.maven:ae2-things-forge-609977:3795991"))
-    implementation(project.the<DependencyManagementExtension>().deobf("curse.maven:the-one-probe-245211:3927520"))
+//    implementation(project.the<DependencyManagementExtension>().deobf("curse.maven:the-one-probe-245211:3927520"))
     compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:ftb-teams-404468:3890141"))
 //    compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:applied-botanics-610632:3770580"))
 //    compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:applied-botanics-610632:3770580"))
+
+    annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
+    compileOnly("org.spongepowered:mixin:0.8.5") { isTransitive = false }
     
 }
 
@@ -163,13 +172,17 @@ tasks.withType<Jar> {
     inputs.property("version", getBetterVersion())
     duplicatesStrategy = org.gradle.api.file.DuplicatesStrategy.EXCLUDE
 
-    baseName = "${modBaseName}-${minecraftVersion}-${getBetterVersion()}"
+    archiveBaseName.set("${modBaseName}-${minecraftVersion}-${getBetterVersion()}")
+
+    manifest.attributes(
+            "MixinConfigs" to "ae2additions.mixins.json",
+    )
 
     // replace stuff in mcmod.info, nothing else
     filesMatching("META-INF/mods.toml") {
         expand(mapOf(
             "version" to getBetterVersion(),
-            "mcversion" to "1.19.2"
+            "mcversion" to "1.20.1"
         ))
         filter { line ->
             line.replace("version=\"0.0.0.0.1\"", "version=\"${getBetterVersion()}\"")
@@ -243,6 +256,7 @@ fun getReleaseType(): String {
 
 sourceSets {
     main {
+
         java {
             srcDir("src")
         }
@@ -254,8 +268,15 @@ sourceSets {
 
 tasks.create("copyResourceToClasses", Copy::class) {
     tasks.classes.get().dependsOn(this)
+    mustRunAfter("compileJava")
     dependsOn(tasks.processResources.get())
-    onlyIf { gradle.taskGraph.hasTask(tasks.getByName("prepareRuns")) }
+//    onlyIf { gradle.taskGraph.hasTask(tasks.getByName("prepareRuns")) }
     into("$buildDir/classes/kotlin/main")
     from(tasks.processResources.get().destinationDir)
+}
+
+configure<org.spongepowered.asm.gradle.plugins.MixinExtension> {
+    add(sourceSets.main.get(), "ae2additions.refmap.json")
+    config("ae2additions.mixins.json")
+    quiet = false
 }

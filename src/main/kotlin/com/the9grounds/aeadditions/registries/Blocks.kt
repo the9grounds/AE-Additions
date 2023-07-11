@@ -11,31 +11,30 @@ import net.minecraft.world.item.BlockItem
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.SoundType
 import net.minecraft.world.level.block.state.BlockBehaviour
-import net.minecraft.world.level.material.Material
+import net.minecraftforge.registries.DeferredRegister
 import net.minecraftforge.registries.ForgeRegistries
-import thedarkcolour.kotlinforforge.forge.KDeferredRegister
 import thedarkcolour.kotlinforforge.forge.registerObject
 
 object Blocks {
-    val REGISTRY = KDeferredRegister.create(ForgeRegistries.BLOCKS, AEAdditions.ID)
+    val REGISTRY = DeferredRegister.create(ForgeRegistries.BLOCKS, AEAdditions.ID)
 
     val BLOCKS = mutableListOf<Block>()
     
     
-    @JvmField val BLOCK_CRAFTING_STORAGE_1024k = createBlock(Ids.CRAFTING_STORAGE_1024k, Material.METAL) {
+    @JvmField val BLOCK_CRAFTING_STORAGE_1024k = createBlock(Ids.CRAFTING_STORAGE_1024k, SoundType.METAL) {
         CraftingStorageBlock(it.strength(.75f, 11f).sound(SoundType.METAL), ExtendedCraftingUnitType.STORAGE_1024)
     }
-    @JvmField val BLOCK_CRAFTING_STORAGE_4096k = createBlock(Ids.CRAFTING_STORAGE_4096k, Material.METAL) {
+    @JvmField val BLOCK_CRAFTING_STORAGE_4096k = createBlock(Ids.CRAFTING_STORAGE_4096k, SoundType.METAL) {
         CraftingStorageBlock(it.strength(.75f, 11f).sound(SoundType.METAL), ExtendedCraftingUnitType.STORAGE_4096)
     }
-    @JvmField val BLOCK_CRAFTING_STORAGE_16384k = createBlock(Ids.CRAFTING_STORAGE_16384k, Material.METAL) {
+    @JvmField val BLOCK_CRAFTING_STORAGE_16384k = createBlock(Ids.CRAFTING_STORAGE_16384k, SoundType.METAL) {
         CraftingStorageBlock(it.strength(.75f, 11f).sound(SoundType.METAL), ExtendedCraftingUnitType.STORAGE_16384)
     }
-    @JvmField val BLOCK_CRAFTING_STORAGE_65536k = createBlock(Ids.CRAFTING_STORAGE_65536k, Material.METAL) {
+    @JvmField val BLOCK_CRAFTING_STORAGE_65536k = createBlock(Ids.CRAFTING_STORAGE_65536k, SoundType.METAL) {
         CraftingStorageBlock(it.strength(.75f, 11f).sound(SoundType.METAL), ExtendedCraftingUnitType.STORAGE_65536)
     }
     
-    val BLOCK_ME_WIRELESS_TRANSCEIVER = createBlock(Ids.ME_WIRELESS_TRANSCEIVER, Material.METAL) {
+    val BLOCK_ME_WIRELESS_TRANSCEIVER = createBlock(Ids.ME_WIRELESS_TRANSCEIVER, SoundType.METAL) {
         MEWirelessTransceiverBlock(it.strength(.75f, 11f).sound(SoundType.METAL))
     }
     
@@ -43,16 +42,16 @@ object Blocks {
         
     }
 
-    fun <T: Block> createBlock(id: ResourceLocation, material: Material, factory: (BlockBehaviour.Properties) -> T): BlockDefinition<T> {
-        val block = constructBlock(material, factory, id)
+    fun <T: Block> createBlock(id: ResourceLocation, soundType: SoundType, factory: (BlockBehaviour.Properties) -> T): BlockDefinition<T> {
+        val block = constructBlock(soundType, factory, id)
 
         val item = Items.createItem(id) { properties -> BlockItem(block, properties) }
 
         return BlockDefinition(block, item)
     }
 
-    fun <T: Block> createBlock(id: ResourceLocation, material: Material, requiredMod: Mods, factory: (BlockBehaviour.Properties) -> T): BlockDefinition<T> {
-        val block = constructBlock(material, factory, id)
+    fun <T: Block> createBlock(id: ResourceLocation, soundType: SoundType, requiredMod: Mods, factory: (BlockBehaviour.Properties) -> T): BlockDefinition<T> {
+        val block = constructBlock(soundType, factory, id)
 
         val item = Items.createItem(id, { properties -> BlockItem(block, properties) }, requiredMod)
 
@@ -60,11 +59,11 @@ object Blocks {
     }
 
     private fun <T : Block> constructBlock(
-        material: Material,
+        soundType: SoundType,
         factory: (BlockBehaviour.Properties) -> T,
         id: ResourceLocation
     ): T {
-        val props = BlockBehaviour.Properties.of(material)
+        val props = BlockBehaviour.Properties.of().strength(2.2f, 11f).sound(soundType)
 
         val block = factory(props)
 

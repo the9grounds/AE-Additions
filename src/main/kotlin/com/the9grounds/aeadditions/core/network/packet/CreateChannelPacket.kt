@@ -52,7 +52,7 @@ class CreateChannelPacket : BasePacket {
             return
         }
         
-        val level = player.level as ServerLevel
+        val level = player.level() as ServerLevel
 
         val channelHolder = level.getCapability(Capability.CHANNEL_HOLDER).resolve().get()
 
@@ -80,7 +80,7 @@ class CreateChannelPacket : BasePacket {
         }
 
         val packet = ChannelsPacket(filteredChannels.values.toList(), filteredChannelInfos)
-        val transceiverDataChange = TransceiverDataChange(subscribe, player.level, channelInfo)
+        val transceiverDataChange = TransceiverDataChange(subscribe, player.level(), channelInfo)
 
         val server = ServerLifecycleHooks.getCurrentServer()
 
@@ -91,7 +91,7 @@ class CreateChannelPacket : BasePacket {
                     NetworkManager.sendTo(transceiverDataChange, it)
                 }
                 
-                if (it.level == player.level) {
+                if (it.level() == player.level()) {
                     NetworkManager.sendTo(packet, it)
                 }
             }

@@ -13,9 +13,6 @@ import com.the9grounds.aeadditions.registries.Capability
 import com.the9grounds.aeadditions.util.Channel
 import com.the9grounds.aeadditions.util.ChannelHolder
 import com.the9grounds.aeadditions.util.ChannelInfo
-import mcjty.theoneprobe.api.IProbeHitData
-import mcjty.theoneprobe.api.IProbeInfo
-import mcjty.theoneprobe.api.ProbeMode
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.nbt.CompoundTag
@@ -24,7 +21,6 @@ import net.minecraft.world.MenuProvider
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.inventory.AbstractContainerMenu
-import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraftforge.fml.util.thread.SidedThreadGroups
@@ -48,10 +44,6 @@ class MEWirelessTransceiverBlockEntity(pos: BlockPos, blockState: BlockState) : 
     val _mainGridNode: IManagedGridNode = GridHelper.createManagedNode(this, BlockEntityNodeListener.INSTANCE).setInWorldNode(true).setFlags(GridFlags.DENSE_CAPACITY).setVisualRepresentation(item).setTagName("wirelesstransceiver")
 
     override fun getMainNode(): IManagedGridNode = _mainGridNode
-
-    override fun securityBreak() {
-        
-    }
 
     override fun getCableConnectionType(dir: Direction?): AECableType = AECableType.SMART
 
@@ -124,7 +116,7 @@ class MEWirelessTransceiverBlockEntity(pos: BlockPos, blockState: BlockState) : 
                         subscriber.connection = null
                     }
                     try {
-                        val connection = GridHelper.createGridConnection(getGridNode(null), subscriber.getGridNode(null))
+                        val connection = GridHelper.createConnection(getGridNode(null), subscriber.getGridNode(null))
                         subscriber.connection = connection
                         connections.add(connection)
                         localIdleDraw += AEAConfig.meWirelessTransceiverDistanceMultiplier * blockPos.distSqr(subscriber.blockPos)
@@ -199,36 +191,36 @@ class MEWirelessTransceiverBlockEntity(pos: BlockPos, blockState: BlockState) : 
         requestModelDataUpdate()
     }
 
-    fun addProbeInfo(
-        blockEntity: MEWirelessTransceiverBlockEntity?,
-        mode: ProbeMode?,
-        probeInfo: IProbeInfo?,
-        player: Player?,
-        level: Level?,
-        blockState: BlockState?,
-        data: IProbeHitData?
-    ) {
-        if (currentChannel !== null) {
-            val type = if (currentChannel!!.broadcaster == this) {
-                "Broadcaster"
-            } else {
-                "Subscriber"
-            }
-            
-            probeInfo!!.text(Component.literal("Connected to ${currentChannel!!.channelInfo.name} as $type"))
-            when(type) {
-                "Broadcaster" -> probeInfo!!.text("Current Power Usage: ${idleDraw} AE/t")
-                "Subscriber" -> {
-                    if (currentChannel!!.broadcaster != null) {
-                        val contributingPowerUsage = AEAConfig.meWirelessTransceiverDistanceMultiplier * currentChannel!!.broadcaster!!.blockPos.distSqr(blockPos)
-                        probeInfo!!.text("Contributing $contributingPowerUsage AE/t to Broadcaster's power draw")
-                    }
-                }
-            }
-        } else {
-            probeInfo!!.text(Component.literal("Not Connected"))
-        }
-    }
+//    fun addProbeInfo(
+//        blockEntity: MEWirelessTransceiverBlockEntity?,
+//        mode: ProbeMode?,
+//        probeInfo: IProbeInfo?,
+//        player: Player?,
+//        level: Level?,
+//        blockState: BlockState?,
+//        data: IProbeHitData?
+//    ) {
+//        if (currentChannel !== null) {
+//            val type = if (currentChannel!!.broadcaster == this) {
+//                "Broadcaster"
+//            } else {
+//                "Subscriber"
+//            }
+//
+//            probeInfo!!.text(Component.literal("Connected to ${currentChannel!!.channelInfo.name} as $type"))
+//            when(type) {
+//                "Broadcaster" -> probeInfo!!.text("Current Power Usage: ${idleDraw} AE/t")
+//                "Subscriber" -> {
+//                    if (currentChannel!!.broadcaster != null) {
+//                        val contributingPowerUsage = AEAConfig.meWirelessTransceiverDistanceMultiplier * currentChannel!!.broadcaster!!.blockPos.distSqr(blockPos)
+//                        probeInfo!!.text("Contributing $contributingPowerUsage AE/t to Broadcaster's power draw")
+//                    }
+//                }
+//            }
+//        } else {
+//            probeInfo!!.text(Component.literal("Not Connected"))
+//        }
+//    }
     
     fun blockPlaced() {
         getGridNode(null)

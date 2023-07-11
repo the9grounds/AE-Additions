@@ -2,7 +2,6 @@ package com.the9grounds.aeadditions.client.gui
 
 import appeng.client.gui.style.Blitter
 import appeng.client.gui.style.Color
-import com.mojang.blaze3d.vertex.PoseStack
 import com.the9grounds.aeadditions.AEAdditions
 import com.the9grounds.aeadditions.client.gui.button.*
 import com.the9grounds.aeadditions.core.network.NetworkManager
@@ -12,11 +11,15 @@ import com.the9grounds.aeadditions.core.network.packet.TransceiverDataChange
 import com.the9grounds.aeadditions.menu.MEWirelessTransceiverMenu
 import com.the9grounds.aeadditions.util.ChannelInfo
 import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.Font
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Button
+import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.entity.player.Inventory
+
 
 class MEWirelessTransceiverScreen(menu: MEWirelessTransceiverMenu, inventory: Inventory, title: Component) : AbstractContainerScreen<MEWirelessTransceiverMenu>(
     menu, inventory, title
@@ -60,33 +63,35 @@ class MEWirelessTransceiverScreen(menu: MEWirelessTransceiverMenu, inventory: In
         scrollBar = ScrollBar(guiLeft + 16 + 138, guiTop + 70, this)
     }
     
-    override fun renderBg(posStack: PoseStack, ticks: Float, p_97789_: Int, p_97790_: Int) {
-        this.renderBackground(posStack)
-        texture.dest(guiLeft, guiTop).src(0, 0, xSize, ySize).blit(posStack, 0)
-        channelListBackground.dest(guiLeft + 16, guiTop + 70, 144, 50).src(0, 0, 2, 2).blit(posStack, -3)
+    override fun renderBg(guiGraphics: GuiGraphics, ticks: Float, p_97789_: Int, p_97790_: Int) {
+        this.renderBackground(guiGraphics)
+        texture.dest(guiLeft, guiTop).src(0, 0, xSize, ySize).blit(guiGraphics)
+        // TODO: Understand implication of removed z value
+        channelListBackground.dest(guiLeft + 16, guiTop + 70, 144, 50).src(0, 0, 2, 2).blit(guiGraphics)
     }
 
-    override fun render(posStack: PoseStack, mouseX: Int, mouseY: Int, p_97798_: Float) {
-        super.render(posStack, mouseX, mouseY, p_97798_)
+
+    override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, p_97798_: Float) {
+        super.render(guiGraphics, mouseX, mouseY, p_97798_)
         accessBtn.x = guiLeft + imageWidth + 2
         accessBtn.y = guiTop + 3
-        accessBtn.render(posStack, mouseX, mouseY, p_97798_)
+        accessBtn.render(guiGraphics, mouseX, mouseY, p_97798_)
         typeButton.x = guiLeft + imageWidth + 2
         typeButton.y = guiTop + 16 + 12
-        typeButton.render(posStack, mouseX, mouseY, p_97798_)
-        font.draw(posStack, Component.literal("Channel Name"), (guiLeft + 16).toFloat(), (guiTop + 22).toFloat(), Color(0, 0, 0, 255).toARGB())
-        textField?.render(posStack, mouseX, mouseY, p_97798_)
+        typeButton.render(guiGraphics, mouseX, mouseY, p_97798_)
+        font.drawInBatch("Channel Name", (guiLeft + 16).toFloat(), (guiTop + 22).toFloat(), Color(0, 0, 0, 255).toARGB(), false, guiGraphics.pose().last().pose(), guiGraphics.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880)
+        textField?.render(guiGraphics, mouseX, mouseY, p_97798_)
         createButton.x = guiLeft + 16 + textField!!.width + 2
         createButton.y = guiTop + 22 + 10
-        createButton.render(posStack, mouseX, mouseY, p_97798_)
+        createButton.render(guiGraphics, mouseX, mouseY, p_97798_)
         deleteChannelButton?.x = guiLeft + 75
         deleteChannelButton?.y = guiTop + 125
-        deleteChannelButton?.renderButton(posStack, mouseX, mouseY, p_97798_)
+        deleteChannelButton?.render(guiGraphics, mouseX, mouseY, p_97798_)
         setChannelButton?.x = guiLeft + 120
         setChannelButton?.y = guiTop + 125
-        setChannelButton?.renderButton(posStack, mouseX, mouseY, p_97798_)
-        extraDataPane?.render(posStack, mouseX, mouseY, p_97798_)
-        scrollBar?.render(posStack, mouseX, mouseY, p_97798_)
+        setChannelButton?.render(guiGraphics, mouseX, mouseY, p_97798_)
+        extraDataPane?.render(guiGraphics, mouseX, mouseY, p_97798_)
+        scrollBar?.render(guiGraphics, mouseX, mouseY, p_97798_)
         
         val channelName = if (menu.isOnChannel) {
             menu.currentChannel?.name ?: "None"
@@ -94,8 +99,8 @@ class MEWirelessTransceiverScreen(menu: MEWirelessTransceiverMenu, inventory: In
             "None"
         }
         
-        font.draw(posStack, Component.literal("Current Channel:"), (guiLeft + 16).toFloat(), (guiTop + 50).toFloat(), Color(0, 0, 0, 255).toARGB())
-        font.draw(posStack, Component.literal(channelName), (guiLeft + 104).toFloat(), (guiTop + 50).toFloat(), Color(0, 88, 12, 255).toARGB())
+        font.drawInBatch(Component.literal("Current Channel:"), (guiLeft + 16).toFloat(), (guiTop + 50).toFloat(), Color(0, 0, 0, 255).toARGB(), false, guiGraphics.pose().last().pose(), guiGraphics.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880)
+        font.drawInBatch(Component.literal(channelName), (guiLeft + 104).toFloat(), (guiTop + 50).toFloat(), Color(0, 88, 12, 255).toARGB(), false, guiGraphics.pose().last().pose(), guiGraphics.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880)
         
         var mode = "None"
         
@@ -107,31 +112,30 @@ class MEWirelessTransceiverScreen(menu: MEWirelessTransceiverMenu, inventory: In
             }
         }
         
-        font.draw(posStack, Component.literal("Current Mode:"), (guiLeft + 16).toFloat(), (guiTop + 60).toFloat(), Color(0, 0, 0, 255).toARGB())
-        font.draw(posStack, Component.literal(mode), (guiLeft + 90).toFloat(), (guiTop + 60).toFloat(), Color(0, 88, 12, 255).toARGB())
-        
-        posStack.pushPose()
-        posStack.translate(guiLeft.toDouble(), guiTop.toDouble(), 0.0)
+        font.drawInBatch(Component.literal("Current Mode:"), (guiLeft + 16).toFloat(), (guiTop + 60).toFloat(), Color(0, 0, 0, 255).toARGB(), false, guiGraphics.pose().last().pose(), guiGraphics.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880)
+        font.drawInBatch(Component.literal(mode), (guiLeft + 90).toFloat(), (guiTop + 60).toFloat(), Color(0, 88, 12, 255).toARGB(), false, guiGraphics.pose().last().pose(), guiGraphics.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880)
+
+        guiGraphics.pose().pushPose()
+        guiGraphics.pose().translate(guiLeft.toDouble(), guiTop.toDouble(), 0.0)
         val initialPaddingX = 1.toDouble()
         val initialPaddingY = 1.toDouble()
-        posStack.translate(16.0 + initialPaddingX, 70.0 + initialPaddingY, 0.0)
+        guiGraphics.pose().translate(16.0 + initialPaddingX, 70.0 + initialPaddingY, 0.0)
         
         // All Channels
         var channelX = 0
         var channelY =  0
-        posStack.pushPose()
-        posStack.scale(.8f, .8f, .8f)
+        guiGraphics.pose().pushPose()
+        guiGraphics.pose().scale(.8f, .8f, .8f)
         channels.forEachIndexed { index, channelInfo ->
-            if (shouldShowChannel(index)) {
-                this.channelFields[channelInfo]?.draw(posStack, 0, channelY, selectedChannel == channelInfo)
-                channelY += 12
+            val channelField = this.channelFields[channelInfo]
+            if (channelField != null) {
+                channelField.updateValues(shouldShowChannel(index), selectedChannel == channelInfo, channelY)
+                channelField.render(guiGraphics, 0, 0, 0f)
             }
         }
-        
-        posStack.popPose()
-        posStack.popPose()
-        
-        this.renderTooltips(posStack, mouseX, mouseY)
+
+        guiGraphics.pose().popPose()
+        guiGraphics.pose().popPose()
     }
     
     fun onChannelListChanged() {
@@ -150,7 +154,17 @@ class MEWirelessTransceiverScreen(menu: MEWirelessTransceiverMenu, inventory: In
         createButton.mouseClicked(x, y, p_97750_)
         deleteChannelButton?.mouseClicked(x, y, p_97750_)
         setChannelButton?.mouseClicked(x, y, p_97750_)
-        textField?.mouseClicked(x, y, p_97750_)
+        val wasClicked = textField?.mouseClicked(x, y, p_97750_)
+
+        if (wasClicked !== null) {
+            if (wasClicked) {
+                textField?.isFocused = true
+            } else {
+                if (textField!!.isFocused) {
+                    textField?.isFocused = false
+                }
+            }
+        }
 
         val filtered = menu.channelInfos.filter { it.isPrivate == menu.isPrivate }
         
@@ -175,18 +189,6 @@ class MEWirelessTransceiverScreen(menu: MEWirelessTransceiverMenu, inventory: In
         scrollBar?.mouseReleased(p_97812_, p_97813_, p_97814_)
         return super.mouseReleased(p_97812_, p_97813_, p_97814_)
     }
-    
-    private fun renderTooltips(posStack: PoseStack, mouseX: Int, mouseY: Int) {
-        renderTooltip(posStack, mouseX, mouseY)
-        
-        if (accessBtn.isMouseOver(mouseX.toDouble(), mouseY.toDouble())) {
-            accessBtn.renderToolTip(posStack, mouseX, mouseY)
-        }
-        
-        if (typeButton.isMouseOver(mouseX.toDouble(), mouseY.toDouble())) {
-            typeButton.renderToolTip(posStack, mouseX, mouseY)
-        }
-    }
 
     override fun mouseDragged(
         p_97752_: Double,
@@ -204,23 +206,18 @@ class MEWirelessTransceiverScreen(menu: MEWirelessTransceiverMenu, inventory: In
         return super.charTyped(p_94683_, p_94684_)
     }
     
-    fun accessBtnTooltip(button: Button, posStack: PoseStack, mouseX: Int, mouseY: Int) {
-        val tooltips = mutableListOf<Component>()
-        tooltips.add(Component.literal("Access Mode"))
-        tooltips.add(Component.literal(if (accessBtn.isPrivate) "Private" else "Public"))
-        this.renderComponentTooltip(posStack, tooltips, mouseX, mouseY)
+    fun accessBtnTooltip(button: Button): Tooltip {
+        return Tooltip.create(Component.literal("Access Mode\n${if (accessBtn.isPrivate) "Private" else "Public"}"))
     }
     
-    fun transceiverTypeButtonTooltip(button: Button, posStack: PoseStack, mouseX: Int, mouseY: Int) {
+    fun transceiverTypeButtonTooltip(button: Button): Tooltip {
         val label = if (typeButton.isSubscriber) {
             "Subscriber"
         } else {
             "Broadcaster"
         }
-        val tooltips = mutableListOf<Component>()
-        tooltips.add(Component.literal("Transceiver Mode"))
-        tooltips.add(Component.literal(label))
-        this.renderComponentTooltip(posStack, tooltips, mouseX, mouseY)
+
+        return Tooltip.create(Component.literal("Transceiver Mode\n${label}"))
     }
     
     fun accessButtonPressed(button: Button) {
@@ -241,7 +238,7 @@ class MEWirelessTransceiverScreen(menu: MEWirelessTransceiverMenu, inventory: In
         val channelName = textField?.value
         val private = menu.isPrivate
         
-        if (channelName != null) {
+        if (channelName != null && channelName.length > 0) {
             NetworkManager.sendToServer(CreateChannelPacket(private, channelName, menu.isSubscriber))
         }
         

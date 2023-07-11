@@ -31,7 +31,7 @@ class ChannelHolder(val level: Level) {
     
     fun setupTestChannels(player: ServerPlayer, name: String) {
         
-        val level = player.level as ServerLevel
+        val level = player.level() as ServerLevel
         
         val alreadyExists = channelInfos.find { it.name == name && ((it.isPrivate && it.creator == player.uuid) || !it.isPrivate) } !== null
         

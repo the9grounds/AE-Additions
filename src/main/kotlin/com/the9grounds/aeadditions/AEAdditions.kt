@@ -2,13 +2,13 @@ package com.the9grounds.aeadditions
 
 import appeng.items.storage.BasicStorageCell
 import com.the9grounds.aeadditions.core.AEAConfig
+import com.the9grounds.aeadditions.core.CreativeTab
 import com.the9grounds.aeadditions.core.network.NetworkManager
 import com.the9grounds.aeadditions.data.AEAdditionsDataGenerator
 import com.the9grounds.aeadditions.debug.CommandRegistry
 import com.the9grounds.aeadditions.integration.Integration
 import com.the9grounds.aeadditions.integration.appeng.AppEng
 import com.the9grounds.aeadditions.integration.appeng.InitUpgrades
-import com.the9grounds.aeadditions.integration.theoneprobe.TheOneProbe
 import com.the9grounds.aeadditions.item.storage.StorageCell
 import com.the9grounds.aeadditions.menu.MenuHolder
 import com.the9grounds.aeadditions.registries.*
@@ -18,7 +18,6 @@ import net.minecraft.client.renderer.ItemBlockRenderTypes
 import net.minecraft.client.renderer.RenderType
 import net.minecraft.world.level.Level
 import net.minecraftforge.api.distmarker.Dist
-import net.minecraftforge.client.event.ModelEvent
 import net.minecraftforge.client.event.RegisterColorHandlersEvent
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.server.ServerStartingEvent
@@ -36,19 +35,23 @@ object AEAdditions {
     const val ID = "ae2additions"
 
     init {
+        Models.init()
         Items.REGISTRY.register(MOD_BUS)
         Blocks.REGISTRY.register(MOD_BUS)
         BlockEntities.REGISTRY.register(MOD_BUS)
         MenuHolder.REGISTRY.register(MOD_BUS)
+        CreativeTab.REGISTRY.register(MOD_BUS)
         Items.init()
         Blocks.init()
         BlockEntities.init()
         MenuHolder.init()
+
+
         
         MOD_BUS.addListener(::commonSetup)
         MOD_BUS.addListener(AEAdditionsDataGenerator::onGatherData)
         MOD_BUS.addListener(Capability::registerCapabilities)
-        MOD_BUS.addListener(TheOneProbe::enqueueIMC)
+//        MOD_BUS.addListener(TheOneProbe::enqueueIMC)
         MOD_BUS.addListener(::clientStuff)
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, AEAConfig.COMMON_SPEC)
         
@@ -61,7 +64,6 @@ object AEAdditions {
     }
     
     fun initClient() {
-        MOD_BUS.addListener(::modelRegistryEvent)
         MOD_BUS.addListener(::registerItemColors)
     }
     
@@ -106,9 +108,5 @@ object AEAdditions {
 //                itemColors.register(DISKDrive::getColor, *chemicalDiskCells)
 //            }
 //        }
-    }
-
-    private fun modelRegistryEvent(event: ModelEvent.RegisterGeometryLoaders) {
-        Models.init(event::register)
     }
 }

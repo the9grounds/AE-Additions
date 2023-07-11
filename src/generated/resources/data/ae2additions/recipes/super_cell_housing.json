@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "a": {
       "item": "ae2:quartz_glass"
@@ -18,5 +19,6 @@
   ],
   "result": {
     "item": "ae2additions:super_cell_housing"
-  }
+  },
+  "show_notification": true
 }

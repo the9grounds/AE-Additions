@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "a": {
       "item": "ae2:fluix_crystal"
@@ -21,5 +22,6 @@
   ],
   "result": {
     "item": "ae2additions:me_wireless_transceiver"
-  }
+  },
+  "show_notification": true
 }

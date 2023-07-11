@@ -29,7 +29,7 @@ class DeleteChannelPacket : BasePacket {
 
     override fun serverPacketData(player: Player) {
         
-        val level = player.level
+        val level = player.level()
 
         val channelHolder = level.getCapability(Capability.CHANNEL_HOLDER).resolve().get()
         

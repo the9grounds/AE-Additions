@@ -74,8 +74,8 @@ open class AEAInternalInventory(var host: IAEAInventory?, size: Int, maxStack: I
             var oldStack = previousStack
             
             var operation = Operation.SET
-            
-            if (newStack.isEmpty || oldStack.isEmpty || ItemStack.isSame(newStack, oldStack)) {
+
+            if (newStack.isEmpty || oldStack.isEmpty || ItemStack.isSameItem(newStack, oldStack)) {
                 if (newStack.count > oldStack.count) {
                     newStack.shrink(oldStack.count)
                     oldStack = ItemStack.EMPTY
