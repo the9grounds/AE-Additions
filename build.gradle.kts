@@ -2,7 +2,7 @@ import net.darkhax.curseforgegradle.Constants as CFG_Constants
 
 plugins {
     id("fabric-loom")
-    val kotlinVersion: String = "1.7.20"
+    val kotlinVersion: String = "1.6.21"
     kotlin("jvm").version(kotlinVersion)
     id("net.darkhax.curseforgegradle") version "1.0.10"
 }
@@ -59,20 +59,11 @@ dependencies {
     modImplementation("net.fabricmc.fabric-api", "fabric-api", fabricVersion)
     val fabricKotlinVersion: String by project
     modImplementation("net.fabricmc", "fabric-language-kotlin", fabricKotlinVersion)
-//    modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:$reiVersion")
-//    modRuntimeOnly("me.shedaniel:RoughlyEnoughItems-fabric:$reiVersion")
-    
-    modImplementation("teamreborn", "energy", "2.2.0") {
-        exclude(group = "net.fabricmc.fabric-api")
-    }
+    modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:$reiVersion")
+    modRuntimeOnly("me.shedaniel:RoughlyEnoughItems-fabric:$reiVersion")
 
-//    include modApi('teamreborn:energy:<latest_version>') {
-//        exclude(group: "net.fabricmc.fabric-api")
-//    }
-
-//    modImplementation("appeng:appliedenergistics2-fabric:$aeVersion")
-//    modImplementation("curse.maven:ae2-things-563800:3796436")
-    modImplementation("curse.maven:ae2-223794:4030069")
+    modImplementation("appeng:appliedenergistics2-fabric:$aeVersion")
+    modImplementation("curse.maven:ae2-things-563800:3796436")
 
     annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
     modCompileOnly("org.spongepowered:mixin:0.8.5") { isTransitive = false }
@@ -92,8 +83,8 @@ tasks {
     }
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         kotlinOptions { jvmTarget = javaVersion.toString() }
-//        sourceCompatibility = javaVersion.toString()
-//        targetCompatibility = javaVersion.toString()
+        sourceCompatibility = javaVersion.toString()
+        targetCompatibility = javaVersion.toString()
     }
     jar { from("LICENSE") { rename { "${it}_${base.archivesName}" } } }
     processResources {

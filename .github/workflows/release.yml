@@ -42,7 +42,7 @@ jobs:
         pullRequests: true
         issues: true
         issuesWoLabels: true
-        excludeLabels: 1.12.2,1.16.5,forge,1.18.2
+        excludeLabels: 1.12.2,1.16.5,forge
         prWoLabels: true
     - name: Build with Gradle
       run: ./gradlew build publishCurseForge

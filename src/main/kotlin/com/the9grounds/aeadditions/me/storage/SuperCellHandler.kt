@@ -5,6 +5,7 @@ import appeng.api.storage.cells.ICellHandler
 import appeng.api.storage.cells.ISaveProvider
 import appeng.core.localization.Tooltips
 import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.TextComponent
 import net.minecraft.world.item.ItemStack
 
 object SuperCellHandler : ICellHandler {
@@ -27,7 +28,7 @@ object SuperCellHandler : ICellHandler {
             }
             
             val number = handler.numberOfTypesByKeyType[keyType] ?: 0
-            lines.add(Component.literal("$number $description Type${if (number != 1) "s" else ""}"))
+            lines.add(TextComponent("${number} ${description} Type${if (number != 1) "s" else ""}"))
         }
     }
 }

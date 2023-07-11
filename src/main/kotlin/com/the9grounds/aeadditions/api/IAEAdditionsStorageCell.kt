@@ -4,6 +4,7 @@ import appeng.api.stacks.AEKey
 import appeng.api.stacks.AEKeyType
 import appeng.api.storage.cells.ICellWorkbenchItem
 import net.minecraft.world.item.ItemStack
+import javax.annotation.Nonnull
 
 interface IAEAdditionsStorageCell : ICellWorkbenchItem {
 
@@ -19,7 +20,7 @@ interface IAEAdditionsStorageCell : ICellWorkbenchItem {
      *
      * @return number of bytes
      */
-    fun getBytes(cellItem: ItemStack): Int
+    fun getBytes(@Nonnull cellItem: ItemStack): Int
 
     /**
      * Determines the number of bytes used for any type included on the cell.
@@ -28,7 +29,7 @@ interface IAEAdditionsStorageCell : ICellWorkbenchItem {
      *
      * @return number of bytes
      */
-    fun getBytesPerType(cellItem: ItemStack): Int
+    fun getBytesPerType(@Nonnull cellItem: ItemStack): Int
 
     /**
      * Allows you to fine tune which items are allowed on a given cell, if you don't care, just return false; As the
@@ -70,7 +71,7 @@ interface IAEAdditionsStorageCell : ICellWorkbenchItem {
      *
      * @return number of types
      */
-    fun getTotalTypes(cellItem: ItemStack): Int
+    fun getTotalTypes(@Nonnull cellItem: ItemStack): Int
 
     /**
      * @return drain in ae/t this storage cell will use.
