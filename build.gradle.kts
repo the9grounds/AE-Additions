@@ -63,7 +63,7 @@ dependencies {
     modRuntimeOnly("me.shedaniel:RoughlyEnoughItems-fabric:$reiVersion")
 
     modImplementation("appeng:appliedenergistics2-fabric:$aeVersion")
-    modImplementation("curse.maven:ae2-things-563800:3796436")
+    modImplementation("curse.maven:ae2things-563800:4024417")
 
     annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
     modCompileOnly("org.spongepowered:mixin:0.8.5") { isTransitive = false }
