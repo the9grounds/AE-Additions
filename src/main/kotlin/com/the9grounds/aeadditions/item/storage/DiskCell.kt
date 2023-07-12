@@ -46,7 +46,7 @@ class DiskCell(properties: Item.Properties, private val _keyType: AEKeyType, val
     }
 
     override fun getBytes(cellItem: ItemStack?): Int {
-        return kilobytes * 1024
+        return kilobytes * 1000
     }
 
     override fun getIdleDrain(): Double {

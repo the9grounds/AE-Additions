@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "ae2things:disk_housing"
+    },
+    {
+      "item": "ae2:cell_component_256k"
+    }
+  ],
+  "result": {
+    "item": "ae2additions:disk_item_256k"
+  },
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "ae2things"
+      ]
+    }
+  ]
+}
