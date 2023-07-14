@@ -35,7 +35,6 @@ object AEAdditions {
     const val ID = "ae2additions"
 
     init {
-        Models.init()
         Items.REGISTRY.register(MOD_BUS)
         Blocks.REGISTRY.register(MOD_BUS)
         BlockEntities.REGISTRY.register(MOD_BUS)
@@ -65,6 +64,7 @@ object AEAdditions {
     
     fun initClient() {
         MOD_BUS.addListener(::registerItemColors)
+        Models.init()
     }
     
     private fun clientStuff(event: FMLClientSetupEvent) {
