@@ -75,10 +75,11 @@ class MEWirelessTransceiverBlockEntity(pos: BlockPos, blockState: BlockState) : 
     
     fun removedFromChannel(channelInfo: ChannelInfo) {
         this.destroyConnections()
-        this.currentChannel = null
+        this.channelId = null
+        this.channelConnectionType = null
     }
 
-    fun broadcastToChannel(channelInfo: ChannelInfo) {
+    fun broadcastToChannel(channelInfo: ChannelInfo, initial: Boolean = false) {
 
         channelHolder.findChannelForBlockEntity(this)?.removeBlockEntity(this)
 
@@ -87,14 +88,18 @@ class MEWirelessTransceiverBlockEntity(pos: BlockPos, blockState: BlockState) : 
         channel.broadcaster = this
 
         currentChannel = channel
+        channelId = channel.channelInfo.id
+        channelConnectionType = "broadcast"
 
         channel.checkSubscribers()
 
         setupLinks()
-        setChanged()
+        if (!initial) {
+            setChanged()
+        }
     }
     
-    fun subscribeToChannel(channelInfo: ChannelInfo) {
+    fun subscribeToChannel(channelInfo: ChannelInfo, initial: Boolean = false) {
         channelHolder.findChannelForBlockEntity(this)?.removeBlockEntity(this)
         
         val channel = channelHolder.getOrCreateChannel(channelInfo)
@@ -106,12 +111,16 @@ class MEWirelessTransceiverBlockEntity(pos: BlockPos, blockState: BlockState) : 
             channel.subscribers.add(this)
 
             currentChannel = channel
+            channelId = channel.channelInfo.id
+            channelConnectionType = "subscribe"
 
             if (currentChannel!!.broadcaster !== null) {
                 currentChannel!!.broadcaster!!.setupLinks()
             }
 
-            setChanged()
+            if (!initial) {
+                setChanged()
+            }
         }
     }
     
@@ -138,7 +147,7 @@ class MEWirelessTransceiverBlockEntity(pos: BlockPos, blockState: BlockState) : 
         }
     }
     
-    fun destroyConnections(remove: Boolean = true) {
+    fun destroyConnections(remove: Boolean = true, clearCurrentChannel: Boolean = true) {
         if (currentChannel != null) {
             if (currentChannel!!.broadcaster == this) {
                 currentChannel!!.subscribers.forEach {
@@ -160,7 +169,7 @@ class MEWirelessTransceiverBlockEntity(pos: BlockPos, blockState: BlockState) : 
                 }
             }
             
-            if (remove) {
+            if (clearCurrentChannel) {
                 currentChannel = null
             }
         }
@@ -169,15 +178,10 @@ class MEWirelessTransceiverBlockEntity(pos: BlockPos, blockState: BlockState) : 
     override fun saveAdditional(tag: CompoundTag) {
         super.saveAdditional(tag)
         mainNode.saveToNBT(tag)
-        if (currentChannel !== null) {
-            val type = if (currentChannel!!.broadcaster == this) {
-                "broadcast"
-            } else {
-                "subscribe"
-            }
+        if (channelId !== null) {
             
-            tag.putString("transceiverType", type)
-            tag.putString("channelId", currentChannel!!.channelInfo.id.toString())
+            tag.putString("transceiverType", channelConnectionType)
+            tag.putString("channelId", channelId.toString())
         }
     }
 
@@ -188,7 +192,7 @@ class MEWirelessTransceiverBlockEntity(pos: BlockPos, blockState: BlockState) : 
             return
         }
         val cachedChannel = this.currentChannel
-        this.destroyConnections()
+        this.destroyConnections(remove = true, clearCurrentChannel = false)
         if (cachedChannel != null && cachedChannel.broadcaster != this) {
             cachedChannel.broadcaster?.setupLinks()
         }
@@ -253,9 +257,9 @@ class MEWirelessTransceiverBlockEntity(pos: BlockPos, blockState: BlockState) : 
             val channelInfo = channelHolder.getChannelById(channelId!!) ?: return
 
             if (channelConnectionType == "broadcast") {
-                this.broadcastToChannel(channelInfo)
+                this.broadcastToChannel(channelInfo, true)
             } else {
-                this.subscribeToChannel(channelInfo)
+                this.subscribeToChannel(channelInfo, true)
             }
         }
     }
