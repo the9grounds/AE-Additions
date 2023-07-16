@@ -5,7 +5,7 @@ name: Build
 
 on:
   push:
-    branches: [ 1.19.2 ]
+    branches: [ 1.19 ]
 
 jobs:
   build:
