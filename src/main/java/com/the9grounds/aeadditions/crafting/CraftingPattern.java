@@ -73,11 +73,20 @@ public class CraftingPattern implements IFluidCraftingPatternDetails,
 
 	@Override
 	public IAEItemStack[] getCondensedInputs() {
+		if (this.pattern == null)
+		{
+			return new IAEItemStack[0];
+		}
 		return removeFluidContainers(this.pattern.getCondensedInputs(), true);
 	}
 
 	@Override
 	public IAEItemStack[] getCondensedOutputs() {
+		if (this.pattern == null)
+		{
+			return new IAEItemStack[0];
+		}
+
 		return this.pattern.getCondensedOutputs();
 	}
 

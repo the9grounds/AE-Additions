@@ -155,8 +155,9 @@ class TileEntityFluidCrafter : TileBase(), IActionHost, ICraftingProvider, ICraf
     override fun provideCrafting(craftingTracker: ICraftingProviderHelper) {
         
         craftingList.forEach {
-            if (it.condensedInputs.size == 0) {
-                craftingTracker.setEmitable(it.condensedOutputs[0])
+            if (it.condensedInputs.isEmpty()) {
+                return;
+//                craftingTracker.setEmitable(it.condensedOutputs[0])
             } else {
                 craftingTracker.addCraftingOption(this, it)
             }
@@ -356,14 +357,15 @@ class TileEntityFluidCrafter : TileBase(), IActionHost, ICraftingProvider, ICraf
         }
         for (patter in craftingList) {
             watcher!!.reset()
-            if (patter.condensedInputs.size == 0) {
-                watcher!!.add(patter.condensedOutputs[0])
-                if (crafting != null) {
-                    if (crafting.isRequesting(patter.condensedOutputs[0])) {
-                        requestedItems
-                            .add(patter.condensedOutputs[0])
-                    }
-                }
+            if (patter.condensedInputs.isEmpty()) {
+                return;
+//                watcher!!.add(patter.condensedOutputs[0])
+//                if (crafting != null) {
+//                    if (crafting.isRequesting(patter.condensedOutputs[0])) {
+//                        requestedItems
+//                            .add(patter.condensedOutputs[0])
+//                    }
+//                }
             }
         }
     }
