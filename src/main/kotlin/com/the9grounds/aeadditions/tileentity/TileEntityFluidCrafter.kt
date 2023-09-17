@@ -359,13 +359,16 @@ class TileEntityFluidCrafter : TileBase(), IActionHost, ICraftingProvider, ICraf
             watcher!!.reset()
             if (patter.condensedInputs.isEmpty()) {
                 return;
-//                watcher!!.add(patter.condensedOutputs[0])
-//                if (crafting != null) {
-//                    if (crafting.isRequesting(patter.condensedOutputs[0])) {
-//                        requestedItems
-//                            .add(patter.condensedOutputs[0])
-//                    }
-//                }
+            }
+            else
+            {
+                watcher!!.add(patter.condensedOutputs[0])
+                if (crafting != null) {
+                    if (crafting.isRequesting(patter.condensedOutputs[0])) {
+                        requestedItems
+                            .add(patter.condensedOutputs[0])
+                    }
+                }
             }
         }
     }
