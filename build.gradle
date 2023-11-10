@@ -4,10 +4,10 @@ buildscript {
             dirs 'libs'
         }
         maven { url "https://plugins.gradle.org/m2/" }
-        maven { url "https://files.minecraftforge.net/maven"}
+//        maven { url "https://files.minecraftforge.net/maven"}
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+//        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
 //        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.1.+', changing: true
         classpath 'gradle.plugin.com.matthewprenger:CurseGradle:1.4.0'
     }
@@ -15,9 +15,11 @@ buildscript {
 
 plugins {
     id "org.jetbrains.kotlin.jvm" version "1.3.50"
+    id 'net.minecraftforge.gradle' version '5.1.+'
+    id 'wtf.gofancy.fancygradle' version '1.1.+'
 }
 
-apply plugin: 'net.minecraftforge.gradle.forge'
+//apply plugin: 'net.minecraftforge.gradle.forge'
 //apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'idea'
 apply plugin: 'com.matthewprenger.cursegradle'
@@ -42,19 +44,70 @@ compileJava {
 
 logger.lifecycle "$archivesBaseName-$version"
 logger.lifecycle "" + version
+//version = "${config.version.minecraft}-${config.version.forge}"
 
 minecraft {
-    version = "${config.version.minecraft}-${config.version.forge}"
-    runDir = "run"
-    mappings = 'snapshot_20180814'
+    // the mappings can be changed at any time, and must be in the following format.
+    // snapshot_YYYYMMDD   snapshot are built nightly.
+    // stable_#            stables are built at the discretion of the MCP team.
+    // Use non-default mappings at your own risk. they may not always work.
+    // simply re-run your setup task after changing the mappings to update your workspace.
+    mappings channel: 'stable', version: '39-1.12'
+//  makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 
-    replace "@VERSION@", actualVersion
+//    replace '@VERSION@', actualVersion
+
+    // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+
+    // Default run configurations.
+    // These can be tweaked, removed, or duplicated as needed.
+    runs {
+        client {
+            workingDirectory project.file('run')
+
+            // Recommended logging data for a userdev environment
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+
+            //JvmArgs += "-Dfml.coreMods.load=com.github.vfyjxf.nee.asm.NEELoadingPlugin"
+        }
+
+        server {
+            workingDirectory project.file('run')
+
+            // Recommended logging data for a userdev environment
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+
+            //JvmArgs += "-Dfml.coreMods.load=com.github.vfyjxf.nee.asm.NEELoadingPlugin"
+        }
+    }
 }
 
+//minecraft {
+//    version = "${config.version.minecraft}-${config.version.forge}"
+//    runDir = "run"
+//    mappings = 'snapshot_20180814'
+//
+//    replace "@VERSION@", actualVersion
+//}
+
+//minecraft {
+//    version = "1.12.2-14.23.5.2847"
+//    runDir = "run"
+//    mappings = "stable_39"
+//    useDepAts = true
+//    makeObfSourceJar = false
+//}
+repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
 repositories {
     gradlePluginPortal()
     maven {
-        url "http://maven.shadowfacts.net/"
+        url "https://maven.shadowfacts.net/"
     }
     maven {
         name 'Mobius Repo'
@@ -102,44 +155,50 @@ repositories {
     }
     maven { url = "https://www.cursemaven.com" }
     maven { url = "https://maven.hypherionmc.me/" }
+    maven { url 'https://jitpack.io' }
+    flatDir {
+        dirs 'libs'
+    }
 }
 
 dependencies {
+    minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2860'
     compileOnly "org.jetbrains.kotlin:kotlin-reflect:${config.kotlin_version}"
     compileOnly "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${config.kotlin_version}"
 
     compile group: "net.shadowfacts", name: "Forgelin", version: "1.8.4"
 
-    deobfProvided ("mcp.mobius.waila:Hwyla:${config.version.waila}:api") {
+    compileOnly ("mcp.mobius.waila:Hwyla:${config.version.waila}:api") {
         transitive = false
     }
 
-    deobfCompile "cofh:RedstoneFlux:${config.version.rf}:universal"
+    compileOnly "cofh:RedstoneFlux:${config.version.rf}:universal"
 
     compileOnly ("cofh:CoFHCore:${config.version.cofh}:deobf") {
         transitive = false
     }
 
     //deobfProvided ("li.cil.oc:OpenComputers:${config.version.oc}:api")
-    deobfProvided ("li.cil.oc:OpenComputers:${config.version.oc}")
+    compileOnly ("li.cil.oc:OpenComputers:${config.version.oc}")
 
-    deobfProvided "mezz.jei:jei_${config.version.minecraft}:${config.version.jei}:api"
+    compileOnly "mezz.jei:jei_${config.version.minecraft}:${config.version.jei}:api"
 //    runtime "mezz.jei:jei_${config.version.minecraft}:${config.version.jei}"
 
-    deobfProvided "com.mod-buildcraft:buildcraft-api:${config.version.bc}"
+    compileOnly "com.mod-buildcraft:buildcraft-api:${config.version.bc}"
     runtime "com.mod-buildcraft:buildcraft:${config.version.bc}"
 
 //    deobfCompile "igwmod:IGW-Mod-${config.version.minecraft}:${config.version.igw}:universal"
 
 //    deobfCompile "mekanism:Mekanism:${config.version.me}"
-    deobfCompile "curse.maven:mekanism-268560:${config.version.me}"
-    deobfCompile "p455w0rd:p455w0rdslib:${config.version.pl}"
-    deobfCompile "p455w0rd:AE2WTLib:${config.version.wt}:api"
+    compileOnly "curse.maven:mekanism-268560:${config.version.me}"
+    compileOnly "p455w0rd:p455w0rdslib:${config.version.pl}"
+    compileOnly "p455w0rd:AE2WTLib:${config.version.wt}:api"
     runtime "p455w0rd:AE2WTLib:${config.version.wt}"
     compileOnly "p455w0rd:WirelessCraftingTerminal:${config.version.wc}:api"
     runtime "p455w0rd:WirelessCraftingTerminal:${config.version.wc}"
+    runtime "p455w0rd:MouseTweaks:2.10"
 
-    deobfProvided "curse.maven:gas-conduits-309756:3328809"
+    compileOnly "curse.maven:gas-conduits-309756:3328809"
 
 //    deobfCompile ("appeng:appliedenergistics2:${config.version.ae}:api"){
 //        transitive = false
@@ -148,29 +207,32 @@ dependencies {
 
     deobfCompile "MCMultiPart2:MCMultiPart:${config.version.mcmp}"
 //    deobfCompile "baubles:Baubles:1.12:${config.version.baubles}"
-    deobfCompile "curse.maven:baubles-227083:${config.version.baubles}"
+    compileOnly "curse.maven:baubles-227083:${config.version.baubles}"
 
-    deobfProvided ("com.enderio:EnderIO:1.12.2-5.3.70:api") {
+    compileOnly ("com.enderio:EnderIO:1.12.2-5.3.70:api") {
         transitive = false
     }
 
-    deobfProvided ("com.enderio:EnderIO:1.12.2-5.3.70") {
+    compileOnly ("com.enderio:EnderIO:1.12.2-5.3.70") {
         transitive = false
     }
 
-    deobfProvided "com.enderio.core:EnderCore:1.12.2-0.5.76"
+    compileOnly "com.enderio.core:EnderCore:1.12.2-0.5.76"
 
     compile "info.loenwind.autoconfig:AutoConfig:1.12.2-1.0.2"
     compile "info.loenwind.autosave:AutoSave:1.12.2-1.0.11"
 }
 
 processResources {
+    inputs.property "version", project.version
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+
     from(sourceSets.main.resources.srcDirs) {
         include '**/*.lang'
         include '**/*.info'
         include '**/*.properties'
 
-        expand 'version': project.version, 'mcversion': project.minecraft.version
+//        expand 'version': project.version, 'mc_version': project.minecraft.version
     }
 
     from(sourceSets.main.resources.srcDirs) {
@@ -187,6 +249,7 @@ compileKotlin {
 }
 
 task apiJar(type: Jar) {
+//    duplicatesStrategy = DuplicatesStrategy.INCLUDE
     classifier = 'api'
     from sourceSets.main.output
     from sourceSets.main.java
@@ -223,7 +286,7 @@ if (System.getenv("CURSEFORGE_API_KEY") != null) {
     }
 }
 
-sourceJar.duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+//sourceJar.duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 apiJar.duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 jar.duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
