@@ -17,11 +17,11 @@ class MEMonitorFluidGasWrapper(val gasMonitor: IMEMonitor<IAEGasStack>) : IMEMon
 
     final val listeners = mutableMapOf<IMEMonitorHandlerReceiver<IAEFluidStack>, Any?>()
 
-    override fun injectItems(fluidStack: IAEFluidStack?, actionable: Actionable?, actionSource: IActionSource?): IAEFluidStack {
+    override fun injectItems(fluidStack: IAEFluidStack?, actionable: Actionable?, actionSource: IActionSource?): IAEFluidStack? {
         return GasUtil.createAEFluidStack(gasMonitor.injectItems(GasUtil.createAEGasStack(fluidStack), actionable, actionSource))
     }
 
-    override fun extractItems(fluidStack: IAEFluidStack?, actionable: Actionable?, actionSource: IActionSource?): IAEFluidStack {
+    override fun extractItems(fluidStack: IAEFluidStack?, actionable: Actionable?, actionSource: IActionSource?): IAEFluidStack? {
         return GasUtil.createAEFluidStack(gasMonitor.extractItems(GasUtil.createAEGasStack(fluidStack), actionable, actionSource))
     }
 
@@ -65,7 +65,11 @@ class MEMonitorFluidGasWrapper(val gasMonitor: IMEMonitor<IAEGasStack>) : IMEMon
         val changes = mutableListOf<IAEFluidStack>()
 
         iterable.forEach {
-            changes.add(GasUtil.createAEFluidStack(it))
+            var aeFluidStack = GasUtil.createAEFluidStack(it)
+            if (aeFluidStack != null){
+                changes.add(aeFluidStack)
+            }
+
         }
 
         this.listeners.forEach { (k, _) ->

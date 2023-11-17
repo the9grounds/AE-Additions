@@ -15,6 +15,7 @@ import com.the9grounds.aeadditions.integration.mekanism.gas.MekanismGas;
 import mekanism.api.gas.Gas;
 import mekanism.api.gas.GasStack;
 import mekanism.api.gas.IGasItem;
+import org.jetbrains.annotations.Nullable;
 
 public class GasUtil {
 
@@ -22,6 +23,7 @@ public class GasUtil {
 		return createAEFluidStack(new FluidStack(MekanismGas.fluidGas.get(gas),1000));
 	}
 
+	@Nullable
 	public static IAEFluidStack createAEFluidStack(GasStack gasStack) {
 		return gasStack == null ? null : createAEFluidStack(new FluidStack(MekanismGas.fluidGas.get(gasStack.getGas()), gasStack.amount));
 	}
@@ -36,6 +38,7 @@ public class GasUtil {
 			amount);
 	}
 
+	@Nullable
 	public static IAEFluidStack createAEFluidStack(IAEGasStack gasStack){
 		if (gasStack == null || gasStack.getGas() == null)
 			return null;
@@ -54,6 +57,7 @@ public class GasUtil {
 		return createAEGasStack(gas).setStackSize(amount);
 	}
 
+	@Nullable
 	public static IAEGasStack createAEGasStack(IAEFluidStack fluidStack) {
 		if (fluidStack == null || fluidStack.getFluid() == null || !isGas(fluidStack.getFluid()))
 			return null;
@@ -173,6 +177,7 @@ public class GasUtil {
 		return null;
 	}
 
+	@Nullable
 	public static GasStack getGasStack(IAEFluidStack fluidStack) {
 		if (fluidStack == null) {
 			return null;
@@ -184,6 +189,7 @@ public class GasUtil {
 		return null;
 	}
 
+	@Nullable
 	public static FluidStack getFluidStack(GasStack gasStack) {
 		if (gasStack == null) {
 			return null;
@@ -203,6 +209,7 @@ public class GasUtil {
 		return fluid != null && fluid instanceof MekanismGas.GasFluid;
 	}
 
+	@Nullable
 	public static Gas getGas(Fluid fluid) {
 		if (fluid == null) {
 			return null;

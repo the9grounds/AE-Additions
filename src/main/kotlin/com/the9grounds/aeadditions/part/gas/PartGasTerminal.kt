@@ -221,7 +221,7 @@ class PartGasTerminal : PartECBase(), IGridTickable, IInventoryListener {
 
         val gasStack = GasUtil.getGasFromContainer(container)
 
-        if (GasUtil.isEmpty(container) || (gasStack.amount < GasUtil.getCapacity(container) && GasUtil.getFluidStack(gasStack).fluid == currentFluid && doNextFill)) {
+        if (GasUtil.isEmpty(container) || (gasStack.amount < GasUtil.getCapacity(container) && GasUtil.getFluidStack(gasStack)?.fluid == currentFluid && doNextFill)) {
             if (currentFluid == null) {
                 return
             }

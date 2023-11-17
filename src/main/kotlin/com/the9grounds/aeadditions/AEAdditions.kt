@@ -26,6 +26,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent
 import net.minecraftforge.fml.common.network.NetworkRegistry
+import org.apache.logging.log4j.Logger
 import java.io.File
 
 @Mod(
@@ -41,6 +42,8 @@ object AEAdditions {
 
     @JvmField val integration = Integration()
     private var configFolder: File? = null
+
+    @JvmStatic var logger: Logger? = null
     @JvmStatic var packetHandler: PacketHandler? = null
     get() {
         Preconditions.checkNotNull(field)
@@ -54,6 +57,7 @@ object AEAdditions {
 
     @Mod.EventHandler
     fun preInit(event: FMLPreInitializationEvent) {
+        logger = event.modLog
         packetHandler = PacketHandler()
         NetworkRegistry.INSTANCE.registerGuiHandler(this, GuiHandler)
 
