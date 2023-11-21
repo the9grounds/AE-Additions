@@ -5,9 +5,11 @@ import appeng.blockentity.crafting.CraftingBlockEntity
 import com.the9grounds.aeadditions.block.crafting.ExtendedCraftingUnitType
 import net.minecraft.core.BlockPos
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.block.entity.BlockEntityType.Builder
 import net.minecraft.world.level.block.state.BlockBehaviour
 import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.level.storage.loot.LootParams
 import net.minecraftforge.registries.ForgeRegistries
 
 
@@ -19,4 +21,9 @@ class CraftingStorageBlock(props: BlockBehaviour.Properties, type: ExtendedCraft
         val type = Builder.of(supplier, this).build(null)
         setBlockEntity(CraftingBlockEntity::class.java, type, null, null)
     }
+
+    override fun getDrops(state: BlockState, p_287596_: LootParams.Builder): MutableList<ItemStack> {
+        return mutableListOf(ItemStack(state.block.asItem(), 1))
+    }
+
 }

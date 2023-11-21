@@ -1,6 +1,7 @@
 package com.the9grounds.aeadditions.registries
 
 import appeng.api.client.StorageCellModels
+import com.the9grounds.aeadditions.integration.Mods
 import net.minecraft.resources.ResourceLocation
 
 object Cells {
@@ -26,11 +27,11 @@ object Cells {
         StorageCellModels.registerModel(Items.SUPER_CELL_16M, ResourceLocation("ae2additions:block/drive/cells/super/16m"))
         StorageCellModels.registerModel(Items.SUPER_CELL_65M, ResourceLocation("ae2additions:block/drive/cells/super/65m"))
         
-//        if (Mods.APPMEK.isEnabled) {
-//            StorageCellModels.registerModel(Items.CHEMICAL_STORAGE_CELL_1024k, ResourceLocation("ae2additions:block/drive/cells/chemical/1024k"))
-//            StorageCellModels.registerModel(Items.CHEMICAL_STORAGE_CELL_4096k, ResourceLocation("ae2additions:block/drive/cells/chemical/4096k"))
-//            StorageCellModels.registerModel(Items.CHEMICAL_STORAGE_CELL_16384k, ResourceLocation("ae2additions:block/drive/cells/chemical/16384k"))
-//        }
+        if (Mods.APPMEK.isEnabled) {
+            StorageCellModels.registerModel(Items.CHEMICAL_STORAGE_CELL_1024k, ResourceLocation("ae2additions:block/drive/cells/chemical/1024k"))
+            StorageCellModels.registerModel(Items.CHEMICAL_STORAGE_CELL_4096k, ResourceLocation("ae2additions:block/drive/cells/chemical/4096k"))
+            StorageCellModels.registerModel(Items.CHEMICAL_STORAGE_CELL_16384k, ResourceLocation("ae2additions:block/drive/cells/chemical/16384k"))
+        }
 //        if (Mods.AE2THINGS.isEnabled) {
 //            StorageCellModels.registerModel(Items.DISK_256k, ResourceLocation("ae2additions:block/drive/cells/item/disk_256k"))
 //            StorageCellModels.registerModel(Items.DISK_1024k, ResourceLocation("ae2additions:block/drive/cells/item/disk_1024k"))

@@ -23,17 +23,17 @@ class AEAItemModelProvider(output: PackOutput?, modid: String?, existingFileHelp
             65536 to Ids.DISK_FLUID_65536k
         )
 
-//        val chemicalDisks = mapOf(
-//            1 to Ids.DISK_CHEMICAL_1k,
-//            4 to Ids.DISK_CHEMICAL_4k,
-//            16 to Ids.DISK_CHEMICAL_16k,
-//            64 to Ids.DISK_CHEMICAL_64k,
-//            256 to Ids.DISK_CHEMICAL_256k,
-//            1024 to Ids.DISK_CHEMICAL_1024k,
-//            4096 to Ids.DISK_CHEMICAL_4096k,
-//            16384 to Ids.DISK_CHEMICAL_16384k,
-//            65536 to Ids.DISK_CHEMICAL_65536k
-//        )
+        val chemicalDisks = mapOf(
+            1 to Ids.DISK_CHEMICAL_1k,
+            4 to Ids.DISK_CHEMICAL_4k,
+            16 to Ids.DISK_CHEMICAL_16k,
+            64 to Ids.DISK_CHEMICAL_64k,
+            256 to Ids.DISK_CHEMICAL_256k,
+            1024 to Ids.DISK_CHEMICAL_1024k,
+            4096 to Ids.DISK_CHEMICAL_4096k,
+            16384 to Ids.DISK_CHEMICAL_16384k,
+            65536 to Ids.DISK_CHEMICAL_65536k
+        )
         val superCellComponents = mapOf(
             "1k" to Ids.SUPER_CELL_COMPONENT_1k,
             "4k" to Ids.SUPER_CELL_COMPONENT_4k,
@@ -90,14 +90,14 @@ class AEAItemModelProvider(output: PackOutput?, modid: String?, existingFileHelp
                 ResourceLocation(AEAdditions.ID, "item/disk_fluid_${fluidDisk.key}k")
             ).texture("layer1", ResourceLocation("ae2:item/storage_cell_led"))
         }
-//        for (chemicalDisk in chemicalDisks) {
-//            this.singleTexture(
-//                chemicalDisk.value.path,
-//                mcLoc("item/generated"),
-//                "layer0",
-//                ResourceLocation(AEAdditions.ID, "item/disk_chemical_${chemicalDisk.key}k")
-//            ).texture("layer1", ResourceLocation("ae2:item/storage_cell_led"))
-//        }
+        for (chemicalDisk in chemicalDisks) {
+            this.singleTexture(
+                chemicalDisk.value.path,
+                mcLoc("item/generated"),
+                "layer0",
+                ResourceLocation(AEAdditions.ID, "item/disk_chemical_${chemicalDisk.key}k")
+            ).texture("layer1", ResourceLocation("ae2:item/storage_cell_led"))
+        }
         
         
         

@@ -1,0 +1,40 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "type": "forge:and",
+          "values": [
+            {
+              "type": "forge:mod_loaded",
+              "modid": "ae2things"
+            },
+            {
+              "type": "forge:mod_loaded",
+              "modid": "appmek"
+            }
+          ]
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shapeless",
+        "category": "misc",
+        "ingredients": [
+          {
+            "item": "ae2additions:disk_chemical_housing"
+          },
+          {
+            "item": "ae2additions:cell_component_4096"
+          },
+          {
+            "tag": "mekanism:alloys/atomic"
+          }
+        ],
+        "result": {
+          "item": "ae2additions:disk_chemical_4096k"
+        }
+      }
+    }
+  ]
+}

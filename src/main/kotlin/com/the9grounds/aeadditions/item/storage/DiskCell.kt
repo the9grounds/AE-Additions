@@ -12,11 +12,11 @@ import appeng.hooks.AEToolItem
 import appeng.items.contents.CellConfig
 import appeng.util.ConfigInventory
 import appeng.util.InteractionUtil
+import io.github.projectet.ae2things.item.AETItems
 import io.github.projectet.ae2things.storage.DISKCellHandler
 import io.github.projectet.ae2things.storage.IDISKCellItem
 import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.Component
-import net.minecraft.network.chat.TextComponent
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.InteractionResultHolder
@@ -32,7 +32,7 @@ import net.minecraft.world.level.Level
 /**
  * Need to overwrite as the original one puts it into the ae2things creative tab
  */
-class DiskCell(properties: Item.Properties, private val _keyType: AEKeyType, val component: ItemLike, val housing: ItemLike, val kilobytes: Int, val _idleDrain: Double) : DiskCellWithoutMod(properties), IDISKCellItem, AEToolItem {
+class DiskCell(properties: Item.Properties, private val _keyType: AEKeyType, val component: ItemLike, val housing: ItemLike?, val kilobytes: Int, val _idleDrain: Double) : DiskCellWithoutMod(properties), IDISKCellItem, AEToolItem {
     override fun getKeyType(): AEKeyType {
         return _keyType
     }
@@ -109,7 +109,7 @@ class DiskCell(properties: Item.Properties, private val _keyType: AEKeyType, val
                     }
 
                     // drop empty storage cell case
-                    playerInventory.placeItemBackInInventory(ItemStack(housing))
+                    playerInventory.placeItemBackInInventory(ItemStack(housing ?: AETItems.DISK_HOUSING.get()))
                     return true
                 }
             }
@@ -133,8 +133,7 @@ class DiskCell(properties: Item.Properties, private val _keyType: AEKeyType, val
         context: TooltipFlag?
     ) {
         tooltip.add(
-            TextComponent("Deep Item Storage disK - Storage for dummies")
-                .withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC)
+                Component.literal("Deep Item Storage disK - Storage for dummies").withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC)
         )
         addCellInformationToTooltip(stack, tooltip)
     }

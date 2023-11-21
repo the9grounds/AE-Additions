@@ -1,0 +1,45 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "type": "forge:and",
+          "values": [
+            {
+              "type": "forge:mod_loaded",
+              "modid": "appmek"
+            }
+          ]
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shaped",
+        "category": "misc",
+        "key": {
+          "a": {
+            "item": "ae2:quartz_glass"
+          },
+          "b": {
+            "item": "ae2:fluix_dust"
+          },
+          "c": {
+            "item": "ae2additions:cell_component_4096"
+          },
+          "d": {
+            "tag": "forge:ingots/osmium"
+          }
+        },
+        "pattern": [
+          "aba",
+          "bcb",
+          "ddd"
+        ],
+        "result": {
+          "item": "ae2additions:chemical_storage_cell_4096"
+        },
+        "show_notification": true
+      }
+    }
+  ]
+}

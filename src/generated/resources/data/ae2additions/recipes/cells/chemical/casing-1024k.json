@@ -1,0 +1,33 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "type": "forge:and",
+          "values": [
+            {
+              "type": "forge:mod_loaded",
+              "modid": "appmek"
+            }
+          ]
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shapeless",
+        "category": "misc",
+        "ingredients": [
+          {
+            "item": "appmek:chemical_cell_housing"
+          },
+          {
+            "item": "ae2additions:cell_component_1024"
+          }
+        ],
+        "result": {
+          "item": "ae2additions:chemical_storage_cell_1024"
+        }
+      }
+    }
+  ]
+}

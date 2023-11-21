@@ -1,0 +1,40 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "type": "forge:mod_loaded",
+          "modid": "ae2things"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shaped",
+        "category": "misc",
+        "key": {
+          "a": {
+            "item": "ae2:quartz_glass"
+          },
+          "b": {
+            "tag": "forge:dusts/redstone"
+          },
+          "d": {
+            "tag": "forge:ingots/netherite"
+          },
+          "e": {
+            "tag": "forge:gems/lapis"
+          }
+        },
+        "pattern": [
+          "aba",
+          "b b",
+          "ded"
+        ],
+        "result": {
+          "item": "ae2additions:disk_fluid_housing"
+        },
+        "show_notification": true
+      }
+    }
+  ]
+}
