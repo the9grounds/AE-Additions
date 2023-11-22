@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ModelBakery.class)
-public class ModelBakeryMixin {
+public abstract class ModelBakeryMixin {
     @Inject(at = @At("HEAD"), method = "loadModel", cancellable = true)
     private void loadModelHook(ResourceLocation id, CallbackInfo ci) {
         var model = Models.getModel(id);
@@ -23,7 +23,6 @@ public class ModelBakeryMixin {
     }
 
     @Shadow
-    protected void cacheAndQueueDependencies(ResourceLocation id, UnbakedModel unbakedModel) {
-    }
+    protected abstract void cacheAndQueueDependencies(ResourceLocation id, UnbakedModel unbakedModel);
 }
 
