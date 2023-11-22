@@ -81,20 +81,20 @@ object Items {
     val DISK_FLUID_16384k = createItem(Ids.DISK_FLUID_16384k, { loadDiskCell(it.stacksTo(1), AEKeyType.fluids(), CELL_COMPONENT_16384k, DISK_FLUID_HOUSING, 16384, 10.0)}, Mods.AE2THINGS)
     val DISK_FLUID_65536k = createItem(Ids.DISK_FLUID_65536k, { loadDiskCell(it.stacksTo(1), AEKeyType.fluids(), CELL_COMPONENT_65536k, DISK_FLUID_HOUSING, 65536, 15.0)}, Mods.AE2THINGS)
 
-    val DISK_CHEMICAL_1k = createItem(Ids.DISK_CHEMICAL_1k, { loadDiskCell(it.stacksTo(1), MekanismKeyType.TYPE, AEItems.CELL_COMPONENT_1K, DISK_CHEMICAL_HOUSING, 1, .5)}, Mods.AE2THINGS, Mods.APPMEK)
-    val DISK_CHEMICAL_4k = createItem(Ids.DISK_CHEMICAL_4k, { loadDiskCell(it.stacksTo(1), MekanismKeyType.TYPE, AEItems.CELL_COMPONENT_4K, DISK_CHEMICAL_HOUSING, 4, 1.0)}, Mods.AE2THINGS, Mods.APPMEK)
-    val DISK_CHEMICAL_16k = createItem(Ids.DISK_CHEMICAL_16k, { loadDiskCell(it.stacksTo(1), MekanismKeyType.TYPE, AEItems.CELL_COMPONENT_16K, DISK_CHEMICAL_HOUSING, 16, 1.5)}, Mods.AE2THINGS, Mods.APPMEK)
-    val DISK_CHEMICAL_64k = createItem(Ids.DISK_CHEMICAL_64k, { loadDiskCell(it.stacksTo(1), MekanismKeyType.TYPE, AEItems.CELL_COMPONENT_64K, DISK_CHEMICAL_HOUSING, 64, 2.0)}, Mods.AE2THINGS, Mods.APPMEK)
-    val DISK_CHEMICAL_256k = createItem(Ids.DISK_CHEMICAL_256k, { loadDiskCell(it.stacksTo(1), MekanismKeyType.TYPE, AEItems.CELL_COMPONENT_256K, DISK_CHEMICAL_HOUSING, 256, 4.0)}, Mods.AE2THINGS, Mods.APPMEK)
-    val DISK_CHEMICAL_1024k = createItem(Ids.DISK_CHEMICAL_1024k, { loadDiskCell(it.stacksTo(1), MekanismKeyType.TYPE, CELL_COMPONENT_1024k, DISK_CHEMICAL_HOUSING, 1024, 6.0)}, Mods.AE2THINGS, Mods.APPMEK)
-    val DISK_CHEMICAL_4096k = createItem(Ids.DISK_CHEMICAL_4096k, { loadDiskCell(it.stacksTo(1), MekanismKeyType.TYPE, CELL_COMPONENT_4096k, DISK_CHEMICAL_HOUSING, 4096, 8.0)}, Mods.AE2THINGS, Mods.APPMEK)
-    val DISK_CHEMICAL_16384k = createItem(Ids.DISK_CHEMICAL_16384k, { loadDiskCell(it.stacksTo(1), MekanismKeyType.TYPE, CELL_COMPONENT_16384k, DISK_CHEMICAL_HOUSING, 16384, 10.0)}, Mods.AE2THINGS, Mods.APPMEK)
-    val DISK_CHEMICAL_65536k = createItem(Ids.DISK_CHEMICAL_65536k, { loadDiskCell(it.stacksTo(1), MekanismKeyType.TYPE, CELL_COMPONENT_65536k, DISK_CHEMICAL_HOUSING, 65536, 15.0)}, Mods.AE2THINGS, Mods.APPMEK)
+    val DISK_CHEMICAL_1k = createItem(Ids.DISK_CHEMICAL_1k, { loadDiskCell(it.stacksTo(1), getMekType(), AEItems.CELL_COMPONENT_1K, DISK_CHEMICAL_HOUSING, 1, .5)}, Mods.AE2THINGS, Mods.APPMEK)
+    val DISK_CHEMICAL_4k = createItem(Ids.DISK_CHEMICAL_4k, { loadDiskCell(it.stacksTo(1), getMekType(), AEItems.CELL_COMPONENT_4K, DISK_CHEMICAL_HOUSING, 4, 1.0)}, Mods.AE2THINGS, Mods.APPMEK)
+    val DISK_CHEMICAL_16k = createItem(Ids.DISK_CHEMICAL_16k, { loadDiskCell(it.stacksTo(1), getMekType(), AEItems.CELL_COMPONENT_16K, DISK_CHEMICAL_HOUSING, 16, 1.5)}, Mods.AE2THINGS, Mods.APPMEK)
+    val DISK_CHEMICAL_64k = createItem(Ids.DISK_CHEMICAL_64k, { loadDiskCell(it.stacksTo(1), getMekType(), AEItems.CELL_COMPONENT_64K, DISK_CHEMICAL_HOUSING, 64, 2.0)}, Mods.AE2THINGS, Mods.APPMEK)
+    val DISK_CHEMICAL_256k = createItem(Ids.DISK_CHEMICAL_256k, { loadDiskCell(it.stacksTo(1), getMekType(), AEItems.CELL_COMPONENT_256K, DISK_CHEMICAL_HOUSING, 256, 4.0)}, Mods.AE2THINGS, Mods.APPMEK)
+    val DISK_CHEMICAL_1024k = createItem(Ids.DISK_CHEMICAL_1024k, { loadDiskCell(it.stacksTo(1), getMekType(), CELL_COMPONENT_1024k, DISK_CHEMICAL_HOUSING, 1024, 6.0)}, Mods.AE2THINGS, Mods.APPMEK)
+    val DISK_CHEMICAL_4096k = createItem(Ids.DISK_CHEMICAL_4096k, { loadDiskCell(it.stacksTo(1), getMekType(), CELL_COMPONENT_4096k, DISK_CHEMICAL_HOUSING, 4096, 8.0)}, Mods.AE2THINGS, Mods.APPMEK)
+    val DISK_CHEMICAL_16384k = createItem(Ids.DISK_CHEMICAL_16384k, { loadDiskCell(it.stacksTo(1), getMekType(), CELL_COMPONENT_16384k, DISK_CHEMICAL_HOUSING, 16384, 10.0)}, Mods.AE2THINGS, Mods.APPMEK)
+    val DISK_CHEMICAL_65536k = createItem(Ids.DISK_CHEMICAL_65536k, { loadDiskCell(it.stacksTo(1), getMekType(), CELL_COMPONENT_65536k, DISK_CHEMICAL_HOUSING, 65536, 15.0)}, Mods.AE2THINGS, Mods.APPMEK)
     
     val CHEMICAL_STORAGE_CELL_1024k by REGISTRY.registerObject(Ids.CHEMICAL_STORAGE_CELL_1024.path) {
         constructItem({ properties ->
             if (Mods.APPMEK.isEnabled) {
-                return@constructItem StorageCell(properties.stacksTo(1).rarity(Rarity.RARE), CELL_COMPONENT_1024k, AMItems.CHEMICAL_CELL_HOUSING.get(), 4.0, 4096, 1024, 8, MekanismKeyType.TYPE)
+                return@constructItem StorageCell(properties.stacksTo(1).rarity(Rarity.RARE), CELL_COMPONENT_1024k, AMItems.CHEMICAL_CELL_HOUSING.get(), 4.0, 4096, 1024, 8, getMekType())
             }
             Item(properties)
         }, Ids.CHEMICAL_STORAGE_CELL_1024, Mods.APPMEK)
@@ -102,7 +102,7 @@ object Items {
     val CHEMICAL_STORAGE_CELL_4096k by REGISTRY.registerObject(Ids.CHEMICAL_STORAGE_CELL_4096.path) {
         constructItem({ properties ->
             if (Mods.APPMEK.isEnabled) {
-                return@constructItem StorageCell(properties.stacksTo(1).rarity(Rarity.EPIC), CELL_COMPONENT_4096k, AMItems.CHEMICAL_CELL_HOUSING.get(), 5.0, 8192, 4096, 12, MekanismKeyType.TYPE)
+                return@constructItem StorageCell(properties.stacksTo(1).rarity(Rarity.EPIC), CELL_COMPONENT_4096k, AMItems.CHEMICAL_CELL_HOUSING.get(), 5.0, 8192, 4096, 12, getMekType())
             }
 
             Item(properties)
@@ -112,7 +112,7 @@ object Items {
     val CHEMICAL_STORAGE_CELL_16384k by REGISTRY.registerObject(Ids.CHEMICAL_STORAGE_CELL_16384.path) {
         constructItem({ properties ->
             if (Mods.APPMEK.isEnabled) {
-                return@constructItem StorageCell(properties.stacksTo(1).rarity(Rarity.EPIC), CELL_COMPONENT_16384k, AMItems.CHEMICAL_CELL_HOUSING.get(), 6.0, 32768, 16384, 15, MekanismKeyType.TYPE)
+                return@constructItem StorageCell(properties.stacksTo(1).rarity(Rarity.EPIC), CELL_COMPONENT_16384k, AMItems.CHEMICAL_CELL_HOUSING.get(), 6.0, 32768, 16384, 15, getMekType())
             }
 
             Item(properties)
@@ -216,6 +216,14 @@ object Items {
             null
         } else {
             DISK_FLUID_HOUSING
+        }
+    }
+
+    private fun getMekType(): AEKeyType {
+        return if (Mods.APPMEK.isEnabled) {
+            MekanismKeyType.TYPE
+        } else {
+            AEKeyType.fluids()
         }
     }
 }
