@@ -129,8 +129,13 @@ class MEWirelessTransceiverScreen(menu: MEWirelessTransceiverMenu, inventory: In
         channels.forEachIndexed { index, channelInfo ->
             val channelField = this.channelFields[channelInfo]
             if (channelField != null) {
-                channelField.updateValues(shouldShowChannel(index), selectedChannel == channelInfo, channelY)
+                val shouldShow = shouldShowChannel(index)
+                channelField.updateValues(shouldShow, selectedChannel == channelInfo, channelY)
                 channelField.render(guiGraphics, 0, 0, 0f)
+
+                if (shouldShow) {
+                    channelY += 12
+                }
             }
         }
 
