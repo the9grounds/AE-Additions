@@ -103,5 +103,7 @@ class ChannelHolder(val level: Level) {
         blockEntity?.setChanged()
         subscribers.forEach { it.removedFromChannel(channelInfo) }
         subscribers.forEach { it.setChanged() }
+        channel.subscribers.clear()
+        channel.broadcaster = null
     }
 }

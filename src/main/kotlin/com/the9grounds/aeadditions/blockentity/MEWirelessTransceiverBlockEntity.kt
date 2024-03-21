@@ -65,7 +65,7 @@ class MEWirelessTransceiverBlockEntity(pos: BlockPos, blockState: BlockState) : 
     }
     
     fun removedFromChannel(channelInfo: ChannelInfo) {
-        this.destroyConnections()
+        this.destroyConnections(false)
         this.channelId = null
         this.channelConnectionType = null
     }
