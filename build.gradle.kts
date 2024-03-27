@@ -155,7 +155,7 @@ dependencies {
     implementation(project.the<DependencyManagementExtension>().deobf("curse.maven:applied-mekanistics-574300:4842281"))
     implementation(project.the<DependencyManagementExtension>().deobf("curse.maven:ae2-things-forge-609977:4616683"))
 //    implementation(project.the<DependencyManagementExtension>().deobf("curse.maven:the-one-probe-245211:3927520"))
-    compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:ftb-teams-404468:3890141"))
+    compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:ftb-teams-404468:5176343"))
 //    compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:applied-botanics-610632:3770580"))
 //    compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:applied-botanics-610632:3770580"))
 

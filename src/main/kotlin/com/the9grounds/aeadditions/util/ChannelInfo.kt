@@ -1,7 +1,7 @@
 package com.the9grounds.aeadditions.util
 
 import com.the9grounds.aeadditions.integration.Mods
-import dev.ftb.mods.ftbteams.FTBTeamsAPI
+import dev.ftb.mods.ftbteams.api.FTBTeamsAPI
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.level.Level
@@ -35,7 +35,7 @@ data class ChannelInfo(val id: UUID, val level: Level, val name: String, val isP
         }
         
         if (Mods.FTBTEAMS.isEnabled) {
-            return FTBTeamsAPI.arePlayersInSameTeam(creator, player.uuid)
+            return FTBTeamsAPI.api().manager.arePlayersInSameTeam(creator, player.uuid)
         }
         
         return creator == player.uuid
@@ -44,7 +44,7 @@ data class ChannelInfo(val id: UUID, val level: Level, val name: String, val isP
     fun hasAccessToDelete(player: ServerPlayer): Boolean {
 
         if (Mods.FTBTEAMS.isEnabled) {
-            return FTBTeamsAPI.arePlayersInSameTeam(creator, player.uuid)
+            return FTBTeamsAPI.api().manager.arePlayersInSameTeam(creator, player.uuid)
         }
 
         return creator == player.uuid
