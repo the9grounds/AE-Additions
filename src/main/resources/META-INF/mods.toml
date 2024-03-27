@@ -52,9 +52,9 @@ mandatory=false
 ordering="AFTER"
 versionRange="[1.0.0,)"
 side="BOTH"
-#[[dependencies.ae2additions]]
-#modId="ftbteams"
-#mandatory=false
-#ordering="AFTER"
-#versionRange="[1900.2.8-build.59,)"
-#side="BOTH"
+[[dependencies.ae2additions]]
+modId="ftbteams"
+mandatory=false
+ordering="AFTER"
+versionRange="[2001.1.4,)"
+side="BOTH"
