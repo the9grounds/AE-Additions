@@ -1,0 +1,8 @@
+{
+  "parent": "block/cube_bottom_top",
+  "textures": {
+    "top": "ae2additions:block/wireless_transceiver/top",
+    "bottom": "ae2additions:block/wireless_transceiver/top",
+    "side": "ae2additions:block/wireless_transceiver/side"
+  }
+}

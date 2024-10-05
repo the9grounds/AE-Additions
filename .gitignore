@@ -13,5 +13,9 @@
 !/changelog.txt
 !/gradle.properties
 !/.gitlab-ci.yml
+!common
+!forge
+!neoforge
+!fabric
 !libs/*
 !/.github
