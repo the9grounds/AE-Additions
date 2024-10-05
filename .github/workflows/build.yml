@@ -40,7 +40,7 @@ jobs:
       env:
         SHORT_SHA: ${{ steps.short-sha.outputs.sha }}
         BRANCH_NAME: ${{ steps.extract_branch.outputs.branch }}
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v4
       with:
         name: jars
         path: ./build/libs/*.jar
