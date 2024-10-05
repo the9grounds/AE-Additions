@@ -50,7 +50,7 @@ jobs:
         CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
         TAG: ${{ steps.vars.outputs.tag }}
         PRERELEASE: ${{ github.event.release.prerelease }}
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v4
       with:
         name: release-files
         path: |
