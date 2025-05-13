@@ -1,3 +1,4 @@
+import com.modrinth.minotaur.TaskModrinthUpload
 import net.darkhax.curseforgegradle.TaskPublishCurseForge
 import net.minecraftforge.gradle.userdev.DependencyManagementExtension
 import net.minecraftforge.gradle.userdev.UserDevExtension
@@ -26,6 +27,7 @@ plugins {
     kotlin("jvm") version "1.8.22"
     java
     id("net.darkhax.curseforgegradle") version "1.0.10"
+    id("com.modrinth.minotaur") version "2.+"
 }
 
 apply {
@@ -49,6 +51,7 @@ val cofhVersion: String by project
 val curseForgeProjectId: String by project
 val modBaseName: String by project
 val modCurseId: String by project
+val modrinthProjectId: String by project
 
 //apply(from= "https://raw.githubusercontent.com/thedarkcolour/KotlinForForge/site/thedarkcolour/kotlinforforge/gradle/kff-3.7.1.gradle")
 
@@ -190,10 +193,10 @@ tasks.withType<Jar> {
     }
 }
 
+val fileName = "${modBaseName}-${minecraftVersion}-${getBetterVersion()}"
+
 tasks.register<TaskPublishCurseForge>("publishCurseForge") {
     apiToken = System.getenv("CURSEFORGE_API_KEY")
-    
-    val fileName = "${modBaseName}-${minecraftVersion}-${getBetterVersion()}"
     
     val mainFile = upload(modCurseId, file("${project.buildDir}/libs/${fileName}.jar"))
     mainFile.addGameVersion(minecraftVersion)
@@ -207,6 +210,21 @@ tasks.register<TaskPublishCurseForge>("publishCurseForge") {
     // Only temporary until the mod id conflict is fixed
 //    mainFile.addIncompatibility("ae2-additions")
     mainFile.addModLoader("Forge")
+}
+
+modrinth {
+    token.set(System.getenv("MODRINTH_API_TOKEN"))
+    projectId.set(modrinthProjectId)
+    uploadFile.set(file("${project.buildDir}/libs/${fileName}.jar"))
+    loaders.add("forge")
+    gameVersions.add(minecraftVersion)
+    changelog.set(file("CHANGELOG.md").readText(Charsets.UTF_8))
+    versionType.set(getReleaseType())
+
+    dependencies {
+        required.project("ae2")
+        required.project("kotlin-for-forge")
+    }
 }
 
 fun getBuildNumber(): String? {
