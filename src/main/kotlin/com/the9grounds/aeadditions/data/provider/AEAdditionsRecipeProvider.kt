@@ -125,7 +125,7 @@ class AEAdditionsRecipeProvider(output: PackOutput) : RecipeProvider(output), IC
         )
 
         val diskCells = mapOf(
-                256 to Items.DISK_256k,
+//                256 to Items.DISK_256k,
                 1024 to Items.DISK_1024k,
                 4096 to Items.DISK_4096k,
                 16384 to Items.DISK_16384k,

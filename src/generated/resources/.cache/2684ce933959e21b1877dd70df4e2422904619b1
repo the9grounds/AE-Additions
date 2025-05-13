@@ -1,4 +1,4 @@
-// 1.20.1	2023-11-21T16:44:58.0994017	vanilla/Recipes
+// 1.20.1	2025-05-13T16:15:26.9871985	vanilla/Recipes
 bcc7bdca8b042f1c348f50764fe0f68743f3acf0 data/ae2additions/advancements/recipes/misc/blocks/wireless_transceiver.json
 dcbae2ba7887f3263e1dd36961c0b395615275e8 data/ae2additions/advancements/recipes/misc/cells/fluid/1024k.json
 247e69635d050ae29ce8b217d834e63c4b4fb576 data/ae2additions/advancements/recipes/misc/cells/fluid/16384k.json
@@ -113,8 +113,6 @@ d17eb79c4188abea90e97d70515181f4b3ca7b35 data/ae2additions/recipes/cells/item/di
 9adb698a3153b855986d5e06a6c4e8df00a66c08 data/ae2additions/recipes/cells/item/disk-1024.json
 b54a5ae5c96ed47d0b3fb826708c32a5566e79b4 data/ae2additions/recipes/cells/item/disk-16384-casing.json
 43a8e952ac3e0e6bc56edca76fe5c867fa7679d1 data/ae2additions/recipes/cells/item/disk-16384.json
-f65075f3b4ff8653beb7717ab3f70171b836d324 data/ae2additions/recipes/cells/item/disk-256-casing.json
-fdbccf24449cfdc7965e80bf90a9a4e659b27f73 data/ae2additions/recipes/cells/item/disk-256.json
 f502d3ba145ff3ee3ab1dfc0c940bc625deafb49 data/ae2additions/recipes/cells/item/disk-4096-casing.json
 3ace12659dda7c30d6fcd5134175ec58fbda7098 data/ae2additions/recipes/cells/item/disk-4096.json
 9614f9275ecad70bb0280b2b70c3531afc24e48e data/ae2additions/recipes/cells/item/disk-65536-casing.json
