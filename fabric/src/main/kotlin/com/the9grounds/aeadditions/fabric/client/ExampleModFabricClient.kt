@@ -1,10 +1,9 @@
-package com.the9grounds.aeadditions.fabric.client;
+package com.the9grounds.aeadditions.fabric.client
 
-import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.api.ClientModInitializer
 
-public final class ExampleModFabricClient implements ClientModInitializer {
-    @Override
-    public void onInitializeClient() {
+class AEAdditionsFabricClient : ClientModInitializer {
+    override fun onInitializeClient() {
         // This entrypoint is suitable for setting up client-specific logic, such as rendering.
     }
 }

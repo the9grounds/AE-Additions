@@ -1,212 +1,70 @@
-import net.darkhax.curseforgegradle.TaskPublishCurseForge
-import net.minecraftforge.gradle.userdev.DependencyManagementExtension
-import net.minecraftforge.gradle.userdev.UserDevExtension
-import org.gradle.jvm.tasks.Jar
-import net.darkhax.curseforgegradle.Constants as CFG_Constants
+import net.fabricmc.loom.api.LoomGradleExtensionAPI
 
-buildscript {
+plugins {
+    java
+    kotlin("jvm") version "1.8.22"
+    id("architectury-plugin") version "3.4-SNAPSHOT"
+    id("dev.architectury.loom") version "1.2-SNAPSHOT" apply false
+    id("com.github.johnrengelman.shadow") version "8.1.1" apply false
+}
+
+architectury {
+    minecraft = rootProject.property("minecraft_version").toString()
+}
+
+subprojects {
+    apply(plugin = "dev.architectury.loom")
+
+    val loom = project.extensions.getByName<LoomGradleExtensionAPI>("loom")
+
+
+    dependencies {
+        "minecraft"("com.mojang:minecraft:${project.property("minecraft_version")}")
+        // The following line declares the mojmap mappings, you may use other mappings as well
+        "mappings"(
+            loom.officialMojangMappings()
+        )
+        // The following line declares the yarn mappings you may select this one as well.
+        // "mappings"("net.fabricmc:yarn:1.18.2+build.3:v2")
+    }
+}
+
+allprojects {
+    apply(plugin = "java")
+    apply(plugin = "kotlin")
+    apply(plugin = "architectury-plugin")
+    apply(plugin = "maven-publish")
+
+    base.archivesName.set("AEAdditions-${rootProject.property("minecraft_version")}")
+    //base.archivesBaseName = rootProject.property("archives_base_name").toString()
+    version = getBetterVersion()
+    group = rootProject.property("maven_group").toString()
+
     repositories {
-        mavenCentral()
-        maven(url = "https://maven.minecraftforge.net/")
-        maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
-        maven(url = "https://repo.spongepowered.org/maven")
+        // Add repositories to retrieve artifacts from in here.
+        // You should only use this when depending on other mods because
+        // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
+        // See https://docs.gradle.org/current/userguide/declaring_repositories.html
+        // for more information about repositories.
+
+
     }
 
     dependencies {
-        classpath(group = "net.minecraftforge.gradle", name = "ForgeGradle", version = "6.0.+") {
-            isChanging = true
-        }
-
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.22")
-        classpath("org.spongepowered:mixingradle:0.7-SNAPSHOT")
-    }
-}
-
-plugins {
-    kotlin("jvm") version "1.8.22"
-    java
-    id("net.darkhax.curseforgegradle") version "1.0.10"
-}
-
-apply {
-    plugin("net.minecraftforge.gradle")
-    plugin("idea")
-    plugin("org.spongepowered.mixin")
-}
-
-// Properties
-val kotlinVersion: String by project
-val minecraftVersion: String by project
-val mcpChannel: String by project
-val mcpMappings: String by project
-val forgeVersion: String by project
-val aeVersion: String by project
-val hwylaVersion: String by project
-val jeiVersion: String by project
-val mekanismVersion: String by project
-val wthitVersion: String by project
-val cofhVersion: String by project
-val curseForgeProjectId: String by project
-val modBaseName: String by project
-val modCurseId: String by project
-
-//apply(from= "https://raw.githubusercontent.com/thedarkcolour/KotlinForForge/site/thedarkcolour/kotlinforforge/gradle/kff-3.7.1.gradle")
-
-project.group = "com.the9grounds.aeadditions"
-base.archivesBaseName = "AEAdditions-${minecraftVersion}"
-
-configure<UserDevExtension> {
-    mappings(mcpChannel, mcpMappings)
-    
-    accessTransformer(file("src/main/resources/META-INF/accesstransformer.cfg"))
-
-    runs {
-        create("client") {
-            workingDirectory(project.file("run"))
-            args("-mixin.config=ae2additions.mixins.json")
-
-            property("forge.logging.markers", "REGISTRIES")
-            property("forge.logging.console.level", "debug")
-
-            property("mixin.env.remapRefMap", "true")
-            property("mixin.env.refMapRemappingFile", "${projectDir}/build/createSrgToMcp/output.srg")
-
-        }
-        create("server") {
-            workingDirectory(project.file("run-server"))
-            args("-mixin.config=ae2additions.mixins.json")
-
-            property("forge.logging.markers", "REGISTRIES")
-            property("forge.logging.console.level", "debug")
-            property("mixin.env.remapRefMap", "true")
-            property("mixin.env.refMapRemappingFile", "${projectDir}/build/createSrgToMcp/output.srg")
-        }
-        create("data") {
-            workingDirectory(project.file("run"))
-
-            property("forge.logging.markers", "REGISTRIES")
-            property("forge.logging.console.level", "debug")
-            property("mixin.env.remapRefMap", "true")
-            property("mixin.env.refMapRemappingFile", "${projectDir}/build/createSrgToMcp/output.srg")
-
-            args("--mod", "ae2additions", "--all", "--output", file("src/generated/resources/"), "--existing", file("src/main/resources"), "-mixin.config=ae2additions.mixins.json")
-        }
-    }
-}
-
-repositories {
-    jcenter()
-    mavenCentral()
-    maven { // TOP
-        url = uri("https://maven.k-4u.nl")
+        compileOnly("org.jetbrains.kotlin:kotlin-stdlib")
     }
 
-//    maven {
-//        name = "Progwml6 maven"
-//        url = uri("https://dvs1.progwml6.com/files/maven/")
-//    }
-
-    maven {
-        name = "Modmaven"
-        url = uri("https://modmaven.dev/")
+    tasks.withType<JavaCompile> {
+        options.encoding = "UTF-8"
+        options.release.set(17)
+    }
+    kotlin.target.compilations.all {
+        kotlinOptions.jvmTarget = "17"
     }
 
-    maven {
-        url = uri("https://www.cursemaven.com")
-        content {
-            includeGroup("curse.maven")
-        }
+    java {
+        withSourcesJar()
     }
-
-    maven {
-        name = "kotlinforforge"
-        url = uri("https://thedarkcolour.github.io/KotlinForForge/")
-    }
-    
-    maven {
-        url = uri("https://maven.bai.lol")
-    }
-    maven {
-        url = uri("https://repo.spongepowered.org/maven")
-    }
-    maven {
-        url = uri("https://squiddev.cc/maven/")
-        content {
-            includeGroup("org.squiddev")
-        }
-    }
-}
-
-val coroutines_version = "1.8.22"
-dependencies {
-    "minecraft"("net.minecraftforge:forge:${minecraftVersion}-${forgeVersion}")
-    val jeiApi = project.dependencies.create(group = "mezz.jei", name = "jei-${minecraftVersion}-forge", version = jeiVersion, classifier = "api")
-    val jei = project.dependencies.create(group = "mezz.jei", name = "jei-1.20.1-forge", version = jeiVersion)
-    val ae2 = project.dependencies.create(group = "appeng", name = "appliedenergistics2-forge", version = aeVersion)
-
-//    compileOnly(project.the<DependencyManagementExtension>().deobf(jeiApi))
-    implementation(project.the<DependencyManagementExtension>().deobf(jei))
-
-    implementation(project.the<DependencyManagementExtension>().deobf(ae2))
-
-    implementation("thedarkcolour:kotlinforforge:4.4.0")
-
-    implementation(project.the<DependencyManagementExtension>().deobf("mekanism:Mekanism:${mekanismVersion}"))
-    implementation(project.the<DependencyManagementExtension>().deobf("curse.maven:applied-mekanistics-574300:4842281"))
-    implementation(project.the<DependencyManagementExtension>().deobf("curse.maven:ae2-things-forge-609977:4616683"))
-//    implementation(project.the<DependencyManagementExtension>().deobf("curse.maven:the-one-probe-245211:3927520"))
-    compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:ftb-teams-404468:5176343"))
-//    compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:applied-botanics-610632:3770580"))
-//    compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:applied-botanics-610632:3770580"))
-
-    annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
-    compileOnly("org.spongepowered:mixin:0.8.5") { isTransitive = false }
-    
-}
-
-val Project.minecraft: UserDevExtension
-    get() = extensions.getByName<UserDevExtension>("minecraft")
-
-tasks.withType<Jar> {
-    // this will ensure that this task is redone when the versions change.
-    inputs.property("version", getBetterVersion())
-    duplicatesStrategy = org.gradle.api.file.DuplicatesStrategy.EXCLUDE
-
-    archiveBaseName.set("${modBaseName}-${minecraftVersion}-${getBetterVersion()}")
-
-    manifest.attributes(
-            "MixinConfigs" to "ae2additions.mixins.json",
-    )
-
-    // replace stuff in mcmod.info, nothing else
-    filesMatching("META-INF/mods.toml") {
-        expand(mapOf(
-            "version" to getBetterVersion(),
-            "mcversion" to "1.20.1"
-        ))
-        filter { line ->
-            line.replace("version=\"0.0.0.0.1\"", "version=\"${getBetterVersion()}\"")
-        }
-    }
-}
-
-tasks.register<TaskPublishCurseForge>("publishCurseForge") {
-    apiToken = System.getenv("CURSEFORGE_API_KEY")
-    
-    val fileName = "${modBaseName}-${minecraftVersion}-${getBetterVersion()}"
-    
-    val mainFile = upload(modCurseId, file("${project.buildDir}/libs/${fileName}.jar"))
-    mainFile.addGameVersion(minecraftVersion)
-    mainFile.changelogType = CFG_Constants.CHANGELOG_MARKDOWN
-    mainFile.changelog = file("CHANGELOG.md")
-    mainFile.releaseType = getReleaseType()
-    mainFile.addRequirement("applied-energistics-2")
-    mainFile.addRequirement("kotlin-for-forge")
-//    mainFile.addOptional("mekanism")
-//    mainFile.addOptional("applied-mekanistics")
-    // Only temporary until the mod id conflict is fixed
-//    mainFile.addIncompatibility("ae2-additions")
-    mainFile.addModLoader("Forge")
 }
 
 fun getBuildNumber(): String? {
@@ -236,47 +94,4 @@ fun getBetterVersion(): String {
     }
 
     return buildNumber
-}
-
-fun getReleaseType(): String {
-    val preReleaseEnv = System.getenv("PRERELEASE")
-
-    if (preReleaseEnv == null) {
-        return "beta"
-    }
-
-    val preRelease = preReleaseEnv.toBoolean()
-
-    if (preRelease) {
-        return "beta"
-    }
-
-    return "release"
-}
-
-sourceSets {
-    main {
-
-        java {
-            srcDir("src")
-        }
-        resources {
-            srcDir("src/generated/resources")
-        }
-    }
-}
-
-tasks.create("copyResourceToClasses", Copy::class) {
-    tasks.classes.get().dependsOn(this)
-    mustRunAfter("compileJava")
-    dependsOn(tasks.processResources.get())
-//    onlyIf { gradle.taskGraph.hasTask(tasks.getByName("prepareRuns")) }
-    into("$buildDir/classes/kotlin/main")
-    from(tasks.processResources.get().destinationDir)
-}
-
-configure<org.spongepowered.asm.gradle.plugins.MixinExtension> {
-    add(sourceSets.main.get(), "ae2additions.refmap.json")
-    config("ae2additions.mixins.json")
-    quiet = false
 }

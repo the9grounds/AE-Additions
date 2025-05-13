@@ -1,5 +1,6 @@
 package com.the9grounds.aeadditions.menu
 
+import com.the9grounds.aeadditions.blockentity.BaseMEWirelessTransceiverBlockEntity
 import com.the9grounds.aeadditions.blockentity.MEWirelessTransceiverBlockEntity
 import com.the9grounds.aeadditions.client.gui.MEWirelessTransceiverScreen
 import com.the9grounds.aeadditions.core.network.NetworkManager
@@ -8,6 +9,8 @@ import com.the9grounds.aeadditions.core.network.packet.RequestChannelsPacket
 import com.the9grounds.aeadditions.registries.Capability
 import com.the9grounds.aeadditions.util.Channel
 import com.the9grounds.aeadditions.util.ChannelInfo
+import dev.architectury.platform.Platform
+import net.fabricmc.api.EnvType
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.player.Inventory
@@ -19,7 +22,7 @@ import net.minecraftforge.fml.util.thread.SidedThreadGroups
 
 class MEWirelessTransceiverMenu(id: Int, val inventory: Inventory) : AbstractContainerMenu(MenuHolder.menuMEWirelessTransceiver, id) {
     
-    var blockEntity: MEWirelessTransceiverBlockEntity? = null
+    var blockEntity: BaseMEWirelessTransceiverBlockEntity? = null
     var isPrivate = false
     var isSubscriber = true
     var isCurrentlySubscribing = false
@@ -31,7 +34,7 @@ class MEWirelessTransceiverMenu(id: Int, val inventory: Inventory) : AbstractCon
     
     var screen: MEWirelessTransceiverScreen? = null
     
-    constructor(id: Int, inventory: Inventory, blockEntity: MEWirelessTransceiverBlockEntity) : this(id, inventory) {
+    constructor(id: Int, inventory: Inventory, blockEntity: BaseMEWirelessTransceiverBlockEntity) : this(id, inventory) {
         this.blockEntity = blockEntity
     }
     
@@ -57,7 +60,7 @@ class MEWirelessTransceiverMenu(id: Int, val inventory: Inventory) : AbstractCon
             }
         }
         
-        if (Thread.currentThread().threadGroup != SidedThreadGroups.SERVER) {
+        if (Platform.getEnv() === EnvType.CLIENT) {
             NetworkManager.sendToServer(RequestChannelsPacket())
         }
     }

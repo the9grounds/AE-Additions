@@ -17,19 +17,7 @@ import com.the9grounds.aeadditions.registries.client.Screens
 import net.minecraft.client.renderer.ItemBlockRenderTypes
 import net.minecraft.client.renderer.RenderType
 import net.minecraft.world.level.Level
-import net.minecraftforge.api.distmarker.Dist
-import net.minecraftforge.client.event.RegisterColorHandlersEvent
-import net.minecraftforge.common.MinecraftForge
-import net.minecraftforge.event.server.ServerStartingEvent
-import net.minecraftforge.fml.DistExecutor
-import net.minecraftforge.fml.ModLoadingContext
-import net.minecraftforge.fml.common.Mod
-import net.minecraftforge.fml.config.ModConfig
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent
-import thedarkcolour.kotlinforforge.forge.MOD_BUS
 
-@Mod(AEAdditions.ID)
 object AEAdditions {
 
     const val ID = "ae2additions"
@@ -60,6 +48,10 @@ object AEAdditions {
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT) { Runnable { initClient() } }
 
         Integration.init()
+    }
+
+    fun init() {
+
     }
     
     fun initClient() {

@@ -6,17 +6,16 @@ import com.the9grounds.aeadditions.block.MEWirelessTransceiverBlock
 import com.the9grounds.aeadditions.block.crafting.ExtendedCraftingUnitType
 import com.the9grounds.aeadditions.core.BlockDefinition
 import com.the9grounds.aeadditions.integration.Mods
+import dev.architectury.registry.registries.DeferredRegister
+import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.SoundType
 import net.minecraft.world.level.block.state.BlockBehaviour
-import net.minecraftforge.registries.DeferredRegister
-import net.minecraftforge.registries.ForgeRegistries
-import thedarkcolour.kotlinforforge.forge.registerObject
 
 object Blocks {
-    val REGISTRY = DeferredRegister.create(ForgeRegistries.BLOCKS, AEAdditions.ID)
+    val REGISTRY = DeferredRegister.create(AEAdditions.ID, Registries.BLOCK)
 
     val BLOCKS = mutableListOf<Block>()
     
@@ -69,7 +68,7 @@ object Blocks {
 
         BLOCKS.add(block)
 
-        REGISTRY.registerObject(id.path) {
+        REGISTRY.register(id.path) {
             block
         }
         return block

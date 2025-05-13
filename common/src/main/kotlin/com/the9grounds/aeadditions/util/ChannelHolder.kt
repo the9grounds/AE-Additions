@@ -1,5 +1,6 @@
 package com.the9grounds.aeadditions.util
 
+import com.the9grounds.aeadditions.blockentity.BaseMEWirelessTransceiverBlockEntity
 import com.the9grounds.aeadditions.blockentity.MEWirelessTransceiverBlockEntity
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
@@ -13,7 +14,7 @@ class ChannelHolder(val level: Level) {
     
     val channels: MutableMap<ChannelInfo, Channel> = mutableMapOf()
     
-    fun findChannelForBlockEntity(blockEntity: MEWirelessTransceiverBlockEntity): Channel? {
+    fun findChannelForBlockEntity(blockEntity: BaseMEWirelessTransceiverBlockEntity): Channel? {
         for (channel in channels) {
             if (channel.value.broadcaster === blockEntity) {
                 return channel.value

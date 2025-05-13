@@ -11,7 +11,6 @@ import net.minecraft.world.inventory.MenuType
 import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.api.distmarker.OnlyIn
 
-@OnlyIn(Dist.CLIENT)
 object Screens {
     
     fun init() {

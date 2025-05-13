@@ -10,19 +10,19 @@ import com.the9grounds.aeadditions.item.storage.DiskCell
 import com.the9grounds.aeadditions.item.storage.DiskCellWithoutMod
 import com.the9grounds.aeadditions.item.storage.StorageCell
 import com.the9grounds.aeadditions.item.storage.SuperStorageCell
+import dev.architectury.registry.CreativeTabRegistry
+import dev.architectury.registry.registries.DeferredRegister
+import dev.architectury.registry.registries.RegistrySupplier
 import me.ramidzkh.mekae2.AMItems
 import me.ramidzkh.mekae2.ae2.MekanismKeyType
+import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.Rarity
 import net.minecraft.world.level.ItemLike
-import net.minecraftforge.registries.DeferredRegister
-import net.minecraftforge.registries.ForgeRegistries
-import thedarkcolour.kotlinforforge.forge.registerObject
-import kotlin.properties.ReadOnlyProperty
 
 object Items {
-    val REGISTRY = DeferredRegister.create(ForgeRegistries.ITEMS, AEAdditions.ID)
+    val REGISTRY = DeferredRegister.create(AEAdditions.ID, Registries.ITEM)
     
     val ITEMS = mutableListOf<Item>()
     
@@ -91,33 +91,33 @@ object Items {
     val DISK_CHEMICAL_16384k = createItem(Ids.DISK_CHEMICAL_16384k, { loadDiskCell(it.stacksTo(1), getMekType(), CELL_COMPONENT_16384k, DISK_CHEMICAL_HOUSING, 16384, 10.0)}, Mods.AE2THINGS, Mods.APPMEK)
     val DISK_CHEMICAL_65536k = createItem(Ids.DISK_CHEMICAL_65536k, { loadDiskCell(it.stacksTo(1), getMekType(), CELL_COMPONENT_65536k, DISK_CHEMICAL_HOUSING, 65536, 15.0)}, Mods.AE2THINGS, Mods.APPMEK)
     
-    val CHEMICAL_STORAGE_CELL_1024k by REGISTRY.registerObject(Ids.CHEMICAL_STORAGE_CELL_1024.path) {
-        constructItem({ properties ->
-            if (Mods.APPMEK.isEnabled) {
-                return@constructItem StorageCell(properties.stacksTo(1).rarity(Rarity.RARE), CELL_COMPONENT_1024k, AMItems.CHEMICAL_CELL_HOUSING.get(), 4.0, 4096, 1024, 8, getMekType())
-            }
-            Item(properties)
-        }, Ids.CHEMICAL_STORAGE_CELL_1024, Mods.APPMEK)
-    }
-    val CHEMICAL_STORAGE_CELL_4096k by REGISTRY.registerObject(Ids.CHEMICAL_STORAGE_CELL_4096.path) {
-        constructItem({ properties ->
-            if (Mods.APPMEK.isEnabled) {
-                return@constructItem StorageCell(properties.stacksTo(1).rarity(Rarity.EPIC), CELL_COMPONENT_4096k, AMItems.CHEMICAL_CELL_HOUSING.get(), 5.0, 8192, 4096, 12, getMekType())
-            }
-
-            Item(properties)
-        }, Ids.CHEMICAL_STORAGE_CELL_4096, Mods.APPMEK)
-    }
-
-    val CHEMICAL_STORAGE_CELL_16384k by REGISTRY.registerObject(Ids.CHEMICAL_STORAGE_CELL_16384.path) {
-        constructItem({ properties ->
-            if (Mods.APPMEK.isEnabled) {
-                return@constructItem StorageCell(properties.stacksTo(1).rarity(Rarity.EPIC), CELL_COMPONENT_16384k, AMItems.CHEMICAL_CELL_HOUSING.get(), 6.0, 32768, 16384, 15, getMekType())
-            }
-
-            Item(properties)
-        }, Ids.CHEMICAL_STORAGE_CELL_16384, Mods.APPMEK)
-    }
+//    val CHEMICAL_STORAGE_CELL_1024k by REGISTRY.registerObject(Ids.CHEMICAL_STORAGE_CELL_1024.path) {
+//        constructItem({ properties ->
+//            if (Mods.APPMEK.isEnabled) {
+//                return@constructItem StorageCell(properties.stacksTo(1).rarity(Rarity.RARE), CELL_COMPONENT_1024k, AMItems.CHEMICAL_CELL_HOUSING.get(), 4.0, 4096, 1024, 8, getMekType())
+//            }
+//            Item(properties)
+//        }, Ids.CHEMICAL_STORAGE_CELL_1024, Mods.APPMEK)
+//    }
+//    val CHEMICAL_STORAGE_CELL_4096k by REGISTRY.register(Ids.CHEMICAL_STORAGE_CELL_4096.path) {
+//        constructItem({ properties ->
+//            if (Mods.APPMEK.isEnabled) {
+//                return@constructItem StorageCell(properties.stacksTo(1).rarity(Rarity.EPIC), CELL_COMPONENT_4096k, AMItems.CHEMICAL_CELL_HOUSING.get(), 5.0, 8192, 4096, 12, getMekType())
+//            }
+//
+//            Item(properties)
+//        }, Ids.CHEMICAL_STORAGE_CELL_4096, Mods.APPMEK)
+//    }
+//
+//    val CHEMICAL_STORAGE_CELL_16384k by REGISTRY.registerObject(Ids.CHEMICAL_STORAGE_CELL_16384.path) {
+//        constructItem({ properties ->
+//            if (Mods.APPMEK.isEnabled) {
+//                return@constructItem StorageCell(properties.stacksTo(1).rarity(Rarity.EPIC), CELL_COMPONENT_16384k, AMItems.CHEMICAL_CELL_HOUSING.get(), 6.0, 32768, 16384, 15, getMekType())
+//            }
+//
+//            Item(properties)
+//        }, Ids.CHEMICAL_STORAGE_CELL_16384, Mods.APPMEK)
+//    }
     
     fun init() {
         
@@ -125,7 +125,7 @@ object Items {
 
     fun <T: Item> createItem(id: ResourceLocation, factory: (Item.Properties) -> T): T {
         val item = constructItem(factory, id)
-        REGISTRY.registerObject(id.path) {
+        REGISTRY.register(id.path) {
             item
         }
         
@@ -134,7 +134,7 @@ object Items {
 
     fun <T: Item> createItem(id: ResourceLocation, factory: (Item.Properties) -> T, vararg requiredMod: Mods): T {
         val item = constructItem(factory, id, *requiredMod)
-        REGISTRY.registerObject(id.path) {
+        REGISTRY.register(id.path) {
             item
         }
         
@@ -143,7 +143,7 @@ object Items {
 
     fun <T: Item> createItemForMod(id: ResourceLocation, factory: (Item.Properties) -> T, vararg requiredMod: Mods): T {
         val item = constructItem(factory, id, *requiredMod)
-        REGISTRY.registerObject(id.path) {
+        REGISTRY.register(id.path) {
             item
         }
 
@@ -154,11 +154,9 @@ object Items {
         factory: (Item.Properties) -> T,
         id: ResourceLocation,
     ): T {
-        val props = Item.Properties()
+        val props = Item.Properties().`arch$tab`(CreativeTab.tab)
 
         val item = factory(props)
-
-        CreativeTab.add(item)
 
         ITEMS.add(item)
 
@@ -183,7 +181,7 @@ object Items {
         val item = factory(props)
 
         if (shouldShow) {
-            CreativeTab.add(item)
+            props.`arch$tab`(CreativeTab.tab)
         }
 
         ITEMS.add(item)
@@ -191,14 +189,14 @@ object Items {
         return item
     }
 
-    fun <T: Item> createItem(id: ResourceLocation, factory: (Item.Properties) -> T, registry: DeferredRegister<Item>): ReadOnlyProperty<Any?, T> {
-        return registry.registerObject(id.path) {
+    fun <T: Item> createItem(id: ResourceLocation, factory: (Item.Properties) -> T, registry: DeferredRegister<Item>): RegistrySupplier<T>? {
+        return registry.register(id.path) {
             constructItem(factory, id)
         }
     }
 
-    fun <T: Item> createItem(id: ResourceLocation, factory: (Item.Properties) -> T, registry: DeferredRegister<Item>, vararg requiredMod: Mods): ReadOnlyProperty<Any?, T> {
-        return registry.registerObject(id.path) {
+    fun <T: Item> createItem(id: ResourceLocation, factory: (Item.Properties) -> T, registry: DeferredRegister<Item>, vararg requiredMod: Mods): RegistrySupplier<T>? {
+        return registry.register(id.path) {
             constructItem(factory, id, *requiredMod)
         }
     }

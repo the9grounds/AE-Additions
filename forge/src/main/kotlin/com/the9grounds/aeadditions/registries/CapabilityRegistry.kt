@@ -8,12 +8,11 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.level.Level
 import net.minecraftforge.common.capabilities.*
-import net.minecraftforge.common.capabilities.Capability
 import net.minecraftforge.common.util.LazyOptional
 import net.minecraftforge.event.AttachCapabilitiesEvent
 
-object Capability {
-    val CHANNEL_HOLDER: Capability<ChannelHolder> = CapabilityManager.get(object : CapabilityToken<ChannelHolder>() {})
+object CapabilityRegistry {
+    val CHANNEL_HOLDER = CapabilityManager.get(object : CapabilityToken<ChannelHolder>() {})
     
     fun registerCapabilities(event: RegisterCapabilitiesEvent) {
         event.register(ChannelHolder::class.java)
