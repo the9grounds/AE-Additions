@@ -53,7 +53,7 @@ object Blocks {
     fun <T: Block> createBlock(id: ResourceLocation, soundType: SoundType, requiredMod: Mods, factory: (BlockBehaviour.Properties) -> T): BlockDefinition<T> {
         val block = constructBlock(soundType, factory, id)
 
-        val item = Items.createItem(id, { properties -> BlockItem(block, properties) }, requiredMod)
+        val item = Items.createItem(id, { properties -> BlockItem(block, properties) }, false, requiredMod)
 
         return BlockDefinition(block, item)
     }

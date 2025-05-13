@@ -62,34 +62,34 @@ object Items {
     val SUPER_CELL_16M = createItem(Ids.SUPER_CELL_16M) { properties -> SuperStorageCell(properties.stacksTo(1).rarity(Rarity.RARE), SUPER_CELL_COMPONENT_16M, SUPER_CELL_HOUSING, 3.0, 32768, 16384, 250) }
     val SUPER_CELL_65M = createItem(Ids.SUPER_CELL_65M) { properties -> SuperStorageCell(properties.stacksTo(1).rarity(Rarity.EPIC), SUPER_CELL_COMPONENT_65M, SUPER_CELL_HOUSING, 30.0, 131072, 65536, 300) }
     
-    val DISK_FLUID_HOUSING = createItem(Ids.DISK_FLUID_HOUSING, { Item(it.stacksTo(64))}, Mods.AE2THINGS)
-    val DISK_CHEMICAL_HOUSING = createItem(Ids.DISK_CHEMICAL_HOUSING, { Item(it.stacksTo(64))}, Mods.AE2THINGS, Mods.APPMEK)
+    val DISK_FLUID_HOUSING = createItem(Ids.DISK_FLUID_HOUSING, { Item(it.stacksTo(64))}, false, Mods.AE2THINGS)
+    val DISK_CHEMICAL_HOUSING = createItem(Ids.DISK_CHEMICAL_HOUSING, { Item(it.stacksTo(64))}, false, Mods.AE2THINGS, Mods.APPMEK)
     
-    val DISK_256k = createItemForMod(Ids.DISK_256k, { loadDiskCell(it.stacksTo(1), AEKeyType.items(), AEItems.CELL_COMPONENT_256K, getAEThingsHousing(),256, 3.0) }, Mods.AE2THINGS)
-    val DISK_1024k = createItemForMod(Ids.DISK_1024k, { loadDiskCell(it.stacksTo(1), AEKeyType.items(), CELL_COMPONENT_1024k, getAEThingsHousing(), 1024, 5.0) }, Mods.AE2THINGS)
-    val DISK_4096k = createItemForMod(Ids.DISK_4096k, { loadDiskCell(it.stacksTo(1).rarity(Rarity.UNCOMMON), AEKeyType.items(), CELL_COMPONENT_4096k, getAEThingsHousing(), 4096, 8.0) }, Mods.AE2THINGS)
-    val DISK_16384k = createItemForMod(Ids.DISK_16384k, { loadDiskCell(it.stacksTo(1).rarity(Rarity.RARE), AEKeyType.items(), CELL_COMPONENT_16384k, getAEThingsHousing(), 16384, 10.0) }, Mods.AE2THINGS)
-    val DISK_65536k = createItemForMod(Ids.DISK_65536k, { loadDiskCell(it.stacksTo(1).rarity(Rarity.EPIC), AEKeyType.items(), CELL_COMPONENT_65536k, getAEThingsHousing(), 65536, 15.0) }, Mods.AE2THINGS)
+    val DISK_256k = createItemForMod(Ids.DISK_256k, { loadDiskCell(it.stacksTo(1), AEKeyType.items(), AEItems.CELL_COMPONENT_256K, getAEThingsHousing(),256, 3.0) }, true, Mods.AE2THINGS)
+    val DISK_1024k = createItemForMod(Ids.DISK_1024k, { loadDiskCell(it.stacksTo(1), AEKeyType.items(), CELL_COMPONENT_1024k, getAEThingsHousing(), 1024, 5.0) }, false, Mods.AE2THINGS)
+    val DISK_4096k = createItemForMod(Ids.DISK_4096k, { loadDiskCell(it.stacksTo(1).rarity(Rarity.UNCOMMON), AEKeyType.items(), CELL_COMPONENT_4096k, getAEThingsHousing(), 4096, 8.0) }, false, Mods.AE2THINGS)
+    val DISK_16384k = createItemForMod(Ids.DISK_16384k, { loadDiskCell(it.stacksTo(1).rarity(Rarity.RARE), AEKeyType.items(), CELL_COMPONENT_16384k, getAEThingsHousing(), 16384, 10.0) }, false, Mods.AE2THINGS)
+    val DISK_65536k = createItemForMod(Ids.DISK_65536k, { loadDiskCell(it.stacksTo(1).rarity(Rarity.EPIC), AEKeyType.items(), CELL_COMPONENT_65536k, getAEThingsHousing(), 65536, 15.0) }, false, Mods.AE2THINGS)
 
-    val DISK_FLUID_1k = createItem(Ids.DISK_FLUID_1k, { loadDiskCell(it.stacksTo(1), AEKeyType.fluids(), AEItems.CELL_COMPONENT_1K, DISK_FLUID_HOUSING, 1, .5)}, Mods.AE2THINGS)
-    val DISK_FLUID_4k = createItem(Ids.DISK_FLUID_4k, { loadDiskCell(it.stacksTo(1), AEKeyType.fluids(), AEItems.CELL_COMPONENT_4K, DISK_FLUID_HOUSING, 4, 1.0)}, Mods.AE2THINGS)
-    val DISK_FLUID_16k = createItem(Ids.DISK_FLUID_16k, { loadDiskCell(it.stacksTo(1), AEKeyType.fluids(), AEItems.CELL_COMPONENT_16K, DISK_FLUID_HOUSING, 16, 1.5)}, Mods.AE2THINGS)
-    val DISK_FLUID_64k = createItem(Ids.DISK_FLUID_64k, { loadDiskCell(it.stacksTo(1), AEKeyType.fluids(), AEItems.CELL_COMPONENT_64K, DISK_FLUID_HOUSING, 64, 2.0)}, Mods.AE2THINGS)
-    val DISK_FLUID_256k = createItem(Ids.DISK_FLUID_256k, { loadDiskCell(it.stacksTo(1), AEKeyType.fluids(), AEItems.CELL_COMPONENT_256K, DISK_FLUID_HOUSING, 256, 4.0)}, Mods.AE2THINGS)
-    val DISK_FLUID_1024k = createItem(Ids.DISK_FLUID_1024k, { loadDiskCell(it.stacksTo(1), AEKeyType.fluids(), CELL_COMPONENT_1024k, DISK_FLUID_HOUSING, 1024, 6.0)}, Mods.AE2THINGS)
-    val DISK_FLUID_4096k = createItem(Ids.DISK_FLUID_4096k, { loadDiskCell(it.stacksTo(1), AEKeyType.fluids(), CELL_COMPONENT_4096k, DISK_FLUID_HOUSING, 4096, 8.0)}, Mods.AE2THINGS)
-    val DISK_FLUID_16384k = createItem(Ids.DISK_FLUID_16384k, { loadDiskCell(it.stacksTo(1), AEKeyType.fluids(), CELL_COMPONENT_16384k, DISK_FLUID_HOUSING, 16384, 10.0)}, Mods.AE2THINGS)
-    val DISK_FLUID_65536k = createItem(Ids.DISK_FLUID_65536k, { loadDiskCell(it.stacksTo(1), AEKeyType.fluids(), CELL_COMPONENT_65536k, DISK_FLUID_HOUSING, 65536, 15.0)}, Mods.AE2THINGS)
+    val DISK_FLUID_1k = createItem(Ids.DISK_FLUID_1k, { loadDiskCell(it.stacksTo(1), AEKeyType.fluids(), AEItems.CELL_COMPONENT_1K, DISK_FLUID_HOUSING, 1, .5)}, false, Mods.AE2THINGS)
+    val DISK_FLUID_4k = createItem(Ids.DISK_FLUID_4k, { loadDiskCell(it.stacksTo(1), AEKeyType.fluids(), AEItems.CELL_COMPONENT_4K, DISK_FLUID_HOUSING, 4, 1.0)}, false, Mods.AE2THINGS)
+    val DISK_FLUID_16k = createItem(Ids.DISK_FLUID_16k, { loadDiskCell(it.stacksTo(1), AEKeyType.fluids(), AEItems.CELL_COMPONENT_16K, DISK_FLUID_HOUSING, 16, 1.5)}, false, Mods.AE2THINGS)
+    val DISK_FLUID_64k = createItem(Ids.DISK_FLUID_64k, { loadDiskCell(it.stacksTo(1), AEKeyType.fluids(), AEItems.CELL_COMPONENT_64K, DISK_FLUID_HOUSING, 64, 2.0)}, false, Mods.AE2THINGS)
+    val DISK_FLUID_256k = createItem(Ids.DISK_FLUID_256k, { loadDiskCell(it.stacksTo(1), AEKeyType.fluids(), AEItems.CELL_COMPONENT_256K, DISK_FLUID_HOUSING, 256, 4.0)}, false, Mods.AE2THINGS)
+    val DISK_FLUID_1024k = createItem(Ids.DISK_FLUID_1024k, { loadDiskCell(it.stacksTo(1), AEKeyType.fluids(), CELL_COMPONENT_1024k, DISK_FLUID_HOUSING, 1024, 6.0)}, false, Mods.AE2THINGS)
+    val DISK_FLUID_4096k = createItem(Ids.DISK_FLUID_4096k, { loadDiskCell(it.stacksTo(1), AEKeyType.fluids(), CELL_COMPONENT_4096k, DISK_FLUID_HOUSING, 4096, 8.0)}, false, Mods.AE2THINGS)
+    val DISK_FLUID_16384k = createItem(Ids.DISK_FLUID_16384k, { loadDiskCell(it.stacksTo(1), AEKeyType.fluids(), CELL_COMPONENT_16384k, DISK_FLUID_HOUSING, 16384, 10.0)}, false, Mods.AE2THINGS)
+    val DISK_FLUID_65536k = createItem(Ids.DISK_FLUID_65536k, { loadDiskCell(it.stacksTo(1), AEKeyType.fluids(), CELL_COMPONENT_65536k, DISK_FLUID_HOUSING, 65536, 15.0)}, false, Mods.AE2THINGS)
 
-    val DISK_CHEMICAL_1k = createItem(Ids.DISK_CHEMICAL_1k, { loadDiskCell(it.stacksTo(1), getMekType(), AEItems.CELL_COMPONENT_1K, DISK_CHEMICAL_HOUSING, 1, .5)}, Mods.AE2THINGS, Mods.APPMEK)
-    val DISK_CHEMICAL_4k = createItem(Ids.DISK_CHEMICAL_4k, { loadDiskCell(it.stacksTo(1), getMekType(), AEItems.CELL_COMPONENT_4K, DISK_CHEMICAL_HOUSING, 4, 1.0)}, Mods.AE2THINGS, Mods.APPMEK)
-    val DISK_CHEMICAL_16k = createItem(Ids.DISK_CHEMICAL_16k, { loadDiskCell(it.stacksTo(1), getMekType(), AEItems.CELL_COMPONENT_16K, DISK_CHEMICAL_HOUSING, 16, 1.5)}, Mods.AE2THINGS, Mods.APPMEK)
-    val DISK_CHEMICAL_64k = createItem(Ids.DISK_CHEMICAL_64k, { loadDiskCell(it.stacksTo(1), getMekType(), AEItems.CELL_COMPONENT_64K, DISK_CHEMICAL_HOUSING, 64, 2.0)}, Mods.AE2THINGS, Mods.APPMEK)
-    val DISK_CHEMICAL_256k = createItem(Ids.DISK_CHEMICAL_256k, { loadDiskCell(it.stacksTo(1), getMekType(), AEItems.CELL_COMPONENT_256K, DISK_CHEMICAL_HOUSING, 256, 4.0)}, Mods.AE2THINGS, Mods.APPMEK)
-    val DISK_CHEMICAL_1024k = createItem(Ids.DISK_CHEMICAL_1024k, { loadDiskCell(it.stacksTo(1), getMekType(), CELL_COMPONENT_1024k, DISK_CHEMICAL_HOUSING, 1024, 6.0)}, Mods.AE2THINGS, Mods.APPMEK)
-    val DISK_CHEMICAL_4096k = createItem(Ids.DISK_CHEMICAL_4096k, { loadDiskCell(it.stacksTo(1), getMekType(), CELL_COMPONENT_4096k, DISK_CHEMICAL_HOUSING, 4096, 8.0)}, Mods.AE2THINGS, Mods.APPMEK)
-    val DISK_CHEMICAL_16384k = createItem(Ids.DISK_CHEMICAL_16384k, { loadDiskCell(it.stacksTo(1), getMekType(), CELL_COMPONENT_16384k, DISK_CHEMICAL_HOUSING, 16384, 10.0)}, Mods.AE2THINGS, Mods.APPMEK)
-    val DISK_CHEMICAL_65536k = createItem(Ids.DISK_CHEMICAL_65536k, { loadDiskCell(it.stacksTo(1), getMekType(), CELL_COMPONENT_65536k, DISK_CHEMICAL_HOUSING, 65536, 15.0)}, Mods.AE2THINGS, Mods.APPMEK)
+    val DISK_CHEMICAL_1k = createItem(Ids.DISK_CHEMICAL_1k, { loadDiskCell(it.stacksTo(1), getMekType(), AEItems.CELL_COMPONENT_1K, DISK_CHEMICAL_HOUSING, 1, .5)}, false, Mods.AE2THINGS, Mods.APPMEK)
+    val DISK_CHEMICAL_4k = createItem(Ids.DISK_CHEMICAL_4k, { loadDiskCell(it.stacksTo(1), getMekType(), AEItems.CELL_COMPONENT_4K, DISK_CHEMICAL_HOUSING, 4, 1.0)}, false, Mods.AE2THINGS, Mods.APPMEK)
+    val DISK_CHEMICAL_16k = createItem(Ids.DISK_CHEMICAL_16k, { loadDiskCell(it.stacksTo(1), getMekType(), AEItems.CELL_COMPONENT_16K, DISK_CHEMICAL_HOUSING, 16, 1.5)}, false, Mods.AE2THINGS, Mods.APPMEK)
+    val DISK_CHEMICAL_64k = createItem(Ids.DISK_CHEMICAL_64k, { loadDiskCell(it.stacksTo(1), getMekType(), AEItems.CELL_COMPONENT_64K, DISK_CHEMICAL_HOUSING, 64, 2.0)}, false, Mods.AE2THINGS, Mods.APPMEK)
+    val DISK_CHEMICAL_256k = createItem(Ids.DISK_CHEMICAL_256k, { loadDiskCell(it.stacksTo(1), getMekType(), AEItems.CELL_COMPONENT_256K, DISK_CHEMICAL_HOUSING, 256, 4.0)}, false, Mods.AE2THINGS, Mods.APPMEK)
+    val DISK_CHEMICAL_1024k = createItem(Ids.DISK_CHEMICAL_1024k, { loadDiskCell(it.stacksTo(1), getMekType(), CELL_COMPONENT_1024k, DISK_CHEMICAL_HOUSING, 1024, 6.0)}, false, Mods.AE2THINGS, Mods.APPMEK)
+    val DISK_CHEMICAL_4096k = createItem(Ids.DISK_CHEMICAL_4096k, { loadDiskCell(it.stacksTo(1), getMekType(), CELL_COMPONENT_4096k, DISK_CHEMICAL_HOUSING, 4096, 8.0)}, false, Mods.AE2THINGS, Mods.APPMEK)
+    val DISK_CHEMICAL_16384k = createItem(Ids.DISK_CHEMICAL_16384k, { loadDiskCell(it.stacksTo(1), getMekType(), CELL_COMPONENT_16384k, DISK_CHEMICAL_HOUSING, 16384, 10.0)}, false, Mods.AE2THINGS, Mods.APPMEK)
+    val DISK_CHEMICAL_65536k = createItem(Ids.DISK_CHEMICAL_65536k, { loadDiskCell(it.stacksTo(1), getMekType(), CELL_COMPONENT_65536k, DISK_CHEMICAL_HOUSING, 65536, 15.0)}, false, Mods.AE2THINGS, Mods.APPMEK)
     
     val CHEMICAL_STORAGE_CELL_1024k by REGISTRY.registerObject(Ids.CHEMICAL_STORAGE_CELL_1024.path) {
         constructItem({ properties ->
@@ -97,7 +97,7 @@ object Items {
                 return@constructItem StorageCell(properties.stacksTo(1).rarity(Rarity.RARE), CELL_COMPONENT_1024k, AMItems.CHEMICAL_CELL_HOUSING.get(), 4.0, 4096, 1024, 8, getMekType())
             }
             Item(properties)
-        }, Ids.CHEMICAL_STORAGE_CELL_1024, Mods.APPMEK)
+        }, Ids.CHEMICAL_STORAGE_CELL_1024, false, Mods.APPMEK)
     }
     val CHEMICAL_STORAGE_CELL_4096k by REGISTRY.registerObject(Ids.CHEMICAL_STORAGE_CELL_4096.path) {
         constructItem({ properties ->
@@ -106,7 +106,7 @@ object Items {
             }
 
             Item(properties)
-        }, Ids.CHEMICAL_STORAGE_CELL_4096, Mods.APPMEK)
+        }, Ids.CHEMICAL_STORAGE_CELL_4096, false, Mods.APPMEK)
     }
 
     val CHEMICAL_STORAGE_CELL_16384k by REGISTRY.registerObject(Ids.CHEMICAL_STORAGE_CELL_16384.path) {
@@ -116,7 +116,7 @@ object Items {
             }
 
             Item(properties)
-        }, Ids.CHEMICAL_STORAGE_CELL_16384, Mods.APPMEK)
+        }, Ids.CHEMICAL_STORAGE_CELL_16384, false, Mods.APPMEK)
     }
     
     fun init() {
@@ -132,8 +132,8 @@ object Items {
         return item
     }
 
-    fun <T: Item> createItem(id: ResourceLocation, factory: (Item.Properties) -> T, vararg requiredMod: Mods): T {
-        val item = constructItem(factory, id, *requiredMod)
+    fun <T: Item> createItem(id: ResourceLocation, factory: (Item.Properties) -> T, deprecated: Boolean = false, vararg requiredMod: Mods): T {
+        val item = constructItem(factory, id, deprecated, *requiredMod)
         REGISTRY.registerObject(id.path) {
             item
         }
@@ -141,8 +141,8 @@ object Items {
         return item
     }
 
-    fun <T: Item> createItemForMod(id: ResourceLocation, factory: (Item.Properties) -> T, vararg requiredMod: Mods): T {
-        val item = constructItem(factory, id, *requiredMod)
+    fun <T: Item> createItemForMod(id: ResourceLocation, factory: (Item.Properties) -> T,deprecated: Boolean = false, vararg requiredMod: Mods): T {
+        val item = constructItem(factory, id, deprecated, *requiredMod)
         REGISTRY.registerObject(id.path) {
             item
         }
@@ -153,12 +153,15 @@ object Items {
     private fun <T: Item> constructItem(
         factory: (Item.Properties) -> T,
         id: ResourceLocation,
+        deprecated: Boolean = false
     ): T {
         val props = Item.Properties()
 
         val item = factory(props)
 
-        CreativeTab.add(item)
+        if (!deprecated) {
+            CreativeTab.add(item)
+        }
 
         ITEMS.add(item)
 
@@ -168,6 +171,7 @@ object Items {
     private fun <T : Item> constructItem(
         factory: (Item.Properties) -> T,
         id: ResourceLocation,
+        deprecated: Boolean = false,
         vararg requiredMod: Mods
     ): T {
         val props = Item.Properties()
@@ -182,7 +186,7 @@ object Items {
 
         val item = factory(props)
 
-        if (shouldShow) {
+        if (shouldShow && !deprecated) {
             CreativeTab.add(item)
         }
 
@@ -197,9 +201,9 @@ object Items {
         }
     }
 
-    fun <T: Item> createItem(id: ResourceLocation, factory: (Item.Properties) -> T, registry: DeferredRegister<Item>, vararg requiredMod: Mods): ReadOnlyProperty<Any?, T> {
+    fun <T: Item> createItem(id: ResourceLocation, factory: (Item.Properties) -> T, registry: DeferredRegister<Item>, deprecated: Boolean = false, vararg requiredMod: Mods): ReadOnlyProperty<Any?, T> {
         return registry.registerObject(id.path) {
-            constructItem(factory, id, *requiredMod)
+            constructItem(factory, id, deprecated, *requiredMod)
         }
     }
     
