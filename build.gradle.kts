@@ -1,8 +1,10 @@
+import com.google.common.primitives.Chars
 import com.modrinth.minotaur.TaskModrinthUpload
 import net.darkhax.curseforgegradle.TaskPublishCurseForge
 import net.minecraftforge.gradle.userdev.DependencyManagementExtension
 import net.minecraftforge.gradle.userdev.UserDevExtension
 import org.gradle.jvm.tasks.Jar
+import java.nio.charset.Charset
 import net.darkhax.curseforgegradle.Constants as CFG_Constants
 
 buildscript {
@@ -212,13 +214,16 @@ tasks.register<TaskPublishCurseForge>("publishCurseForge") {
     mainFile.addModLoader("Forge")
 }
 
+val changeLogFile = file("CHANGELOG.md")
+val changeLogContents = if (changeLogFile.exists()) changeLogFile.readText(Charsets.UTF_8) else ""
+
 modrinth {
     token.set(System.getenv("MODRINTH_API_TOKEN"))
     projectId.set(modrinthProjectId)
     uploadFile.set(file("${project.buildDir}/libs/${fileName}.jar"))
     loaders.add("forge")
     gameVersions.add(minecraftVersion)
-    changelog.set(file("CHANGELOG.md").readText(Charsets.UTF_8))
+    changelog.set(changeLogContents)
     versionType.set(getReleaseType())
 
     dependencies {
