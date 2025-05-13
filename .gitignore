@@ -19,3 +19,9 @@
 !fabric
 !libs/*
 !/.github
+fabric/.gradle
+fabric/build
+forge/build
+forge/.gradle
+common/build
+common/.gradle
