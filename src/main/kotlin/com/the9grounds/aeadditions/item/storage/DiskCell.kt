@@ -12,6 +12,7 @@ import appeng.hooks.AEToolItem
 import appeng.items.contents.CellConfig
 import appeng.util.ConfigInventory
 import appeng.util.InteractionUtil
+import com.the9grounds.aeadditions.api.IAEAdditionsDiskCell
 import io.github.projectet.ae2things.item.AETItems
 import io.github.projectet.ae2things.storage.DISKCellHandler
 import io.github.projectet.ae2things.storage.IDISKCellItem
@@ -32,12 +33,12 @@ import net.minecraft.world.level.Level
 /**
  * Need to overwrite as the original one puts it into the ae2things creative tab
  */
-class DiskCell(properties: Item.Properties, private val _keyType: AEKeyType, val component: ItemLike, val housing: ItemLike?, val kilobytes: Int, val _idleDrain: Double) : DiskCellWithoutMod(properties), IDISKCellItem, AEToolItem {
+class DiskCell(properties: Item.Properties, private val keyType: AEKeyType, val component: ItemLike, val housing: ItemLike?, val kilobytes: Int, val _idleDrain: Double) : DiskCellWithoutMod(properties), IAEAdditionsDiskCell, AEToolItem {
     override fun getKeyType(): AEKeyType {
-        return _keyType
+        return keyType
     }
 
-    override fun isBlackListed(cellItem: ItemStack?, requestedAddition: AEKey?): Boolean {
+    override fun isBlackListed(cellItem: ItemStack?, requestedAddition: AEKey): Boolean {
         if (requestedAddition is AEItemKey) {
             return super.isBlackListed(cellItem, requestedAddition)
         }
@@ -132,6 +133,9 @@ class DiskCell(properties: Item.Properties, private val _keyType: AEKeyType, val
         tooltip: MutableList<Component?>,
         context: TooltipFlag?
     ) {
+        if (stack === null) {
+            return
+        }
         tooltip.add(
                 Component.literal("Deep Item Storage disK - Storage for dummies").withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC)
         )

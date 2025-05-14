@@ -13,7 +13,7 @@ class AppEng {
             StorageCells.addCellHandler(AEAdditionsCellHandler)
             StorageCells.addCellHandler(SuperCellHandler)
             if (Mods.AE2THINGS.isEnabled) {
-                StorageCells.addCellHandler(ExtendedDiskCellHandler())
+                StorageCells.addCellHandler(ExtendedDiskCellHandler)
             }
         }
     }
