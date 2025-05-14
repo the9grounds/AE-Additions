@@ -1,4 +1,4 @@
-// 1.20.1	2025-05-13T16:15:26.9871985	vanilla/Recipes
+// 1.20.1	2025-05-14T14:43:34.7038541	vanilla/Recipes
 bcc7bdca8b042f1c348f50764fe0f68743f3acf0 data/ae2additions/advancements/recipes/misc/blocks/wireless_transceiver.json
 dcbae2ba7887f3263e1dd36961c0b395615275e8 data/ae2additions/advancements/recipes/misc/cells/fluid/1024k.json
 247e69635d050ae29ce8b217d834e63c4b4fb576 data/ae2additions/advancements/recipes/misc/cells/fluid/16384k.json
@@ -37,14 +37,22 @@ aa268ae8e0d471f81e750761696aafc888d98133 data/ae2additions/advancements/recipes/
 42ab2e9d992e64012621bbb77475ddf6981c824e data/ae2additions/advancements/recipes/misc/components/4096k.json
 5af3b464590438d46474774aa253f16985dd16ff data/ae2additions/advancements/recipes/misc/components/65536k.json
 7d48fdf7d3076754974cbd415e153268be55b00a data/ae2additions/advancements/recipes/misc/components/super/1024k.json
+4778c092bfb6f31c749b65c3ae0a4d8666936db7 data/ae2additions/advancements/recipes/misc/components/super/1024k_upgrade.json
 dc097481e7bbbfb7c328805fb5a4c2620f13afe0 data/ae2additions/advancements/recipes/misc/components/super/16k.json
+721809452c38f60b134cbbcf7f975fd6c504aef7 data/ae2additions/advancements/recipes/misc/components/super/16k_upgrade.json
 5a73ef4b37765733e7c5814ba6709ee65cea8d67 data/ae2additions/advancements/recipes/misc/components/super/16m.json
+b6b16a1f2f8cf16e64922d329b32e968da5a76b0 data/ae2additions/advancements/recipes/misc/components/super/16m_upgrade.json
 920f9e5e9d8568cc2f62692bd66754a69f958d6a data/ae2additions/advancements/recipes/misc/components/super/1k.json
 963bff20188db63226f8d8cfcb0f23d266caa6cb data/ae2additions/advancements/recipes/misc/components/super/256k.json
+a39c30ae9655c4b54e7b16a5fad179f938e715cf data/ae2additions/advancements/recipes/misc/components/super/256k_upgrade.json
 162e5096fc873d89300d4dc0605df6bed54e9144 data/ae2additions/advancements/recipes/misc/components/super/4096k.json
+43a31749a3c63021428ef97269255c3283f265a6 data/ae2additions/advancements/recipes/misc/components/super/4096k_upgrade.json
 39fa55392eeac608482eab9e7f3805de349343a0 data/ae2additions/advancements/recipes/misc/components/super/4k.json
+1f8ce397592a0d3480a9e0655de7d901a4c44921 data/ae2additions/advancements/recipes/misc/components/super/4k_upgrade.json
 9f2cf1336d13c1769b42e7b8649a5299f380339e data/ae2additions/advancements/recipes/misc/components/super/64k.json
+d496d20fd0f3e210dd0a75ba2da3a9e8d730cb79 data/ae2additions/advancements/recipes/misc/components/super/64k_upgrade.json
 1a70e2cf98ed5ac78ddf0f8b27f2cef2edc95804 data/ae2additions/advancements/recipes/misc/components/super/65m.json
+4bc763c4b7c2767c54fa48d4ed7d7850a7324c03 data/ae2additions/advancements/recipes/misc/components/super/65m_upgrade.json
 220a3f868a509c54cad54192b13c025c904b7f0e data/ae2additions/advancements/recipes/misc/crafting/1024k_storage.json
 dda8a94f7b971730c7d3bb23e77849d430a5fcee data/ae2additions/advancements/recipes/misc/crafting/16384k_storage.json
 c37aafc19c39407d5f9432fd1f3c0ff2bd935933 data/ae2additions/advancements/recipes/misc/crafting/4096k_storage.json
@@ -140,14 +148,22 @@ c2e4d4e500f26ea17d4a67cd46f32e15b5d6d2aa data/ae2additions/recipes/components/16
 b9778ce6e04aeefbef3ec7226ed6dfbfbf42c41e data/ae2additions/recipes/components/4096k.json
 f0a5858198dfca6ebffe42d79f9351b58cc84a8a data/ae2additions/recipes/components/65536k.json
 d4371a20684aa4fd01b969bf3b710752fd54ed51 data/ae2additions/recipes/components/super/1024k.json
+d3383db80f1435f078291d74adc3766611427738 data/ae2additions/recipes/components/super/1024k_upgrade.json
 6954ef89ba1052da47fa04cc040aceb1f6deb88e data/ae2additions/recipes/components/super/16k.json
+10a882929e10af2b9f1ef7b27afe556d10cca155 data/ae2additions/recipes/components/super/16k_upgrade.json
 f44e61618ed87f27d0cb7f8e998e51caaa8e01bc data/ae2additions/recipes/components/super/16m.json
+44a268fb7dc2b51a5a392636605d2422e21c0bc4 data/ae2additions/recipes/components/super/16m_upgrade.json
 d8e26661ae30bc8a3efa4cf072c20dd24f29922c data/ae2additions/recipes/components/super/1k.json
 642582da3aa972a1b958412def2cde78efe8aae7 data/ae2additions/recipes/components/super/256k.json
+78ac257bfacf0eff045b305eab407fc4dcd62a49 data/ae2additions/recipes/components/super/256k_upgrade.json
 9ace642fadb908832dc58a44c11f82f27eb11759 data/ae2additions/recipes/components/super/4096k.json
+17bef3e188968b81d15996103a9e232ad21a20be data/ae2additions/recipes/components/super/4096k_upgrade.json
 1abd0d7cfd62fbd594d211d217e6a3144e776446 data/ae2additions/recipes/components/super/4k.json
+15be952fac1c7c6af16f186e221c13de84d13599 data/ae2additions/recipes/components/super/4k_upgrade.json
 cce80522594257ba1b9aa9494721858b4f118ddc data/ae2additions/recipes/components/super/64k.json
+88b9243d9ed45f189516bfdb14101852ad017110 data/ae2additions/recipes/components/super/64k_upgrade.json
 8f31140e785342bd4816ad4d5c1fdbe68f86fcfa data/ae2additions/recipes/components/super/65m.json
+8fe5bbb8e4ef276f0b8d390a99599a41bdbd7e0b data/ae2additions/recipes/components/super/65m_upgrade.json
 86cb90055098d3e6606b64f844ebfb8994d73dc1 data/ae2additions/recipes/crafting/1024k_storage.json
 e3b993a483aade7efb655ebd44f0aaa169de858f data/ae2additions/recipes/crafting/16384k_storage.json
 1efcd3a2136a2be632e72ea80fc7b5619e6c20ab data/ae2additions/recipes/crafting/4096k_storage.json
