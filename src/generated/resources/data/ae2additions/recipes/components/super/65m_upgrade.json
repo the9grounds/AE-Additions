@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "tag": "forge:gems/diamond"
+    },
+    "b": {
+      "item": "ae2additions:super_cell_component_16m"
+    }
+  },
+  "pattern": [
+    "aaa",
+    "bbb",
+    "aaa"
+  ],
+  "result": {
+    "item": "ae2additions:super_cell_component_65m"
+  },
+  "show_notification": true
+}

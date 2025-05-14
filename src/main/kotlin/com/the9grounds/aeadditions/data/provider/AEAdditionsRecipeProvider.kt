@@ -2,6 +2,7 @@ package com.the9grounds.aeadditions.data.provider
 
 import appeng.core.definitions.AEBlocks
 import appeng.core.definitions.AEItems
+import appeng.items.materials.StorageComponentItem
 import com.the9grounds.aeadditions.AEAdditions
 import com.the9grounds.aeadditions.integration.Mods
 import com.the9grounds.aeadditions.item.storage.DiskCellWithoutMod
@@ -20,6 +21,7 @@ import net.minecraft.world.level.ItemLike
 import net.minecraftforge.common.Tags
 import net.minecraftforge.common.crafting.ConditionalRecipe
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder
+import org.apache.commons.lang3.ObjectUtils.Null
 import java.util.function.Consumer
 
 class AEAdditionsRecipeProvider(output: PackOutput) : RecipeProvider(output), IConditionBuilder {
@@ -153,6 +155,8 @@ class AEAdditionsRecipeProvider(output: PackOutput) : RecipeProvider(output), IC
                 16384 to Items.DISK_CHEMICAL_16384k,
                 65536 to Items.DISK_CHEMICAL_65536k
         )
+
+        var previousComponent: StorageComponentItem? = null
         
         for (superCellComponent in superCellComponents) {
             ShapedRecipeBuilder.shaped(RecipeCategory.MISC, superCellComponent.value)
@@ -163,6 +167,19 @@ class AEAdditionsRecipeProvider(output: PackOutput) : RecipeProvider(output), IC
                 .define('b', Tags.Items.GEMS_DIAMOND)
                 .unlockedBy("has_item", has(components[superCellComponent.key]))
                 .save(consumer, ResourceLocation(AEAdditions.ID, "components/super/${superMapReversed[superCellComponent.key]}"))
+            if (previousComponent !== null) {
+                ShapedRecipeBuilder.shaped(RecipeCategory.MISC, superCellComponent.value)
+                    .pattern("aaa")
+                    .pattern("bbb")
+                    .pattern("aaa")
+                    .define('a', Tags.Items.GEMS_DIAMOND)
+                    .define('b', previousComponent)
+                    .unlockedBy("has_previous_component", has(previousComponent))
+                    .save(consumer, ResourceLocation(AEAdditions.ID, "components/super/${superMapReversed[superCellComponent.key]}_upgrade"))
+
+            }
+
+            previousComponent = superCellComponent.value
         }
         
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC,Items.SUPER_CELL_HOUSING)
