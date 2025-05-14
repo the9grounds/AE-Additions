@@ -182,6 +182,7 @@ class SuperCellInventory(val cell: SuperStorageCell?, val itemStackLocal: ItemSt
         
         if (computedUsedBytes == 0L) {
             getTag()!!.remove(ITEM_COUNT_TAG)
+            getTag()!!.remove("usedBytes")
         } else {
             getTag()!!.putLong(ITEM_COUNT_TAG, computedUsedBytes)
             getTag()!!.putLong("usedBytes", computedUsedBytes)
