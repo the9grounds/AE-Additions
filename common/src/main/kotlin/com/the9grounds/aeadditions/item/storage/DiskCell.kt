@@ -12,6 +12,7 @@ import appeng.hooks.AEToolItem
 import appeng.items.contents.CellConfig
 import appeng.util.ConfigInventory
 import appeng.util.InteractionUtil
+import dev.architectury.injectables.annotations.ExpectPlatform
 import io.github.projectet.ae2things.item.AETItems
 import io.github.projectet.ae2things.storage.DISKCellHandler
 import io.github.projectet.ae2things.storage.IDISKCellItem
@@ -109,7 +110,7 @@ class DiskCell(properties: Item.Properties, private val _keyType: AEKeyType, val
                     }
 
                     // drop empty storage cell case
-                    playerInventory.placeItemBackInInventory(ItemStack(housing ?: AETItems.DISK_HOUSING.get()))
+                    playerInventory.placeItemBackInInventory(ItemStack(housing ?: getHousingItem()))
                     return true
                 }
             }
@@ -117,14 +118,15 @@ class DiskCell(properties: Item.Properties, private val _keyType: AEKeyType, val
         return false
     }
 
-    override fun onItemUseFirst(stack: ItemStack, context: UseOnContext): InteractionResult? {
-        return if (disassembleDrive(
-                stack,
-                context.level,
-                context.player
-            )
-        ) InteractionResult.sidedSuccess(context.level.isClientSide()) else InteractionResult.PASS
-    }
+    // Forge relic, this method is called when activating a block, but this function is called first
+//    override fun onItemUseFirst(stack: ItemStack, context: UseOnContext): InteractionResult? {
+//        return if (disassembleDrive(
+//                stack,
+//                context.level,
+//                context.player
+//            )
+//        ) InteractionResult.sidedSuccess(context.level.isClientSide()) else InteractionResult.PASS
+//    }
 
     override fun appendHoverText(
         stack: ItemStack?,
@@ -149,5 +151,12 @@ class DiskCell(properties: Item.Properties, private val _keyType: AEKeyType, val
             0xFFFFFF
         }
     }
-    
+
+    companion object {
+        @JvmStatic
+        @ExpectPlatform
+        fun getHousingItem(): Item {
+            throw Error()
+        }
+    }
 }

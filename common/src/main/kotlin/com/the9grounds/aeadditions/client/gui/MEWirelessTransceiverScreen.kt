@@ -7,7 +7,7 @@ import com.the9grounds.aeadditions.client.gui.button.*
 import com.the9grounds.aeadditions.core.network.NetworkManager
 import com.the9grounds.aeadditions.core.network.packet.CreateChannelPacket
 import com.the9grounds.aeadditions.core.network.packet.DeleteChannelPacket
-import com.the9grounds.aeadditions.core.network.packet.TransceiverDataChange
+import com.the9grounds.aeadditions.core.network.packet.ChangeTransceiverDataPacket
 import com.the9grounds.aeadditions.menu.MEWirelessTransceiverMenu
 import com.the9grounds.aeadditions.util.ChannelInfo
 import net.minecraft.client.Minecraft
@@ -36,6 +36,15 @@ class MEWirelessTransceiverScreen(menu: MEWirelessTransceiverMenu, inventory: In
     private var setChannelButton: SaveChangesButton? = null
     private var channelFields : MutableMap<ChannelInfo, ChannelField> = mutableMapOf()
     private var selectedChannel: ChannelInfo? = null
+
+    val guiLeft: Int
+        get() = leftPos
+    val guiTop: Int
+        get() = topPos
+    val xSize: Int
+    get() = imageWidth
+    val ySize: Int
+    get() = imageHeight
     
     private var channels = listOf<ChannelInfo>()
     
@@ -270,7 +279,7 @@ class MEWirelessTransceiverScreen(menu: MEWirelessTransceiverMenu, inventory: In
     fun saveChangesButtonPressed(button: Button) {
         if (selectedChannel !== null || menu.currentChannel !== null) {
             NetworkManager.sendToServer(
-                TransceiverDataChange(
+                ChangeTransceiverDataPacket(
                     menu.isSubscriber,
                     Minecraft.getInstance().level!!,
                     selectedChannel ?: menu.currentChannel!!

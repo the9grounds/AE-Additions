@@ -8,7 +8,7 @@ import net.minecraft.client.gui.components.Button
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 
-class AccessButton(var parent: MEWirelessTransceiverScreen, var isPrivate: Boolean = false) : Button(Builder(Component.empty(), parent::accessButtonPressed).size(16, 16)) {
+class AccessButton(var parent: MEWirelessTransceiverScreen, var isPrivate: Boolean = false) : Button(0, 0, 16, 16, Component.empty(), parent::accessButtonPressed, DEFAULT_NARRATION) {
 
     override fun render(guiGraphics: GuiGraphics, p_93658_: Int, p_93659_: Int, p_93660_: Float) {
         this.tooltip = parent.accessBtnTooltip(this)

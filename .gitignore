@@ -19,6 +19,7 @@
 !fabric
 !libs/*
 !/.github
+!settings.gradle
 fabric/.gradle
 fabric/build
 forge/build

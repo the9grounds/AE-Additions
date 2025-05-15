@@ -15,6 +15,7 @@ loom {
         extraAccessWideners.add(loom.accessWidenerPath.get().asFile.name)
 
         mixinConfig("ae2additions.mixins.json")
+        mixinConfig("ae2additions-common.mixins.json")
     }
 }
 

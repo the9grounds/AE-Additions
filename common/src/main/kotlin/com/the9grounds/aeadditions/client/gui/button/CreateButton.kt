@@ -8,7 +8,8 @@ import net.minecraft.client.gui.components.Button
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 
-class CreateButton(parent: MEWirelessTransceiverScreen) : Button(Builder(Component.empty(), parent::createButtonPressed).size(14, 14)) {
+class CreateButton(parent: MEWirelessTransceiverScreen) : Button(0, 0, 14, 14, Component.empty(), parent::createButtonPressed,
+    DEFAULT_NARRATION) {
     override fun render(guiGraphics: GuiGraphics, p_93658_: Int, p_93659_: Int, p_93660_: Float) {
         guiGraphics.pose().pushPose()
         guiGraphics.pose().translate(x.toDouble(), y.toDouble(), 0.0)

@@ -1,12 +1,11 @@
 package com.the9grounds.aeadditions.menu
 
-import com.the9grounds.aeadditions.blockentity.BaseMEWirelessTransceiverBlockEntity
-import com.the9grounds.aeadditions.blockentity.MEWirelessTransceiverBlockEntity
+import com.the9grounds.aeadditions.blockentity.IMEWirelessTransceiver
 import com.the9grounds.aeadditions.client.gui.MEWirelessTransceiverScreen
+import com.the9grounds.aeadditions.core.injections.IChannelHolderAccess
 import com.the9grounds.aeadditions.core.network.NetworkManager
 import com.the9grounds.aeadditions.core.network.packet.ChannelsPacket
 import com.the9grounds.aeadditions.core.network.packet.RequestChannelsPacket
-import com.the9grounds.aeadditions.registries.Capability
 import com.the9grounds.aeadditions.util.Channel
 import com.the9grounds.aeadditions.util.ChannelInfo
 import dev.architectury.platform.Platform
@@ -18,11 +17,10 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.ItemStack
-import net.minecraftforge.fml.util.thread.SidedThreadGroups
 
 class MEWirelessTransceiverMenu(id: Int, val inventory: Inventory) : AbstractContainerMenu(MenuHolder.menuMEWirelessTransceiver, id) {
     
-    var blockEntity: BaseMEWirelessTransceiverBlockEntity? = null
+    var blockEntity: IMEWirelessTransceiver? = null
     var isPrivate = false
     var isSubscriber = true
     var isCurrentlySubscribing = false
@@ -34,7 +32,7 @@ class MEWirelessTransceiverMenu(id: Int, val inventory: Inventory) : AbstractCon
     
     var screen: MEWirelessTransceiverScreen? = null
     
-    constructor(id: Int, inventory: Inventory, blockEntity: BaseMEWirelessTransceiverBlockEntity) : this(id, inventory) {
+    constructor(id: Int, inventory: Inventory, blockEntity: IMEWirelessTransceiver) : this(id, inventory) {
         this.blockEntity = blockEntity
     }
     
@@ -72,18 +70,18 @@ class MEWirelessTransceiverMenu(id: Int, val inventory: Inventory) : AbstractCon
     public fun sendChannelStuffToClient() {
         val level = inventory.player.level() as ServerLevel
 
-        val channelHolder = level.getCapability(Capability.CHANNEL_HOLDER).resolve().get()
-
-        val filteredChannels = channelHolder.channels.filter {
-            it.value.hasAccessTo(inventory.player as ServerPlayer)
-        }
-        val filteredChannelInfos = channelHolder.channelInfos.filter {
-            it.hasAccessTo(inventory.player as ServerPlayer)
-        }
-
-        val packet = ChannelsPacket(filteredChannels.values.toList(), filteredChannelInfos)
-
-        NetworkManager.sendTo(packet, inventory.player as ServerPlayer)
+//        val channelHolder = level.getChannelHolder()
+//
+//        val filteredChannels = channelHolder.channels.filter {
+//            it.value.hasAccessTo(inventory.player as ServerPlayer)
+//        }
+//        val filteredChannelInfos = channelHolder.channelInfos.filter {
+//            it.hasAccessTo(inventory.player as ServerPlayer)
+//        }
+//
+//        val packet = ChannelsPacket(filteredChannels.values.toList(), filteredChannelInfos)
+//
+//        NetworkManager.sendTo(packet, inventory.player as ServerPlayer)
     }
     
     var channelInfos = listOf<ChannelInfo>()

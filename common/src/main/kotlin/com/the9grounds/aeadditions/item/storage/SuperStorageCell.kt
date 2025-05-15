@@ -10,11 +10,8 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.TooltipFlag
-import net.minecraft.world.item.context.UseOnContext
 import net.minecraft.world.level.ItemLike
 import net.minecraft.world.level.Level
-import net.minecraftforge.api.distmarker.Dist
-import net.minecraftforge.api.distmarker.OnlyIn
 
 class SuperStorageCell(properties: Properties, val component: ItemLike, val housingItem: ItemLike, val _idleDrain: Double, val _bytesPerType: Int, val kiloBytes: Int, val numberOfTypes: Int) : Item(properties) {
     fun getBytes(cellItem: ItemStack): Int = kiloBytes * 1024
@@ -60,15 +57,15 @@ class SuperStorageCell(properties: Properties, val component: ItemLike, val hous
         return false;
     }
 
-    override fun onItemUseFirst(stack: ItemStack?, context: UseOnContext?): InteractionResult {
-        return if (this.disassembleDrive(stack, context!!.level, context.player!!)) {
-            InteractionResult.sidedSuccess(context.level.isClientSide)
-        } else {
-            InteractionResult.PASS
-        }
-    }
+    // Forge relic, this method is called when activating a block, but this function is called first
+//    override fun onItemUseFirst(stack: ItemStack?, context: UseOnContext?): InteractionResult {
+//        return if (this.disassembleDrive(stack, context!!.level, context.player!!)) {
+//            InteractionResult.sidedSuccess(context.level.isClientSide)
+//        } else {
+//            InteractionResult.PASS
+//        }
+//    }
 
-    @OnlyIn(Dist.CLIENT)
     override fun appendHoverText(
         stack: ItemStack?,
         level: Level?,

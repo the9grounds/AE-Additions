@@ -405,7 +405,7 @@ class AEAdditionsCellInventory(val cellType: com.the9grounds.aeadditions.item.st
             saveChanges()
         }
 
-        return amount
+        return _amount
     }
 
     override fun extract(what: AEKey?, amount: Long, mode: Actionable, source: IActionSource?): Long {

@@ -1,9 +1,8 @@
 package com.the9grounds.aeadditions.registries
 
 import com.the9grounds.aeadditions.AEAdditions
-import com.the9grounds.aeadditions.block.CraftingStorageBlock
+//import com.the9grounds.aeadditions.block.CraftingStorageBlock
 import com.the9grounds.aeadditions.block.MEWirelessTransceiverBlock
-import com.the9grounds.aeadditions.block.crafting.ExtendedCraftingUnitType
 import com.the9grounds.aeadditions.core.BlockDefinition
 import com.the9grounds.aeadditions.integration.Mods
 import dev.architectury.registry.registries.DeferredRegister
@@ -20,18 +19,18 @@ object Blocks {
     val BLOCKS = mutableListOf<Block>()
     
     
-    @JvmField val BLOCK_CRAFTING_STORAGE_1024k = createBlock(Ids.CRAFTING_STORAGE_1024k, SoundType.METAL) {
-        CraftingStorageBlock(it.strength(.75f, 11f).sound(SoundType.METAL), ExtendedCraftingUnitType.STORAGE_1024)
-    }
-    @JvmField val BLOCK_CRAFTING_STORAGE_4096k = createBlock(Ids.CRAFTING_STORAGE_4096k, SoundType.METAL) {
-        CraftingStorageBlock(it.strength(.75f, 11f).sound(SoundType.METAL), ExtendedCraftingUnitType.STORAGE_4096)
-    }
-    @JvmField val BLOCK_CRAFTING_STORAGE_16384k = createBlock(Ids.CRAFTING_STORAGE_16384k, SoundType.METAL) {
-        CraftingStorageBlock(it.strength(.75f, 11f).sound(SoundType.METAL), ExtendedCraftingUnitType.STORAGE_16384)
-    }
-    @JvmField val BLOCK_CRAFTING_STORAGE_65536k = createBlock(Ids.CRAFTING_STORAGE_65536k, SoundType.METAL) {
-        CraftingStorageBlock(it.strength(.75f, 11f).sound(SoundType.METAL), ExtendedCraftingUnitType.STORAGE_65536)
-    }
+//    @JvmField val BLOCK_CRAFTING_STORAGE_1024k = createBlock(Ids.CRAFTING_STORAGE_1024k, SoundType.METAL) {
+//        CraftingStorageBlock(it.strength(.75f, 11f).sound(SoundType.METAL), ExtendedCraftingUnitType.STORAGE_1024)
+//    }
+//    @JvmField val BLOCK_CRAFTING_STORAGE_4096k = createBlock(Ids.CRAFTING_STORAGE_4096k, SoundType.METAL) {
+//        CraftingStorageBlock(it.strength(.75f, 11f).sound(SoundType.METAL), ExtendedCraftingUnitType.STORAGE_4096)
+//    }
+//    @JvmField val BLOCK_CRAFTING_STORAGE_16384k = createBlock(Ids.CRAFTING_STORAGE_16384k, SoundType.METAL) {
+//        CraftingStorageBlock(it.strength(.75f, 11f).sound(SoundType.METAL), ExtendedCraftingUnitType.STORAGE_16384)
+//    }
+//    @JvmField val BLOCK_CRAFTING_STORAGE_65536k = createBlock(Ids.CRAFTING_STORAGE_65536k, SoundType.METAL) {
+//        CraftingStorageBlock(it.strength(.75f, 11f).sound(SoundType.METAL), ExtendedCraftingUnitType.STORAGE_65536)
+//    }
     
     val BLOCK_ME_WIRELESS_TRANSCEIVER = createBlock(Ids.ME_WIRELESS_TRANSCEIVER, SoundType.METAL) {
         MEWirelessTransceiverBlock(it.strength(.75f, 11f).sound(SoundType.METAL))

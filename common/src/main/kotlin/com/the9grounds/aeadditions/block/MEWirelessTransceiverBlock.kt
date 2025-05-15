@@ -1,7 +1,6 @@
 package com.the9grounds.aeadditions.block
 
-import com.the9grounds.aeadditions.blockentity.BaseMEWirelessTransceiverBlockEntity
-import com.the9grounds.aeadditions.blockentity.MEWirelessTransceiverBlockEntity
+import com.the9grounds.aeadditions.blockentity.IMEWirelessTransceiver
 import dev.architectury.injectables.annotations.ExpectPlatform
 import net.minecraft.core.BlockPos
 import net.minecraft.world.InteractionHand
@@ -19,7 +18,7 @@ import net.minecraft.world.phys.BlockHitResult
 
 class MEWirelessTransceiverBlock(properties: Properties) : Block(properties), EntityBlock {
     override fun newBlockEntity(pos: BlockPos, blockState: BlockState): BlockEntity? {
-        return MEWirelessTransceiverBlock.getBlockEntity(pos, blockState)
+        return getBlockEntity(pos, blockState)
     }
 
     override fun onPlace(
@@ -34,7 +33,11 @@ class MEWirelessTransceiverBlock(properties: Properties) : Block(properties), En
         val blockEntity = level.getBlockEntity(pos, getBlockEntityType())
         
         if (blockEntity.isPresent) {
-            blockEntity.get().blockPlaced()
+            val blockE = blockEntity.get()
+
+            if (blockE is IMEWirelessTransceiver) {
+                blockE.blockPlaced()
+            }
         }
     }
 
@@ -50,8 +53,9 @@ class MEWirelessTransceiverBlock(properties: Properties) : Block(properties), En
         val blockEntity = level.getBlockEntity(pos, getBlockEntityType())
         
         if (blockEntity.isPresent && !player.isShiftKeyDown) {
-            if (!level.isClientSide) {
-                player.openMenu(blockEntity.get())
+            val blockE = blockEntity.get()
+            if (!level.isClientSide && blockE is IMEWirelessTransceiver) {
+                player.openMenu(blockE)
             }
             return InteractionResult.sidedSuccess(level.isClientSide)
         }
@@ -66,13 +70,13 @@ class MEWirelessTransceiverBlock(properties: Properties) : Block(properties), En
     companion object {
         @JvmStatic
         @ExpectPlatform
-        fun getBlockEntity(pos: BlockPos, blockState: BlockState): BaseMEWirelessTransceiverBlockEntity {
+        fun getBlockEntity(pos: BlockPos, blockState: BlockState): BlockEntity {
             throw Error()
         }
 
         @JvmStatic
         @ExpectPlatform
-        fun getBlockEntityType(): BlockEntityType<BaseMEWirelessTransceiverBlockEntity> {
+        fun getBlockEntityType(): BlockEntityType<BlockEntity> {
             throw Error()
         }
     }

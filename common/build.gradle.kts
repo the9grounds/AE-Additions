@@ -4,6 +4,9 @@ architectury {
 
 loom {
     accessWidenerPath.set(file("src/main/resources/ae2additions.accesswidener"))
+    interfaceInjection {
+        enableDependencyInterfaceInjection = true
+    }
 }
 
 repositories {

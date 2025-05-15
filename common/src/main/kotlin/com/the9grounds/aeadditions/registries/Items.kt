@@ -20,6 +20,7 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.Rarity
 import net.minecraft.world.level.ItemLike
+import java.util.function.Supplier
 
 object Items {
     val REGISTRY = DeferredRegister.create(AEAdditions.ID, Registries.ITEM)
@@ -91,14 +92,14 @@ object Items {
     val DISK_CHEMICAL_16384k = createItem(Ids.DISK_CHEMICAL_16384k, { loadDiskCell(it.stacksTo(1), getMekType(), CELL_COMPONENT_16384k, DISK_CHEMICAL_HOUSING, 16384, 10.0)}, Mods.AE2THINGS, Mods.APPMEK)
     val DISK_CHEMICAL_65536k = createItem(Ids.DISK_CHEMICAL_65536k, { loadDiskCell(it.stacksTo(1), getMekType(), CELL_COMPONENT_65536k, DISK_CHEMICAL_HOUSING, 65536, 15.0)}, Mods.AE2THINGS, Mods.APPMEK)
     
-//    val CHEMICAL_STORAGE_CELL_1024k by REGISTRY.registerObject(Ids.CHEMICAL_STORAGE_CELL_1024.path) {
+//    val CHEMICAL_STORAGE_CELL_1024k by REGISTRY.register(Ids.CHEMICAL_STORAGE_CELL_1024.path, {
 //        constructItem({ properties ->
 //            if (Mods.APPMEK.isEnabled) {
 //                return@constructItem StorageCell(properties.stacksTo(1).rarity(Rarity.RARE), CELL_COMPONENT_1024k, AMItems.CHEMICAL_CELL_HOUSING.get(), 4.0, 4096, 1024, 8, getMekType())
 //            }
 //            Item(properties)
 //        }, Ids.CHEMICAL_STORAGE_CELL_1024, Mods.APPMEK)
-//    }
+//    })
 //    val CHEMICAL_STORAGE_CELL_4096k by REGISTRY.register(Ids.CHEMICAL_STORAGE_CELL_4096.path) {
 //        constructItem({ properties ->
 //            if (Mods.APPMEK.isEnabled) {

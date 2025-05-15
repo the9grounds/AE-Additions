@@ -23,7 +23,7 @@
     ]
   },
   "mixins": [
-    "ae2additions.mixins.json"
+    "ae2additions-common.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.15.10",

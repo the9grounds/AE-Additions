@@ -1,13 +1,13 @@
 package com.the9grounds.aeadditions.util
 
-import com.the9grounds.aeadditions.blockentity.BaseMEWirelessTransceiverBlockEntity
+import com.the9grounds.aeadditions.blockentity.IMEWirelessTransceiver
 import net.minecraft.core.BlockPos
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.level.Level
 
-data class Channel(val channelInfo: ChannelInfo, var broadcaster: BaseMEWirelessTransceiverBlockEntity?, val subscribers: MutableList<BaseMEWirelessTransceiverBlockEntity>) {
-    fun removeBlockEntity(blockEntity: BaseMEWirelessTransceiverBlockEntity) {
+data class Channel(val channelInfo: ChannelInfo, var broadcaster: IMEWirelessTransceiver?, val subscribers: MutableList<IMEWirelessTransceiver>) {
+    fun removeBlockEntity(blockEntity: IMEWirelessTransceiver) {
         if (broadcaster === blockEntity) {
             blockEntity.removedFromChannel(channelInfo)
             
@@ -27,14 +27,14 @@ data class Channel(val channelInfo: ChannelInfo, var broadcaster: BaseMEWireless
         val tag = CompoundTag()
         tag.putString("channelInfoId", channelInfo.id.toString())
         if (broadcaster != null) {
-            val pos = broadcaster!!.blockPos
+            val pos = broadcaster!!.position
             tag.putIntArray("broadcaster", listOf(pos.x, pos.y, pos.z))
         }
         
         tag.putInt("subscriberSize", subscribers.size)
         
         subscribers.forEachIndexed { index, meWirelessTransceiverBlockEntity ->
-            val pos = meWirelessTransceiverBlockEntity.blockPos
+            val pos = meWirelessTransceiverBlockEntity.position
             tag.putIntArray("subscriber#$index", listOf(pos.x, pos.y, pos.z))
         }
         
@@ -43,7 +43,7 @@ data class Channel(val channelInfo: ChannelInfo, var broadcaster: BaseMEWireless
     
     // Check if subscribers are removed and remove them from the array
     fun checkSubscribers() {
-        subscribers.removeAll { it.isRemoved }
+        subscribers.removeAll { it.isBlockEntityRemoved() }
     }
     
     fun hasAccessTo(player: ServerPlayer): Boolean {
@@ -55,19 +55,19 @@ data class Channel(val channelInfo: ChannelInfo, var broadcaster: BaseMEWireless
             val channelInfo = channelInfos.find { it.id.toString() == tag.getString("channelInfoId") }
             
             val broadcasterPos = tag.getIntArray("broadcaster")
-            var broadcaster: BaseMEWirelessTransceiverBlockEntity? = null
+            var broadcaster: IMEWirelessTransceiver? = null
             
             if (!broadcasterPos.isEmpty()) {
                 val blockEntity = level.getBlockEntity(BlockPos(broadcasterPos[0], broadcasterPos[1], broadcasterPos[2]))
                 
-                if (blockEntity is BaseMEWirelessTransceiverBlockEntity) {
+                if (blockEntity is IMEWirelessTransceiver) {
                     broadcaster = blockEntity
                 }
             }
             
             val subscriberSize = tag.getInt("subscriberSize")
             
-            val subscriberList = mutableListOf<BaseMEWirelessTransceiverBlockEntity>()
+            val subscriberList = mutableListOf<IMEWirelessTransceiver>()
             
             for (i in 0 until subscriberSize) {
                 val intArray = tag.getIntArray("subscriber#$i")
@@ -75,7 +75,7 @@ data class Channel(val channelInfo: ChannelInfo, var broadcaster: BaseMEWireless
                 if (!intArray.isEmpty()) {
                     val blockEntity = level.getBlockEntity(BlockPos(intArray[0], intArray[1], intArray[2]))
 
-                    if (blockEntity is BaseMEWirelessTransceiverBlockEntity) {
+                    if (blockEntity is IMEWirelessTransceiver) {
                         subscriberList.add(blockEntity)
                     }
                 }

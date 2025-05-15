@@ -1,0 +1,7 @@
+{
+  "injected_interfaces": {
+    "net/minecraft/class_3218": [
+      "com/the9grounds/aeadditions/core/injections/IChannelHolderAccess"
+    ]
+  }
+}

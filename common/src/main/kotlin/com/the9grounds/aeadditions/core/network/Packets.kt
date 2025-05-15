@@ -11,7 +11,7 @@ object Packets {
         REQUESTCHANNELS(RequestChannelsPacket::class, ::RequestChannelsPacket),
         CHANNELS(ChannelsPacket::class, ::ChannelsPacket),
         CREATECHANNEL(CreateChannelPacket::class, ::CreateChannelPacket),
-        TRANSCEIVERDATACHANGE(TransceiverDataChange::class, ::TransceiverDataChange),
+        TRANSCEIVERDATACHANGE(ChangeTransceiverDataPacket::class, ::ChangeTransceiverDataPacket),
         DELETECHANNEL(DeleteChannelPacket::class, ::DeleteChannelPacket);
 
         companion object {

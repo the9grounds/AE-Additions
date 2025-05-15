@@ -10,7 +10,7 @@ import net.minecraft.client.gui.components.Button
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 
-class SaveChangesButton(parent: MEWirelessTransceiverScreen, val font: Font) : Button(Builder(Component.empty(), parent::saveChangesButtonPressed).size(40, 16)) {
+class SaveChangesButton(parent: MEWirelessTransceiverScreen, val font: Font) : Button(0, 0, 40, 16, Component.empty(), parent::saveChangesButtonPressed, DEFAULT_NARRATION) {
 
     override fun render(guiGraphics: GuiGraphics, p_93658_: Int, p_93659_: Int, p_93660_: Float) {
         val texture = Blitter.texture(ResourceLocation(AEAdditions.ID, "textures/gui/buttons/background.png"), 16, 16)

@@ -4,11 +4,13 @@ import com.the9grounds.aeadditions.Logger
 import com.the9grounds.aeadditions.menu.MEWirelessTransceiverMenu
 import com.the9grounds.aeadditions.util.Channel
 import com.the9grounds.aeadditions.util.ChannelInfo
+import dev.architectury.networking.NetworkManager
 import net.minecraft.client.Minecraft
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
+import java.util.function.Supplier
 
 class ChannelsPacket : BasePacket {
     
@@ -42,39 +44,39 @@ class ChannelsPacket : BasePacket {
     }
     
     constructor(channels: List<Channel>, channelInfos: List<ChannelInfo>) {
-        
-        val data = getInitialData()
-        
+        this.channels = channels.toMutableList()
+        this.channelInfos = channelInfos.toMutableList()
+    }
+
+    override fun encode(buf: FriendlyByteBuf) {
         val channelsSize = channels.size
         val channelInfoSize = channelInfos.size
-        
+
         val nbt = CompoundTag()
         val channelsTag = CompoundTag()
         channelsTag.putInt("size", channelsSize)
-        
-        channels.forEachIndexed { index, channel -> 
+
+        channels.forEachIndexed { index, channel ->
             val tag = channel.saveToNbt()
             channelsTag.put("$index", tag)
         }
-        
+
         val channelInfoTag = CompoundTag()
         channelInfoTag.putInt("size", channelInfoSize)
-        
-        channelInfos.forEachIndexed { index, channelInfo -> 
+
+        channelInfos.forEachIndexed { index, channelInfo ->
             val tag = channelInfo.saveToNbt()
             channelInfoTag.put("$index", tag)
         }
-        
+
         nbt.put("channels", channelsTag)
         nbt.put("channelInfos", channelInfoTag)
-        
-        data.writeNbt(nbt)
-        
-        configureWrite(data)
+
+        buf.writeNbt(nbt)
     }
 
-    override fun clientPacketData(player: Player?) {
-        val containerMenu = player!!.containerMenu
+    override fun apply(contextSupplier: Supplier<NetworkManager.PacketContext>) {
+        val containerMenu = contextSupplier.get().player!!.containerMenu
         if (containerMenu is MEWirelessTransceiverMenu) {
             containerMenu.receiveChannelData(channelInfos, channels)
         }
