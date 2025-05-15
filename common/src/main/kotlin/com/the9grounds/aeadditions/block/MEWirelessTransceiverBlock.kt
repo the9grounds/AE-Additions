@@ -1,5 +1,6 @@
 package com.the9grounds.aeadditions.block
 
+import com.the9grounds.aeadditions.Blocks
 import com.the9grounds.aeadditions.blockentity.IMEWirelessTransceiver
 import dev.architectury.injectables.annotations.ExpectPlatform
 import net.minecraft.core.BlockPos
@@ -18,7 +19,7 @@ import net.minecraft.world.phys.BlockHitResult
 
 class MEWirelessTransceiverBlock(properties: Properties) : Block(properties), EntityBlock {
     override fun newBlockEntity(pos: BlockPos, blockState: BlockState): BlockEntity? {
-        return getBlockEntity(pos, blockState)
+        return Blocks.getTransceiverBlockEntity(pos, blockState)
     }
 
     override fun onPlace(
@@ -30,7 +31,7 @@ class MEWirelessTransceiverBlock(properties: Properties) : Block(properties), En
     ) {
         super.onPlace(blockState, level, pos, p_60569_, p_60570_)
         
-        val blockEntity = level.getBlockEntity(pos, getBlockEntityType())
+        val blockEntity = level.getBlockEntity(pos, Blocks.getTransceiverBlockEntityType())
         
         if (blockEntity.isPresent) {
             val blockE = blockEntity.get()
@@ -50,7 +51,7 @@ class MEWirelessTransceiverBlock(properties: Properties) : Block(properties), En
         hit: BlockHitResult
     ): InteractionResult {
         
-        val blockEntity = level.getBlockEntity(pos, getBlockEntityType())
+        val blockEntity = level.getBlockEntity(pos, Blocks.getTransceiverBlockEntityType())
         
         if (blockEntity.isPresent && !player.isShiftKeyDown) {
             val blockE = blockEntity.get()
@@ -65,19 +66,5 @@ class MEWirelessTransceiverBlock(properties: Properties) : Block(properties), En
 
     override fun getDrops(state: BlockState, p_287596_: LootParams.Builder): MutableList<ItemStack> {
         return mutableListOf(ItemStack(state.block.asItem(), 1))
-    }
-
-    companion object {
-        @JvmStatic
-        @ExpectPlatform
-        fun getBlockEntity(pos: BlockPos, blockState: BlockState): BlockEntity {
-            throw Error()
-        }
-
-        @JvmStatic
-        @ExpectPlatform
-        fun getBlockEntityType(): BlockEntityType<BlockEntity> {
-            throw Error()
-        }
     }
 }

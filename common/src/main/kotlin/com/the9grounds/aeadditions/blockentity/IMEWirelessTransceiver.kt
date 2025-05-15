@@ -1,36 +1,23 @@
 package com.the9grounds.aeadditions.blockentity
 
-import appeng.api.networking.GridHelper
-import appeng.api.networking.IGridConnection
-import appeng.api.networking.IManagedGridNode
-import appeng.api.util.AECableType
-import appeng.me.helpers.IGridConnectedBlockEntity
-import com.the9grounds.aeadditions.Config
-import com.the9grounds.aeadditions.Logger
 import com.the9grounds.aeadditions.util.Channel
 import com.the9grounds.aeadditions.util.ChannelHolder
 import com.the9grounds.aeadditions.util.ChannelInfo
 import dev.architectury.platform.Platform
 import net.fabricmc.api.EnvType
 import net.minecraft.core.BlockPos
-import net.minecraft.core.Direction
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
 import net.minecraft.world.MenuProvider
 import net.minecraft.world.item.Item
 import java.util.*
 
-interface IMEWirelessTransceiver: IGridConnectedBlockEntity, MenuProvider {
+interface IMEWirelessTransceiver: MenuProvider {
     var currentChannel: Channel?
     var channelId: UUID?
     var channelConnectionType: String?
-    var connection: IGridConnection?
-    var connections: MutableList<IGridConnection>
     val item: Item
     var idleDraw: Double
-    val mainGridNode: IManagedGridNode
-
-    override fun getCableConnectionType(dir: Direction?): AECableType = AECableType.SMART
 
     fun isServerSided(): Boolean = Platform.getEnv() == EnvType.SERVER
 
@@ -38,17 +25,9 @@ interface IMEWirelessTransceiver: IGridConnectedBlockEntity, MenuProvider {
 
     fun isBlockEntityRemoved(): Boolean
 
-
     fun hasChunkAt(pos: BlockPos): Boolean
 
-    fun onIdleDrawChanged() {
-        if (mainNode.isReady) {
-            mainNode.setIdlePowerUsage(idleDraw)
-        }
-    }
-
     fun loadFromNBT(tag: CompoundTag) {
-        mainNode.loadFromNBT(tag)
         val channelId = tag.getString("channelId")
 
         if (channelId.isNotEmpty()) {
@@ -110,59 +89,11 @@ interface IMEWirelessTransceiver: IGridConnectedBlockEntity, MenuProvider {
         }
     }
 
-    fun setupLinks() {
-        if (currentChannel != null && currentChannel!!.broadcaster == this) {
-            var localIdleDraw = Config.getConfig().meWirelessTransceiverBasePower.toDouble()
-            for (subscriber in currentChannel!!.subscribers) {
-                if (hasChunkAt(subscriber.position)) {
-                    if (subscriber.connection != null) {
-                        subscriber.connection?.destroy()
-                        subscriber.connection = null
-                    }
-                    try {
-                        val connection = GridHelper.createConnection(getGridNode(null), subscriber.getGridNode(null))
-                        subscriber.connection = connection
-                        connections.add(connection)
-                        localIdleDraw += Config.getConfig().meWirelessTransceiverDistanceMultiplier * position.distSqr(subscriber.position)
-                    } catch (e: Exception) {
-                        Logger.info(e)
-                    }
-                }
-            }
-            idleDraw = localIdleDraw
-        }
-    }
+    fun setupLinks()
 
-    fun destroyConnections(remove: Boolean = true, clearCurrentChannel: Boolean = true) {
-        if (currentChannel != null) {
-            if (currentChannel!!.broadcaster == this) {
-                currentChannel!!.subscribers.forEach {
-                    if (it.connection != null) {
-                        it.connection!!.destroy()
-                    }
-                }
-
-                if (remove) {
-                    currentChannel!!.broadcaster = null
-                }
-            } else {
-                if (connection != null) {
-                    connection!!.destroy()
-                    connection = null
-                }
-                if (remove) {
-                    currentChannel!!.subscribers.remove(this)
-                }
-            }
-
-            if (clearCurrentChannel) {
-                currentChannel = null
-            }
-        }
-    }
+    fun destroyConnections(remove: Boolean = true, clearCurrentChannel: Boolean = true)
 
     fun saveToNbt(tag: CompoundTag) {
-        mainNode.saveToNBT(tag)
         if (channelId !== null) {
 
             tag.putString("transceiverType", channelConnectionType)
@@ -171,7 +102,6 @@ interface IMEWirelessTransceiver: IGridConnectedBlockEntity, MenuProvider {
     }
 
     fun handleChunkUnloaded() {
-        mainNode.destroy()
         if (!isServerSided()) {
             return
         }
@@ -183,12 +113,10 @@ interface IMEWirelessTransceiver: IGridConnectedBlockEntity, MenuProvider {
     }
 
     fun handleSetRemoved() {
-        mainNode.destroy()
+
     }
 
-    fun blockPlaced() {
-        getGridNode(null)
-    }
+    fun blockPlaced()
 
     fun handleOnLoad() {
         if (channelId != null && isServerSided()) {

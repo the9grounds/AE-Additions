@@ -2,16 +2,13 @@ package com.the9grounds.aeadditions.menu
 
 import com.the9grounds.aeadditions.blockentity.IMEWirelessTransceiver
 import com.the9grounds.aeadditions.client.gui.MEWirelessTransceiverScreen
-import com.the9grounds.aeadditions.core.injections.IChannelHolderAccess
 import com.the9grounds.aeadditions.core.network.NetworkManager
-import com.the9grounds.aeadditions.core.network.packet.ChannelsPacket
 import com.the9grounds.aeadditions.core.network.packet.RequestChannelsPacket
 import com.the9grounds.aeadditions.util.Channel
 import com.the9grounds.aeadditions.util.ChannelInfo
 import dev.architectury.platform.Platform
 import net.fabricmc.api.EnvType
 import net.minecraft.server.level.ServerLevel
-import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.inventory.AbstractContainerMenu

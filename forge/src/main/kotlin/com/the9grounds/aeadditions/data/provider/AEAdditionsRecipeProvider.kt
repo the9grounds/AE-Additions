@@ -4,10 +4,9 @@ import appeng.core.definitions.AEBlocks
 import appeng.core.definitions.AEItems
 import com.the9grounds.aeadditions.AEAdditions
 import com.the9grounds.aeadditions.integration.Mods
-import com.the9grounds.aeadditions.item.storage.DiskCellWithoutMod
+import com.the9grounds.aeadditions.forge.items.storage.DiskCellWithoutMod
 import com.the9grounds.aeadditions.item.storage.StorageCell
 import com.the9grounds.aeadditions.registries.Blocks
-import com.the9grounds.aeadditions.registries.Items
 import io.github.projectet.ae2things.item.AETItems
 import me.ramidzkh.mekae2.AMItems
 import net.minecraft.data.PackOutput
@@ -391,10 +390,10 @@ class AEAdditionsRecipeProvider(output: PackOutput) : RecipeProvider(output), IC
     }
 
     private fun registerChemicalDiskRecipe(
-            chemicalCell: Map.Entry<Int, DiskCellWithoutMod>,
-            alloy: TagKey<Item>,
-            components: Map<Int, ItemLike>,
-            consumer: Consumer<FinishedRecipe>
+        chemicalCell: Map.Entry<Int, DiskCellWithoutMod>,
+        alloy: TagKey<Item>,
+        components: Map<Int, ItemLike>,
+        consumer: Consumer<FinishedRecipe>
     ) {
         ConditionalRecipe.builder().addCondition(
             and(

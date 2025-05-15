@@ -1,7 +1,6 @@
 package com.the9grounds.aeadditions
 
 import appeng.items.storage.BasicStorageCell
-import com.the9grounds.aeadditions.core.CreativeTab
 import com.the9grounds.aeadditions.core.network.NetworkManager
 import com.the9grounds.aeadditions.integration.Integration
 import com.the9grounds.aeadditions.integration.appeng.AppEng
@@ -21,7 +20,7 @@ object AEAdditions {
 
     init {
         Items.REGISTRY.register()
-        Blocks.REGISTRY.register()
+        com.the9grounds.aeadditions.registries.Blocks.REGISTRY.register()
 //        Items.REGISTRY.register(MOD_BUS)
 //        Blocks.REGISTRY.register(MOD_BUS)
 //        BlockEntities.REGISTRY.register(MOD_BUS)
@@ -30,7 +29,7 @@ object AEAdditions {
         CreativeTab.REGISTRY.register()
 //        CreativeTab.REGISTRY.register(MOD_BUS)
         Items.init()
-        Blocks.init()
+        com.the9grounds.aeadditions.registries.Blocks.init()
 //        BlockEntities.init()
         MenuHolder.init()
 

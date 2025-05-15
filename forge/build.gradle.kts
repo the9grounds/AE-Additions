@@ -39,6 +39,29 @@ repositories {
         name = "Modmaven"
         url = uri("https://modmaven.dev/")
     }
+    maven { // TOP
+        url = uri("https://maven.k-4u.nl")
+    }
+
+    maven {
+        url = uri("https://www.cursemaven.com")
+        content {
+            includeGroup("curse.maven")
+        }
+    }
+
+    maven {
+        url = uri("https://maven.bai.lol")
+    }
+    maven {
+        url = uri("https://repo.spongepowered.org/maven")
+    }
+    maven {
+        url = uri("https://squiddev.cc/maven/")
+        content {
+            includeGroup("org.squiddev")
+        }
+    }
 }
 
 dependencies {
@@ -54,6 +77,13 @@ dependencies {
 
     val ae2 = project.dependencies.create(group = "appeng", name = "appliedenergistics2-forge", version = rootProject.property("aeVersion").toString())
     modImplementation(ae2)
+    val jei = project.dependencies.create(group = "mezz.jei", name = "jei-1.20.1-forge", version = rootProject.property("jeiVersion").toString())
+    modImplementation(jei)
+
+    modImplementation("mekanism:Mekanism:${rootProject.property("mekanismVersion")}")
+    modImplementation("curse.maven:applied-mekanistics-574300:4842281")
+    modImplementation("curse.maven:ae2-things-forge-609977:4616683")
+    modApi("curse.maven:ftb-teams-404468:5176343")
 }
 
 tasks.processResources {
