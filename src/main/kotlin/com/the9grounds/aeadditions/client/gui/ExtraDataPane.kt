@@ -12,7 +12,7 @@ import net.minecraft.resources.ResourceLocation
 
 class ExtraDataPane(x: Int, y: Int, val screen: MEWirelessTransceiverScreen, val font: Font) : AbstractWidget(x, y, 128, 24, Component.empty()) {
     
-    val texture = Blitter.texture(ResourceLocation(AEAdditions.ID, "textures/gui/extra-data-panel.png"))
+    val texture = Blitter.texture(ResourceLocation.fromNamespaceAndPath(AEAdditions.ID, "textures/gui/extra-data-panel.png"))
 
     override fun renderWidget(guiGraphics: GuiGraphics, p_268034_: Int, p_268009_: Int, p_268085_: Float) {
         guiGraphics.pose().pushPose()

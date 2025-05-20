@@ -19,8 +19,8 @@ object Models {
     }
 
     private fun <T: UnbakedModel> addBuiltInModel(id: String, modelFactory: Supplier<T>) {
-        if (!models.containsKey(ResourceLocation(AEAdditions.ID, id))) {
-            models[ResourceLocation(AEAdditions.ID, id)] = modelFactory.get()
+        if (!models.containsKey(ResourceLocation.fromNamespaceAndPath(AEAdditions.ID, id))) {
+            models[ResourceLocation.fromNamespaceAndPath(AEAdditions.ID, id)] = modelFactory.get()
         }
     }
 

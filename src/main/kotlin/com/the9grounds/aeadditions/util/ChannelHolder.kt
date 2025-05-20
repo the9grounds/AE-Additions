@@ -2,13 +2,9 @@ package com.the9grounds.aeadditions.util
 
 import com.the9grounds.aeadditions.blockentity.MEWirelessTransceiverBlockEntity
 import net.minecraft.nbt.CompoundTag
-import net.minecraft.network.chat.Component
-import net.minecraft.server.level.ServerLevel
-import net.minecraft.server.level.ServerPlayer
-import net.minecraft.world.level.Level
 import java.util.*
 
-class ChannelHolder(val level: Level) {
+open class ChannelHolder {
     val channelInfos: MutableList<ChannelInfo> = mutableListOf()
     
     val channels: MutableMap<ChannelInfo, Channel> = mutableMapOf()
@@ -29,23 +25,6 @@ class ChannelHolder(val level: Level) {
         return null
     }
     
-    fun setupTestChannels(player: ServerPlayer, name: String) {
-        
-        val level = player.level() as ServerLevel
-        
-        val alreadyExists = channelInfos.find { it.name == name && ((it.isPrivate && it.creator == player.uuid) || !it.isPrivate) } !== null
-        
-        if (!alreadyExists) {
-            val channelInfo = ChannelInfo(UUID.randomUUID(), level, name, false, null, null)
-
-            channelInfos.add(channelInfo)
-            
-            player.sendSystemMessage(Component.literal("Channel created"))
-        } else {
-            player.sendSystemMessage(Component.literal("Channel already exists"))
-        }
-    }
-    
     fun getOrCreateChannel(channelInfo: ChannelInfo): Channel {
         var channel = channels.get(channelInfo)
         
@@ -53,16 +32,21 @@ class ChannelHolder(val level: Level) {
             channel = Channel(channelInfo, null, mutableListOf())
             
             channels.put(channelInfo, channel)
+            persist()
         }
         
         return channel
     }
+
+    fun getChannel(channelInfo: ChannelInfo): Channel? {
+        return channels[channelInfo]
+    }
     
-    fun getChannelByName(name: String): ChannelInfo? {
+    fun getChannelInfoByName(name: String): ChannelInfo? {
         return channelInfos.find { it.name == name }
     }
     
-    fun getChannelById(id: UUID): ChannelInfo? {
+    fun getChannelInfoById(id: UUID): ChannelInfo? {
         return channelInfos.find { it.id == id }
     }
     
@@ -84,11 +68,13 @@ class ChannelHolder(val level: Level) {
         for (i in 0 until size) {
             val channelInfoTag = tag.getCompound("$i")
             if (!channelInfoTag.isEmpty) {
-                channelInfos.add(i, ChannelInfo.readFromNbt(channelInfoTag, level))
+                channelInfos.add(i, ChannelInfo.readFromNbt(channelInfoTag))
             }
         }
     }
-    
+
+    open fun persist() {}
+
     fun removeChannel(channelInfo: ChannelInfo) {
         val channel = getOrCreateChannel(channelInfo)
         
@@ -105,5 +91,6 @@ class ChannelHolder(val level: Level) {
         subscribers.forEach { it.setChanged() }
         channel.subscribers.clear()
         channel.broadcaster = null
+        persist()
     }
 }

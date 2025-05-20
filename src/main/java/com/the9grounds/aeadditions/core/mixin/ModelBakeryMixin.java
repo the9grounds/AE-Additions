@@ -9,20 +9,17 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ModelBakery.class)
 public abstract class ModelBakeryMixin {
-    @Inject(at = @At("HEAD"), method = "loadModel", cancellable = true)
-    private void loadModelHook(ResourceLocation id, CallbackInfo ci) {
+    @Inject(at = @At("HEAD"), method = "getModel", cancellable = true)
+    private void getModelHook(ResourceLocation id, CallbackInfoReturnable<UnbakedModel> cir) {
         var model = Models.getModel(id);
 
         if (model != null) {
-            cacheAndQueueDependencies(id, model);
-            ci.cancel();
+            cir.setReturnValue(model);
         }
     }
-
-    @Shadow
-    protected abstract void cacheAndQueueDependencies(ResourceLocation id, UnbakedModel unbakedModel);
 }
 

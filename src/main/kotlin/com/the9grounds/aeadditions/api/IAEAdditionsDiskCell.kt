@@ -10,12 +10,11 @@ import appeng.me.cells.BasicCellHandler
 import appeng.util.ConfigInventory
 import com.google.common.base.Preconditions
 import com.the9grounds.aeadditions.me.storage.ExtendedDiskCellHandler
-import io.github.projectet.ae2things.storage.DISKCellHandler
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.ItemStack
 
 interface IAEAdditionsDiskCell : ICellWorkbenchItem {
-    open fun getKeyType(): AEKeyType?
+    open fun getKeyType(): AEKeyType
 
     open fun getBytes(var1: ItemStack?): Int
 
@@ -41,9 +40,9 @@ interface IAEAdditionsDiskCell : ICellWorkbenchItem {
 
     open fun getIdleDrain(): Double
 
-    override fun getConfigInventory(var1: ItemStack?): ConfigInventory?
+    override fun getConfigInventory(var1: ItemStack?): ConfigInventory
 
-    fun addCellInformationToTooltip(`is`: ItemStack, lines: MutableList<Component?>) {
+    fun addCellInformationToTooltip(`is`: ItemStack, lines: MutableList<Component>) {
         Preconditions.checkArgument(`is`.item === this)
         ExtendedDiskCellHandler.addCellInformationToTooltip(`is`, lines)
     }

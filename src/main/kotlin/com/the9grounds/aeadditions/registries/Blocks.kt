@@ -11,12 +11,12 @@ import net.minecraft.world.item.BlockItem
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.SoundType
 import net.minecraft.world.level.block.state.BlockBehaviour
-import net.minecraftforge.registries.DeferredRegister
-import net.minecraftforge.registries.ForgeRegistries
-import thedarkcolour.kotlinforforge.forge.registerObject
+import net.neoforged.neoforge.registries.DeferredBlock
+import net.neoforged.neoforge.registries.DeferredRegister
+import thedarkcolour.kotlinforforge.neoforge.forge.getValue
 
 object Blocks {
-    val REGISTRY = DeferredRegister.create(ForgeRegistries.BLOCKS, AEAdditions.ID)
+    val REGISTRY = DeferredRegister.createBlocks(AEAdditions.ID)
 
     val BLOCKS = mutableListOf<Block>()
     
@@ -45,7 +45,7 @@ object Blocks {
     fun <T: Block> createBlock(id: ResourceLocation, soundType: SoundType, factory: (BlockBehaviour.Properties) -> T): BlockDefinition<T> {
         val block = constructBlock(soundType, factory, id)
 
-        val item = Items.createItem(id) { properties -> BlockItem(block, properties) }
+        val item = Items.createItem(id) { properties -> BlockItem(block.get(), properties) }
 
         return BlockDefinition(block, item)
     }
@@ -53,7 +53,7 @@ object Blocks {
     fun <T: Block> createBlock(id: ResourceLocation, soundType: SoundType, requiredMod: Mods, factory: (BlockBehaviour.Properties) -> T): BlockDefinition<T> {
         val block = constructBlock(soundType, factory, id)
 
-        val item = Items.createItem(id, { properties -> BlockItem(block, properties) }, false, requiredMod)
+        val item = Items.createItem(id, { properties -> BlockItem(block.get(), properties) }, false, requiredMod)
 
         return BlockDefinition(block, item)
     }
@@ -62,16 +62,15 @@ object Blocks {
         soundType: SoundType,
         factory: (BlockBehaviour.Properties) -> T,
         id: ResourceLocation
-    ): T {
-        val props = BlockBehaviour.Properties.of().strength(2.2f, 11f).sound(soundType)
+    ): DeferredBlock<T> {
+        return REGISTRY.register(id.path){ ->
+            val props = BlockBehaviour.Properties.of().strength(2.2f, 11f).sound(soundType)
 
-        val block = factory(props)
+            val block = factory(props)
 
-        BLOCKS.add(block)
+            BLOCKS.add(block)
 
-        REGISTRY.registerObject(id.path) {
             block
         }
-        return block
     }
 }

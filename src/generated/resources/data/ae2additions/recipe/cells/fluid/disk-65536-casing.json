@@ -1,0 +1,27 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "ae2things"
+        }
+      ]
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "ae2additions:disk_fluid_housing"
+    },
+    {
+      "item": "ae2additions:cell_component_65536"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "ae2additions:disk_fluid_65536k"
+  }
+}

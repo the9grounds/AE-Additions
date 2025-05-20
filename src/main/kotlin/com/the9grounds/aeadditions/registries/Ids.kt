@@ -86,5 +86,5 @@ object Ids {
     val ME_WIRELESS_TRANSCEIVER = id("me_wireless_transceiver")
     
 
-    private fun id(id: String): ResourceLocation = ResourceLocation(AEAdditions.ID, id)
+    private fun id(id: String): ResourceLocation = ResourceLocation.fromNamespaceAndPath(AEAdditions.ID, id)
 }

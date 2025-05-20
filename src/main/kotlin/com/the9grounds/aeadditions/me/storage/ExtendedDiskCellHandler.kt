@@ -6,6 +6,7 @@ import appeng.api.storage.cells.ISaveProvider
 import appeng.core.localization.GuiText
 import appeng.core.localization.Tooltips
 import com.the9grounds.aeadditions.item.storage.DiskCell
+import io.github.projectet.ae2things.AE2Things
 import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.ItemStack
@@ -17,10 +18,10 @@ object ExtendedDiskCellHandler : ICellHandler {
 
     override fun getCellInventory(`is`: ItemStack?, container: ISaveProvider?): ExtendedDiskCellInventory? {
         if (`is` == null) return null
-        return ExtendedDiskCellInventory.createInventory(`is`, container)
+        return ExtendedDiskCellInventory.createInventory(`is`, container, AE2Things.currentStorageManager())
     }
 
-    fun addCellInformationToTooltip(stack: ItemStack, lines: MutableList<Component?>) {
+    fun addCellInformationToTooltip(stack: ItemStack, lines: MutableList<Component>) {
         val handler: ExtendedDiskCellInventory? = this.getCellInventory(stack, null as ISaveProvider?)
         if (handler != null) {
             if (handler.hasDiskUUID()) {

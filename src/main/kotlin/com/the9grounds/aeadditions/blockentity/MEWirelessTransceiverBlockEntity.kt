@@ -9,12 +9,13 @@ import com.the9grounds.aeadditions.core.AEAConfig
 import com.the9grounds.aeadditions.menu.MEWirelessTransceiverMenu
 import com.the9grounds.aeadditions.registries.BlockEntities
 import com.the9grounds.aeadditions.registries.Blocks
-import com.the9grounds.aeadditions.registries.Capability
 import com.the9grounds.aeadditions.util.Channel
 import com.the9grounds.aeadditions.util.ChannelHolder
 import com.the9grounds.aeadditions.util.ChannelInfo
+import com.the9grounds.aeadditions.util.Utils
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
+import net.minecraft.core.HolderLookup
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
 import net.minecraft.world.MenuProvider
@@ -23,10 +24,11 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
-import net.minecraftforge.fml.util.thread.SidedThreadGroups
+import net.neoforged.fml.util.thread.SidedThreadGroups
+import net.neoforged.neoforge.server.ServerLifecycleHooks
 import java.util.*
 
-class MEWirelessTransceiverBlockEntity(pos: BlockPos, blockState: BlockState) : BlockEntity(BlockEntities.ME_WIRELESS_TRANSCEIVER, pos, blockState), IGridConnectedBlockEntity, IInWorldGridNodeHost, MenuProvider {
+class MEWirelessTransceiverBlockEntity(pos: BlockPos, blockState: BlockState) : BlockEntity(BlockEntities.ME_WIRELESS_TRANSCEIVER, pos, blockState), IGridConnectedBlockEntity, MenuProvider {
     var currentChannel : Channel? = null
     var channelId: UUID? = null
     var channelConnectionType: String? = null
@@ -47,14 +49,14 @@ class MEWirelessTransceiverBlockEntity(pos: BlockPos, blockState: BlockState) : 
 
     override fun getCableConnectionType(dir: Direction?): AECableType = AECableType.SMART
 
-    override fun load(tag: CompoundTag) {
-        super.load(tag)
+    override fun loadAdditional(tag: CompoundTag, registries: HolderLookup.Provider) {
+        super.loadAdditional(tag, registries)
         mainNode.loadFromNBT(tag)
         val channelId = tag.getString("channelId")
-        
+
         if (channelId != "") {
             val uuid = UUID.fromString(channelId)
-            
+
             this.channelId = uuid
             this.channelConnectionType = tag.getString("transceiverType")
         }
@@ -62,6 +64,19 @@ class MEWirelessTransceiverBlockEntity(pos: BlockPos, blockState: BlockState) : 
 
     override fun saveChanges() {
         
+    }
+
+    override fun onMainNodeStateChanged(reason: IGridNodeListener.State?) {
+        if (reason === IGridNodeListener.State.CHANNEL) {
+            if (currentChannel !== null) {
+                ServerLifecycleHooks.getCurrentServer()?.playerList?.players?.forEach {
+                    val containerMenu = it.containerMenu
+                    if (containerMenu is MEWirelessTransceiverMenu && containerMenu.blockEntity == this) {
+                        containerMenu.sendTransceiverInfoToClient()
+                    }
+                }
+            }
+        }
     }
     
     fun removedFromChannel(channelInfo: ChannelInfo) {
@@ -166,8 +181,8 @@ class MEWirelessTransceiverBlockEntity(pos: BlockPos, blockState: BlockState) : 
         }
     }
 
-    override fun saveAdditional(tag: CompoundTag) {
-        super.saveAdditional(tag)
+    override fun saveAdditional(tag: CompoundTag, registries: HolderLookup.Provider) {
+        super.saveAdditional(tag, registries)
         mainNode.saveToNBT(tag)
         if (channelId !== null) {
             
@@ -245,7 +260,7 @@ class MEWirelessTransceiverBlockEntity(pos: BlockPos, blockState: BlockState) : 
     override fun onLoad() {
         super.onLoad()
         if (channelId != null && Thread.currentThread().threadGroup == SidedThreadGroups.SERVER) {
-            val channelInfo = channelHolder.getChannelById(channelId!!) ?: return
+            val channelInfo = channelHolder.getChannelInfoById(channelId!!) ?: return
 
             if (channelConnectionType == "broadcast") {
                 this.broadcastToChannel(channelInfo, true)
@@ -260,5 +275,5 @@ class MEWirelessTransceiverBlockEntity(pos: BlockPos, blockState: BlockState) : 
     override fun getDisplayName(): Component = Component.literal("ME Wireless Transceiver")
 
     val channelHolder: ChannelHolder 
-    get () = level!!.getCapability(Capability.CHANNEL_HOLDER).resolve().get()
+    get () = Utils.getChannelHolderForLevel(level)!!
 }

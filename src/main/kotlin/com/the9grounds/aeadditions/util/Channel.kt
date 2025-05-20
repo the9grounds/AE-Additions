@@ -7,6 +7,25 @@ import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.level.Level
 
 data class Channel(val channelInfo: ChannelInfo, var broadcaster: MEWirelessTransceiverBlockEntity?, val subscribers: MutableList<MEWirelessTransceiverBlockEntity>) {
+
+    val usedChannels: Int
+        get() {
+            return if (broadcaster != null && broadcaster?.mainNode?.node?.isActive == true) {
+                broadcaster?.mainNode?.node?.usedChannels ?: 0
+            } else {
+                0
+            }
+        }
+
+    val maxChannels: Int
+        get() {
+            return if (broadcaster != null && broadcaster?.mainNode?.node?.isActive == true) {
+                broadcaster?.mainNode?.node?.maxChannels ?: 0
+            } else {
+                0
+            }
+        }
+
     fun removeBlockEntity(blockEntity: MEWirelessTransceiverBlockEntity) {
         if (broadcaster === blockEntity) {
             blockEntity.removedFromChannel(channelInfo)

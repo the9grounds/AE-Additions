@@ -10,11 +10,11 @@ import net.minecraft.resources.ResourceLocation
 
 class TransceiverTypeButton(var screen: MEWirelessTransceiverScreen, var isSubscriber: Boolean = true) : Button(Builder(Component.empty(), screen::transceiverTypeButtonPressed).size(16, 16)) {
 
-    override fun render(guiGraphics: GuiGraphics, p_93658_: Int, p_93659_: Int, p_93660_: Float) {
-        this.tooltip = screen.transceiverTypeButtonTooltip(this)
+    override fun renderWidget(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTick: Float) {
+        this.tooltip.set(screen.transceiverTypeButtonTooltip(this))
         guiGraphics.pose().pushPose()
         guiGraphics.pose().translate(x.toDouble(), y.toDouble(), 0.0)
-        val texture = Blitter.texture(ResourceLocation(AEAdditions.ID, "textures/gui/buttons/background.png"), 16, 16)
+        val texture = Blitter.texture(ResourceLocation.fromNamespaceAndPath(AEAdditions.ID, "textures/gui/buttons/background.png"), 16, 16)
 
         texture.dest(0, 0, 20, 20).src(0, 0, 16, 16).blit(guiGraphics)
         val iconFile = if (isSubscriber) {
@@ -22,10 +22,9 @@ class TransceiverTypeButton(var screen: MEWirelessTransceiverScreen, var isSubsc
         } else {
             "textures/gui/buttons/broadcaster.png"
         }
-        val icon = Blitter.texture(ResourceLocation(AEAdditions.ID, iconFile), 16, 16)
+        val icon = Blitter.texture(ResourceLocation.fromNamespaceAndPath(AEAdditions.ID, iconFile), 16, 16)
         icon.dest(4, 3, 12, 12).src(0, 0, 16, 16).blit(guiGraphics)
         guiGraphics.pose().popPose()
-        isHovered = p_93658_ >= x && p_93659_ >= y && p_93658_ < x + width && p_93659_ < y + height
-        super.updateTooltip();
+        isHovered = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height
     }
 }

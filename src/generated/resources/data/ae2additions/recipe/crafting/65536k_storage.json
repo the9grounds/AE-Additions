@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "ae2:crafting_unit"
+    },
+    {
+      "item": "ae2additions:cell_component_65536"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "ae2additions:65536k_crafting_storage"
+  }
+}

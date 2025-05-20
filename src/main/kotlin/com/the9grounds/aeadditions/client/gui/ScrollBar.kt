@@ -12,7 +12,7 @@ import kotlin.math.floor
 class ScrollBar(x: Int, y: Int, val screen: MEWirelessTransceiverScreen) : AbstractWidget(x, y, 6, 4, Component.empty()) {
     val originalY: Int = this.y
     val maxY = (originalY + 12 * 4) - 2
-    val texture = Blitter.texture(ResourceLocation(AEAdditions.ID, "textures/gui/scrollbar.png"))
+    val texture = Blitter.texture(ResourceLocation.fromNamespaceAndPath(AEAdditions.ID, "textures/gui/scrollbar.png"))
     
     var dragging = false
 
@@ -24,9 +24,9 @@ class ScrollBar(x: Int, y: Int, val screen: MEWirelessTransceiverScreen) : Abstr
 
     }
 
-    override fun mouseScrolled(mouseX: Double, mouseY: Double, wheelDelta: Double): Boolean {
+    override fun mouseScrolled(mouseX: Double, mouseY: Double, scrollX: Double, scrollY: Double): Boolean {
         
-        val change = if (wheelDelta < 0) {
+        val change = if (scrollY < 0) {
             1
         } else {
             -1
@@ -36,7 +36,7 @@ class ScrollBar(x: Int, y: Int, val screen: MEWirelessTransceiverScreen) : Abstr
         
         this.y = floor(this.y + (change * screen.scrollUnit())).toInt().coerceAtLeast(originalY).coerceAtMost(maxY)
         
-        return super.mouseScrolled(mouseX, mouseY, wheelDelta)
+        return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY)
     }
 
     override fun mouseDragged(

@@ -1,13 +1,14 @@
 package com.the9grounds.aeadditions.menu
 
+import com.the9grounds.aeadditions.Logger
 import com.the9grounds.aeadditions.blockentity.MEWirelessTransceiverBlockEntity
 import com.the9grounds.aeadditions.client.gui.MEWirelessTransceiverScreen
 import com.the9grounds.aeadditions.core.network.NetworkManager
-import com.the9grounds.aeadditions.core.network.packet.ChannelsPacket
-import com.the9grounds.aeadditions.core.network.packet.RequestChannelsPacket
-import com.the9grounds.aeadditions.registries.Capability
-import com.the9grounds.aeadditions.util.Channel
+import com.the9grounds.aeadditions.core.network.packet.client.ChannelsPacket
+import com.the9grounds.aeadditions.core.network.packet.client.TransceiverInfoPacket
+import com.the9grounds.aeadditions.core.network.packet.server.RequestChannelsPacket
 import com.the9grounds.aeadditions.util.ChannelInfo
+import com.the9grounds.aeadditions.util.Utils
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.player.Inventory
@@ -15,7 +16,8 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.ItemStack
-import net.minecraftforge.fml.util.thread.SidedThreadGroups
+import net.neoforged.fml.util.thread.SidedThreadGroups
+import java.util.Optional
 
 class MEWirelessTransceiverMenu(id: Int, val inventory: Inventory) : AbstractContainerMenu(MenuHolder.menuMEWirelessTransceiver, id) {
     
@@ -66,33 +68,58 @@ class MEWirelessTransceiverMenu(id: Int, val inventory: Inventory) : AbstractCon
         return ItemStack.EMPTY; 
     }
 
-    public fun sendChannelStuffToClient() {
+    fun sendTransceiverInfoToClient() {
         val level = inventory.player.level() as ServerLevel
 
-        val channelHolder = level.getCapability(Capability.CHANNEL_HOLDER).resolve().get()
+        val channelHolder = Utils.getChannelHolderForLevel(level)
 
-        val filteredChannels = channelHolder.channels.filter {
-            it.value.hasAccessTo(inventory.player as ServerPlayer)
+        if (channelHolder === null) {
+            Logger.error("Channel holder is null")
+            return
         }
-        val filteredChannelInfos = channelHolder.channelInfos.filter {
+
+        var maxChannels = 0
+        var usedChannels = 0
+
+        val channelInfo = blockEntity?.currentChannel?.channelInfo
+
+        if (channelInfo != null) {
+            val channel = channelHolder.getOrCreateChannel(channelInfo)
+
+            maxChannels = channel.maxChannels
+            usedChannels = channel.usedChannels
+        }
+
+        val transceiverInfoPacket = TransceiverInfoPacket(Optional.ofNullable(channelInfo), blockEntity?.currentChannel?.broadcaster !== blockEntity, usedChannels, maxChannels)
+
+        NetworkManager.sendTo(transceiverInfoPacket, inventory.player as ServerPlayer)
+    }
+
+    fun sendChannelsToClient() {
+        val level = inventory.player.level() as ServerLevel
+
+        val channelHolder = Utils.getChannelHolderForLevel(level)
+
+        if (channelHolder === null) {
+            Logger.error("Channel holder is null")
+            return
+        }
+
+        val filteredChannels = channelHolder.channelInfos.filter {
             it.hasAccessTo(inventory.player as ServerPlayer)
         }
 
-        val packet = ChannelsPacket(filteredChannels.values.toList(), filteredChannelInfos)
-
-        NetworkManager.sendTo(packet, inventory.player as ServerPlayer)
+        NetworkManager.sendTo(ChannelsPacket(filteredChannels), inventory.player as ServerPlayer)
     }
     
     var channelInfos = listOf<ChannelInfo>()
-    var channels = listOf<Channel>()
 
     override fun stillValid(player: Player): Boolean {
         return true
     }
     
-    fun receiveChannelData(channelInfos: List<ChannelInfo>, channels: List<Channel>) {
+    fun receiveChannelData(channelInfos: List<ChannelInfo>) {
         this.channelInfos = channelInfos
-        this.channels = channels
         
         screen?.onChannelListChanged()
     }

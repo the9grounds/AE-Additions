@@ -1,0 +1,66 @@
+# Make sure this is set to "kotlinforforge"
+modLoader="kotlinforforge"
+# Make sure this is set to the appropriate version range
+loaderVersion="${loader_version_range}"
+license='${mod_license}'
+
+[[mods]]
+modId="${mod_id}"
+version="${mod_version}"
+displayName="${mod_name}"
+credits="The AEAdditions dev team"
+authors="${mod_authors}"
+description='''${mod_description}'''
+[[dependencies.${mod_id}]]
+    modId="neoforge"
+    type="required"
+    versionRange="${neo_version_range}"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.${mod_id}]]
+    modId="minecraft"
+    type="required"
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.${mod_id}]]
+modId="ae2"
+type = "required"
+versionRange="[19.2.10,)"
+ordering="AFTER"
+side="BOTH"
+[[dependencies.${mod_id}]]
+modId="mekanism"
+type = "optional"
+ordering="AFTER"
+versionRange="[10.7.14,)"
+side="BOTH"
+[[dependencies.${mod_id}]]
+modId="appmek"
+type = "optional"
+ordering="AFTER"
+versionRange="[1.6.2,)"
+side="BOTH"
+[[dependencies.${mod_id}]]
+modId="ae2things"
+type = "optional"
+ordering="AFTER"
+versionRange="[1.4.2-beta,)"
+side="BOTH"
+[[dependencies.${mod_id}]]
+modId="ftbteams"
+type = "optional"
+ordering="AFTER"
+versionRange="[2101.1.2,)"
+side="BOTH"
+
+# Features are specific properties of the game environment, that you may want to declare you require. This example declares
+# that your mod requires GL version 3.2 or higher. Other features will be added. They are side aware so declaring this won't
+# stop your mod loading on the server for example.
+#[features.${mod_id}]
+#openGLVersion="[3.2,)"
+
+[[accessTransformers]]
+file="META-INF/accesstransformer.cfg"
+[[mixins]]
+config = "ae2additions.mixins.json"

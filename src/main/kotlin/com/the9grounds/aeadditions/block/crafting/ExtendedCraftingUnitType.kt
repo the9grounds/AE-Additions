@@ -16,10 +16,10 @@ enum class ExtendedCraftingUnitType(val kiloBytes: Int) : ICraftingUnitType {
 
     override fun getItemFromType(): Item? {
         return when(this) {
-            STORAGE_1024 -> Blocks.BLOCK_CRAFTING_STORAGE_1024k.item
-            STORAGE_4096 -> Blocks.BLOCK_CRAFTING_STORAGE_4096k.item
-            STORAGE_16384 -> Blocks.BLOCK_CRAFTING_STORAGE_16384k.item
-            STORAGE_65536 -> Blocks.BLOCK_CRAFTING_STORAGE_65536k.item
+            STORAGE_1024 -> Blocks.BLOCK_CRAFTING_STORAGE_1024k.item.get()
+            STORAGE_4096 -> Blocks.BLOCK_CRAFTING_STORAGE_4096k.item.get()
+            STORAGE_16384 -> Blocks.BLOCK_CRAFTING_STORAGE_16384k.item.get()
+            STORAGE_65536 -> Blocks.BLOCK_CRAFTING_STORAGE_65536k.item.get()
             else -> null
         }
     }

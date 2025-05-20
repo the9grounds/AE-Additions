@@ -2,20 +2,20 @@ package com.the9grounds.aeadditions.me.storage
 
 import appeng.api.config.Actionable
 import appeng.api.config.IncludeExclude
+import appeng.api.ids.AEComponents
 import appeng.api.networking.security.IActionSource
 import appeng.api.stacks.*
 import appeng.api.storage.cells.CellState
 import appeng.api.storage.cells.ISaveProvider
 import appeng.api.storage.cells.StorageCell
-import appeng.core.AELog
 import appeng.util.prioritylist.FuzzyPriorityList
 import appeng.util.prioritylist.IPartitionList
+import com.the9grounds.aeadditions.core.data.SuperStorageCellExtraInfo
 import com.the9grounds.aeadditions.item.storage.SuperStorageCell
+import com.the9grounds.aeadditions.registries.DataComponents
 import it.unimi.dsi.fastutil.longs.LongArrayList
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap
 import net.minecraft.nbt.CompoundTag
-import net.minecraft.nbt.ListTag
-import net.minecraft.nbt.Tag
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.ItemStack
 
@@ -23,8 +23,7 @@ class SuperCellInventory(val cell: SuperStorageCell?, val itemStackLocal: ItemSt
     
     private var tagCompound: CompoundTag? = null
     private var maxItemTypes = MAX_ITEM_TYPES
-    private var storedItems: Short
-    get() = (cellItems?.size ?: 0).toShort()
+    private var storedItems: Int
     private var storedItemCount = 0L
     var partitionList: IPartitionList? = null
         private set
@@ -120,14 +119,19 @@ class SuperCellInventory(val cell: SuperStorageCell?, val itemStackLocal: ItemSt
         if (maxItemTypes < 1) {
             maxItemTypes = 1
         }
-        tagCompound = itemStackLocal.orCreateTag
-        storedItems = tagCompound!!.getShort(ITEM_TYPE_TAG)
-        storedItemCount = tagCompound!!.getLong(ITEM_COUNT_TAG)
-        computedUsedBytes = tagCompound!!.getLong("usedBytes")
+        val storedStacks = storedStacks
+        storedItems = storedStacks.size
+        storedItemCount = storedStacks.stream().mapToLong(GenericStack::amount).sum()
+        computedUsedBytes = storedExtraInfo.usedBytes
         cellItems = null
         
         recalculateValues()
     }
+
+    private val storedStacks: List<GenericStack>
+        get() = itemStackLocal.getOrDefault(AEComponents.STORAGE_CELL_INV, listOf())
+    private val storedExtraInfo: SuperStorageCellExtraInfo
+        get() = itemStackLocal.getOrDefault(DataComponents.SUPER_STORAGE_CELL_EXTRA_INFO, SuperStorageCellExtraInfo())
 
     override fun persist() {
         if (isPersisted) {
@@ -142,14 +146,14 @@ class SuperCellInventory(val cell: SuperStorageCell?, val itemStackLocal: ItemSt
 
         // add new pretty stuff...
         val amounts = LongArrayList(cellItems!!.size)
-        val keys = ListTag()
+        val stacks: MutableList<GenericStack> = mutableListOf()
 
         for (entry in cellItems!!) {
             val amount = entry.value
             if (amount > 0) {
                 val currentAmount = localItemCountByKeyType[entry.key.type] ?: 0
                 localItemCountByKeyType[entry.key.type] = currentAmount + amount
-                keys.add(entry.key.toTagGeneric())
+                stacks.add(GenericStack(entry.key, amount))
                 amounts.add(amount)
                 
                 val currentNumber = localNumberOfTypesByKeyType[entry.key.type] ?: 0
@@ -158,15 +162,13 @@ class SuperCellInventory(val cell: SuperStorageCell?, val itemStackLocal: ItemSt
             }
         }
 
-        if (keys.isEmpty()) {
-            getTag()!!.remove(STACK_KEYS)
-            getTag()!!.remove(STACK_AMOUNTS)
+        if (stacks.isEmpty()) {
+            itemStackLocal.remove(AEComponents.STORAGE_CELL_INV)
         } else {
-            getTag()!!.put(STACK_KEYS, keys)
-            getTag()!!.putLongArray(STACK_AMOUNTS, amounts.toArray(LongArray(0)))
+            itemStackLocal.set(AEComponents.STORAGE_CELL_INV, stacks)
         }
 
-        storedItems = cellItems!!.size.toShort()
+        storedItems = cellItems!!.size
 
         storedItemCount = itemCount
         storedItemCountByKeyType = localItemCountByKeyType
@@ -179,23 +181,15 @@ class SuperCellInventory(val cell: SuperStorageCell?, val itemStackLocal: ItemSt
         }
         
         computedUsedBytes = localComputedUsedBytes
+        val extraInfo = SuperStorageCellExtraInfo(computedUsedBytes)
         
-        if (computedUsedBytes == 0L) {
-            getTag()!!.remove(ITEM_COUNT_TAG)
-            getTag()!!.remove("usedBytes")
+        if (extraInfo.hasDefaultValues()) {
+            itemStackLocal.remove(DataComponents.SUPER_STORAGE_CELL_EXTRA_INFO)
         } else {
-            getTag()!!.putLong(ITEM_COUNT_TAG, computedUsedBytes)
-            getTag()!!.putLong("usedBytes", computedUsedBytes)
+            itemStackLocal.set(DataComponents.SUPER_STORAGE_CELL_EXTRA_INFO, extraInfo)
         }
 
         isPersisted = true
-    }
-
-    open fun getTag(): CompoundTag? {
-        // On Fabric, the tag itself may be copied and then replaced later in case a portable cell is being charged.
-        // In that case however, we can rely on the itemstack reference not changing due to the special logic in the
-        // transactional inventory wrappers. So we must always re-query the tag from the stack.
-        return itemStackLocal.getOrCreateTag()
     }
 
     protected open fun saveChanges() {
@@ -212,7 +206,7 @@ class SuperCellInventory(val cell: SuperStorageCell?, val itemStackLocal: ItemSt
     }
 
     private fun recalculateValues() {
-        storedItems = cellItems!!.size.toShort()
+        storedItems = cellItems!!.size
         storedItemCount = 0
         var localItemCountByKeyType = mutableMapOf<AEKeyType, Long>()
         var localNumberOfTypesByKeyType = mutableMapOf<AEKeyType, Int>()
@@ -239,28 +233,14 @@ class SuperCellInventory(val cell: SuperStorageCell?, val itemStackLocal: ItemSt
     }
 
     private fun loadCellItems() {
-        var corruptedTag = false
-        val amounts = getTag()!!.getLongArray(STACK_AMOUNTS)
-        val tags = getTag()!!.getList(STACK_KEYS, Tag.TAG_COMPOUND.toInt())
-        if (amounts.size != tags.size) {
-            AELog.warn(
-                "Loading storage cell with mismatched amounts/tags: %d != %d",
-                amounts.size, tags.size
-            )
+        val storedStacks = storedStacks
+        for (storedStack in storedStacks) {
+            cellItems!![storedStack.what] = storedStack.amount
         }
-        for (i in amounts.indices) {
-            val amount = amounts[i]
-            val key = AEKey.fromTagGeneric(tags.getCompound(i))
-            if (amount <= 0 || key == null) {
-                corruptedTag = true
-            } else {
-                cellItems!!.put(key, amount)
-            }
-        }
+
+        val extraInfo = storedExtraInfo
+        computedUsedBytes = extraInfo.usedBytes
         recalculateValues()
-        if (corruptedTag) {
-            saveChanges()
-        }
     }
 
     override fun getAvailableStacks(out: KeyCounter) {

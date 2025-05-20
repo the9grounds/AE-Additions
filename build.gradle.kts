@@ -1,102 +1,75 @@
-import com.google.common.primitives.Chars
-import com.modrinth.minotaur.TaskModrinthUpload
 import net.darkhax.curseforgegradle.TaskPublishCurseForge
-import net.minecraftforge.gradle.userdev.DependencyManagementExtension
-import net.minecraftforge.gradle.userdev.UserDevExtension
-import org.gradle.jvm.tasks.Jar
-import java.nio.charset.Charset
 import net.darkhax.curseforgegradle.Constants as CFG_Constants
 
-buildscript {
-    repositories {
-        mavenCentral()
-        maven(url = "https://maven.minecraftforge.net/")
-        maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
-        maven(url = "https://repo.spongepowered.org/maven")
-    }
-
-    dependencies {
-        classpath(group = "net.minecraftforge.gradle", name = "ForgeGradle", version = "6.0.+") {
-            isChanging = true
-        }
-
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.22")
-        classpath("org.spongepowered:mixingradle:0.7-SNAPSHOT")
-    }
-}
-
 plugins {
-    kotlin("jvm") version "1.8.22"
     java
+    idea
+    `maven-publish`
+    id("net.neoforged.moddev") version "1.0.11"
+    id("org.jetbrains.kotlin.jvm") version "2.0.0"
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.0.0"
     id("net.darkhax.curseforgegradle") version "1.0.10"
     id("com.modrinth.minotaur") version "2.+"
 }
 
-apply {
-    plugin("net.minecraftforge.gradle")
-    plugin("idea")
-    plugin("org.spongepowered.mixin")
-}
+neoForge {
+    version = project.extra["neoForgeVersion"]!!.toString()
+    accessTransformers {
+        file("src/main/resources/META-INF/accesstransformer.cfg")
+    }
 
-// Properties
-val kotlinVersion: String by project
-val minecraftVersion: String by project
-val mcpChannel: String by project
-val mcpMappings: String by project
-val forgeVersion: String by project
-val aeVersion: String by project
-val hwylaVersion: String by project
-val jeiVersion: String by project
-val mekanismVersion: String by project
-val wthitVersion: String by project
-val cofhVersion: String by project
-val curseForgeProjectId: String by project
-val modBaseName: String by project
-val modCurseId: String by project
-val modrinthProjectId: String by project
-
-//apply(from= "https://raw.githubusercontent.com/thedarkcolour/KotlinForForge/site/thedarkcolour/kotlinforforge/gradle/kff-3.7.1.gradle")
-
-project.group = "com.the9grounds.aeadditions"
-base.archivesBaseName = "AEAdditions-${minecraftVersion}"
-
-configure<UserDevExtension> {
-    mappings(mcpChannel, mcpMappings)
-    
-    accessTransformer(file("src/main/resources/META-INF/accesstransformer.cfg"))
+    parchment {
+        mappingsVersion = project.extra["parchmentMappingsVersion"]!!.toString()
+        minecraftVersion = project.extra["parchmentMinecraftVersion"]!!.toString()
+    }
 
     runs {
+        configureEach {
+            systemProperty("forge.logging.markers", "REGISTRIES")
+            logLevel.set(org.slf4j.event.Level.DEBUG)
+        }
+
         create("client") {
-            workingDirectory(project.file("run"))
-            args("-mixin.config=ae2additions.mixins.json")
-
-            property("forge.logging.markers", "REGISTRIES")
-            property("forge.logging.console.level", "debug")
-
-            property("mixin.env.remapRefMap", "true")
-            property("mixin.env.refMapRemappingFile", "${projectDir}/build/createSrgToMcp/output.srg")
-
+            client()
+            systemProperty("neoforge.enabledGameTestNamespaces", project.extra["modId"]!!.toString())
+            systemProperty("guideme.ae2.guide.sources", file("src/main/resources/assets/ae2additions/ae2guide").absolutePath)
+            systemProperty("guideme.ae2.guide.sourcesNamespace", project.extra["modId"]!!.toString())
         }
+
         create("server") {
-            workingDirectory(project.file("run-server"))
-            args("-mixin.config=ae2additions.mixins.json")
-
-            property("forge.logging.markers", "REGISTRIES")
-            property("forge.logging.console.level", "debug")
-            property("mixin.env.remapRefMap", "true")
-            property("mixin.env.refMapRemappingFile", "${projectDir}/build/createSrgToMcp/output.srg")
+            server()
+            programArgument("--nogui")
+            systemProperty("neoforge.enabledGameTestNamespaces", project.extra["modId"]!!.toString())
         }
+
+        create("gameTestServer") {
+            type.set("gameTestServer")
+            systemProperty("neoforge.enabledGameTestNamespaces", project.extra["modId"]!!.toString())
+        }
+
         create("data") {
-            workingDirectory(project.file("run"))
-
-            property("forge.logging.markers", "REGISTRIES")
-            property("forge.logging.console.level", "debug")
-            property("mixin.env.remapRefMap", "true")
-            property("mixin.env.refMapRemappingFile", "${projectDir}/build/createSrgToMcp/output.srg")
-
-            args("--mod", "ae2additions", "--all", "--output", file("src/generated/resources/"), "--existing", file("src/main/resources"), "-mixin.config=ae2additions.mixins.json")
+            data()
+            programArguments.addAll(
+                listOf(
+                    "--mod", project.extra["modId"]!!.toString(),
+                    "--all",
+                    "--output", file("src/generated/resources/").absolutePath,
+                    "--existing", file("src/main/resources/").absolutePath
+                )
+            )
         }
     }
+
+    mods {
+        create(project.extra["modId"]!!.toString()) {
+            sourceSet(sourceSets["main"])
+        }
+    }
+}
+
+configurations {
+    create("localRuntime")
+    getByName("runtimeClasspath").extendsFrom(getByName("localRuntime"))
 }
 
 repositories {
@@ -105,11 +78,6 @@ repositories {
     maven { // TOP
         url = uri("https://maven.k-4u.nl")
     }
-
-//    maven {
-//        name = "Progwml6 maven"
-//        url = uri("https://dvs1.progwml6.com/files/maven/")
-//    }
 
     maven {
         name = "Modmaven"
@@ -144,73 +112,68 @@ repositories {
 
 val coroutines_version = "1.8.22"
 dependencies {
-    "minecraft"("net.minecraftforge:forge:${minecraftVersion}-${forgeVersion}")
-    val jeiApi = project.dependencies.create(group = "mezz.jei", name = "jei-${minecraftVersion}-forge", version = jeiVersion, classifier = "api")
-    val jei = project.dependencies.create(group = "mezz.jei", name = "jei-1.20.1-forge", version = jeiVersion)
-    val ae2 = project.dependencies.create(group = "appeng", name = "appliedenergistics2-forge", version = aeVersion)
+    val jeiApi = project.dependencies.create(group = "mezz.jei", name = "jei-${project.extra["mcVersion"]}-neoforge", version = project.extra["jeiVersion"].toString(), classifier = "api")
+    val jei = project.dependencies.create(group = "mezz.jei", name = "jei-1.21.1-neoforge", version = project.extra["jeiVersion"].toString())
+    val ae2 = project.dependencies.create(group = "org.appliedenergistics", name = "appliedenergistics2", version = project.extra["aeVersion"].toString())
 
 //    compileOnly(project.the<DependencyManagementExtension>().deobf(jeiApi))
-    implementation(project.the<DependencyManagementExtension>().deobf(jei))
+    implementation(jei)
 
-    implementation(project.the<DependencyManagementExtension>().deobf(ae2))
+    implementation(ae2)
 
-    implementation("thedarkcolour:kotlinforforge:4.4.0")
+    implementation("thedarkcolour:kotlinforforge-neoforge:5.8.0")
 
-    implementation(project.the<DependencyManagementExtension>().deobf("mekanism:Mekanism:${mekanismVersion}"))
-    implementation(project.the<DependencyManagementExtension>().deobf("curse.maven:applied-mekanistics-574300:4842281"))
-    implementation(project.the<DependencyManagementExtension>().deobf("curse.maven:ae2-things-forge-609977:4616683"))
+    implementation("mekanism:Mekanism:${project.extra["mekanismVersion"]!!.toString()}")
+    implementation("curse.maven:applied-mekanistics-574300:5978711")
+    implementation("curse.maven:ae2-things-forge-609977:5637783")
 //    implementation(project.the<DependencyManagementExtension>().deobf("curse.maven:the-one-probe-245211:3927520"))
-    compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:ftb-teams-404468:5176343"))
-//    compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:applied-botanics-610632:3770580"))
-//    compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:applied-botanics-610632:3770580"))
+    compileOnly("curse.maven:ftb-teams-404468:6119437")
+    compileOnly("org.appliedenergistics:guideme:${project.extra["guideMeVersion"]!!}:api")
+    runtimeOnly("org.appliedenergistics:guideme:${project.extra["guideMeVersion"]!!}")
 
-    annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
-    compileOnly("org.spongepowered:mixin:0.8.5") { isTransitive = false }
+
+
+//    compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:applied-botanics-610632:3770580"))
+//    compileOnly(project.the<DependencyManagementExtension>().deobf("curse.maven:applied-botanics-610632:3770580"))
     
 }
 
-val Project.minecraft: UserDevExtension
-    get() = extensions.getByName<UserDevExtension>("minecraft")
-
-tasks.withType<Jar> {
-    // this will ensure that this task is redone when the versions change.
-    inputs.property("version", getBetterVersion())
-    duplicatesStrategy = org.gradle.api.file.DuplicatesStrategy.EXCLUDE
-
-    archiveBaseName.set("${modBaseName}-${minecraftVersion}-${getBetterVersion()}")
-
-    manifest.attributes(
-            "MixinConfigs" to "ae2additions.mixins.json",
+tasks.withType<ProcessResources>().configureEach {
+    val replaceProperties = mapOf(
+        "minecraft_version" to project.extra["mcVersion"]!!,
+        "minecraft_version_range" to project.extra["minecraftVersionRange"]!!,
+        "neo_version" to project.extra["neoForgeVersion"]!!,
+        "neo_version_range" to project.extra["neoVersionRange"]!!,
+        "loader_version_range" to project.extra["loaderVersionRange"]!!,
+        "mod_id" to project.extra["modId"]!!,
+        "mod_name" to project.extra["modName"]!!,
+        "mod_license" to project.extra["modLicense"]!!,
+        "mod_version" to getBetterVersion(),
+        "mod_authors" to project.extra["modAuthors"]!!,
+        "mod_description" to project.extra["modDescription"]!!
     )
 
-    // replace stuff in mcmod.info, nothing else
-    filesMatching("META-INF/mods.toml") {
-        expand(mapOf(
-            "version" to getBetterVersion(),
-            "mcversion" to "1.20.1"
-        ))
-        filter { line ->
-            line.replace("version=\"0.0.0.0.1\"", "version=\"${getBetterVersion()}\"")
-        }
+    inputs.properties(replaceProperties)
+
+    filesMatching("META-INF/neoforge.mods.toml") {
+        expand(replaceProperties)
     }
 }
 
-val fileName = "${modBaseName}-${minecraftVersion}-${getBetterVersion()}"
+val fileName = "${project.extra["modBaseName"]}-${project.extra["mcVersion"]}-${getBetterVersion()}"
 
 tasks.register<TaskPublishCurseForge>("publishCurseForge") {
     apiToken = System.getenv("CURSEFORGE_API_KEY")
     
-    val mainFile = upload(modCurseId, file("${project.buildDir}/libs/${fileName}.jar"))
-    mainFile.addGameVersion(minecraftVersion)
+    val mainFile = upload(project.extra["modCurseId"], file("${project.buildDir}/libs/${fileName}.jar"))
+    mainFile.addGameVersion(project.extra["mcVersion"])
     mainFile.changelogType = CFG_Constants.CHANGELOG_MARKDOWN
     mainFile.changelog = file("CHANGELOG.md")
     mainFile.releaseType = getReleaseType()
     mainFile.addRequirement("applied-energistics-2")
     mainFile.addRequirement("kotlin-for-forge")
-//    mainFile.addOptional("mekanism")
-//    mainFile.addOptional("applied-mekanistics")
-    // Only temporary until the mod id conflict is fixed
-//    mainFile.addIncompatibility("ae2-additions")
+    mainFile.addOptional("mekanism")
+    mainFile.addOptional("applied-mekanistics")
     mainFile.addModLoader("Forge")
 }
 
@@ -219,10 +182,10 @@ val changeLogContents = if (changeLogFile.exists()) changeLogFile.readText(Chars
 
 modrinth {
     token.set(System.getenv("MODRINTH_API_TOKEN"))
-    projectId.set(modrinthProjectId)
+    projectId.set(project.extra["modrinthProjectId"].toString())
     uploadFile.set(file("${project.buildDir}/libs/${fileName}.jar"))
     loaders.add("forge")
-    gameVersions.add(minecraftVersion)
+    gameVersions.add(project.extra["mcVersion"].toString())
     changelog.set(changeLogContents)
     versionType.set(getReleaseType())
 
@@ -279,7 +242,6 @@ fun getReleaseType(): String {
 
 sourceSets {
     main {
-
         java {
             srcDir("src")
         }
@@ -289,17 +251,9 @@ sourceSets {
     }
 }
 
-tasks.create("copyResourceToClasses", Copy::class) {
-    tasks.classes.get().dependsOn(this)
-    mustRunAfter("compileJava")
-    dependsOn(tasks.processResources.get())
-//    onlyIf { gradle.taskGraph.hasTask(tasks.getByName("prepareRuns")) }
-    into("$buildDir/classes/kotlin/main")
-    from(tasks.processResources.get().destinationDir)
-}
-
-configure<org.spongepowered.asm.gradle.plugins.MixinExtension> {
-    add(sourceSets.main.get(), "ae2additions.refmap.json")
-    config("ae2additions.mixins.json")
-    quiet = false
+idea {
+    module {
+        isDownloadJavadoc = true
+        isDownloadSources = true
+    }
 }

@@ -5,9 +5,9 @@ import appeng.client.gui.style.Color
 import com.the9grounds.aeadditions.AEAdditions
 import com.the9grounds.aeadditions.client.gui.button.*
 import com.the9grounds.aeadditions.core.network.NetworkManager
-import com.the9grounds.aeadditions.core.network.packet.CreateChannelPacket
-import com.the9grounds.aeadditions.core.network.packet.DeleteChannelPacket
-import com.the9grounds.aeadditions.core.network.packet.TransceiverDataChange
+import com.the9grounds.aeadditions.core.network.packet.server.ChangeTransceiverDataPacket
+import com.the9grounds.aeadditions.core.network.packet.server.CreateChannelPacket
+import com.the9grounds.aeadditions.core.network.packet.server.DeleteChannelPacket
 import com.the9grounds.aeadditions.menu.MEWirelessTransceiverMenu
 import com.the9grounds.aeadditions.util.ChannelInfo
 import net.minecraft.client.Minecraft
@@ -24,8 +24,8 @@ import net.minecraft.world.entity.player.Inventory
 class MEWirelessTransceiverScreen(menu: MEWirelessTransceiverMenu, inventory: Inventory, title: Component) : AbstractContainerScreen<MEWirelessTransceiverMenu>(
     menu, inventory, title
 ) {
-    val texture = Blitter.texture(ResourceLocation(AEAdditions.ID, "textures/gui/me_wireless_transceiver.png"))
-    val channelListBackground = Blitter.texture(ResourceLocation(AEAdditions.ID, "textures/gui/channel-list-background.png"))
+    val texture = Blitter.texture(ResourceLocation.fromNamespaceAndPath(AEAdditions.ID, "textures/gui/me_wireless_transceiver.png"))
+    val channelListBackground = Blitter.texture(ResourceLocation.fromNamespaceAndPath(AEAdditions.ID, "textures/gui/channel-list-background.png"))
     val accessBtn = AccessButton(this, false)
     val typeButton = TransceiverTypeButton(this)
     private val createButton = CreateButton(this)
@@ -62,36 +62,34 @@ class MEWirelessTransceiverScreen(menu: MEWirelessTransceiverMenu, inventory: In
         extraDataPane = ExtraDataPane(guiLeft - 128, guiTop, this, font)
         scrollBar = ScrollBar(guiLeft + 16 + 138, guiTop + 70, this)
     }
-    
-    override fun renderBg(guiGraphics: GuiGraphics, ticks: Float, p_97789_: Int, p_97790_: Int) {
-        this.renderBackground(guiGraphics)
+
+    override fun renderBg(guiGraphics: GuiGraphics, partialTick: Float, mouseX: Int, mouseY: Int) {
         texture.dest(guiLeft, guiTop).src(0, 0, xSize, ySize).blit(guiGraphics)
         // TODO: Understand implication of removed z value
         channelListBackground.dest(guiLeft + 16, guiTop + 70, 144, 50).src(0, 0, 2, 2).blit(guiGraphics)
     }
 
-
-    override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, p_97798_: Float) {
-        super.render(guiGraphics, mouseX, mouseY, p_97798_)
+    override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTick: Float) {
+        super.render(guiGraphics, mouseX, mouseY, partialTick)
         accessBtn.x = guiLeft + imageWidth + 2
         accessBtn.y = guiTop + 3
-        accessBtn.render(guiGraphics, mouseX, mouseY, p_97798_)
+        accessBtn.render(guiGraphics, mouseX, mouseY, partialTick)
         typeButton.x = guiLeft + imageWidth + 2
         typeButton.y = guiTop + 16 + 12
-        typeButton.render(guiGraphics, mouseX, mouseY, p_97798_)
+        typeButton.render(guiGraphics, mouseX, mouseY, partialTick)
         font.drawInBatch("Channel Name", (guiLeft + 16).toFloat(), (guiTop + 22).toFloat(), Color(0, 0, 0, 255).toARGB(), false, guiGraphics.pose().last().pose(), guiGraphics.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880)
-        textField?.render(guiGraphics, mouseX, mouseY, p_97798_)
+        textField?.render(guiGraphics, mouseX, mouseY, partialTick)
         createButton.x = guiLeft + 16 + textField!!.width + 2
         createButton.y = guiTop + 22 + 10
-        createButton.render(guiGraphics, mouseX, mouseY, p_97798_)
+        createButton.render(guiGraphics, mouseX, mouseY, partialTick)
         deleteChannelButton?.x = guiLeft + 75
         deleteChannelButton?.y = guiTop + 125
-        deleteChannelButton?.render(guiGraphics, mouseX, mouseY, p_97798_)
+        deleteChannelButton?.render(guiGraphics, mouseX, mouseY, partialTick)
         setChannelButton?.x = guiLeft + 120
         setChannelButton?.y = guiTop + 125
-        setChannelButton?.render(guiGraphics, mouseX, mouseY, p_97798_)
-        extraDataPane?.render(guiGraphics, mouseX, mouseY, p_97798_)
-        scrollBar?.render(guiGraphics, mouseX, mouseY, p_97798_)
+        setChannelButton?.render(guiGraphics, mouseX, mouseY, partialTick)
+        extraDataPane?.render(guiGraphics, mouseX, mouseY, partialTick)
+        scrollBar?.render(guiGraphics, mouseX, mouseY, partialTick)
         
         val channelName = if (menu.isOnChannel) {
             menu.currentChannel?.name ?: "None"
@@ -250,18 +248,18 @@ class MEWirelessTransceiverScreen(menu: MEWirelessTransceiverMenu, inventory: In
         textField?.value = ""
     }
 
-    override fun mouseScrolled(mouseX: Double, mouseY: Double, wheelDelta: Double): Boolean {
+    override fun mouseScrolled(mouseX: Double, mouseY: Double, scrollX: Double, scrollY: Double): Boolean {
         
         if (mouseX > guiLeft + 16 && mouseX < guiLeft + 160 && mouseY > guiTop + 70 && mouseY < guiTop + 120) {
-            scrollBar?.mouseScrolled(mouseX, mouseY, wheelDelta)
+            scrollBar?.mouseScrolled(mouseX, mouseY, scrollX, scrollY)
         }
         
-        return super.mouseScrolled(mouseX, mouseY, wheelDelta)
+        return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY)
     }
     
     fun deleteChannelButtonPressed(button: Button) {
         if (selectedChannel != null) {
-            NetworkManager.sendToServer(DeleteChannelPacket(selectedChannel!!))
+            NetworkManager.sendToServer(DeleteChannelPacket(selectedChannel!!.id))
             selectedChannel = null
             menu.currentChannel = null
         }
@@ -270,9 +268,8 @@ class MEWirelessTransceiverScreen(menu: MEWirelessTransceiverMenu, inventory: In
     fun saveChangesButtonPressed(button: Button) {
         if (selectedChannel !== null || menu.currentChannel !== null) {
             NetworkManager.sendToServer(
-                TransceiverDataChange(
+                ChangeTransceiverDataPacket(
                     menu.isSubscriber,
-                    Minecraft.getInstance().level!!,
                     selectedChannel ?: menu.currentChannel!!
                 )
             )

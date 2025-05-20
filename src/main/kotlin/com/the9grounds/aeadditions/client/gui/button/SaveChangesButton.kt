@@ -12,8 +12,8 @@ import net.minecraft.resources.ResourceLocation
 
 class SaveChangesButton(parent: MEWirelessTransceiverScreen, val font: Font) : Button(Builder(Component.empty(), parent::saveChangesButtonPressed).size(40, 16)) {
 
-    override fun render(guiGraphics: GuiGraphics, p_93658_: Int, p_93659_: Int, p_93660_: Float) {
-        val texture = Blitter.texture(ResourceLocation(AEAdditions.ID, "textures/gui/buttons/background.png"), 16, 16)
+    override fun renderWidget(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTick: Float) {
+        val texture = Blitter.texture(ResourceLocation.fromNamespaceAndPath(AEAdditions.ID, "textures/gui/buttons/background.png"), 16, 16)
 
         texture.dest(this.x, this.y, 40, 16).src(0, 0, 16, 16).blit(guiGraphics)
         font.drawInBatch("Save", this.x + 10f, this.y + 4f, Color(0, 0, 0, 255).toARGB(), false, guiGraphics.pose().last().pose(), guiGraphics.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880)

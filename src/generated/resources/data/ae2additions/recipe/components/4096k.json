@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "tag": "c:gems/diamond"
+    },
+    "b": {
+      "item": "ae2:engineering_processor"
+    },
+    "c": {
+      "item": "ae2additions:cell_component_1024"
+    },
+    "d": {
+      "item": "ae2:quartz_glass"
+    }
+  },
+  "pattern": [
+    "aba",
+    "cdc",
+    "aca"
+  ],
+  "result": {
+    "count": 1,
+    "id": "ae2additions:cell_component_4096"
+  }
+}

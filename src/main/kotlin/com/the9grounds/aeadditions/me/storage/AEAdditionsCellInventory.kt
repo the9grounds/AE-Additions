@@ -3,34 +3,29 @@ package com.the9grounds.aeadditions.me.storage
 import appeng.api.config.Actionable
 import appeng.api.config.FuzzyMode
 import appeng.api.config.IncludeExclude
+import appeng.api.ids.AEComponents
 import appeng.api.networking.security.IActionSource
 import appeng.api.stacks.AEItemKey
 import appeng.api.stacks.AEKey
+import appeng.api.stacks.GenericStack
 import appeng.api.stacks.KeyCounter
 import appeng.api.storage.cells.CellState
 import appeng.api.storage.cells.ISaveProvider
 import appeng.api.storage.cells.StorageCell
 import appeng.api.upgrades.IUpgradeInventory
-import appeng.core.AELog
 import appeng.core.definitions.AEItems
 import appeng.util.ConfigInventory
 import appeng.util.prioritylist.FuzzyPriorityList
 import appeng.util.prioritylist.IPartitionList
 import com.the9grounds.aeadditions.api.IAEAdditionsStorageCell
-import it.unimi.dsi.fastutil.longs.LongArrayList
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap
-import net.minecraft.nbt.CompoundTag
-import net.minecraft.nbt.ListTag
-import net.minecraft.nbt.Tag
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.ItemStack
 
-class AEAdditionsCellInventory(val cellType: com.the9grounds.aeadditions.item.storage.StorageCell?, val itemStackLocal: ItemStack, val container: ISaveProvider?) : StorageCell {
-    
-    private var tagCompound: CompoundTag? = null
+class AEAdditionsCellInventory(val cellType: com.the9grounds.aeadditions.item.storage.StorageCell, val itemStackLocal: ItemStack, val container: ISaveProvider?) : StorageCell {
+
     private var maxItemTypes = MAX_ITEM_TYPES
-    private var storedItems: Short
-    get() = (cellItems?.size ?: 0).toShort()
+    private var storedItems: Int
     private var storedItemCount = 0L
     var partitionList: IPartitionList? = null
         private set
@@ -53,21 +48,6 @@ class AEAdditionsCellInventory(val cellType: com.the9grounds.aeadditions.item.st
     companion object
     {
         private val MAX_ITEM_TYPES = 300
-        private val ITEM_TYPE_TAG = "it"
-        private val ITEM_COUNT_TAG = "ic"
-        private val ITEM_SLOT = "#"
-        private val ITEM_SLOT_COUNT = "@"
-        private const val STACK_KEYS = "keys"
-        private const val STACK_AMOUNTS = "amts"
-        private val ITEM_SLOT_KEYS = arrayOfNulls<String>(MAX_ITEM_TYPES)
-        private val ITEM_SLOT_COUNT_KEYS = arrayOfNulls<String>(MAX_ITEM_TYPES)
-
-        init {
-            for (x in 0 until MAX_ITEM_TYPES) {
-                ITEM_SLOT_KEYS[x] = ITEM_SLOT + x
-                ITEM_SLOT_COUNT_KEYS[x] = ITEM_SLOT_COUNT + x
-            }
-        }
         
         private fun getStorageCell(input: ItemStack?): IAEAdditionsStorageCell? {
             if (input != null && input.item is com.the9grounds.aeadditions.item.storage.StorageCell) {
@@ -119,9 +99,9 @@ class AEAdditionsCellInventory(val cellType: com.the9grounds.aeadditions.item.st
         if (maxItemTypes < 1) {
             maxItemTypes = 1
         }
-        tagCompound = itemStackLocal.orCreateTag
-        storedItems = tagCompound!!.getShort(ITEM_TYPE_TAG)
-        storedItemCount = tagCompound!!.getLong(ITEM_COUNT_TAG)
+        val storedStacks = storedStacks
+        storedItems = storedStacks.size
+        storedItemCount = storedStacks.stream().mapToLong(GenericStack::amount).sum()
         cellItems = null
 
 
@@ -161,6 +141,9 @@ class AEAdditionsCellInventory(val cellType: com.the9grounds.aeadditions.item.st
         this.hasVoidUpgrade = upgrades.isInstalled(AEItems.VOID_CARD)
     }
 
+    private val storedStacks: List<GenericStack>
+        get() = itemStackLocal.getOrDefault(AEComponents.STORAGE_CELL_INV, listOf())
+
     override fun persist() {
         if (isPersisted) {
             return
@@ -168,54 +151,33 @@ class AEAdditionsCellInventory(val cellType: com.the9grounds.aeadditions.item.st
 
         var itemCount: Long = 0
 
-        // add new pretty stuff...
-
-        // add new pretty stuff...
-        val amounts = LongArrayList(cellItems!!.size)
-        val keys = ListTag()
+        val stacks: MutableList<GenericStack> = mutableListOf()
 
         for (entry in cellItems!!) {
             val amount = entry.value
             if (amount > 0) {
                 itemCount += amount
-                keys.add(entry.key.toTagGeneric())
-                amounts.add(amount)
+                stacks.add(GenericStack(entry.key, amount))
             }
         }
 
-        if (keys.isEmpty()) {
-            getTag()!!.remove(STACK_KEYS)
-            getTag()!!.remove(STACK_AMOUNTS)
+        if (stacks.isEmpty()) {
+            itemStackLocal.remove(AEComponents.STORAGE_CELL_INV)
         } else {
-            getTag()!!.put(STACK_KEYS, keys)
-            getTag()!!.putLongArray(STACK_AMOUNTS, amounts.toArray(LongArray(0)))
+            itemStackLocal.set(AEComponents.STORAGE_CELL_INV, stacks)
         }
 
-        storedItems = cellItems!!.size.toShort()
-
+        storedItems = cellItems!!.size
         storedItemCount = itemCount
-        if (itemCount == 0L) {
-            getTag()!!.remove(ITEM_COUNT_TAG)
-        } else {
-            getTag()!!.putLong(ITEM_COUNT_TAG, itemCount)
-        }
-
         isPersisted = true
-    }
-
-    open fun getTag(): CompoundTag? {
-        // On Fabric, the tag itself may be copied and then replaced later in case a portable cell is being charged.
-        // In that case however, we can rely on the itemstack reference not changing due to the special logic in the
-        // transactional inventory wrappers. So we must always re-query the tag from the stack.
-        return itemStackLocal.getOrCreateTag()
     }
 
     protected open fun saveChanges() {
         // recalculate values
-        storedItems = cellItems!!.size.toShort()
+        storedItems = cellItems!!.size
         storedItemCount = 0
         for (storedAmount in cellItems!!.values) {
-            storedItemCount += storedAmount!!
+            storedItemCount += storedAmount
         }
         isPersisted = false
         if (container != null) {
@@ -227,26 +189,10 @@ class AEAdditionsCellInventory(val cellType: com.the9grounds.aeadditions.item.st
     }
 
     private fun loadCellItems() {
-        var corruptedTag = false
-        val amounts = getTag()!!.getLongArray(STACK_AMOUNTS)
-        val tags = getTag()!!.getList(STACK_KEYS, Tag.TAG_COMPOUND.toInt())
-        if (amounts.size != tags.size) {
-            AELog.warn(
-                "Loading storage cell with mismatched amounts/tags: %d != %d",
-                amounts.size, tags.size
-            )
-        }
-        for (i in amounts.indices) {
-            val amount = amounts[i]
-            val key = AEKey.fromTagGeneric(tags.getCompound(i))
-            if (amount <= 0 || key == null) {
-                corruptedTag = true
-            } else {
-                cellItems!!.put(key, amount)
-            }
-        }
-        if (corruptedTag) {
-            saveChanges()
+        val storedStacks = storedStacks
+
+        for (storedStack in storedStacks) {
+            cellItems!![storedStack.what] = storedStack.amount
         }
     }
 

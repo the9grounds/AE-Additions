@@ -4,7 +4,7 @@ import com.the9grounds.aeadditions.blockentity.MEWirelessTransceiverBlockEntity
 import com.the9grounds.aeadditions.registries.BlockEntities
 import net.minecraft.core.BlockPos
 import net.minecraft.world.InteractionHand
-import net.minecraft.world.InteractionResult
+import net.minecraft.world.ItemInteractionResult
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
@@ -36,25 +36,25 @@ class MEWirelessTransceiverBlock(properties: Properties) : Block(properties), En
         }
     }
 
-    override fun use(
-        blockState: BlockState,
+    override fun useItemOn(
+        stack: ItemStack,
+        state: BlockState,
         level: Level,
         pos: BlockPos,
         player: Player,
         hand: InteractionHand,
-        hit: BlockHitResult
-    ): InteractionResult {
-        
+        hitResult: BlockHitResult
+    ): ItemInteractionResult {
         val blockEntity = level.getBlockEntity(pos, BlockEntities.ME_WIRELESS_TRANSCEIVER)
-        
+
         if (blockEntity.isPresent && !player.isShiftKeyDown) {
             if (!level.isClientSide) {
                 player.openMenu(blockEntity.get())
             }
-            return InteractionResult.sidedSuccess(level.isClientSide)
+            return ItemInteractionResult.sidedSuccess(level.isClientSide)
         }
-        
-        return super.use(blockState, level, pos, player, hand, hit)
+
+        return super.useItemOn(stack, state, level, pos, player, hand, hitResult)
     }
 
     override fun getDrops(state: BlockState, p_287596_: LootParams.Builder): MutableList<ItemStack> {

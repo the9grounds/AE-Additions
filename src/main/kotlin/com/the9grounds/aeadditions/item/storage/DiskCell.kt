@@ -1,6 +1,7 @@
 package com.the9grounds.aeadditions.item.storage
 
 import appeng.api.config.FuzzyMode
+import appeng.api.ids.AEComponents
 import appeng.api.stacks.AEItemKey
 import appeng.api.stacks.AEKey
 import appeng.api.stacks.AEKeyType
@@ -15,7 +16,6 @@ import appeng.util.InteractionUtil
 import com.the9grounds.aeadditions.api.IAEAdditionsDiskCell
 import io.github.projectet.ae2things.item.AETItems
 import io.github.projectet.ae2things.storage.DISKCellHandler
-import io.github.projectet.ae2things.storage.IDISKCellItem
 import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.Component
 import net.minecraft.world.InteractionHand
@@ -28,6 +28,8 @@ import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.item.context.UseOnContext
 import net.minecraft.world.level.ItemLike
 import net.minecraft.world.level.Level
+import net.neoforged.api.distmarker.Dist
+import net.neoforged.api.distmarker.OnlyIn
 
 
 /**
@@ -58,23 +60,16 @@ class DiskCell(properties: Item.Properties, private val keyType: AEKeyType, val 
         return true
     }
 
-    override fun getConfigInventory(`is`: ItemStack?): ConfigInventory? {
-        return CellConfig.create(keyType.filter(), `is`)
+    override fun getConfigInventory(`is`: ItemStack?): ConfigInventory {
+        return CellConfig.create(mutableSetOf(keyType), `is`)
     }
 
     override fun getFuzzyMode(`is`: ItemStack): FuzzyMode? {
-        val fz = `is`.orCreateTag.getString("FuzzyMode")
-        return if (fz.isEmpty()) {
-            FuzzyMode.IGNORE_ALL
-        } else try {
-            FuzzyMode.valueOf(fz)
-        } catch (t: Throwable) {
-            FuzzyMode.IGNORE_ALL
-        }
+        return `is`.getOrDefault(AEComponents.STORAGE_CELL_FUZZY_MODE, FuzzyMode.IGNORE_ALL)
     }
 
     override fun setFuzzyMode(`is`: ItemStack, fzMode: FuzzyMode) {
-        `is`.orCreateTag.putString("FuzzyMode", fzMode.name)
+        `is`.set(AEComponents.STORAGE_CELL_FUZZY_MODE, fzMode)
     }
 
     override fun use(level: Level, player: Player, hand: InteractionHand?): InteractionResultHolder<ItemStack>? {
@@ -118,7 +113,7 @@ class DiskCell(properties: Item.Properties, private val keyType: AEKeyType, val 
         return false
     }
 
-    override fun onItemUseFirst(stack: ItemStack, context: UseOnContext): InteractionResult? {
+    override fun onItemUseFirst(stack: ItemStack, context: UseOnContext): InteractionResult {
         return if (disassembleDrive(
                 stack,
                 context.level,
@@ -127,19 +122,17 @@ class DiskCell(properties: Item.Properties, private val keyType: AEKeyType, val 
         ) InteractionResult.sidedSuccess(context.level.isClientSide()) else InteractionResult.PASS
     }
 
+    @OnlyIn(Dist.CLIENT)
     override fun appendHoverText(
-        stack: ItemStack?,
-        world: Level?,
-        tooltip: MutableList<Component?>,
-        context: TooltipFlag?
+        stack: ItemStack,
+        context: TooltipContext,
+        tooltipComponents: MutableList<Component>,
+        tooltipFlag: TooltipFlag
     ) {
-        if (stack === null) {
-            return
-        }
-        tooltip.add(
-                Component.literal("Deep Item Storage disK - Storage for dummies").withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC)
+        tooltipComponents.add(
+            Component.literal("Deep Item Storage disK - Storage for dummies").withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC)
         )
-        addCellInformationToTooltip(stack, tooltip)
+        addCellInformationToTooltip(stack, tooltipComponents)
     }
 
     fun getColor(stack: ItemStack?, tintIndex: Int): Int {

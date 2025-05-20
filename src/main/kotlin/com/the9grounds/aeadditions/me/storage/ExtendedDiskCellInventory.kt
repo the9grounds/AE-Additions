@@ -18,9 +18,7 @@ import appeng.util.ConfigInventory
 import appeng.util.prioritylist.FuzzyPriorityList
 import appeng.util.prioritylist.IPartitionList
 import com.the9grounds.aeadditions.api.IAEAdditionsDiskCell
-import com.the9grounds.aeadditions.item.storage.DiskCell
 import io.github.projectet.ae2things.AE2Things
-import io.github.projectet.ae2things.util.Constants
 import io.github.projectet.ae2things.util.DataStorage
 import io.github.projectet.ae2things.util.StorageManager
 import it.unimi.dsi.fastutil.longs.LongArrayList
@@ -36,9 +34,14 @@ import kotlin.math.min
 class ExtendedDiskCellInventory(
     private val cellType: IAEAdditionsDiskCell,
     private val i: ItemStack,
-    private val container: ISaveProvider?
+    private val container: ISaveProvider?,
+    /**
+     * Without a storage manager, this inventory is read-only and shows only information retrievable from the stack
+     * itself.
+     */
+    private val storageManager: StorageManager?
 ) : StorageCell {
-    private val keyType: AEKeyType = cellType.getKeyType()!!
+    private val keyType: AEKeyType = cellType.getKeyType()
     private var partitionList: IPartitionList? = null
     var partitionListMode: IncludeExclude? = null
         private set
@@ -73,8 +76,11 @@ class ExtendedDiskCellInventory(
 
     private val diskStorage: DataStorage
         get() {
-            return if (diskUUID != null) storageInstance.getOrCreateDisk(diskUUID)
-            else DataStorage.EMPTY
+            return if (diskUUID != null && storageManager != null) {
+                storageManager.getOrCreateDisk(diskUUID)
+            } else {
+                DataStorage.EMPTY
+            }
         }
 
     private fun initData() {
@@ -95,7 +101,7 @@ class ExtendedDiskCellInventory(
         get() = partitionList is FuzzyPriorityList
 
     val configInventory: ConfigInventory
-        get() = cellType.getConfigInventory(this.i)!!
+        get() = cellType.getConfigInventory(this.i)
 
     val fuzzyMode: FuzzyMode
         get() = cellType.getFuzzyMode(this.i)
@@ -129,15 +135,15 @@ class ExtendedDiskCellInventory(
     }
 
     override fun persist() {
-        if (this.isPersisted) {
+        if (this.isPersisted || storageManager == null) {
             return
         }
 
         if (storedItemCount == 0L) {
             if (hasDiskUUID()) {
-                storageInstance.removeDisk(diskUUID)
-                i.tag!!.remove(Constants.DISKUUID)
-                i.tag!!.remove(ITEM_COUNT_TAG)
+                storageManager.removeDisk(diskUUID)
+                i.remove(AE2Things.DATA_DISK_ID)
+                i.remove(AE2Things.DATA_DISK_ITEM_COUNT)
                 initData()
             }
             return
@@ -154,21 +160,21 @@ class ExtendedDiskCellInventory(
 
             if (amount > 0) {
                 itemCount += amount
-                keys.add(entry.key.toTagGeneric())
+                keys.add(entry.key.toTagGeneric(storageManager.registries))
                 amounts.add(amount)
             }
         }
 
         if (keys.isEmpty()) {
-            storageInstance.updateDisk(diskUUID, DataStorage())
+            storageManager.updateDisk(diskUUID, DataStorage())
         } else {
-            storageInstance.modifyDisk(diskUUID, keys, amounts.toArray(LongArray(0)), itemCount)
+            storageManager.modifyDisk(diskUUID, keys, amounts.toArray(LongArray(0)), itemCount)
         }
 
-        this.storedItems = storedAmounts!!.size.toShort().toInt()
+        this.storedItems = storedAmounts!!.size
 
         this.storedItemCount = itemCount
-        i.getOrCreateTag().putLong(ITEM_COUNT_TAG, itemCount)
+        i.set(AE2Things.DATA_DISK_ITEM_COUNT, itemCount)
 
         this.isPersisted = true
     }
@@ -178,28 +184,25 @@ class ExtendedDiskCellInventory(
     }
 
     fun hasDiskUUID(): Boolean {
-        return i.hasTag() && i.getOrCreateTag().contains(Constants.DISKUUID)
+        return i.has(AE2Things.DATA_DISK_ID)
     }
 
     val diskUUID: UUID?
-        get() {
-            return if (hasDiskUUID()) i.getOrCreateTag().getUUID(Constants.DISKUUID)
-            else null
-        }
+        get() = i.get(AE2Things.DATA_DISK_ID)
 
     private fun isStorageCell(key: AEItemKey): Boolean {
         val type = getStorageCell(key)
         return type != null && !type.storableInStorageCell()
     }
 
-    protected val cellItems: Object2LongMap<AEKey>
+    protected val cellItems: Object2LongMap<AEKey>?
         get() {
             if (this.storedAmounts == null) {
                 this.storedAmounts = Object2LongOpenHashMap()
                 this.loadCellItems()
             }
 
-            return this.storedAmounts!!
+            return this.storedAmounts
         }
 
     override fun getAvailableStacks(out: KeyCounter) {
@@ -209,12 +212,11 @@ class ExtendedDiskCellInventory(
     }
 
     private fun loadCellItems() {
-        var corruptedTag = false
-
-        if (!i.hasTag()) {
+        if (this.storageManager == null) {
             return
         }
 
+        val diskStorage = diskStorage
         val amounts = diskStorage.stackAmounts
         val tags = diskStorage.stackKeys
         if (amounts.size != tags.size) {
@@ -224,9 +226,12 @@ class ExtendedDiskCellInventory(
             )
         }
 
+        var corruptedTag = false
+        val registries = storageManager.registries
+
         for (i in amounts.indices) {
             val amount = amounts[i]
-            val key = AEKey.fromTagGeneric(tags.getCompound(i))
+            val key = AEKey.fromTagGeneric(registries, tags.getCompound(i))
 
             if (amount <= 0 || key == null) {
                 corruptedTag = true
@@ -239,9 +244,6 @@ class ExtendedDiskCellInventory(
             this.saveChanges()
         }
     }
-
-    private val storageInstance: StorageManager
-        get() = AE2Things.STORAGE_INSTANCE
 
     protected fun saveChanges() {
         // recalculate values
@@ -261,11 +263,7 @@ class ExtendedDiskCellInventory(
     }
 
     val remainingItemCount: Long
-        get() {
-            val beforeMultiply = if (this.freeBytes > 0) freeBytes else 0
-
-            return beforeMultiply * divisible
-        }
+        get() = if (this.freeBytes > 0) freeBytes else 0
 
     override fun insert(what: AEKey, amount: Long, mode: Actionable, source: IActionSource): Long {
         var amount = amount
@@ -287,15 +285,15 @@ class ExtendedDiskCellInventory(
         // any NBT data for empty cells instead of relying on an empty IAEStackList
         if (what is AEItemKey && this.isStorageCell(what)) {
             // TODO: make it work for any cell, and not just BasicCellInventory!
-            val meInventory = createInventory(what.toStack(), null)
+            val meInventory = createInventory(what.toStack(), null, storageManager)
             if (!isCellEmpty(meInventory)) {
                 return 0
             }
         }
 
-        if (!hasDiskUUID()) {
-            i.getOrCreateTag().putUUID(Constants.DISKUUID, UUID.randomUUID())
-            storageInstance.getOrCreateDisk(diskUUID)
+        if (storageManager != null && !hasDiskUUID()) {
+            i.set(AE2Things.DATA_DISK_ID, UUID.randomUUID())
+            storageManager.getOrCreateDisk(diskUUID)
             loadCellItems()
         }
 
@@ -318,11 +316,11 @@ class ExtendedDiskCellInventory(
         // To avoid long-overflow on the extracting callers side
         val extractAmount = min(Int.MAX_VALUE.toDouble(), amount.toDouble()).toLong()
 
-        val currentAmount = cellItems.getLong(what)
+        val currentAmount = cellItems!!.getLong(what)
         if (currentAmount > 0) {
             if (extractAmount >= currentAmount) {
                 if (mode == Actionable.MODULATE) {
-                    cellItems.remove(what)
+                    cellItems!!.removeLong(what)
                     this.saveChanges()
                 }
 
@@ -364,7 +362,7 @@ class ExtendedDiskCellInventory(
     val nbtItemCount: Long
         get() {
             if (hasDiskUUID()) {
-                return i.tag!!.getLong(ITEM_COUNT_TAG)
+                return i.getOrDefault(AE2Things.DATA_DISK_ITEM_COUNT, 0L)
             }
             return 0
         }
@@ -377,11 +375,11 @@ class ExtendedDiskCellInventory(
     }
 
     companion object {
-        const val ITEM_COUNT_TAG: String = "ic"
-        const val STACK_KEYS: String = "keys"
-        const val STACK_AMOUNTS: String = "amts"
-
-        fun createInventory(stack: ItemStack, saveProvider: ISaveProvider?): ExtendedDiskCellInventory? {
+        fun createInventory(
+            stack: ItemStack,
+            saveProvider: ISaveProvider?,
+            storageManager: StorageManager?
+        ): ExtendedDiskCellInventory? {
             Objects.requireNonNull(stack, "Cannot create cell inventory for null itemstack")
 
             if (stack.item !is IAEAdditionsDiskCell) {
@@ -396,19 +394,19 @@ class ExtendedDiskCellInventory(
             }
 
             // The cell type's channel matches, so this cast is safe
-            return ExtendedDiskCellInventory(cellType, stack, saveProvider)
+            return ExtendedDiskCellInventory(cellType, stack, saveProvider, storageManager)
         }
 
         fun hasDiskUUID(disk: ItemStack): Boolean {
             if (disk.item is IAEAdditionsDiskCell) {
-                return disk.hasTag() && disk.getOrCreateTag().contains(Constants.DISKUUID)
+                return disk.has(AE2Things.DATA_DISK_ID)
             }
             return false
         }
 
-        private fun getStorageCell(itemKey: AEItemKey): DiskCell? {
-            if (itemKey.item is DiskCell) {
-                return itemKey.item as DiskCell
+        private fun getStorageCell(itemKey: AEItemKey): IAEAdditionsDiskCell? {
+            if (itemKey.item is IAEAdditionsDiskCell) {
+                return itemKey.item as IAEAdditionsDiskCell
             }
 
             return null

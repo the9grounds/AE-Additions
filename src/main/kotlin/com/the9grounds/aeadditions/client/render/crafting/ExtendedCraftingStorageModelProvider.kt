@@ -58,10 +58,10 @@ class ExtendedCraftingStorageModelProvider(type: ExtendedCraftingUnitType) : Abs
     }
 
     fun texture(name: String): Material {
-        return Material(TextureAtlas.LOCATION_BLOCKS, ResourceLocation(AEAdditions.ID, "block/crafting/$name"))
+        return Material(TextureAtlas.LOCATION_BLOCKS, ResourceLocation.fromNamespaceAndPath(AEAdditions.ID, "block/crafting/$name"))
     }
     
     fun textureAe2(name: String): Material {
-        return Material(TextureAtlas.LOCATION_BLOCKS, ResourceLocation(AppEng.MOD_ID, "block/crafting/$name"))
+        return Material(TextureAtlas.LOCATION_BLOCKS, ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "block/crafting/$name"))
     }
 }

@@ -1,30 +1,18 @@
 package com.the9grounds.aeadditions.util
 
-import net.minecraft.nbt.CompoundTag
-import net.minecraft.world.item.ItemStack
+import com.the9grounds.aeadditions.core.ChannelHolderSavedData
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.level.Level
+import net.minecraft.world.level.saveddata.SavedData
+
 
 object Utils {
-    
-    fun isItemStackEqual(left: ItemStack, right: ItemStack): Boolean {
-        return left.`is`(right.item) && isNbtEqual(left.tag, right.tag)
-    }
-    
-    fun isNbtEqual(left: CompoundTag?, right: CompoundTag?): Boolean {
-        if (left == right) {
-            return true;
+
+    fun getChannelHolderForLevel(level: Level?): ChannelHolder? {
+        if (level !is ServerLevel) {
+            return null
         }
-        
-        val isLeftNullOrEmpty = left == null || left.isEmpty
-        val isRightNullOrEmpty = right == null || right.isEmpty
-        
-        if (isLeftNullOrEmpty && isRightNullOrEmpty) {
-            return true
-        }
-        
-        if (isLeftNullOrEmpty != isRightNullOrEmpty) {
-            return false
-        }
-        
-        return left?.equals(right) ?: false
+
+        return level.dataStorage.computeIfAbsent(SavedData.Factory(::ChannelHolderSavedData, ChannelHolderSavedData::load), "channelHolder").channelHolder
     }
 }

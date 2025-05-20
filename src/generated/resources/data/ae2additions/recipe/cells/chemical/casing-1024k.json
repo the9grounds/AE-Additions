@@ -1,0 +1,27 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "appmek"
+        }
+      ]
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "appmek:chemical_cell_housing"
+    },
+    {
+      "item": "ae2additions:cell_component_1024"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "ae2additions:chemical_storage_cell_1024"
+  }
+}

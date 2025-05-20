@@ -15,7 +15,7 @@ object AEAdditionsCellHandler : ICellHandler {
         return AEAdditionsCellInventory.createInventory(`is`!!, host)
     }
 
-    fun addCellInformationToTooltip(`is`: ItemStack?, lines: MutableList<Component?>) {
+    fun addCellInformationToTooltip(`is`: ItemStack?, lines: MutableList<Component>) {
         val handler = getCellInventory(`is`, null) ?: return
         lines.add(Tooltips.bytesUsed(handler.getUsedBytes(), handler.getTotalBytes()))
         lines.add(Tooltips.typesUsed(handler.getStoredItemTypes(), handler.getTotalItemTypes()))

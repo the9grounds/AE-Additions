@@ -12,7 +12,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 
 class ChannelField(val font: Font, val channelInfo: ChannelInfo, val guiLeft: Int, val guiTop: Int): AbstractWidget(0, 0, 142, 12, Component.empty()) {
-    val backgroundTexture = Blitter.texture(ResourceLocation(AEAdditions.ID, "textures/gui/text-background.png"))
+    val backgroundTexture = Blitter.texture(ResourceLocation.fromNamespaceAndPath(AEAdditions.ID, "textures/gui/text-background.png"))
     var shouldShow = false
     var isSelected = false
     var yValue = 0

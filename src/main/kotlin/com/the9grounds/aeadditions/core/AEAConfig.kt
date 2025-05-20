@@ -1,17 +1,14 @@
 package com.the9grounds.aeadditions.core
 
-import com.the9grounds.aeadditions.AEAdditions
-import net.minecraftforge.common.ForgeConfigSpec
-import net.minecraftforge.fml.common.Mod
+import net.neoforged.neoforge.common.ModConfigSpec
 
-@Mod.EventBusSubscriber(modid = AEAdditions.ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 object AEAConfig {
     
-    val COMMON_SPEC: ForgeConfigSpec
+    val COMMON_SPEC: ModConfigSpec
     val COMMON_CONFIG: CommonConfig
     
     init {
-        val commonPair = ForgeConfigSpec.Builder().configure(::CommonConfig)
+        val commonPair = ModConfigSpec.Builder().configure(::CommonConfig)
         COMMON_CONFIG = commonPair.left
         COMMON_SPEC = commonPair.right
     }
@@ -28,9 +25,9 @@ object AEAConfig {
         }
     }
     
-    class CommonConfig(builder: ForgeConfigSpec.Builder) {
-        val meWirelessTransceiverBasePower: ForgeConfigSpec.ConfigValue<Int>;
-        val meWirelessTransceiverDistanceMultiplier: ForgeConfigSpec.ConfigValue<Double>
+    class CommonConfig(builder: ModConfigSpec.Builder) {
+        val meWirelessTransceiverBasePower: ModConfigSpec.ConfigValue<Int>;
+        val meWirelessTransceiverDistanceMultiplier: ModConfigSpec.ConfigValue<Double>
         
         init {
             builder.push("meWirelessTransceiver")

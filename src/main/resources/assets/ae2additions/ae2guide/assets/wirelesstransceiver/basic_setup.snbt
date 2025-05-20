@@ -1,0 +1,22 @@
+{
+    DataVersion: 3955,
+    size: [11, 2, 8],
+    data: [
+        {pos: [4, 0, 5], state: "ae2:drive{facing:north,spin:0}", nbt: {id: "ae2:drive", inv: {item0: {components: {"ae2:storage_cell_inv": [{"#": 64L, "#t": "ae2:i", id: "minecraft:redstone_block"}], "ae2additions:super_storage_cell_extra_info": {usedBytes: 131080L}}, count: 1, id: "ae2additions:super_cell_65m"}, item1: {}, item2: {}, item3: {}, item4: {}, item5: {}, item6: {}, item7: {}, item8: {}, item9: {}}, priority: 0, proxy: {p: 0}, visual: {cell0: {id: "ae2additions:super_cell_65m", state: "not_empty"}, online: 1b}}},
+        {pos: [4, 0, 6], state: "ae2:controller{state:online,type:block}", nbt: {id: "ae2:controller", internalCurrentPower: 0.0d, proxy: {p: 0}, visual: {}}},
+        {pos: [4, 0, 7], state: "ae2:dense_energy_cell{fullness:3}", nbt: {components: {"ae2:stored_energy": 1600000.0d}, id: "ae2:dense_energy_cell", internalCurrentPower: 1521221.9375d, neighborChangePending: 1b, proxy: {p: 0}, visual: {}}},
+        {pos: [5, 0, 6], state: "ae2:cable_bus{light_level:0,waterlogged:false}", nbt: {cable: {gn: {p: 0}, id: "ae2:fluix_smart_dense_cable", visual: {channelsEast: 1, channelsWest: 1, connections: ["west", "east"], missingChannel: 0b, powered: 1b}}, hasRedstone: 2, id: "ae2:cable_bus", visual: {}}},
+        {pos: [6, 0, 6], state: "ae2additions:me_wireless_transceiver", nbt: {channelId: "71ea13c1-d9bd-4ae7-bdc5-57f9fd346ec6", id: "ae2additions:me_wireless_transceiver", transceiverType: "broadcast", wirelesstransceiver: {p: -1}}},
+        {pos: [10, 0, 6], state: "ae2additions:me_wireless_transceiver", nbt: {channelId: "71ea13c1-d9bd-4ae7-bdc5-57f9fd346ec6", id: "ae2additions:me_wireless_transceiver", transceiverType: "subscribe", wirelesstransceiver: {p: -1}}},
+        {pos: [10, 1, 6], state: "ae2:cable_bus{light_level:9,waterlogged:false}", nbt: {cable: {gn: {p: 0}, id: "ae2:fluix_smart_cable", visual: {channelsDown: 1, connections: ["down"], missingChannel: 0b, powered: 1b}}, hasRedstone: 2, id: "ae2:cable_bus", north: {enabledKeyTypes: ["ae2:f", "ae2:i", "appmek:chemical"], gn: {p: 0}, id: "ae2:crafting_terminal", sort_by: "NAME", sort_direction: "ASCENDING", spin: 0b, view_mode: "ALL", visual: {missingChannel: 0b, powered: 1b}}, visual: {}}}
+    ],
+    entities: [],
+    palette: [
+        "ae2:drive{facing:north,spin:0}",
+        "ae2:controller{state:online,type:block}",
+        "ae2:dense_energy_cell{fullness:3}",
+        "ae2:cable_bus{light_level:0,waterlogged:false}",
+        "ae2additions:me_wireless_transceiver",
+        "ae2:cable_bus{light_level:9,waterlogged:false}"
+    ]
+}
