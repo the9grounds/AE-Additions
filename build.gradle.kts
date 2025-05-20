@@ -164,7 +164,7 @@ val fileName = "${project.extra["modBaseName"]}-${project.extra["mcVersion"]}-${
 
 tasks.register<TaskPublishCurseForge>("publishCurseForge") {
     apiToken = System.getenv("CURSEFORGE_API_KEY")
-    
+
     val mainFile = upload(project.extra["modCurseId"], file("${project.buildDir}/libs/${fileName}.jar"))
     mainFile.addGameVersion(project.extra["mcVersion"])
     mainFile.changelogType = CFG_Constants.CHANGELOG_MARKDOWN
@@ -172,8 +172,8 @@ tasks.register<TaskPublishCurseForge>("publishCurseForge") {
     mainFile.releaseType = getReleaseType()
     mainFile.addRequirement("applied-energistics-2")
     mainFile.addRequirement("kotlin-for-forge")
-    mainFile.addOptional("mekanism")
-    mainFile.addOptional("applied-mekanistics")
+//    mainFile.addOptional("mekanism")
+//    mainFile.addOptional("applied-mekanistics")
     mainFile.addModLoader("Forge")
 }
 
