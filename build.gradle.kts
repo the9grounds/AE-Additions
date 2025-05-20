@@ -162,6 +162,8 @@ tasks.withType<ProcessResources>().configureEach {
 
 val fileName = "${project.extra["modBaseName"]}-${project.extra["mcVersion"]}-${getBetterVersion()}"
 
+base.archivesName.set(fileName)
+
 tasks.register<TaskPublishCurseForge>("publishCurseForge") {
     apiToken = System.getenv("CURSEFORGE_API_KEY")
 
