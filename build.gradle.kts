@@ -176,7 +176,7 @@ tasks.register<TaskPublishCurseForge>("publishCurseForge") {
     mainFile.addRequirement("kotlin-for-forge")
 //    mainFile.addOptional("mekanism")
 //    mainFile.addOptional("applied-mekanistics")
-    mainFile.addModLoader("Forge")
+    mainFile.addModLoader("NeoForge")
 }
 
 val changeLogFile = file("CHANGELOG.md")
@@ -186,8 +186,10 @@ modrinth {
     token.set(System.getenv("MODRINTH_API_TOKEN"))
     projectId.set(project.extra["modrinthProjectId"].toString())
     uploadFile.set(file("${project.buildDir}/libs/${fileName}.jar"))
-    loaders.add("forge")
+    loaders.add("neoforge")
     gameVersions.add(project.extra["mcVersion"].toString())
+    version = getBetterVersion()
+    versionName = fileName
     changelog.set(changeLogContents)
     versionType.set(getReleaseType())
 
