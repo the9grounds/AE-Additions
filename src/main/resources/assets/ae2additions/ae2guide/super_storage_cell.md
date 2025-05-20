@@ -24,7 +24,7 @@ item_ids:
 ---
 # Super Storage Cell
 
-The Super Storage Cell is a very power cell, which allows you to store fluids, items, chemicals, etc in the same cell. You no longer need a cell for fluids, a cell for items and so on.
+The Super Storage Cell is a very powerful cell, which allows you to store fluids, items, chemicals, etc in the same cell. You no longer need a cell for fluids, a cell for items and so on.
 
 <Row>
 ![Terminal](assets/super_storage_cell/example_terminal.png)
