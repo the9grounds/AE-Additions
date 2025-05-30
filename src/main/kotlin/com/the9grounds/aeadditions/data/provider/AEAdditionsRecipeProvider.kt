@@ -25,11 +25,11 @@ import java.util.concurrent.CompletableFuture
 
 class AEAdditionsRecipeProvider(output: PackOutput, registries: CompletableFuture<HolderLookup.Provider>) : RecipeProvider(output, registries), IConditionBuilder {
     
-    val osmiumTag = ItemTags.create(ResourceLocation.fromNamespaceAndPath("forge", "ingots/osmium"))
+    val osmiumTag = ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "ingots/osmium"))
     val infusedAlloy = ItemTags.create(ResourceLocation.fromNamespaceAndPath("mekanism", "alloys/infused"))
     val reinforcedAlloy = ItemTags.create(ResourceLocation.fromNamespaceAndPath("mekanism", "alloys/reinforced"))
     val atomicAlloy = ItemTags.create(ResourceLocation.fromNamespaceAndPath("mekanism", "alloys/atomic"))
-    val osmiumDust = ItemTags.create(ResourceLocation.fromNamespaceAndPath("forge", "dusts/osmium"))
+    val osmiumDust = ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "dusts/osmium"))
 
     val components = mapOf(
         1 to AEItems.CELL_COMPONENT_1K,
