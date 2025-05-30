@@ -188,7 +188,7 @@ modrinth {
     uploadFile.set(file("${project.buildDir}/libs/${fileName}.jar"))
     loaders.add("neoforge")
     gameVersions.add(project.extra["mcVersion"].toString())
-    version = getBetterVersion()
+    versionNumber = getBetterVersion()
     versionName = fileName
     changelog.set(changeLogContents)
     versionType.set(getReleaseType())
