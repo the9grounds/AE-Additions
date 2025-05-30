@@ -24,7 +24,7 @@ import net.neoforged.neoforge.common.conditions.IConditionBuilder
 import java.util.concurrent.CompletableFuture
 
 class AEAdditionsRecipeProvider(output: PackOutput, registries: CompletableFuture<HolderLookup.Provider>) : RecipeProvider(output, registries), IConditionBuilder {
-    
+    // Correct the 'forge' tag to 'c'
     val osmiumTag = ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "ingots/osmium"))
     val infusedAlloy = ItemTags.create(ResourceLocation.fromNamespaceAndPath("mekanism", "alloys/infused"))
     val reinforcedAlloy = ItemTags.create(ResourceLocation.fromNamespaceAndPath("mekanism", "alloys/reinforced"))
