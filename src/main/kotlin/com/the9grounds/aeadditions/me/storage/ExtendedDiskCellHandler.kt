@@ -28,7 +28,7 @@ object ExtendedDiskCellHandler : ICellHandler {
                     Component.literal("Disk UUID: ").withStyle(ChatFormatting.GRAY)
                         .append(Component.literal(handler.diskUUID.toString()).withStyle(ChatFormatting.AQUA))
                 )
-                lines.add(Tooltips.bytesUsed(handler.usedSpace, handler.totalBytes))
+                lines.add(Tooltips.bytesUsed(handler.nbtItemCount, handler.totalBytes))
             }
 
             if (handler.isPreformatted) {
